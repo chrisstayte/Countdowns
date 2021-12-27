@@ -1,10 +1,12 @@
-import 'package:countdown/models/event.dart';
+import 'package:countdown/models/countdown_event.dart';
 import 'package:countdown/utilities/functions.dart';
 import 'package:flutter/material.dart';
 
+/// This countdown card is used to show on the homescreen.
+/// It takes a [CountdownEvent] object and sets the information on the card accordingly
 class CountdownCard extends StatefulWidget {
   const CountdownCard({Key? key, required this.event}) : super(key: key);
-  final Event event;
+  final CountdownEvent event;
 
   @override
   _CountdownCardState createState() => _CountdownCardState();
@@ -47,9 +49,9 @@ class _CountdownCardState extends State<CountdownCard> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        const Text(
-          'DAYS',
-          style: TextStyle(
+        Text(
+          numberOfDays == 1 ? 'DAY' : 'DAYS',
+          style: const TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w300,
           ),
@@ -59,7 +61,7 @@ class _CountdownCardState extends State<CountdownCard> {
       widgets = const [
         Icon(
           Icons.done,
-          color: Colors.white,
+          color: Colors.black,
         ),
         Text(
           'TODAY',

@@ -1,6 +1,7 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 
+/// This countdown card is used to show on the homescreen when there are not countdown events at all
 class CountdownCardEmpty extends StatelessWidget {
   const CountdownCardEmpty({Key? key}) : super(key: key);
 
