@@ -35,6 +35,7 @@ class _CountdownCardState extends State<CountdownCard> {
         Text(
           '${widget.event.eventDate.month}.${widget.event.eventDate.day}.${widget.event.eventDate.year}',
           style: const TextStyle(
+            color: Colors.white,
             fontSize: 12,
             fontWeight: FontWeight.w300,
           ),
@@ -45,6 +46,7 @@ class _CountdownCardState extends State<CountdownCard> {
         Text(
           numberOfDays.toString(),
           style: const TextStyle(
+            color: Colors.white,
             fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
@@ -52,6 +54,7 @@ class _CountdownCardState extends State<CountdownCard> {
         Text(
           numberOfDays == 1 ? 'DAY' : 'DAYS',
           style: const TextStyle(
+            color: Colors.white,
             fontSize: 12,
             fontWeight: FontWeight.w300,
           ),
@@ -61,13 +64,14 @@ class _CountdownCardState extends State<CountdownCard> {
       widgets = const [
         Icon(
           Icons.done,
-          color: Colors.black,
+          color: Colors.white,
         ),
         Text(
           'TODAY',
           style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w300,
+            color: Colors.white,
           ),
         )
       ];

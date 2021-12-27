@@ -1,7 +1,10 @@
+import 'package:countdown/models/countdown_event.dart';
+import 'package:countdown/utilities/my_countdowns.dart';
 import 'package:countdown/widgets/countdown_card_builder.dart';
 import 'package:countdown/widgets/countdown_card_empty.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/src/provider.dart';
 
 class AddCountdownPage extends StatefulWidget {
   const AddCountdownPage({Key? key}) : super(key: key);
@@ -15,6 +18,23 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
   DateTime? dateTime;
   Color? color;
 
+  final List<Color> colors = [
+    const Color(0XFFBB84E7),
+    const Color(0XFFA3C4F3),
+    const Color(0XFF568D66),
+    const Color(0XFFF15152),
+    const Color(0XFFFF9500),
+    const Color(0XFF0a9396),
+    Colors.green,
+    Colors.blue,
+    Colors.orange,
+    Colors.red,
+    Colors.purple,
+    Colors.grey,
+    Colors.lightBlue,
+    Colors.lightGreen,
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,6 +42,22 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
       appBar: AppBar(
         elevation: 0,
         title: const Text('Add Countdown'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              if (textBox != null && dateTime != null) {
+                CountdownEvent event = CountdownEvent(
+                  title: textBox!,
+                  eventDate: dateTime!,
+                  color: color,
+                );
+                context.read<MyCountdowns>().addEvent(event);
+                Navigator.pop(context);
+              }
+            },
+            child: Text('Add'),
+          )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -90,39 +126,28 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              MaterialButton(
-                                onPressed: () {
-                                  setState(() {
-                                    color = Colors.red;
-                                  });
-                                },
-                                shape: const CircleBorder(),
-                                color: Colors.red,
-                                elevation: 0,
-                              ),
-                              MaterialButton(
-                                onPressed: () {},
-                                shape: const CircleBorder(),
-                                color: Colors.blue,
-                                elevation: 0,
-                              ),
-                              MaterialButton(
-                                onPressed: () {},
-                                shape: const CircleBorder(),
-                                color: Colors.orange,
-                                elevation: 0,
-                              ),
-                              MaterialButton(
-                                onPressed: () {},
-                                shape: const CircleBorder(),
-                                color: Colors.purple,
-                                elevation: 0,
-                              ),
-                            ],
-                          ),
+                          Expanded(
+                            child: GridView.count(
+                              padding: const EdgeInsets.fromLTRB(25, 15, 25, 0),
+                              mainAxisSpacing: 20,
+                              crossAxisSpacing: 20,
+                              crossAxisCount: 5,
+                              children: List.generate(colors.length, (index) {
+                                return MaterialButton(
+                                  minWidth: 25,
+                                  height: 25,
+                                  shape: const CircleBorder(),
+                                  color: colors[index],
+                                  elevation: 0,
+                                  onPressed: () {
+                                    setState(() {
+                                      color = colors[index];
+                                    });
+                                  },
+                                );
+                              }),
+                            ),
+                          )
                         ],
                       ),
                     ),

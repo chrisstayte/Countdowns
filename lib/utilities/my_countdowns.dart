@@ -11,28 +11,6 @@ class MyCountdowns extends ChangeNotifier {
       eventDate: DateTime(2022, 1, 5),
       icon: Icons.celebration,
     ),
-    CountdownEvent(
-      title: 'No Icon Given',
-      eventDate: DateTime(2023, 3, 4),
-      color: Colors.amber,
-    ),
-    CountdownEvent(
-      title: 'No Icon or Color Given',
-      eventDate: DateTime(2023, 3, 4),
-    ),
-    CountdownEvent(
-      title: 'No Icon or Color Given',
-      eventDate: DateTime(2023, 3, 4),
-    ),
-    CountdownEvent(
-      title: 'No Icon or Color Given',
-      eventDate: DateTime(2023, 3, 4),
-    ),
-    CountdownEvent(
-      title: 'No Icon or Color Given',
-      eventDate: DateTime(2023, 3, 4),
-      color: Colors.red,
-    ),
   ];
   List<CountdownEvent> get events => _events;
 
@@ -44,6 +22,11 @@ class MyCountdowns extends ChangeNotifier {
         color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
       ),
     );
+    notifyListeners();
+  }
+
+  void addEvent(CountdownEvent event) {
+    _events.add(event);
     notifyListeners();
   }
 }

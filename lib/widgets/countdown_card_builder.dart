@@ -123,7 +123,7 @@ class CountdownCardBuilder extends StatelessWidget {
               padding: EdgeInsets.zero,
               dashPattern: const [7],
               color: Colors.black,
-              strokeWidth: color != null ? 0 : 1.5,
+              strokeWidth: 1.5,
               child: getRow(),
             ),
           );
