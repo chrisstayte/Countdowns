@@ -100,14 +100,19 @@ class _CountdownCardState extends State<CountdownCard> {
                 ),
               ),
             ),
-            Text(
-              widget.event.title,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(right: 15.0),
+                child: Text(
+                  widget.event.title,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700),
+                ),
+              ),
             ),
-            const Spacer(),
             Padding(
               padding: const EdgeInsets.only(right: 10),
               child: Column(

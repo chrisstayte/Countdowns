@@ -89,14 +89,19 @@ class CountdownCardBuilder extends StatelessWidget {
               ),
             ),
           ),
-          Text(
-            title ?? '',
-            style: TextStyle(
-                color: color != null ? Colors.white : Colors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.w700),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 15.0),
+              child: Text(
+                title ?? '',
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    color: color != null ? Colors.white : Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700),
+              ),
+            ),
           ),
-          const Spacer(),
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: Column(
