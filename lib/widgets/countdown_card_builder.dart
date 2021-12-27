@@ -83,7 +83,7 @@ class CountdownCardBuilder extends StatelessWidget {
             child: Align(
               alignment: Alignment.center,
               child: Icon(
-                Icons.calendar_today,
+                icon ?? Icons.calendar_today,
                 color: color != null ? Colors.white : Colors.black,
                 size: 24,
               ),
