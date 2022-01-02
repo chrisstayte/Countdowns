@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
 class MyCountdowns extends ChangeNotifier {
-  final String fileName = 'countdownevents.json';
+  final String _fileName = 'countdownevents.json';
 
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
@@ -17,7 +17,7 @@ class MyCountdowns extends ChangeNotifier {
 
   Future<File> get _localFile async {
     final path = await _localPath;
-    return File('$path/$fileName');
+    return File('$path/$_fileName');
   }
 
   List<CountdownEvent> _events = [

@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
+//TODO: add custom font per card
 class CountdownEvent {
   String title;
   DateTime eventDate;
   IconData? icon;
   Color? color;
+  String? font;
 
   CountdownEvent(
-      {required this.title, required this.eventDate, this.icon, this.color});
+      {required this.title,
+      required this.eventDate,
+      this.icon,
+      this.color,
+      this.font});
 
   factory CountdownEvent.fromJson(Map<String, dynamic> json) {
     String title = json['title'] as String;

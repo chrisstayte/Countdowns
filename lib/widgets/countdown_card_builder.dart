@@ -1,4 +1,3 @@
-import 'package:countdown/utilities/functions.dart';
 import 'package:flutter/material.dart';
 
 /// This is the countdown card that is used to show a preview on the 'add countdown page'
@@ -19,7 +18,7 @@ class CountdownCardBuilder extends StatelessWidget {
 
     if (eventDate == null) return widgets;
 
-    int numberOfDays = numberOfDaysBetween(currentDate, eventDate!);
+    int numberOfDays = eventDate!.difference(currentDate).inDays;
 
     if (numberOfDays < 0) {
       widgets = [

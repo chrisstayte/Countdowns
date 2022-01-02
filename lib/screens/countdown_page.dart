@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:countdown/models/countdown_event.dart';
 import 'package:countdown/utilities/my_countdowns.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +17,47 @@ class CountdownPage extends StatefulWidget {
 }
 
 class _CountdownPageState extends State<CountdownPage> {
+  @override
+  void initState() {
+    _getTime();
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) => _getTime());
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+
+    super.dispose();
+  }
+
+  late Timer _timer;
+
+  int seconds = 0;
+  int minutes = 0;
+  int hours = 0;
+  int days = 0;
+  int months = 0;
+  int years = 0;
+
+  void _getTime() {
+    DateTime currentTime = DateTime.now();
+    Duration timeDifference =
+        widget.countdownEvent.eventDate.difference(currentTime);
+
+    setState(() {
+      seconds = timeDifference.inSeconds % 60;
+      minutes = timeDifference.inMinutes % 60;
+      hours = timeDifference.inHours % 24;
+      days = (timeDifference.inDays % 365);
+
+      //TODO: calculate months
+      years = (timeDifference.inDays / 365.0).floor();
+    });
+  }
+
   final TextStyle numberStyle = const TextStyle(
-    fontSize: 40,
+    fontSize: 50,
     fontWeight: FontWeight.bold,
     color: Colors.white,
   );
@@ -49,17 +91,13 @@ class _CountdownPageState extends State<CountdownPage> {
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.pop(context),
-                        child: Text(
+                        child: const Text(
                           'No',
-                          style: TextStyle(color: Colors.grey.shade900),
                         ),
                       ),
                       TextButton(
-                        child: Text(
+                        child: const Text(
                           "Yes",
-                          style: TextStyle(
-                            color: Colors.grey.shade900,
-                          ),
                         ),
                         onPressed: () {
                           context
@@ -75,115 +113,163 @@ class _CountdownPageState extends State<CountdownPage> {
                 },
               );
             },
-            icon: const Icon(Icons.delete),
+            icon: const Icon(
+              Icons.delete,
+              color: Colors.white,
+            ),
           )
         ],
       ),
       backgroundColor: widget.countdownEvent.color ?? Colors.blue,
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 15.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: AutoSizeText(
+                    widget.countdownEvent.title,
+                    overflow: TextOverflow.visible,
+                    maxLines: 2,
+                    textAlign: TextAlign.center,
+                    style: numberStyle,
+                  ),
+                ),
+              ],
+            ),
             SizedBox(
-              height: 44,
+              height: 40,
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
-                    child: Text(
-                      widget.countdownEvent.title,
-                      overflow: TextOverflow.visible,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 32,
-                          fontWeight: FontWeight.w700),
-                    ),
+                  Text(
+                    "${widget.countdownEvent.eventDate.month.toString()}/${widget.countdownEvent.eventDate.day.toString()}/${widget.countdownEvent.eventDate.year.toString()}",
+                    style: labelStyle,
                   ),
                 ],
               ),
             ),
-            const SizedBox(
-              height: 35,
-            ),
-            Row(
+            Expanded(
+                child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text(
-                      "35",
-                      textAlign: TextAlign.center,
-                      style: numberStyle,
+                    Expanded(
+                      flex: 1,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          FittedBox(
+                            child: Text(
+                              years.toString(),
+                              style: numberStyle,
+                            ),
+                          ),
+                          Text("Years", style: labelStyle)
+                        ],
+                      ),
                     ),
-                    Text("Hours", style: labelStyle)
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text("35", style: numberStyle),
-                    Text(
-                      "Minutes",
-                      style: labelStyle,
-                    )
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text(
-                      "35",
-                      style: numberStyle,
+                    Expanded(
+                      flex: 1,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            months.toString(),
+                            style: numberStyle,
+                          ),
+                          Text(
+                            "Months",
+                            style: labelStyle,
+                          )
+                        ],
+                      ),
                     ),
-                    Text(
-                      "Seconds",
-                      style: labelStyle,
-                    )
                   ],
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            days.toString(),
+                            style: numberStyle,
+                          ),
+                          Text(
+                            "Days",
+                            style: labelStyle,
+                          )
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            hours.toString(),
+                            textAlign: TextAlign.center,
+                            style: numberStyle,
+                          ),
+                          Text("Hours", style: labelStyle)
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            minutes.toString(),
+                            style: numberStyle,
+                          ),
+                          Text(
+                            "Minutes",
+                            style: labelStyle,
+                          )
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            seconds.toString(),
+                            style: numberStyle,
+                          ),
+                          Text(
+                            "Seconds",
+                            style: labelStyle,
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                )
               ],
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Column(
-                  children: [
-                    Text(
-                      "35",
-                      style: numberStyle,
-                    ),
-                    Text("Days", style: labelStyle)
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text("35", style: numberStyle),
-                    Text(
-                      "Months",
-                      style: labelStyle,
-                    )
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text(
-                      "35",
-                      style: numberStyle,
-                    ),
-                    Text(
-                      "Years",
-                      style: labelStyle,
-                    )
-                  ],
-                ),
-              ],
-            ),
+            ))
           ],
         ),
       ),

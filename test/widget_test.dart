@@ -7,7 +7,6 @@
 
 import 'dart:async';
 
-import 'package:countdown/utilities/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -31,7 +30,4 @@ void main() {
   //   expect(find.text('1'), findsOneWidget);
   // });
   //print(numberOfDaysBetween(DateTime.now(), DateTime(2022, 1, 1)));
-  Timer timer = Timer.periodic(Duration(seconds: 1), (_) {
-    print(numberOfSecondsBetween(DateTime.now(), DateTime(2022, 1, 1)));
-  });
 }

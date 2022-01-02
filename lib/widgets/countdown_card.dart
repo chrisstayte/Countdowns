@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:countdown/models/countdown_event.dart';
 import 'package:countdown/screens/countdown_page.dart';
-import 'package:countdown/utilities/functions.dart';
+
 import 'package:flutter/material.dart';
 
 /// This countdown card is used to show on the homescreen.
@@ -18,9 +18,7 @@ class CountdownCard extends StatelessWidget {
 
     DateTime currentDate = DateTime.now();
 
-    int numberOfDays =
-        numberOfDaysBetween(currentDate, countdownEvent.eventDate);
-    //int numberOfSeconds = numberOfSecondsBetween(currentDate, countdownEvent.eventDate);
+    int numberOfDays = countdownEvent.eventDate.difference(currentDate).inDays;
 
     if (numberOfDays < 0) {
       widgets = [

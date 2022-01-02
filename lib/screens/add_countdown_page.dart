@@ -195,7 +195,6 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0,
         title: const Text('Add Countdown'),
@@ -267,7 +266,9 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text("Select a date"),
+                  const Text(
+                    "Select a date",
+                  ),
                   dateTime == null
                       ? IconButton(
                           onPressed: showDatePicker,
