@@ -1,7 +1,7 @@
 import 'package:countdown/models/countdown_event.dart';
+import 'package:countdown/screens/settings_page.dart';
 import 'package:countdown/utilities/my_countdowns.dart';
 import 'package:countdown/widgets/countdown_card_builder.dart';
-import 'package:countdown/widgets/countdown_card_empty.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/src/provider.dart';
@@ -14,10 +14,12 @@ class AddCountdownPage extends StatefulWidget {
 }
 
 class _AddCountdownPageState extends State<AddCountdownPage> {
-  String? textBox;
+  String textBox = '';
   DateTime? dateTime;
   Color? color;
   IconData? icon;
+
+  final rowHeight = 42.0;
 
   final List<Color> colors = [
     const Color(0XFFBB84E7),
@@ -34,6 +36,9 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
     Colors.grey,
     Colors.lightBlue,
     Colors.lightGreen,
+    Colors.deepPurple,
+    Colors.black,
+    Colors.pink
   ];
 
   final List<IconData> icons = [
@@ -59,6 +64,134 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
     ),
   );
 
+  void showIconPicker() {
+    showModalBottomSheet(
+      context: context,
+      shape: modalShape,
+      builder: (_) => SizedBox(
+        height: 400,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 12.0,
+            horizontal: 8.0,
+          ),
+          child: Column(
+            children: [
+              const Text(
+                'Select an Icon',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              Expanded(
+                child: GridView.count(
+                  padding: const EdgeInsets.fromLTRB(25, 15, 25, 0),
+                  mainAxisSpacing: 20,
+                  crossAxisSpacing: 20,
+                  crossAxisCount: 5,
+                  children: List.generate(icons.length, (index) {
+                    return IconButton(
+                      icon: Icon(icons[index]),
+                      onPressed: () {
+                        setState(() {
+                          icon = icons[index];
+                        });
+                      },
+                    );
+                  }),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void showColorPicker() {
+    showModalBottomSheet(
+      context: context,
+      shape: modalShape,
+      builder: (_) => SizedBox(
+        height: 450,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 12.0,
+          ),
+          child: Column(
+            children: [
+              const Text(
+                'Select A Color',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              Expanded(
+                child: GridView.count(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  mainAxisSpacing: 20,
+                  crossAxisSpacing: 20,
+                  crossAxisCount: 5,
+                  children: List.generate(colors.length, (index) {
+                    return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            color = colors[index];
+                          });
+                        },
+                        child: Container(
+                          height: 25,
+                          width: 25,
+                          decoration: BoxDecoration(
+                            color: colors[index],
+                            shape: BoxShape.circle,
+                          ),
+                        ));
+                  }),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void showDatePicker() {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (_) => Container(
+        height: 250,
+        color: const Color.fromARGB(255, 255, 255, 255),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+                color: Colors.grey.shade100,
+                height: 40,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      child: const Text("Done"),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ],
+                )),
+            SizedBox(
+              height: 180,
+              child: CupertinoDatePicker(
+                  mode: CupertinoDatePickerMode.date,
+                  initialDateTime: DateTime.now(),
+                  onDateTimeChanged: (val) {
+                    setState(() {
+                      dateTime = val;
+                    });
+                  }),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,9 +202,9 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
         actions: [
           TextButton(
             onPressed: () {
-              if (textBox != null && dateTime != null) {
+              if (textBox.isNotEmpty && dateTime != null) {
                 CountdownEvent event = CountdownEvent(
-                  title: textBox!,
+                  title: textBox,
                   eventDate: dateTime!,
                   color: color,
                   icon: icon,
@@ -94,144 +227,104 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
               color: color,
               icon: icon,
             ),
-            TextField(
-              onChanged: (value) {
-                setState(() {
-                  textBox = value;
-                });
-              },
-            ),
-            TextButton(
-              child: const Text('Select Date'),
-              style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
-              ),
-              onPressed: () {
-                showCupertinoModalPopup(
-                    context: context,
-                    builder: (_) => Container(
-                          height: 190,
-                          color: const Color.fromARGB(255, 255, 255, 255),
-                          child: Column(
-                            children: [
-                              Container(
-                                height: 180,
-                                child: CupertinoDatePicker(
-                                    mode: CupertinoDatePickerMode.date,
-                                    initialDateTime: DateTime.now(),
-                                    onDateTimeChanged: (val) {
-                                      setState(() {
-                                        dateTime = val;
-                                      });
-                                    }),
-                              ),
-                            ],
-                          ),
-                        ));
-              },
-            ),
-            TextButton(
-              child: const Text('Select Color'),
-              style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
-              ),
-              onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  shape: modalShape,
-                  builder: (_) => SizedBox(
-                    height: 250,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 12.0,
-                        horizontal: 8.0,
+            const SizedBox(height: 10),
+            SizedBox(
+              height: rowHeight,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  textBox.isEmpty ? const Text('Enter a name') : const Text(''),
+                  Flexible(
+                    child: TextField(
+                      textCapitalization: TextCapitalization.words,
+                      textDirection: TextDirection.rtl,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      child: Column(
-                        children: [
-                          const Text(
-                            'Select A Color',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                          Expanded(
-                            child: GridView.count(
-                              padding: const EdgeInsets.fromLTRB(25, 15, 25, 0),
-                              mainAxisSpacing: 20,
-                              crossAxisSpacing: 20,
-                              crossAxisCount: 5,
-                              children: List.generate(colors.length, (index) {
-                                return MaterialButton(
-                                  minWidth: 25,
-                                  height: 25,
-                                  shape: const CircleBorder(),
-                                  color: colors[index],
-                                  elevation: 0,
-                                  onPressed: () {
-                                    setState(() {
-                                      color = colors[index];
-                                    });
-                                  },
-                                );
-                              }),
-                            ),
-                          )
-                        ],
+                      decoration: const InputDecoration(
+                        hintTextDirection: TextDirection.rtl,
+                        border: InputBorder.none,
+                        hintText: 'Name',
                       ),
+                      onChanged: (value) {
+                        setState(() {
+                          textBox = value;
+                        });
+                      },
                     ),
                   ),
-                );
-              },
+                ],
+              ),
             ),
-            TextButton(
-              child: const Text(
-                'Select Icon',
+            Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(width: 1, color: Colors.grey.shade400),
+                ),
               ),
-              style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
+              height: rowHeight,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("Select a date"),
+                  dateTime == null
+                      ? IconButton(
+                          onPressed: showDatePicker,
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          icon: const Icon(Icons.chevron_right),
+                        )
+                      : GestureDetector(
+                          onTap: showDatePicker,
+                          child: Text(
+                              "${dateTime?.month.toString()}/${dateTime?.day.toString()}/${dateTime?.year.toString()}"),
+                        )
+                ],
               ),
-              onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  shape: modalShape,
-                  builder: (_) => SizedBox(
-                    height: 250,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 12.0,
-                        horizontal: 8.0,
-                      ),
-                      child: Column(
-                        children: [
-                          const Text(
-                            'Select an Icon',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                          Expanded(
-                            child: GridView.count(
-                              padding: const EdgeInsets.fromLTRB(25, 15, 25, 0),
-                              mainAxisSpacing: 20,
-                              crossAxisSpacing: 20,
-                              crossAxisCount: 5,
-                              children: List.generate(icons.length, (index) {
-                                return IconButton(
-                                  icon: Icon(icons[index]),
-                                  onPressed: () {
-                                    setState(() {
-                                      icon = icons[index];
-                                    });
-                                  },
-                                );
-                              }),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(width: 1, color: Colors.grey.shade400),
+                ),
+              ),
+              height: rowHeight,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("Select a color"),
+                  IconButton(
+                    onPressed: showColorPicker,
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    icon: const Icon(Icons.chevron_right),
                   ),
-                );
-              },
+                ],
+              ),
             ),
+            Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(width: 1, color: Colors.grey.shade400),
+                ),
+              ),
+              height: rowHeight,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Select an icon'),
+                  IconButton(
+                    onPressed: showIconPicker,
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    icon: const Icon(
+                      Icons.chevron_right,
+                    ),
+                  )
+                ],
+              ),
+            )
           ],
         ),
       ),

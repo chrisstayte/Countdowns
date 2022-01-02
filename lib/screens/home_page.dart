@@ -1,8 +1,10 @@
+import 'package:countdown/models/countdown_event.dart';
 import 'package:countdown/screens/add_countdown_page.dart';
+import 'package:countdown/screens/countdown_page.dart';
 import 'package:countdown/screens/settings_page.dart';
 import 'package:countdown/utilities/my_countdowns.dart';
 import 'package:countdown/widgets/countdown_card.dart';
-import 'package:countdown/widgets/countdown_card_empty.dart';
+import 'package:countdown/widgets/countdown_card_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/src/provider.dart';
 
@@ -19,8 +21,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-
-    //events.clear();
+    context.read<MyCountdowns>().loadEvents();
   }
 
   @override
@@ -45,30 +46,46 @@ class _HomePageState extends State<HomePage> {
         ),
         actions: [
           IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return const AddCountdownPage();
-                    },
-                  ),
-                );
-              },
-              icon: const Icon(Icons.add))
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return const AddCountdownPage();
+                  },
+                ),
+              );
+            },
+            icon: const Icon(Icons.add),
+          )
         ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: context.watch<MyCountdowns>().events.isNotEmpty
             ? ListView.builder(
-                itemCount: context.watch<MyCountdowns>().events.length,
+                itemCount: context.read<MyCountdowns>().events.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return CountdownCard(
-                      event: context.watch<MyCountdowns>().events[index]);
+                  return GestureDetector(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => CountdownPage(
+                          countdownEvent:
+                              context.read<MyCountdowns>().events[index],
+                        ),
+                      ),
+                    ),
+                    child: CountdownCard(
+                      countdownEvent:
+                          context.read<MyCountdowns>().events[index],
+                    ),
+                  );
                 },
               )
-            : const CountdownCardEmpty(),
+            : const CountdownCardBuilder(
+                title: 'Create a countdown',
+              ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }

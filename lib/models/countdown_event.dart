@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 class CountdownEvent {
   String title;
@@ -9,12 +10,31 @@ class CountdownEvent {
   CountdownEvent(
       {required this.title, required this.eventDate, this.icon, this.color});
 
-  CountdownEvent.fromJson(Map<String, dynamic> json)
-      : title = json['title'] as String,
-        eventDate = json['eventDate'] as DateTime,
-        icon = json['icon'] as IconData?,
-        color = json['color'] as Color?;
+  factory CountdownEvent.fromJson(Map<String, dynamic> json) {
+    String title = json['title'] as String;
+    DateTime eventDate = DateTime.parse(json['eventDate']);
+    IconData? icon;
+    if (json['icon'] != null) {
+      icon = IconData(json['icon'], fontFamily: 'MaterialIcons');
+    }
 
-  Map<String, dynamic> toJson() =>
-      {'title': title, 'eventDate': eventDate, 'icon': icon, 'color': color};
+    Color? color;
+    if (json['color'] != null) {
+      color = Color(json['color']).withOpacity(1);
+    }
+
+    return CountdownEvent(
+      title: title,
+      eventDate: eventDate,
+      icon: icon,
+      color: color,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'title': title,
+        'eventDate': eventDate.toString(),
+        'icon': icon?.codePoint,
+        'color': color?.value,
+      };
 }

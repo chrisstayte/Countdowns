@@ -1,5 +1,4 @@
 import 'package:countdown/utilities/functions.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 
 /// This is the countdown card that is used to show a preview on the 'add countdown page'
@@ -120,17 +119,18 @@ class CountdownCardBuilder extends StatelessWidget {
             height: 74,
             child: Card(color: color, child: getRow()),
           )
-        : SizedBox(
-            height: 74,
-            child: DottedBorder(
-              borderType: BorderType.RRect,
-              radius: const Radius.circular(4.0),
-              padding: EdgeInsets.zero,
-              dashPattern: const [7],
-              color: Colors.black,
-              strokeWidth: 1.5,
-              child: getRow(),
+        : Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.black,
+                width: 1,
+              ),
+              borderRadius: const BorderRadius.all(
+                Radius.circular(4.0),
+              ),
             ),
+            height: 74,
+            child: getRow(),
           );
   }
 }

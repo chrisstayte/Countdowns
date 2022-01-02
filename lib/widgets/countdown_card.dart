@@ -1,30 +1,26 @@
+import 'dart:async';
+
 import 'package:countdown/models/countdown_event.dart';
+import 'package:countdown/screens/countdown_page.dart';
 import 'package:countdown/utilities/functions.dart';
 import 'package:flutter/material.dart';
 
 /// This countdown card is used to show on the homescreen.
 /// It takes a [CountdownEvent] object and sets the information on the card accordingly
-class CountdownCard extends StatefulWidget {
-  const CountdownCard({Key? key, required this.event}) : super(key: key);
-  final CountdownEvent event;
+class CountdownCard extends StatelessWidget {
+  final CountdownEvent countdownEvent;
 
-  @override
-  _CountdownCardState createState() => _CountdownCardState();
-}
+  const CountdownCard({Key? key, required this.countdownEvent})
+      : super(key: key);
 
-class _CountdownCardState extends State<CountdownCard> {
-  @override
-  void initState() {
-    super.initState();
-    getStatus();
-  }
-
-  List<Widget> getStatus() {
+  List<Widget> _getStatus() {
     List<Widget> widgets = [];
 
     DateTime currentDate = DateTime.now();
 
-    int numberOfDays = numberOfDaysBetween(currentDate, widget.event.eventDate);
+    int numberOfDays =
+        numberOfDaysBetween(currentDate, countdownEvent.eventDate);
+    //int numberOfSeconds = numberOfSecondsBetween(currentDate, countdownEvent.eventDate);
 
     if (numberOfDays < 0) {
       widgets = [
@@ -33,7 +29,7 @@ class _CountdownCardState extends State<CountdownCard> {
           color: Colors.white,
         ),
         Text(
-          '${widget.event.eventDate.month}.${widget.event.eventDate.day}.${widget.event.eventDate.year}',
+          '${countdownEvent.eventDate.month}.${countdownEvent.eventDate.day}.${countdownEvent.eventDate.year}',
           style: const TextStyle(
             color: Colors.white,
             fontSize: 12,
@@ -44,6 +40,7 @@ class _CountdownCardState extends State<CountdownCard> {
     } else if (numberOfDays > 0) {
       widgets = [
         Text(
+          //numberOfDays.toString(),
           numberOfDays.toString(),
           style: const TextStyle(
             color: Colors.white,
@@ -85,7 +82,7 @@ class _CountdownCardState extends State<CountdownCard> {
     return SizedBox(
       height: 74,
       child: Card(
-        color: widget.event.color ?? Colors.blue,
+        color: countdownEvent.color ?? Colors.blue,
         elevation: 1.0,
         child: Row(
           children: [
@@ -94,7 +91,7 @@ class _CountdownCardState extends State<CountdownCard> {
               child: Align(
                 alignment: Alignment.center,
                 child: Icon(
-                  widget.event.icon ?? Icons.calendar_today,
+                  countdownEvent.icon ?? Icons.calendar_today,
                   color: Colors.white,
                   size: 24,
                 ),
@@ -104,7 +101,7 @@ class _CountdownCardState extends State<CountdownCard> {
               child: Padding(
                 padding: const EdgeInsets.only(right: 15.0),
                 child: Text(
-                  widget.event.title,
+                  countdownEvent.title,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                       color: Colors.white,
@@ -118,7 +115,7 @@ class _CountdownCardState extends State<CountdownCard> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.end,
-                children: getStatus(),
+                children: _getStatus(),
               ),
             ),
           ],
