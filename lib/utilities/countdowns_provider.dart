@@ -6,8 +6,12 @@ import 'package:countdown/models/countdown_event.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
-class MyCountdowns extends ChangeNotifier {
+class CountdownsProvider extends ChangeNotifier {
   final String _fileName = 'countdownevents.json';
+
+  CountdownsProvider() {
+    loadEvents();
+  }
 
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();

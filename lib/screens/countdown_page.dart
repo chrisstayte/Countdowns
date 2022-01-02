@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:countdown/models/countdown_event.dart';
-import 'package:countdown/utilities/my_countdowns.dart';
+import 'package:countdown/utilities/countdowns_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/src/provider.dart';
 
@@ -56,16 +56,18 @@ class _CountdownPageState extends State<CountdownPage> {
     });
   }
 
-  final TextStyle numberStyle = const TextStyle(
+  late TextStyle numberStyle = TextStyle(
     fontSize: 50,
     fontWeight: FontWeight.bold,
     color: Colors.white,
+    fontFamily: widget.countdownEvent.fontFamily,
   );
 
-  final TextStyle labelStyle = const TextStyle(
+  late TextStyle labelStyle = TextStyle(
     fontSize: 19,
     fontWeight: FontWeight.w300,
     color: Colors.white,
+    fontFamily: widget.countdownEvent.fontFamily,
   );
 
   @override
@@ -101,7 +103,7 @@ class _CountdownPageState extends State<CountdownPage> {
                         ),
                         onPressed: () {
                           context
-                              .read<MyCountdowns>()
+                              .read<CountdownsProvider>()
                               .deleteEvent(widget.countdownEvent);
                           Navigator.of(context)
                             ..pop()

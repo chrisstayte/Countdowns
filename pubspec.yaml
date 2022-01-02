@@ -35,8 +35,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   provider: ^6.0.1
   path_provider: ^2.0.8
-  uuid: ^3.0.5
   auto_size_text: ^3.0.0
+  package_info_plus: ^1.3.0
 
 dev_dependencies:
   flutter_test:
@@ -84,6 +84,30 @@ flutter:
           weight: 300
         - asset: fonts/ComicNeue-Bold.ttf
           weight: 700
-  #
+    - family: Roboto
+      fonts:
+        - asset: fonts/Roboto-Regular.ttf
+          weight: 400
+        - asset: fonts/Roboto-Light.ttf
+          weight: 300
+        - asset: fonts/Roboto-Bold.ttf
+          weight: 700
+    - family: LibreBaskerville
+      fonts:
+        - asset: fonts/LibreBaskerville-Regular.ttf
+          weight: 400
+        - asset: fonts/LibreBaskerville-Italic.ttf
+          weight: 300
+        - asset: fonts/LibreBaskerville-Bold.ttf
+          weight: 700
+    - family: CarnivaleeFreakshow
+      fonts:
+        - asset: fonts/CarnivaleeFreakshow-Regular.ttf
+          weight: 400
+    - family: GoodTimes
+      fonts:
+        - asset: fonts/GoodTimes-Regular.otf
+          weight: 400
+
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

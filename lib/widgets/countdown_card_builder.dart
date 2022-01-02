@@ -1,4 +1,6 @@
+import 'package:countdown/utilities/settings_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/src/provider.dart';
 
 /// This is the countdown card that is used to show a preview on the 'add countdown page'
 class CountdownCardBuilder extends StatelessWidget {
@@ -6,9 +8,15 @@ class CountdownCardBuilder extends StatelessWidget {
   final DateTime? eventDate;
   final IconData? icon;
   final Color? color;
+  final String? fontFamily;
 
   const CountdownCardBuilder(
-      {Key? key, this.title, this.eventDate, this.icon, this.color})
+      {Key? key,
+      this.title,
+      this.eventDate,
+      this.icon,
+      this.color,
+      this.fontFamily})
       : super(key: key);
 
   List<Widget> getStatus() {
@@ -24,14 +32,15 @@ class CountdownCardBuilder extends StatelessWidget {
       widgets = [
         Icon(
           Icons.done,
-          color: color != null ? Colors.white : Colors.black,
+          color: color != null ? Colors.white : null,
         ),
         Text(
           '${eventDate?.month}.${eventDate?.day}.${eventDate?.year}',
           style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w300,
-            color: color != null ? Colors.white : Colors.black,
+            color: color != null ? Colors.white : null,
+            fontFamily: fontFamily,
           ),
         )
       ];
@@ -41,16 +50,18 @@ class CountdownCardBuilder extends StatelessWidget {
           numberOfDays.toString(),
           style: TextStyle(
             fontSize: 16,
-            color: color != null ? Colors.white : Colors.black,
+            color: color != null ? Colors.white : null,
             fontWeight: FontWeight.bold,
+            fontFamily: fontFamily,
           ),
         ),
         Text(
           numberOfDays == 1 ? 'DAY' : 'DAYS',
           style: TextStyle(
-            color: color != null ? Colors.white : Colors.black,
+            color: color != null ? Colors.white : null,
             fontSize: 12,
             fontWeight: FontWeight.w300,
+            fontFamily: fontFamily,
           ),
         ),
       ];
@@ -58,14 +69,15 @@ class CountdownCardBuilder extends StatelessWidget {
       widgets = [
         Icon(
           Icons.done,
-          color: color != null ? Colors.white : Colors.black,
+          color: color != null ? Colors.white : null,
         ),
         Text(
           'TODAY',
           style: TextStyle(
             fontSize: 12,
-            color: color != null ? Colors.white : Colors.black,
+            color: color != null ? Colors.white : null,
             fontWeight: FontWeight.w300,
+            fontFamily: fontFamily,
           ),
         )
       ];
@@ -82,7 +94,7 @@ class CountdownCardBuilder extends StatelessWidget {
               alignment: Alignment.center,
               child: Icon(
                 icon ?? Icons.calendar_today,
-                color: color != null ? Colors.white : Colors.black,
+                color: color != null ? Colors.white : null,
                 size: 24,
               ),
             ),
@@ -94,9 +106,11 @@ class CountdownCardBuilder extends StatelessWidget {
                 title ?? '',
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                    color: color != null ? Colors.white : Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: color != null ? Colors.white : null,
+                  fontFamily: fontFamily,
+                ),
               ),
             ),
           ),
@@ -121,7 +135,10 @@ class CountdownCardBuilder extends StatelessWidget {
         : Container(
             decoration: BoxDecoration(
               border: Border.all(
-                color: Colors.black,
+                //UPDATE: whenever the app changes with system settings we need to update this to watch maybe?
+                color: context.read<SettingsProvider>().settings.darkMode
+                    ? Colors.white
+                    : Colors.black,
                 width: 1,
               ),
               borderRadius: const BorderRadius.all(

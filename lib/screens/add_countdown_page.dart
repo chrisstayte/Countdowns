@@ -1,9 +1,10 @@
 import 'package:countdown/models/countdown_event.dart';
 import 'package:countdown/screens/settings_page.dart';
-import 'package:countdown/utilities/my_countdowns.dart';
+import 'package:countdown/utilities/countdowns_provider.dart';
 import 'package:countdown/widgets/countdown_card_builder.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'package:provider/src/provider.dart';
 
 class AddCountdownPage extends StatefulWidget {
@@ -14,14 +15,15 @@ class AddCountdownPage extends StatefulWidget {
 }
 
 class _AddCountdownPageState extends State<AddCountdownPage> {
-  String textBox = '';
-  DateTime? dateTime;
+  String _textBox = '';
+  DateTime? _dateTime;
   Color? color;
-  IconData? icon;
+  IconData? _icon;
+  String? _fontFamily;
 
-  final rowHeight = 42.0;
+  final _rowHeight = 42.0;
 
-  final List<Color> colors = [
+  final List<Color> _colors = [
     const Color(0XFFBB84E7),
     const Color(0XFFA3C4F3),
     const Color(0XFF568D66),
@@ -41,7 +43,7 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
     Colors.pink
   ];
 
-  final List<IconData> icons = [
+  final List<IconData> _icons = [
     Icons.calendar_today,
     Icons.celebration,
     Icons.baby_changing_station,
@@ -54,10 +56,25 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
     Icons.sports_football,
     Icons.sports_baseball,
     Icons.sports_basketball,
-    Icons.sports_esports
+    Icons.sports_esports,
+    Icons.alarm,
+    Icons.airplane_ticket,
+    Icons.airplanemode_active,
+    Icons.photo,
+    Icons.wifi,
+    Icons.warning
   ];
 
-  final modalShape = const RoundedRectangleBorder(
+  final Map<String, String> _fonts = {
+    'Default': 'Default',
+    'Baskerville': 'LibreBaskerville',
+    'Carnivalee Freakshow': 'CarnivaleeFreakshow',
+    'Comic Neue': 'ComicNeue',
+    'Good Times': 'GoodTimes',
+    'Roboto': 'Roboto',
+  };
+
+  final _modalShape = const RoundedRectangleBorder(
     borderRadius: BorderRadius.only(
       topLeft: Radius.circular(10),
       topRight: Radius.circular(10),
@@ -67,9 +84,9 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
   void showIconPicker() {
     showModalBottomSheet(
       context: context,
-      shape: modalShape,
+      shape: _modalShape,
       builder: (_) => SizedBox(
-        height: 400,
+        height: 450,
         child: Padding(
           padding: const EdgeInsets.symmetric(
             vertical: 12.0,
@@ -87,12 +104,12 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                   mainAxisSpacing: 20,
                   crossAxisSpacing: 20,
                   crossAxisCount: 5,
-                  children: List.generate(icons.length, (index) {
+                  children: List.generate(_icons.length, (index) {
                     return IconButton(
-                      icon: Icon(icons[index]),
+                      icon: Icon(_icons[index]),
                       onPressed: () {
                         setState(() {
-                          icon = icons[index];
+                          _icon = _icons[index];
                         });
                       },
                     );
@@ -109,7 +126,7 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
   void showColorPicker() {
     showModalBottomSheet(
       context: context,
-      shape: modalShape,
+      shape: _modalShape,
       builder: (_) => SizedBox(
         height: 450,
         child: Padding(
@@ -129,18 +146,18 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                   mainAxisSpacing: 20,
                   crossAxisSpacing: 20,
                   crossAxisCount: 5,
-                  children: List.generate(colors.length, (index) {
+                  children: List.generate(_colors.length, (index) {
                     return GestureDetector(
                         onTap: () {
                           setState(() {
-                            color = colors[index];
+                            color = _colors[index];
                           });
                         },
                         child: Container(
                           height: 25,
                           width: 25,
                           decoration: BoxDecoration(
-                            color: colors[index],
+                            color: _colors[index],
                             shape: BoxShape.circle,
                           ),
                         ));
@@ -182,11 +199,55 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                   initialDateTime: DateTime.now(),
                   onDateTimeChanged: (val) {
                     setState(() {
-                      dateTime = val;
+                      _dateTime = val;
                     });
                   }),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  void showFontPicker() {
+    showModalBottomSheet(
+      context: context,
+      shape: _modalShape,
+      builder: (_) => SizedBox(
+        height: 450,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 12.0,
+          ),
+          child: Column(
+            children: [
+              const Text(
+                'Select A Font',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _fonts.length,
+                  itemBuilder: (context, index) {
+                    List<String> values = _fonts.values.toList();
+                    return ListTile(
+                      title: Text(
+                        _fonts.keys.toList()[index],
+                        style: TextStyle(
+                          fontFamily: values[index],
+                        ),
+                      ),
+                      onTap: () => setState(
+                        () {
+                          _fontFamily = values[index];
+                        },
+                      ),
+                    );
+                  },
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -201,14 +262,15 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
         actions: [
           TextButton(
             onPressed: () {
-              if (textBox.isNotEmpty && dateTime != null) {
+              if (_textBox.isNotEmpty && _dateTime != null) {
                 CountdownEvent event = CountdownEvent(
-                  title: textBox,
-                  eventDate: dateTime!,
+                  title: _textBox,
+                  eventDate: _dateTime!,
                   color: color,
-                  icon: icon,
+                  icon: _icon,
+                  fontFamily: _fontFamily,
                 );
-                context.read<MyCountdowns>().addEvent(event);
+                context.read<CountdownsProvider>().addEvent(event);
                 Navigator.pop(context);
               }
             },
@@ -221,19 +283,23 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
         child: Column(
           children: [
             CountdownCardBuilder(
-              title: textBox,
-              eventDate: dateTime,
+              title: _textBox,
+              eventDate: _dateTime,
               color: color,
-              icon: icon,
+              icon: _icon,
+              fontFamily: _fontFamily,
             ),
             const SizedBox(height: 10),
             SizedBox(
-              height: rowHeight,
+              height: _rowHeight,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  textBox.isEmpty ? const Text('Enter a name') : const Text(''),
+                  _textBox.isEmpty
+                      ? const Text('Enter a name')
+                      : const Text(''),
                   Flexible(
+                    //BUG: Cursor keeps going to the left
                     child: TextField(
                       textCapitalization: TextCapitalization.words,
                       textDirection: TextDirection.rtl,
@@ -248,7 +314,7 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                       ),
                       onChanged: (value) {
                         setState(() {
-                          textBox = value;
+                          _textBox = value;
                         });
                       },
                     ),
@@ -262,14 +328,14 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                   top: BorderSide(width: 1, color: Colors.grey.shade400),
                 ),
               ),
-              height: rowHeight,
+              height: _rowHeight,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
                     "Select a date",
                   ),
-                  dateTime == null
+                  _dateTime == null
                       ? IconButton(
                           onPressed: showDatePicker,
                           splashColor: Colors.transparent,
@@ -279,7 +345,7 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                       : GestureDetector(
                           onTap: showDatePicker,
                           child: Text(
-                              "${dateTime?.month.toString()}/${dateTime?.day.toString()}/${dateTime?.year.toString()}"),
+                              "${_dateTime?.month.toString()}/${_dateTime?.day.toString()}/${_dateTime?.year.toString()}"),
                         )
                 ],
               ),
@@ -290,7 +356,7 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                   top: BorderSide(width: 1, color: Colors.grey.shade400),
                 ),
               ),
-              height: rowHeight,
+              height: _rowHeight,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -310,13 +376,35 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                   top: BorderSide(width: 1, color: Colors.grey.shade400),
                 ),
               ),
-              height: rowHeight,
+              height: _rowHeight,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text('Select an icon'),
                   IconButton(
                     onPressed: showIconPicker,
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    icon: const Icon(
+                      Icons.chevron_right,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(width: 1, color: Colors.grey.shade400),
+                ),
+              ),
+              height: _rowHeight,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Select a font'),
+                  IconButton(
+                    onPressed: showFontPicker,
                     splashColor: Colors.transparent,
                     highlightColor: Colors.transparent,
                     icon: const Icon(

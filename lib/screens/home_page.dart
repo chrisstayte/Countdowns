@@ -2,10 +2,11 @@ import 'package:countdown/models/countdown_event.dart';
 import 'package:countdown/screens/add_countdown_page.dart';
 import 'package:countdown/screens/countdown_page.dart';
 import 'package:countdown/screens/settings_page.dart';
-import 'package:countdown/utilities/my_countdowns.dart';
+import 'package:countdown/utilities/countdowns_provider.dart';
 import 'package:countdown/widgets/countdown_card.dart';
 import 'package:countdown/widgets/countdown_card_builder.dart';
 import 'package:flutter/material.dart';
+
 import 'package:provider/src/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -20,7 +21,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
-    context.read<MyCountdowns>().loadEvents();
+    // I was loading the list here
+    //context.read<CountdownsProvider>().loadEvents();
     super.initState();
   }
 
@@ -31,7 +33,7 @@ class _HomePageState extends State<HomePage> {
         title: Text(widget.title),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.settings),
+          icon: const Icon(Icons.settings_outlined),
           onPressed: () {
             Navigator.push(
               context,
@@ -45,6 +47,7 @@ class _HomePageState extends State<HomePage> {
         ),
         actions: [
           IconButton(
+            icon: const Icon(Icons.add),
             onPressed: () {
               Navigator.push(
                 context,
@@ -55,15 +58,14 @@ class _HomePageState extends State<HomePage> {
                 ),
               );
             },
-            icon: const Icon(Icons.add),
           )
         ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: context.watch<MyCountdowns>().events.isNotEmpty
+        child: context.watch<CountdownsProvider>().events.isNotEmpty
             ? ListView.builder(
-                itemCount: context.read<MyCountdowns>().events.length,
+                itemCount: context.read<CountdownsProvider>().events.length,
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
                     onTap: () => Navigator.push(
@@ -71,13 +73,13 @@ class _HomePageState extends State<HomePage> {
                       MaterialPageRoute(
                         builder: (_) => CountdownPage(
                           countdownEvent:
-                              context.read<MyCountdowns>().events[index],
+                              context.read<CountdownsProvider>().events[index],
                         ),
                       ),
                     ),
                     child: CountdownCard(
                       countdownEvent:
-                          context.read<MyCountdowns>().events[index],
+                          context.read<CountdownsProvider>().events[index],
                     ),
                   );
                 },

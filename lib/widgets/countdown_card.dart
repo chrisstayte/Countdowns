@@ -28,10 +28,11 @@ class CountdownCard extends StatelessWidget {
         ),
         Text(
           '${countdownEvent.eventDate.month}.${countdownEvent.eventDate.day}.${countdownEvent.eventDate.year}',
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.white,
             fontSize: 12,
             fontWeight: FontWeight.w300,
+            fontFamily: countdownEvent.fontFamily,
           ),
         )
       ];
@@ -40,24 +41,26 @@ class CountdownCard extends StatelessWidget {
         Text(
           //numberOfDays.toString(),
           numberOfDays.toString(),
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.white,
             fontSize: 16,
             fontWeight: FontWeight.bold,
+            fontFamily: countdownEvent.fontFamily,
           ),
         ),
         Text(
           numberOfDays == 1 ? 'DAY' : 'DAYS',
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.white,
             fontSize: 12,
             fontWeight: FontWeight.w300,
+            fontFamily: countdownEvent.fontFamily,
           ),
         ),
       ];
     } else {
-      widgets = const [
-        Icon(
+      widgets = [
+        const Icon(
           Icons.done,
           color: Colors.white,
         ),
@@ -67,6 +70,7 @@ class CountdownCard extends StatelessWidget {
             fontSize: 12,
             fontWeight: FontWeight.w300,
             color: Colors.white,
+            fontFamily: countdownEvent.fontFamily,
           ),
         )
       ];
@@ -101,10 +105,12 @@ class CountdownCard extends StatelessWidget {
                 child: Text(
                   countdownEvent.title,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: countdownEvent.fontFamily,
+                  ),
                 ),
               ),
             ),

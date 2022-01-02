@@ -1,6 +1,6 @@
 import 'package:countdown/screens/home_page.dart';
-import 'package:countdown/utilities/my_countdowns.dart';
-import 'package:countdown/utilities/settings.dart';
+import 'package:countdown/utilities/countdowns_provider.dart';
+import 'package:countdown/utilities/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -8,8 +8,8 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => MyCountdowns()),
-        ChangeNotifierProvider(create: (_) => Settings()),
+        ChangeNotifierProvider(create: (_) => CountdownsProvider()),
+        ChangeNotifierProvider(create: (_) => SettingsProvider()),
       ],
       child: const MyApp(),
     ),
@@ -22,26 +22,24 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    context.read<MyCountdowns>().loadEvents;
     return MaterialApp(
-      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: true,
+      debugShowMaterialGrid: false,
+      showPerformanceOverlay: false,
+      showSemanticsDebugger: false,
+      title: 'My Countdowns',
       theme: ThemeData.light().copyWith(
-        textTheme: ThemeData.light().textTheme.apply(
-              fontFamily: context.watch<Settings>().fontFamily,
-            ),
-        primaryTextTheme: ThemeData.light().textTheme.apply(
-              fontFamily: context.watch<Settings>().fontFamily,
-            ),
-        appBarTheme: AppBarTheme(
+        appBarTheme: const AppBarTheme(
           color: Colors.white,
-          iconTheme: const IconThemeData(color: Colors.black),
-          actionsIconTheme: const IconThemeData(color: Colors.black),
+          iconTheme: IconThemeData(color: Colors.black),
+          actionsIconTheme: IconThemeData(color: Colors.black),
           titleTextStyle: TextStyle(
             color: Colors.black,
             fontSize: 22,
-            fontFamily: context.watch<Settings>().fontFamily,
           ),
         ),
+        backgroundColor: Colors.white,
+        scaffoldBackgroundColor: Colors.white,
       ),
       darkTheme: ThemeData.dark().copyWith(
         appBarTheme: const AppBarTheme(
@@ -53,8 +51,9 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      themeMode:
-          context.watch<Settings>().darkMode ? ThemeMode.dark : ThemeMode.light,
+      themeMode: context.watch<SettingsProvider>().settings.darkMode
+          ? ThemeMode.dark
+          : ThemeMode.light,
       home: const HomePage(title: 'My Countdowns'),
     );
   }
