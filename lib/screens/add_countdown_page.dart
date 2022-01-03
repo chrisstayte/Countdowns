@@ -1,7 +1,7 @@
-import 'package:countdown/models/countdown_event.dart';
-import 'package:countdown/screens/settings_page.dart';
-import 'package:countdown/utilities/countdowns_provider.dart';
-import 'package:countdown/widgets/countdown_card_builder.dart';
+import 'package:countdowns/models/countdown_event.dart';
+import 'package:countdowns/screens/settings_page.dart';
+import 'package:countdowns/utilities/countdowns_provider.dart';
+import 'package:countdowns/widgets/countdown_card_builder.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -17,9 +17,11 @@ class AddCountdownPage extends StatefulWidget {
 class _AddCountdownPageState extends State<AddCountdownPage> {
   String _textBox = '';
   DateTime? _dateTime;
-  Color? color;
+  Color? _color;
   IconData? _icon;
   String? _fontFamily;
+  String? _selectedFont;
+  Color? _contentColor;
 
   final _rowHeight = 42.0;
 
@@ -30,6 +32,7 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
     const Color(0XFFF15152),
     const Color(0XFFFF9500),
     const Color(0XFF0a9396),
+    const Color(0XFFF7E7CE),
     Colors.green,
     Colors.blue,
     Colors.orange,
@@ -40,7 +43,9 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
     Colors.lightGreen,
     Colors.deepPurple,
     Colors.black,
-    Colors.pink
+    Colors.pink,
+    Colors.white,
+    Colors.brown,
   ];
 
   final List<IconData> _icons = [
@@ -62,7 +67,7 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
     Icons.airplanemode_active,
     Icons.photo,
     Icons.wifi,
-    Icons.warning
+    Icons.warning,
   ];
 
   final Map<String, String> _fonts = {
@@ -81,7 +86,7 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
     ),
   );
 
-  void showIconPicker() {
+  void _showIconPicker() {
     showModalBottomSheet(
       context: context,
       shape: _modalShape,
@@ -123,7 +128,7 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
     );
   }
 
-  void showColorPicker() {
+  void _showColorPicker() {
     showModalBottomSheet(
       context: context,
       shape: _modalShape,
@@ -150,7 +155,7 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                     return GestureDetector(
                         onTap: () {
                           setState(() {
-                            color = _colors[index];
+                            _color = _colors[index];
                           });
                         },
                         child: Container(
@@ -171,7 +176,8 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
     );
   }
 
-  void showDatePicker() {
+//TODO: add dark theme to  this
+  void _showDatePicker() {
     showCupertinoModalPopup(
       context: context,
       builder: (_) => Container(
@@ -209,7 +215,7 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
     );
   }
 
-  void showFontPicker() {
+  void _showFontPicker() {
     showModalBottomSheet(
       context: context,
       shape: _modalShape,
@@ -229,10 +235,11 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                 child: ListView.builder(
                   itemCount: _fonts.length,
                   itemBuilder: (context, index) {
+                    List<String> keys = _fonts.keys.toList();
                     List<String> values = _fonts.values.toList();
                     return ListTile(
                       title: Text(
-                        _fonts.keys.toList()[index],
+                        keys[index],
                         style: TextStyle(
                           fontFamily: values[index],
                         ),
@@ -240,10 +247,59 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                       onTap: () => setState(
                         () {
                           _fontFamily = values[index];
+                          _selectedFont = keys[index];
                         },
                       ),
                     );
                   },
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showColorPickerForFont() {
+    showModalBottomSheet(
+      context: context,
+      shape: _modalShape,
+      builder: (_) => SizedBox(
+        height: 450,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 12.0,
+          ),
+          child: Column(
+            children: [
+              const Text(
+                'Select A Color',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              Expanded(
+                child: GridView.count(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  mainAxisSpacing: 20,
+                  crossAxisSpacing: 20,
+                  crossAxisCount: 5,
+                  children: List.generate(_colors.length, (index) {
+                    return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _contentColor = _colors[index];
+                          });
+                        },
+                        child: Container(
+                          height: 25,
+                          width: 25,
+                          decoration: BoxDecoration(
+                            color: _colors[index],
+                            shape: BoxShape.circle,
+                          ),
+                        ));
+                  }),
                 ),
               )
             ],
@@ -266,9 +322,10 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                 CountdownEvent event = CountdownEvent(
                   title: _textBox,
                   eventDate: _dateTime!,
-                  color: color,
+                  color: _color,
                   icon: _icon,
                   fontFamily: _fontFamily,
+                  contentColor: _contentColor,
                 );
                 context.read<CountdownsProvider>().addEvent(event);
                 Navigator.pop(context);
@@ -278,144 +335,99 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
           )
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            CountdownCardBuilder(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+            child: CountdownCardBuilder(
               title: _textBox,
               eventDate: _dateTime,
-              color: color,
+              color: _color,
               icon: _icon,
               fontFamily: _fontFamily,
+              contentColor: _contentColor,
             ),
-            const SizedBox(height: 10),
-            SizedBox(
-              height: _rowHeight,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _textBox.isEmpty
-                      ? const Text('Enter a name')
-                      : const Text(''),
-                  Flexible(
-                    //BUG: Cursor keeps going to the left
-                    child: TextField(
-                      textCapitalization: TextCapitalization.words,
-                      textDirection: TextDirection.rtl,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      decoration: const InputDecoration(
-                        hintTextDirection: TextDirection.rtl,
-                        border: InputBorder.none,
-                        hintText: 'Name',
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          _textBox = value;
-                        });
-                      },
-                    ),
+          ),
+          Expanded(
+            child: ListView(
+              children: [
+                ListTile(
+                  title: Row(
+                    children: [
+                      _textBox.isEmpty ? Text('Name') : Text(''),
+                      Flexible(
+                        //BUG: Cursor keeps going to the left
+                        child: TextField(
+                          textCapitalization: TextCapitalization.words,
+                          textDirection: TextDirection.rtl,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          decoration: const InputDecoration(
+                            hintTextDirection: TextDirection.rtl,
+                            border: InputBorder.none,
+                            hintText: 'Name',
+                          ),
+                          onChanged: (value) {
+                            setState(
+                              () {
+                                _textBox = value;
+                              },
+                            );
+                          },
+                        ),
+                      )
+                    ],
                   ),
-                ],
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(width: 1, color: Colors.grey.shade400),
                 ),
-              ),
-              height: _rowHeight,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    "Select a date",
+                ListTile(
+                  onTap: () => _showDatePicker(),
+                  title: Text('Date'),
+                  trailing: _dateTime == null
+                      ? Icon(Icons.chevron_right_rounded)
+                      : Text(
+                          '${_dateTime?.month.toString()}/${_dateTime?.day.toString()}/${_dateTime?.year.toString()}'),
+                ),
+                ListTile(
+                  onTap: () => _showColorPicker(),
+                  title: Text('Color'),
+                  trailing: Icon(
+                    Icons.circle,
+                    color: _color,
                   ),
-                  _dateTime == null
-                      ? IconButton(
-                          onPressed: showDatePicker,
-                          splashColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          icon: const Icon(Icons.chevron_right),
-                        )
-                      : GestureDetector(
-                          onTap: showDatePicker,
-                          child: Text(
-                              "${_dateTime?.month.toString()}/${_dateTime?.day.toString()}/${_dateTime?.year.toString()}"),
-                        )
-                ],
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(width: 1, color: Colors.grey.shade400),
                 ),
-              ),
-              height: _rowHeight,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text("Select a color"),
-                  IconButton(
-                    onPressed: showColorPicker,
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    icon: const Icon(Icons.chevron_right),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(width: 1, color: Colors.grey.shade400),
+                ListTile(
+                  onTap: () => _showIconPicker(),
+                  title: Text('Icon'),
+                  trailing: _icon == null
+                      ? Icon(Icons.chevron_right_rounded)
+                      : Icon(_icon),
                 ),
-              ),
-              height: _rowHeight,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text('Select an icon'),
-                  IconButton(
-                    onPressed: showIconPicker,
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    icon: const Icon(
-                      Icons.chevron_right,
-                    ),
-                  )
-                ],
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(width: 1, color: Colors.grey.shade400),
+                ListTile(
+                  onTap: () => _showFontPicker(),
+                  title: Text('Font'),
+                  trailing: _fontFamily == null
+                      ? Text('Regular')
+                      : Text(_selectedFont!),
                 ),
-              ),
-              height: _rowHeight,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text('Select a font'),
-                  IconButton(
-                    onPressed: showFontPicker,
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    icon: const Icon(
-                      Icons.chevron_right,
-                    ),
-                  )
-                ],
-              ),
-            )
-          ],
-        ),
+                ListTile(
+                  onTap: () => _showColorPickerForFont(),
+                  title: Text('Content Color'),
+                  trailing: _contentColor == null
+                      ? Icon(Icons.circle)
+                      : Icon(
+                          Icons.circle,
+                          color: _contentColor,
+                        ),
+                )
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

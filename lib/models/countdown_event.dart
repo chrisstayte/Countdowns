@@ -6,6 +6,7 @@ class CountdownEvent {
   DateTime eventDate;
   IconData? icon;
   Color? color;
+  Color? contentColor;
   String? fontFamily;
 
   CountdownEvent(
@@ -13,7 +14,8 @@ class CountdownEvent {
       required this.eventDate,
       this.icon,
       this.color,
-      this.fontFamily});
+      this.fontFamily,
+      this.contentColor});
 
   factory CountdownEvent.fromJson(Map<String, dynamic> json) {
     String title = json['title'] as String;
@@ -29,6 +31,11 @@ class CountdownEvent {
     }
 
     String? fontFamily = json['fontFamily'];
+
+    Color? contentColor;
+    if (json['contentColor'] != null) {
+      contentColor = Color(json['contentColor']).withOpacity(1);
+    }
     ;
     return CountdownEvent(
       title: title,
@@ -36,6 +43,7 @@ class CountdownEvent {
       icon: icon,
       color: color,
       fontFamily: fontFamily,
+      contentColor: contentColor,
     );
   }
 
@@ -45,5 +53,6 @@ class CountdownEvent {
         'icon': icon?.codePoint,
         'color': color?.value,
         'fontFamily': fontFamily,
+        'contentColor': contentColor?.value,
       };
 }

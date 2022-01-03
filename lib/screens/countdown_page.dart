@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:countdown/models/countdown_event.dart';
-import 'package:countdown/utilities/countdowns_provider.dart';
+import 'package:countdowns/models/countdown_event.dart';
+import 'package:countdowns/utilities/countdowns_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/src/provider.dart';
 
@@ -59,14 +59,26 @@ class _CountdownPageState extends State<CountdownPage> {
   late TextStyle numberStyle = TextStyle(
     fontSize: 50,
     fontWeight: FontWeight.bold,
-    color: Colors.white,
+    color: widget.countdownEvent.contentColor != null
+        ? widget.countdownEvent.contentColor
+        : widget.countdownEvent.color != null
+            ? widget.countdownEvent.color!.computeLuminance() > 0.5
+                ? Colors.black
+                : Colors.white
+            : null,
     fontFamily: widget.countdownEvent.fontFamily,
   );
 
   late TextStyle labelStyle = TextStyle(
     fontSize: 19,
     fontWeight: FontWeight.w300,
-    color: Colors.white,
+    color: widget.countdownEvent.contentColor != null
+        ? widget.countdownEvent.contentColor
+        : widget.countdownEvent.color != null
+            ? widget.countdownEvent.color!.computeLuminance() > 0.5
+                ? Colors.black
+                : Colors.white
+            : null,
     fontFamily: widget.countdownEvent.fontFamily,
   );
 
@@ -74,10 +86,24 @@ class _CountdownPageState extends State<CountdownPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(
+          color: widget.countdownEvent.contentColor != null
+              ? widget.countdownEvent.contentColor
+              : widget.countdownEvent.color != null
+                  ? widget.countdownEvent.color!.computeLuminance() > 0.5
+                      ? Colors.black
+                      : Colors.white
+                  : null,
+        ),
         title: Icon(
           widget.countdownEvent.icon ?? Icons.calendar_today,
-          color: Colors.white,
+          color: widget.countdownEvent.contentColor != null
+              ? widget.countdownEvent.contentColor
+              : widget.countdownEvent.color != null
+                  ? widget.countdownEvent.color!.computeLuminance() > 0.5
+                      ? Colors.black
+                      : Colors.white
+                  : null,
           size: 32.0,
         ),
         elevation: 0,
@@ -92,12 +118,6 @@ class _CountdownPageState extends State<CountdownPage> {
                     title: const Text('Delete This Countdown?'),
                     actions: [
                       TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text(
-                          'No',
-                        ),
-                      ),
-                      TextButton(
                         child: const Text(
                           "Yes",
                         ),
@@ -109,15 +129,27 @@ class _CountdownPageState extends State<CountdownPage> {
                             ..pop()
                             ..pop();
                         },
-                      )
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text(
+                          'No',
+                        ),
+                      ),
                     ],
                   );
                 },
               );
             },
-            icon: const Icon(
+            icon: Icon(
               Icons.delete,
-              color: Colors.white,
+              color: widget.countdownEvent.contentColor != null
+                  ? widget.countdownEvent.contentColor
+                  : widget.countdownEvent.color != null
+                      ? widget.countdownEvent.color!.computeLuminance() > 0.5
+                          ? Colors.black
+                          : Colors.white
+                      : null,
             ),
           )
         ],

@@ -1,6 +1,6 @@
-import 'package:countdown/screens/home_page.dart';
-import 'package:countdown/utilities/countdowns_provider.dart';
-import 'package:countdown/utilities/settings_provider.dart';
+import 'package:countdowns/screens/home_page.dart';
+import 'package:countdowns/utilities/countdowns_provider.dart';
+import 'package:countdowns/utilities/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -27,10 +27,11 @@ class MyApp extends StatelessWidget {
       debugShowMaterialGrid: false,
       showPerformanceOverlay: false,
       showSemanticsDebugger: false,
-      title: 'My Countdowns',
+      title: 'Countdowns',
       theme: ThemeData.light().copyWith(
         appBarTheme: const AppBarTheme(
           color: Colors.white,
+          elevation: 0,
           iconTheme: IconThemeData(color: Colors.black),
           actionsIconTheme: IconThemeData(color: Colors.black),
           titleTextStyle: TextStyle(
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
       ),
       darkTheme: ThemeData.dark().copyWith(
         appBarTheme: const AppBarTheme(
+          elevation: 0,
           foregroundColor: Colors.white,
           actionsIconTheme: IconThemeData(color: Colors.white),
           titleTextStyle: TextStyle(
@@ -54,7 +56,7 @@ class MyApp extends StatelessWidget {
       themeMode: context.watch<SettingsProvider>().settings.darkMode
           ? ThemeMode.dark
           : ThemeMode.light,
-      home: const HomePage(title: 'My Countdowns'),
+      home: const HomePage(title: 'Countdowns'),
     );
   }
 }

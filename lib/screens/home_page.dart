@@ -1,10 +1,13 @@
-import 'package:countdown/models/countdown_event.dart';
-import 'package:countdown/screens/add_countdown_page.dart';
-import 'package:countdown/screens/countdown_page.dart';
-import 'package:countdown/screens/settings_page.dart';
-import 'package:countdown/utilities/countdowns_provider.dart';
-import 'package:countdown/widgets/countdown_card.dart';
-import 'package:countdown/widgets/countdown_card_builder.dart';
+import 'dart:ffi';
+
+import 'package:countdowns/models/countdown_event.dart';
+import 'package:countdowns/screens/add_countdown_page.dart';
+import 'package:countdowns/screens/countdown_page.dart';
+import 'package:countdowns/screens/settings_page.dart';
+import 'package:countdowns/utilities/countdowns_provider.dart';
+import 'package:countdowns/widgets/countdown_card.dart';
+import 'package:countdowns/widgets/countdown_card_builder.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/src/provider.dart';
@@ -35,9 +38,29 @@ class _HomePageState extends State<HomePage> {
         leading: IconButton(
           icon: const Icon(Icons.settings_outlined),
           onPressed: () {
+            // UPDATE: Add ios style modal on top another
+            // Navigator.push(
+            //   context,
+            //   PageRouteBuilder(
+            //     transitionDuration: const Duration(milliseconds: 500),
+            //     pageBuilder: (context, _, __) {
+            //       return const SettingsPage();
+            //     },
+            //     transitionsBuilder: (context, primaryRouteAnimation,
+            //         secondaryRouteAnimation, child) {
+            //       return CupertinoFullscreenDialogTransition(
+            //         primaryRouteAnimation: primaryRouteAnimation,
+            //         secondaryRouteAnimation: secondaryRouteAnimation,
+            //         child: child,
+            //         linearTransition: true,
+            //       );
+            //     },
+            //   ),
+            // );
             Navigator.push(
               context,
               MaterialPageRoute(
+                fullscreenDialog: true,
                 builder: (context) {
                   return const SettingsPage();
                 },

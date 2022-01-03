@@ -1,5 +1,5 @@
-import 'package:countdown/utilities/countdowns_provider.dart';
-import 'package:countdown/utilities/settings_provider.dart';
+import 'package:countdowns/utilities/countdowns_provider.dart';
+import 'package:countdowns/utilities/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/src/provider.dart';
@@ -20,10 +20,36 @@ class _SettingsPageState extends State<SettingsPage> {
     buildSignature: 'Unknown',
   );
 
+  late Widget fullDivider;
+  late Widget partialDivider;
+  final dividerThickness = 0.75;
+
   @override
   void initState() {
     super.initState();
+
     _initPackageInfo();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    fullDivider = Divider(
+      thickness: dividerThickness,
+      color: context.watch<SettingsProvider>().settings.darkMode
+          ? Colors.grey.shade700
+          : Colors.grey.shade300,
+    );
+
+    partialDivider = Padding(
+      padding: const EdgeInsets.only(left: 8.0),
+      child: Divider(
+        thickness: dividerThickness,
+        color: context.watch<SettingsProvider>().settings.darkMode
+            ? Colors.grey.shade700
+            : Colors.grey.shade300,
+      ),
+    );
   }
 
   Future<void> _initPackageInfo() async {
@@ -52,12 +78,43 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
             ),
-            Divider(
-              thickness: 1,
-              color: context.watch<SettingsProvider>().settings.darkMode
-                  ? Colors.grey.shade700
-                  : Colors.grey.shade300,
+            fullDivider,
+            const ListTile(
+              title: Text("Sorting"),
+              trailing: Icon(Icons.sort_by_alpha_rounded),
             ),
+            partialDivider,
+            ListTile(
+              onTap: () => showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Delete All Countdowns'),
+                    content: const Text('This is not reversable.'),
+                    actions: [
+                      TextButton(
+                        child: const Text(
+                          "Yes",
+                        ),
+                        onPressed: () {
+                          context.read<CountdownsProvider>().deleteAll();
+                          Navigator.pop(context);
+                        },
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text(
+                          'No',
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+              title: const Text('Delete All Countdowns'),
+              trailing: const Icon(Icons.delete),
+            ),
+            fullDivider,
             const SizedBox(
               height: 30,
             ),
@@ -70,39 +127,16 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
             ),
-            Divider(
-              thickness: 1,
-              color: context.watch<SettingsProvider>().settings.darkMode
-                  ? Colors.grey.shade700
-                  : Colors.grey.shade300,
-            ),
-            SizedBox(
-              height: 30,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Dark Mode'),
-                    Switch(
-                      value:
-                          context.watch<SettingsProvider>().settings.darkMode,
-                      onChanged: (isDark) =>
-                          context.read<SettingsProvider>().setDarkMode(isDark),
-                    ),
-                  ],
-                ),
+            fullDivider,
+            ListTile(
+              title: Text('Dark Theme'),
+              trailing: Switch(
+                value: context.watch<SettingsProvider>().settings.darkMode,
+                onChanged: (isDark) =>
+                    context.read<SettingsProvider>().setDarkMode(isDark),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Divider(
-                thickness: 1,
-                color: context.watch<SettingsProvider>().settings.darkMode
-                    ? Colors.grey.shade700
-                    : Colors.grey.shade300,
-              ),
-            ),
+            fullDivider,
             const SizedBox(
               height: 30,
             ),
@@ -115,85 +149,21 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
             ),
-            Divider(
-              thickness: 1,
-              color: context.watch<SettingsProvider>().settings.darkMode
-                  ? Colors.grey.shade700
-                  : Colors.grey.shade300,
+            fullDivider,
+            ListTile(
+              title: const Text('Feedback'),
+              trailing: Text('countdowns@chrisstayte.com'),
             ),
-            GestureDetector(
-              onTap: () {
-                // TODO: Add email to default app
-              },
-              child: SizedBox(
-                height: 30,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text('Feedback'),
-                      Text('countdowns@chrisstayte.com',
-                          style: Theme.of(context).textTheme.overline),
-                    ],
-                  ),
-                ),
-              ),
+            partialDivider,
+            AboutListTile(
+              child: Text('About'),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Divider(
-                thickness: 1,
-                color: context.watch<SettingsProvider>().settings.darkMode
-                    ? Colors.grey.shade700
-                    : Colors.grey.shade300,
-              ),
+            partialDivider,
+            ListTile(
+              title: const Text("Rate Coutndowns"),
+              trailing: const Icon(Icons.rate_review),
             ),
-            GestureDetector(
-              onTap: () {
-                // TODO: Add email to default app
-              },
-              child: SizedBox(
-                height: 30,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [Text('About'), Icon(Icons.chevron_right)],
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Divider(
-                thickness: 1,
-                color: context.watch<SettingsProvider>().settings.darkMode
-                    ? Colors.grey.shade700
-                    : Colors.grey.shade300,
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                // TODO: Add email to default app
-              },
-              child: SizedBox(
-                height: 30,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
-                      Text('Rate Countdowns'),
-                      Icon(Icons.chevron_right)
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            fullDivider,
             SizedBox(
               height: 42,
               child: Column(

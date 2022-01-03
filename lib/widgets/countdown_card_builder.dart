@@ -1,4 +1,4 @@
-import 'package:countdown/utilities/settings_provider.dart';
+import 'package:countdowns/utilities/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/src/provider.dart';
 
@@ -9,15 +9,17 @@ class CountdownCardBuilder extends StatelessWidget {
   final IconData? icon;
   final Color? color;
   final String? fontFamily;
+  final Color? contentColor;
 
-  const CountdownCardBuilder(
-      {Key? key,
-      this.title,
-      this.eventDate,
-      this.icon,
-      this.color,
-      this.fontFamily})
-      : super(key: key);
+  const CountdownCardBuilder({
+    Key? key,
+    this.title,
+    this.eventDate,
+    this.icon,
+    this.color,
+    this.fontFamily,
+    this.contentColor,
+  }) : super(key: key);
 
   List<Widget> getStatus() {
     List<Widget> widgets = [];
@@ -32,14 +34,26 @@ class CountdownCardBuilder extends StatelessWidget {
       widgets = [
         Icon(
           Icons.done,
-          color: color != null ? Colors.white : null,
+          color: contentColor != null
+              ? contentColor
+              : color != null
+                  ? color!.computeLuminance() > 0.5
+                      ? Colors.black
+                      : Colors.white
+                  : null,
         ),
         Text(
           '${eventDate?.month}.${eventDate?.day}.${eventDate?.year}',
           style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w300,
-            color: color != null ? Colors.white : null,
+            color: contentColor != null
+                ? contentColor
+                : color != null
+                    ? color!.computeLuminance() > 0.5
+                        ? Colors.black
+                        : Colors.white
+                    : null,
             fontFamily: fontFamily,
           ),
         )
@@ -50,7 +64,13 @@ class CountdownCardBuilder extends StatelessWidget {
           numberOfDays.toString(),
           style: TextStyle(
             fontSize: 16,
-            color: color != null ? Colors.white : null,
+            color: contentColor != null
+                ? contentColor
+                : color != null
+                    ? color!.computeLuminance() > 0.5
+                        ? Colors.black
+                        : Colors.white
+                    : null,
             fontWeight: FontWeight.bold,
             fontFamily: fontFamily,
           ),
@@ -58,7 +78,13 @@ class CountdownCardBuilder extends StatelessWidget {
         Text(
           numberOfDays == 1 ? 'DAY' : 'DAYS',
           style: TextStyle(
-            color: color != null ? Colors.white : null,
+            color: contentColor != null
+                ? contentColor
+                : color != null
+                    ? color!.computeLuminance() > 0.5
+                        ? Colors.black
+                        : Colors.white
+                    : null,
             fontSize: 12,
             fontWeight: FontWeight.w300,
             fontFamily: fontFamily,
@@ -69,13 +95,25 @@ class CountdownCardBuilder extends StatelessWidget {
       widgets = [
         Icon(
           Icons.done,
-          color: color != null ? Colors.white : null,
+          color: contentColor != null
+              ? contentColor
+              : color != null
+                  ? color!.computeLuminance() > 0.5
+                      ? Colors.black
+                      : Colors.white
+                  : null,
         ),
         Text(
           'TODAY',
           style: TextStyle(
             fontSize: 12,
-            color: color != null ? Colors.white : null,
+            color: contentColor != null
+                ? contentColor
+                : color != null
+                    ? color!.computeLuminance() > 0.5
+                        ? Colors.black
+                        : Colors.white
+                    : null,
             fontWeight: FontWeight.w300,
             fontFamily: fontFamily,
           ),
@@ -94,7 +132,13 @@ class CountdownCardBuilder extends StatelessWidget {
               alignment: Alignment.center,
               child: Icon(
                 icon ?? Icons.calendar_today,
-                color: color != null ? Colors.white : null,
+                color: contentColor != null
+                    ? contentColor
+                    : color != null
+                        ? color!.computeLuminance() > 0.5
+                            ? Colors.black
+                            : Colors.white
+                        : null,
                 size: 24,
               ),
             ),
@@ -108,7 +152,14 @@ class CountdownCardBuilder extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
-                  color: color != null ? Colors.white : null,
+                  // color: color != null ? Colors.white : null,
+                  color: contentColor != null
+                      ? contentColor
+                      : color != null
+                          ? color!.computeLuminance() > 0.5
+                              ? Colors.black
+                              : Colors.white
+                          : null,
                   fontFamily: fontFamily,
                 ),
               ),

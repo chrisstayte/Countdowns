@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:countdown/models/countdown_event.dart';
+import 'package:countdowns/models/countdown_event.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
