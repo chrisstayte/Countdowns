@@ -187,7 +187,7 @@ class CountdownCardBuilder extends StatelessWidget {
             decoration: BoxDecoration(
               border: Border.all(
                 //UPDATE: whenever the app changes with system settings we need to update this to watch maybe?
-                color: context.read<SettingsProvider>().settings.darkMode
+                color: context.watch<SettingsProvider>().settings.darkMode
                     ? Colors.white
                     : Colors.black,
                 width: 1,

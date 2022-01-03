@@ -1,6 +1,7 @@
 import 'package:countdowns/screens/home_page.dart';
 import 'package:countdowns/utilities/countdowns_provider.dart';
 import 'package:countdowns/utilities/settings_provider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -51,6 +52,10 @@ class MyApp extends StatelessWidget {
             color: Colors.white,
             fontSize: 22,
           ),
+        ),
+        cupertinoOverrideTheme: NoDefaultCupertinoThemeData(
+          textTheme:
+              CupertinoTextThemeData(primaryColor: CupertinoColors.white),
         ),
       ),
       themeMode: context.watch<SettingsProvider>().settings.darkMode

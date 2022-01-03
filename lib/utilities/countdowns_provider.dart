@@ -59,6 +59,7 @@ class CountdownsProvider extends ChangeNotifier {
 
   void deleteAll() {
     _events.clear();
+    _saveEvents();
     notifyListeners();
   }
 

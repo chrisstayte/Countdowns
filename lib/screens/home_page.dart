@@ -107,8 +107,24 @@ class _HomePageState extends State<HomePage> {
                   );
                 },
               )
-            : const CountdownCardBuilder(
-                title: 'Create a countdown',
+            : GestureDetector(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return const AddCountdownPage();
+                    },
+                  ),
+                ),
+                child: Hero(
+                  tag: 'emptycard',
+                  child: Material(
+                    type: MaterialType.transparency,
+                    child: const CountdownCardBuilder(
+                      title: 'Create a countdown',
+                    ),
+                  ),
+                ),
               ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );

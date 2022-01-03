@@ -15,6 +15,21 @@ class AddCountdownPage extends StatefulWidget {
 }
 
 class _AddCountdownPageState extends State<AddCountdownPage> {
+  @override
+  void initState() {
+    super.initState();
+
+    _focusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    // Clean up the focus node when the Form is disposed.
+    _focusNode.dispose();
+
+    super.dispose();
+  }
+
   String _textBox = '';
   DateTime? _dateTime;
   Color? _color;
@@ -22,6 +37,8 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
   String? _fontFamily;
   String? _selectedFont;
   Color? _contentColor;
+
+  late FocusNode _focusNode;
 
   final _rowHeight = 42.0;
 
@@ -128,7 +145,7 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
     );
   }
 
-  void _showColorPicker() {
+  void _showColorPickerForBackground() {
     showModalBottomSheet(
       context: context,
       shape: _modalShape,
@@ -182,12 +199,10 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
       context: context,
       builder: (_) => Container(
         height: 250,
-        color: const Color.fromARGB(255, 255, 255, 255),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
-                color: Colors.grey.shade100,
                 height: 40,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -340,15 +355,20 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
-            child: CountdownCardBuilder(
-              title: _textBox,
-              eventDate: _dateTime,
-              color: _color,
-              icon: _icon,
-              fontFamily: _fontFamily,
-              contentColor: _contentColor,
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+            child: GestureDetector(
+              onTap: () => _focusNode.requestFocus(),
+              child: Hero(
+                tag: 'emptycard',
+                child: CountdownCardBuilder(
+                  title: _textBox,
+                  eventDate: _dateTime,
+                  color: _color,
+                  icon: _icon,
+                  fontFamily: _fontFamily,
+                  contentColor: _contentColor,
+                ),
+              ),
             ),
           ),
           Expanded(
@@ -361,6 +381,7 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                       Flexible(
                         //BUG: Cursor keeps going to the left
                         child: TextField(
+                          focusNode: _focusNode,
                           textCapitalization: TextCapitalization.words,
                           textDirection: TextDirection.rtl,
                           style: const TextStyle(
@@ -393,7 +414,7 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                           '${_dateTime?.month.toString()}/${_dateTime?.day.toString()}/${_dateTime?.year.toString()}'),
                 ),
                 ListTile(
-                  onTap: () => _showColorPicker(),
+                  onTap: () => _showColorPickerForBackground(),
                   title: Text('Color'),
                   trailing: Icon(
                     Icons.circle,
