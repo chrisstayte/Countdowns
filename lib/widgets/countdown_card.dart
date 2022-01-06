@@ -19,6 +19,9 @@ class CountdownCard extends StatelessWidget {
     DateTime currentDate = DateTime.now();
 
     int numberOfDays = countdownEvent.eventDate.difference(currentDate).inDays;
+    if (countdownEvent.eventDate.difference(currentDate).inSeconds > 0) {
+      numberOfDays++;
+    }
 
     if (numberOfDays < 0) {
       widgets = [

@@ -29,6 +29,9 @@ class CountdownCardBuilder extends StatelessWidget {
     if (eventDate == null) return widgets;
 
     int numberOfDays = eventDate!.difference(currentDate).inDays;
+    if (eventDate!.difference(currentDate).inSeconds > 0) {
+      numberOfDays++;
+    }
 
     if (numberOfDays < 0) {
       widgets = [
@@ -186,7 +189,6 @@ class CountdownCardBuilder extends StatelessWidget {
         : Container(
             decoration: BoxDecoration(
               border: Border.all(
-                //UPDATE: whenever the app changes with system settings we need to update this to watch maybe?
                 color: context.watch<SettingsProvider>().settings.darkMode
                     ? Colors.white
                     : Colors.black,

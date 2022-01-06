@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     // I was loading the list here
-    //context.read<CountdownsProvider>().loadEvents();
+    context.read<CountdownsProvider>().loadEvents();
     super.initState();
   }
 

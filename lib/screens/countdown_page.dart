@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:countdowns/models/countdown_event.dart';
 import 'package:countdowns/utilities/countdowns_provider.dart';
+import 'package:countdowns/utilities/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/src/provider.dart';
 
@@ -149,7 +150,9 @@ class _CountdownPageState extends State<CountdownPage> {
                       ? widget.countdownEvent.color!.computeLuminance() > 0.5
                           ? Colors.black
                           : Colors.white
-                      : null,
+                      : context.watch<SettingsProvider>().settings.darkMode
+                          ? Colors.white
+                          : Colors.black,
             ),
           )
         ],

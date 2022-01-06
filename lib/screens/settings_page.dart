@@ -1,3 +1,4 @@
+import 'package:countdowns/enums/sorting_method.dart';
 import 'package:countdowns/utilities/countdowns_provider.dart';
 import 'package:countdowns/utilities/settings_provider.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,8 @@ class _SettingsPageState extends State<SettingsPage> {
   late Widget fullDivider;
   late Widget partialDivider;
   final dividerThickness = 0.75;
+
+  late SortingMethod _sortingMethod;
 
   @override
   void initState() {
@@ -50,6 +53,8 @@ class _SettingsPageState extends State<SettingsPage> {
             : Colors.grey.shade300,
       ),
     );
+
+    _sortingMethod = context.watch<SettingsProvider>().settings.sortingMethod;
   }
 
   Future<void> _initPackageInfo() async {
@@ -79,9 +84,35 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             fullDivider,
-            const ListTile(
+            ListTile(
               title: Text("Sorting"),
-              trailing: Icon(Icons.sort_by_alpha_rounded),
+              trailing: DropdownButton(
+                value: _sortingMethod,
+                items: const [
+                  DropdownMenuItem<SortingMethod>(
+                    child: Text('Alpha Ascending'),
+                    value: SortingMethod.alphaAscending,
+                  ),
+                  DropdownMenuItem<SortingMethod>(
+                    child: Text('Alpha Descending'),
+                    value: SortingMethod.alphaDescending,
+                  ),
+                  DropdownMenuItem<SortingMethod>(
+                    child: Text('Date Ascending'),
+                    value: SortingMethod.dateAscending,
+                  ),
+                  DropdownMenuItem<SortingMethod>(
+                    child: Text('Date Descending'),
+                    value: SortingMethod.dateDescending,
+                  )
+                ],
+                onChanged: (value) {
+                  context
+                      .read<SettingsProvider>()
+                      .setSortingMethod(value as SortingMethod);
+                  context.read<CountdownsProvider>().sortEvents();
+                },
+              ),
             ),
             partialDivider,
             ListTile(

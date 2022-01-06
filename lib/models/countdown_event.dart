@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-//TODO: add custom font per card
 class CountdownEvent {
   String title;
   DateTime eventDate;
