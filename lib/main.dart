@@ -9,8 +9,13 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => CountdownsProvider()),
-        ChangeNotifierProvider(create: (_) => SettingsProvider()),
+        ChangeNotifierProvider<SettingsProvider>(
+            create: (_) => SettingsProvider()),
+        ChangeNotifierProxyProvider<SettingsProvider, CountdownsProvider>(
+          update: (context, settings, countdowns) =>
+              CountdownsProvider(settings),
+          create: (context) => CountdownsProvider.empty(),
+        ),
       ],
       child: const MyApp(),
     ),

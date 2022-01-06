@@ -1,6 +1,7 @@
 import 'package:countdowns/models/countdown_event.dart';
 import 'package:countdowns/screens/settings_page.dart';
 import 'package:countdowns/utilities/countdowns_provider.dart';
+import 'package:countdowns/utilities/settings_provider.dart';
 import 'package:countdowns/widgets/countdown_card_builder.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -193,16 +194,21 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
     );
   }
 
-//TODO: add dark theme to  this
   void _showDatePicker() {
     showCupertinoModalPopup(
       context: context,
       builder: (_) => Container(
+        color: context.watch<SettingsProvider>().settings.darkMode
+            ? const Color(0XFF303030)
+            : Colors.white,
         height: 250,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
+                color: context.watch<SettingsProvider>().settings.darkMode
+                    ? Color(0XFF424242)
+                    : Colors.white,
                 height: 40,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -210,6 +216,15 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                     TextButton(
                       child: const Text("Done"),
                       onPressed: () => Navigator.pop(context),
+                      style: ButtonStyle(
+                        overlayColor:
+                            MaterialStateProperty.all(Colors.transparent),
+                        foregroundColor: MaterialStateProperty.all(
+                          context.watch<SettingsProvider>().settings.darkMode
+                              ? Colors.white
+                              : Color(0XFF536372),
+                        ),
+                      ),
                     ),
                   ],
                 )),
@@ -332,6 +347,14 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
         title: const Text('Add Countdown'),
         actions: [
           TextButton(
+            style: ButtonStyle(
+              overlayColor: MaterialStateProperty.all(Colors.transparent),
+              foregroundColor: MaterialStateProperty.all(
+                context.watch<SettingsProvider>().settings.darkMode
+                    ? Colors.white
+                    : Color(0XFF536372),
+              ),
+            ),
             onPressed: () {
               if (_textBox.isNotEmpty && _dateTime != null) {
                 CountdownEvent event = CountdownEvent(
@@ -342,7 +365,10 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                   fontFamily: _fontFamily,
                   contentColor: _contentColor,
                 );
-                context.read<CountdownsProvider>().addEvent(event);
+                // TODO: add a visible message if the user does not add a name or date
+                context.read<CountdownsProvider>()
+                  ..addEvent(event)
+                  ..sortEvents();
                 Navigator.pop(context);
               }
             },
@@ -377,19 +403,19 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                 ListTile(
                   title: Row(
                     children: [
-                      _textBox.isEmpty ? Text('Name') : Text(''),
                       Flexible(
-                        //BUG: Cursor keeps going to the left
                         child: TextField(
                           focusNode: _focusNode,
                           textCapitalization: TextCapitalization.words,
-                          textDirection: TextDirection.rtl,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          decoration: const InputDecoration(
-                            hintTextDirection: TextDirection.rtl,
+                          textDirection: TextDirection.ltr,
+                          style:
+                              // subtitle1 was used because this is the default text theme of a 'listTile'
+                              Theme.of(context).textTheme.subtitle1?.copyWith(
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                          decoration: InputDecoration(
+                            hintStyle: Theme.of(context).textTheme.subtitle1,
+                            hintTextDirection: TextDirection.ltr,
                             border: InputBorder.none,
                             hintText: 'Name',
                           ),
