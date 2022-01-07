@@ -25,6 +25,14 @@ class _CountdownPageState extends State<CountdownPage> {
     super.initState();
   }
 
+  late final Color _contentColor = widget.countdownEvent.contentColor != null
+      ? widget.countdownEvent.contentColor!
+      : widget.countdownEvent.color != null
+          ? widget.countdownEvent.color!.computeLuminance() > 0.5
+              ? Colors.black
+              : Colors.white
+          : Colors.white;
+
   @override
   void dispose() {
     _timer.cancel();
@@ -60,26 +68,14 @@ class _CountdownPageState extends State<CountdownPage> {
   late TextStyle numberStyle = TextStyle(
     fontSize: 50,
     fontWeight: FontWeight.bold,
-    color: widget.countdownEvent.contentColor != null
-        ? widget.countdownEvent.contentColor
-        : widget.countdownEvent.color != null
-            ? widget.countdownEvent.color!.computeLuminance() > 0.5
-                ? Colors.black
-                : Colors.white
-            : null,
+    color: _contentColor,
     fontFamily: widget.countdownEvent.fontFamily,
   );
 
   late TextStyle labelStyle = TextStyle(
     fontSize: 19,
     fontWeight: FontWeight.w300,
-    color: widget.countdownEvent.contentColor != null
-        ? widget.countdownEvent.contentColor
-        : widget.countdownEvent.color != null
-            ? widget.countdownEvent.color!.computeLuminance() > 0.5
-                ? Colors.black
-                : Colors.white
-            : null,
+    color: _contentColor,
     fontFamily: widget.countdownEvent.fontFamily,
   );
 
@@ -88,27 +84,15 @@ class _CountdownPageState extends State<CountdownPage> {
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
-          color: widget.countdownEvent.contentColor != null
-              ? widget.countdownEvent.contentColor
-              : widget.countdownEvent.color != null
-                  ? widget.countdownEvent.color!.computeLuminance() > 0.5
-                      ? Colors.black
-                      : Colors.white
-                  : null,
+          color: _contentColor,
         ),
         title: Icon(
           widget.countdownEvent.icon ?? Icons.calendar_today,
-          color: widget.countdownEvent.contentColor != null
-              ? widget.countdownEvent.contentColor
-              : widget.countdownEvent.color != null
-                  ? widget.countdownEvent.color!.computeLuminance() > 0.5
-                      ? Colors.black
-                      : Colors.white
-                  : null,
+          color: _contentColor,
           size: 32.0,
         ),
         elevation: 0,
-        backgroundColor: widget.countdownEvent.color ?? Colors.blue,
+        backgroundColor: widget.countdownEvent.color ?? Colors.blue.shade200,
         actions: [
           IconButton(
             onPressed: () {
@@ -144,15 +128,7 @@ class _CountdownPageState extends State<CountdownPage> {
             },
             icon: Icon(
               Icons.delete,
-              color: widget.countdownEvent.contentColor != null
-                  ? widget.countdownEvent.contentColor
-                  : widget.countdownEvent.color != null
-                      ? widget.countdownEvent.color!.computeLuminance() > 0.5
-                          ? Colors.black
-                          : Colors.white
-                      : context.watch<SettingsProvider>().settings.darkMode
-                          ? Colors.white
-                          : Colors.black,
+              color: _contentColor,
             ),
           )
         ],

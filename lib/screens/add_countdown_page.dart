@@ -368,7 +368,9 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                 // TODO: add a visible message if the user does not add a name or date
                 context.read<CountdownsProvider>()
                   ..addEvent(event)
-                  ..sortEvents();
+                  ..sortEvents(
+                    context.read<SettingsProvider>().settings.sortingMethod,
+                  );
                 Navigator.pop(context);
               }
             },

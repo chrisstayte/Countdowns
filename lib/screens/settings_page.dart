@@ -4,6 +4,7 @@ import 'package:countdowns/utilities/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/src/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -110,7 +111,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   context
                       .read<SettingsProvider>()
                       .setSortingMethod(value as SortingMethod);
-                  context.read<CountdownsProvider>().sortEvents();
+                  context.read<CountdownsProvider>().sortEvents(value);
                 },
               ),
             ),
@@ -183,7 +184,20 @@ class _SettingsPageState extends State<SettingsPage> {
             fullDivider,
             ListTile(
               title: const Text('Feedback'),
-              trailing: Text('countdowns@chrisstayte.com'),
+              trailing: const Text('countdowns@chrisstayte.com'),
+              onTap: () async {
+                final Uri params = Uri(
+                  scheme: 'mailto',
+                  path: 'countdowns@chrisstayte.com',
+                  query:
+                      'subject=App Feedback&body=\n\n\nApp Version ${_packageInfo.version}', //add subject and body here
+                );
+
+                final String url = params.toString();
+                if (await canLaunch(url)) {
+                  await launch(url);
+                }
+              },
             ),
             partialDivider,
             AboutListTile(

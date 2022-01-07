@@ -7,14 +7,14 @@ import 'package:countdowns/models/countdown_event.dart';
 import 'package:countdowns/utilities/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 
 class CountdownsProvider extends ChangeNotifier {
-  SettingsProvider? _settingsProvider;
   final String _fileName = 'countdownevents.json';
 
-  CountdownsProvider(this._settingsProvider) {}
-
-  CountdownsProvider.empty() {}
+  CountdownsProvider() {
+    _loadEvents();
+  }
 
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
@@ -73,8 +73,8 @@ class CountdownsProvider extends ChangeNotifier {
     });
   }
 
-  void sortEvents() async {
-    switch (_settingsProvider?.settings.sortingMethod) {
+  void sortEvents(SortingMethod sortingMethod) async {
+    switch (sortingMethod) {
       case SortingMethod.alphaAscending:
         _sortEventsAlphaAscending();
         break;
@@ -88,6 +88,7 @@ class CountdownsProvider extends ChangeNotifier {
         _sortEventsDateDescending();
         break;
     }
+
     notifyListeners();
     await _saveEvents();
   }
@@ -110,7 +111,7 @@ class CountdownsProvider extends ChangeNotifier {
     await _saveEvents();
   }
 
-  Future<void> loadEvents() async {
+  Future<void> _loadEvents() async {
     try {
       File file = await _localFile;
       if (!await file.exists()) {

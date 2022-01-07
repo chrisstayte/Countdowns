@@ -24,8 +24,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
-    // I was loading the list here
-    context.read<CountdownsProvider>().loadEvents();
     super.initState();
   }
 
@@ -88,7 +86,7 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.all(8.0),
         child: context.watch<CountdownsProvider>().events.isNotEmpty
             ? ListView.builder(
-                itemCount: context.read<CountdownsProvider>().events.length,
+                itemCount: context.watch<CountdownsProvider>().events.length,
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
                     onTap: () => Navigator.push(
@@ -96,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                       MaterialPageRoute(
                         builder: (_) => CountdownPage(
                           countdownEvent:
-                              context.read<CountdownsProvider>().events[index],
+                              context.watch<CountdownsProvider>().events[index],
                         ),
                       ),
                     ),
@@ -120,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                   tag: 'emptycard',
                   child: Material(
                     type: MaterialType.transparency,
-                    child: const CountdownCardBuilder(
+                    child: CountdownCardBuilder(
                       title: 'Create a countdown',
                     ),
                   ),

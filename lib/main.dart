@@ -10,11 +10,10 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider<SettingsProvider>(
-            create: (_) => SettingsProvider()),
-        ChangeNotifierProxyProvider<SettingsProvider, CountdownsProvider>(
-          update: (context, settings, countdowns) =>
-              CountdownsProvider(settings),
-          create: (context) => CountdownsProvider.empty(),
+          create: (_) => SettingsProvider(),
+        ),
+        ChangeNotifierProvider<CountdownsProvider>(
+          create: (_) => CountdownsProvider(),
         ),
       ],
       child: const MyApp(),
