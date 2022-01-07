@@ -1,10 +1,12 @@
 import 'package:countdowns/enums/sorting_method.dart';
+import 'package:countdowns/screens/setttings/credits_page.dart';
 import 'package:countdowns/utilities/countdowns_provider.dart';
 import 'package:countdowns/utilities/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/src/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:store_redirect/store_redirect.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -201,12 +203,28 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             partialDivider,
             AboutListTile(
-              child: Text('About'),
+              child: const Text('About'),
             ),
+            // partialDivider,
+            // ListTile(
+            //   title: const Text("Rate Countdowns"),
+            //   trailing: const Icon(Icons.rate_review),
+            //   onTap: () {
+            //     StoreRedirect.redirect();
+            //   },
+            // ),
             partialDivider,
             ListTile(
-              title: const Text("Rate Coutndowns"),
-              trailing: const Icon(Icons.rate_review),
+              title: Text('Credits'),
+              trailing: Icon(Icons.chevron_right_rounded),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return CreditsPage();
+                  },
+                ),
+              ),
             ),
             fullDivider,
             SizedBox(
@@ -217,88 +235,6 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             )
           ],
-        )
-        // body: Padding(
-        //   padding: const EdgeInsets.symmetric(horizontal: 0),
-        //   child: Column(
-        //     crossAxisAlignment: CrossAxisAlignment.stretch,
-        //     mainAxisAlignment: MainAxisAlignment.start,
-        //     children: [
-        //       Text('General'),
-        //       Divider(
-        //         color: context.watch<SettingsProvider>().settings.darkMode
-        //             ? Colors.white
-        //             : Colors.grey,
-        //       ),
-        //       SizedBox(
-        //         height: 42,
-        //         child: Padding(
-        //           padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        //           child: Row(
-        //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //               children: [
-        //                 Text('Dark Mode'),
-        //                 Switch(
-        //                   value:
-        //                       context.watch<SettingsProvider>().settings.darkMode,
-        //                   onChanged: (isDark) => context
-        //                       .read<SettingsProvider>()
-        //                       .setDarkMode(isDark),
-        //                 ),
-        //               ]),
-        //         ),
-        //       ),
-        //       Row(
-        //         mainAxisAlignment: MainAxisAlignment.center,
-        //         children: [
-        //           OutlinedButton(
-        //             onPressed: () => {
-        //               showDialog(
-        //                 context: context,
-        //                 builder: (BuildContext context) {
-        //                   return AlertDialog(
-        //                     title: const Text('Delete All Countdowns'),
-        //                     content: const Text('This is not reversable'),
-        //                     actions: [
-        //                       TextButton(
-        //                         onPressed: () => Navigator.pop(context),
-        //                         child: Text(
-        //                           'No',
-        //                           style: TextStyle(color: Colors.grey.shade900),
-        //                         ),
-        //                       ),
-        //                       TextButton(
-        //                         child: Text(
-        //                           "Yes",
-        //                           style: TextStyle(
-        //                             color: Colors.grey.shade900,
-        //                           ),
-        //                         ),
-        //                         onPressed: () {
-        //                           context.read<CountdownsProvider>().deleteAll();
-        //                           Navigator.of(context)
-        //                             ..pop()
-        //                             ..pop();
-        //                         },
-        //                       )
-        //                     ],
-        //                   );
-        //                 },
-        //               )
-        //             },
-        //             child: const Text(
-        //               "Delete All Events",
-        //               style: TextStyle(color: Colors.redAccent),
-        //             ),
-        //             style: OutlinedButton.styleFrom(
-        //               side: const BorderSide(color: Colors.redAccent),
-        //             ),
-        //           ),
-        //         ],
-        //       )
-        //     ],
-        //   ),
-        // ),
-        );
+        ));
   }
 }

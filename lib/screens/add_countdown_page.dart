@@ -2,6 +2,7 @@ import 'package:countdowns/models/countdown_event.dart';
 import 'package:countdowns/screens/settings_page.dart';
 import 'package:countdowns/utilities/countdowns_provider.dart';
 import 'package:countdowns/utilities/settings_provider.dart';
+import 'package:countdowns/widgets/color_picker_material_modal.dart';
 import 'package:countdowns/widgets/countdown_card_builder.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -64,6 +65,45 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
     Colors.pink,
     Colors.white,
     Colors.brown,
+    Colors.green,
+    Colors.blue,
+    Colors.orange,
+    Colors.red,
+    Colors.purple,
+    Colors.grey,
+    Colors.lightBlue,
+    Colors.lightGreen,
+    Colors.deepPurple,
+    Colors.black,
+    Colors.pink,
+    Colors.white,
+    Colors.brown,
+    Colors.green,
+    Colors.blue,
+    Colors.orange,
+    Colors.red,
+    Colors.purple,
+    Colors.grey,
+    Colors.lightBlue,
+    Colors.lightGreen,
+    Colors.deepPurple,
+    Colors.black,
+    Colors.pink,
+    Colors.white,
+    Colors.brown,
+    Colors.green,
+    Colors.blue,
+    Colors.orange,
+    Colors.red,
+    Colors.purple,
+    Colors.grey,
+    Colors.lightBlue,
+    Colors.lightGreen,
+    Colors.deepPurple,
+    Colors.black,
+    Colors.pink,
+    Colors.white,
+    Colors.brown,
   ];
 
   final List<IconData> _icons = [
@@ -83,9 +123,30 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
     Icons.alarm,
     Icons.airplane_ticket,
     Icons.airplanemode_active,
+    Icons.airline_seat_flat,
     Icons.photo,
     Icons.wifi,
     Icons.warning,
+    Icons.baby_changing_station,
+    Icons.apartment,
+    Icons.card_giftcard,
+    Icons.computer,
+    Icons.book,
+    Icons.bookmark,
+    Icons.piano,
+    Icons.donut_large,
+    Icons.camera,
+    Icons.animation,
+    Icons.sports_cricket,
+    Icons.agriculture,
+    Icons.horizontal_distribute_sharp,
+    Icons.music_note,
+    Icons.music_video,
+    Icons.snooze,
+    Icons.school,
+    Icons.work,
+    Icons.business,
+    Icons.group,
   ];
 
   final Map<String, String> _fonts = {
@@ -136,54 +197,6 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                         });
                       },
                     );
-                  }),
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _showColorPickerForBackground() {
-    showModalBottomSheet(
-      context: context,
-      shape: _modalShape,
-      builder: (_) => SizedBox(
-        height: 450,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 12.0,
-          ),
-          child: Column(
-            children: [
-              const Text(
-                'Select A Color',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              Expanded(
-                child: GridView.count(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  mainAxisSpacing: 20,
-                  crossAxisSpacing: 20,
-                  crossAxisCount: 5,
-                  children: List.generate(_colors.length, (index) {
-                    return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _color = _colors[index];
-                          });
-                        },
-                        child: Container(
-                          height: 25,
-                          width: 25,
-                          decoration: BoxDecoration(
-                            color: _colors[index],
-                            shape: BoxShape.circle,
-                          ),
-                        ));
                   }),
                 ),
               )
@@ -282,54 +295,6 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                       ),
                     );
                   },
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _showColorPickerForFont() {
-    showModalBottomSheet(
-      context: context,
-      shape: _modalShape,
-      builder: (_) => SizedBox(
-        height: 450,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 12.0,
-          ),
-          child: Column(
-            children: [
-              const Text(
-                'Select A Color',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              Expanded(
-                child: GridView.count(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  mainAxisSpacing: 20,
-                  crossAxisSpacing: 20,
-                  crossAxisCount: 5,
-                  children: List.generate(_colors.length, (index) {
-                    return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _contentColor = _colors[index];
-                          });
-                        },
-                        child: Container(
-                          height: 25,
-                          width: 25,
-                          decoration: BoxDecoration(
-                            color: _colors[index],
-                            shape: BoxShape.circle,
-                          ),
-                        ));
-                  }),
                 ),
               )
             ],
@@ -442,7 +407,19 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                           '${_dateTime?.month.toString()}/${_dateTime?.day.toString()}/${_dateTime?.year.toString()}'),
                 ),
                 ListTile(
-                  onTap: () => _showColorPickerForBackground(),
+                  onTap: () => showModalBottomSheet(
+                    isScrollControlled: true,
+                    shape: _modalShape,
+                    context: context,
+                    builder: (context) => ColorPickerMaterialModal(
+                      color: _contentColor,
+                      colorCallback: (color) => setState(
+                        () {
+                          _color = color;
+                        },
+                      ),
+                    ),
+                  ),
                   title: Text('Color'),
                   trailing: Icon(
                     Icons.circle,
@@ -464,7 +441,19 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                       : Text(_selectedFont!),
                 ),
                 ListTile(
-                  onTap: () => _showColorPickerForFont(),
+                  onTap: () => showModalBottomSheet(
+                    isScrollControlled: true,
+                    shape: _modalShape,
+                    context: context,
+                    builder: (context) => ColorPickerMaterialModal(
+                      color: _contentColor,
+                      colorCallback: (color) => setState(
+                        () {
+                          _contentColor = color;
+                        },
+                      ),
+                    ),
+                  ),
                   title: Text('Content Color'),
                   trailing: _contentColor == null
                       ? Icon(Icons.circle)
