@@ -4,8 +4,7 @@ import 'package:provider/src/provider.dart';
 
 class ColorPickerMaterialModal extends StatefulWidget {
   //const ColorPickerMaterialModal.empty({Key? key}) : super(key: key);
-  ColorPickerMaterialModal(
-      {Key? key, Color? this.color, required ColorCallback this.colorCallback})
+  ColorPickerMaterialModal({Key? key, this.color, required this.colorCallback})
       : super(key: key);
 
   Color? color;
@@ -107,9 +106,9 @@ class _ColorPickerMaterialModalState extends State<ColorPickerMaterialModal> {
                   setState(
                     () {
                       _selectedColor = _colors[index];
-                      widget.colorCallback(_selectedColor!);
                     },
                   );
+                  widget.colorCallback(_selectedColor!);
                 },
                 child: Container(
                   height: 25,

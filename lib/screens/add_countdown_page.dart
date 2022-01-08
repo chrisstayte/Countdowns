@@ -4,6 +4,7 @@ import 'package:countdowns/utilities/countdowns_provider.dart';
 import 'package:countdowns/utilities/settings_provider.dart';
 import 'package:countdowns/widgets/color_picker_material_modal.dart';
 import 'package:countdowns/widgets/countdown_card_builder.dart';
+import 'package:countdowns/widgets/icon_picker_material_modal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -44,111 +45,6 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
 
   final _rowHeight = 42.0;
 
-  final List<Color> _colors = [
-    const Color(0XFFBB84E7),
-    const Color(0XFFA3C4F3),
-    const Color(0XFF568D66),
-    const Color(0XFFF15152),
-    const Color(0XFFFF9500),
-    const Color(0XFF0a9396),
-    const Color(0XFFF7E7CE),
-    Colors.green,
-    Colors.blue,
-    Colors.orange,
-    Colors.red,
-    Colors.purple,
-    Colors.grey,
-    Colors.lightBlue,
-    Colors.lightGreen,
-    Colors.deepPurple,
-    Colors.black,
-    Colors.pink,
-    Colors.white,
-    Colors.brown,
-    Colors.green,
-    Colors.blue,
-    Colors.orange,
-    Colors.red,
-    Colors.purple,
-    Colors.grey,
-    Colors.lightBlue,
-    Colors.lightGreen,
-    Colors.deepPurple,
-    Colors.black,
-    Colors.pink,
-    Colors.white,
-    Colors.brown,
-    Colors.green,
-    Colors.blue,
-    Colors.orange,
-    Colors.red,
-    Colors.purple,
-    Colors.grey,
-    Colors.lightBlue,
-    Colors.lightGreen,
-    Colors.deepPurple,
-    Colors.black,
-    Colors.pink,
-    Colors.white,
-    Colors.brown,
-    Colors.green,
-    Colors.blue,
-    Colors.orange,
-    Colors.red,
-    Colors.purple,
-    Colors.grey,
-    Colors.lightBlue,
-    Colors.lightGreen,
-    Colors.deepPurple,
-    Colors.black,
-    Colors.pink,
-    Colors.white,
-    Colors.brown,
-  ];
-
-  final List<IconData> _icons = [
-    Icons.calendar_today,
-    Icons.celebration,
-    Icons.baby_changing_station,
-    Icons.cake,
-    Icons.local_dining,
-    Icons.icecream,
-    Icons.holiday_village,
-    Icons.hiking,
-    Icons.sports,
-    Icons.sports_football,
-    Icons.sports_baseball,
-    Icons.sports_basketball,
-    Icons.sports_esports,
-    Icons.alarm,
-    Icons.airplane_ticket,
-    Icons.airplanemode_active,
-    Icons.airline_seat_flat,
-    Icons.photo,
-    Icons.wifi,
-    Icons.warning,
-    Icons.baby_changing_station,
-    Icons.apartment,
-    Icons.card_giftcard,
-    Icons.computer,
-    Icons.book,
-    Icons.bookmark,
-    Icons.piano,
-    Icons.donut_large,
-    Icons.camera,
-    Icons.animation,
-    Icons.sports_cricket,
-    Icons.agriculture,
-    Icons.horizontal_distribute_sharp,
-    Icons.music_note,
-    Icons.music_video,
-    Icons.snooze,
-    Icons.school,
-    Icons.work,
-    Icons.business,
-    Icons.group,
-  ];
-
   final Map<String, String> _fonts = {
     'Default': 'Default',
     'Baskerville': 'LibreBaskerville',
@@ -164,48 +60,6 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
       topRight: Radius.circular(10),
     ),
   );
-
-  void _showIconPicker() {
-    showModalBottomSheet(
-      context: context,
-      shape: _modalShape,
-      builder: (_) => SizedBox(
-        height: 450,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 12.0,
-            horizontal: 8.0,
-          ),
-          child: Column(
-            children: [
-              const Text(
-                'Select an Icon',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              Expanded(
-                child: GridView.count(
-                  padding: const EdgeInsets.fromLTRB(25, 15, 25, 0),
-                  mainAxisSpacing: 20,
-                  crossAxisSpacing: 20,
-                  crossAxisCount: 5,
-                  children: List.generate(_icons.length, (index) {
-                    return IconButton(
-                      icon: Icon(_icons[index]),
-                      onPressed: () {
-                        setState(() {
-                          _icon = _icons[index];
-                        });
-                      },
-                    );
-                  }),
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
   void _showDatePicker() {
     showCupertinoModalPopup(
@@ -427,7 +281,19 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                   ),
                 ),
                 ListTile(
-                  onTap: () => _showIconPicker(),
+                  onTap: () => showModalBottomSheet(
+                    isScrollControlled: true,
+                    shape: _modalShape,
+                    context: context,
+                    builder: (context) => IconPickerMaterialModal(
+                      icon: _icon,
+                      iconCallback: (icon) => setState(
+                        () {
+                          _icon = icon;
+                        },
+                      ),
+                    ),
+                  ),
                   title: Text('Icon'),
                   trailing: _icon == null
                       ? Icon(Icons.chevron_right_rounded)
