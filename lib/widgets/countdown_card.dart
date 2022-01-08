@@ -14,8 +14,8 @@ class CountdownCard extends StatelessWidget {
 
   late final Color _contentColor = countdownEvent.contentColor != null
       ? countdownEvent.contentColor!
-      : countdownEvent.color != null
-          ? countdownEvent.color!.computeLuminance() > 0.5
+      : countdownEvent.backgroundColor != null
+          ? countdownEvent.backgroundColor!.computeLuminance() > 0.5
               ? Colors.black
               : Colors.white
           : Colors.white;
@@ -94,7 +94,7 @@ class CountdownCard extends StatelessWidget {
     return SizedBox(
       height: 74,
       child: Card(
-        color: countdownEvent.color ?? Colors.blue.shade300,
+        color: countdownEvent.backgroundColor ?? Colors.blue.shade300,
         child: Row(
           children: [
             SizedBox(

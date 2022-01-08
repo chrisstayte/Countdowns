@@ -4,7 +4,7 @@ class CountdownEvent {
   String title;
   DateTime eventDate;
   IconData? icon;
-  Color? color;
+  Color? backgroundColor;
   Color? contentColor;
   String? fontFamily;
 
@@ -12,7 +12,7 @@ class CountdownEvent {
       {required this.title,
       required this.eventDate,
       this.icon,
-      this.color,
+      this.backgroundColor,
       this.fontFamily,
       this.contentColor});
 
@@ -25,8 +25,8 @@ class CountdownEvent {
     }
 
     Color? color;
-    if (json['color'] != null) {
-      color = Color(json['color']).withOpacity(1);
+    if (json['backgroundColor'] != null) {
+      color = Color(json['backgroundColor']).withOpacity(1);
     }
 
     String? fontFamily = json['fontFamily'];
@@ -40,7 +40,7 @@ class CountdownEvent {
       title: title,
       eventDate: eventDate,
       icon: icon,
-      color: color,
+      backgroundColor: color,
       fontFamily: fontFamily,
       contentColor: contentColor,
     );
@@ -50,7 +50,7 @@ class CountdownEvent {
         'title': title,
         'eventDate': eventDate.toString(),
         'icon': icon?.codePoint,
-        'color': color?.value,
+        'backgroundColor': backgroundColor?.value,
         'fontFamily': fontFamily,
         'contentColor': contentColor?.value,
       };

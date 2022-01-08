@@ -4,6 +4,7 @@ import 'package:countdowns/utilities/countdowns_provider.dart';
 import 'package:countdowns/utilities/settings_provider.dart';
 import 'package:countdowns/widgets/color_picker_material_modal.dart';
 import 'package:countdowns/widgets/countdown_card_builder.dart';
+import 'package:countdowns/widgets/font_picker_material_modal.dart';
 import 'package:countdowns/widgets/icon_picker_material_modal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -35,24 +36,15 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
 
   String _textBox = '';
   DateTime? _dateTime;
-  Color? _color;
+  Color? _backgroundColor;
   IconData? _icon;
   String? _fontFamily;
-  String? _selectedFont;
+  String? _fontDisplayName;
   Color? _contentColor;
 
   late FocusNode _focusNode;
 
   final _rowHeight = 42.0;
-
-  final Map<String, String> _fonts = {
-    'Default': 'Default',
-    'Baskerville': 'LibreBaskerville',
-    'Carnivalee Freakshow': 'CarnivaleeFreakshow',
-    'Comic Neue': 'ComicNeue',
-    'Good Times': 'GoodTimes',
-    'Roboto': 'Roboto',
-  };
 
   final _modalShape = const RoundedRectangleBorder(
     borderRadius: BorderRadius.only(
@@ -116,43 +108,17 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
     showModalBottomSheet(
       context: context,
       shape: _modalShape,
-      builder: (_) => SizedBox(
-        height: 450,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 12.0,
-          ),
-          child: Column(
-            children: [
-              const Text(
-                'Select A Font',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: _fonts.length,
-                  itemBuilder: (context, index) {
-                    List<String> keys = _fonts.keys.toList();
-                    List<String> values = _fonts.values.toList();
-                    return ListTile(
-                      title: Text(
-                        keys[index],
-                        style: TextStyle(
-                          fontFamily: values[index],
-                        ),
-                      ),
-                      onTap: () => setState(
-                        () {
-                          _fontFamily = values[index];
-                          _selectedFont = keys[index];
-                        },
-                      ),
-                    );
-                  },
-                ),
-              )
-            ],
-          ),
+      builder: (context) => FontPickerMaterialModal(
+        fontName: _fontFamily,
+        fontCallback: (
+          fontName,
+          fontDisplayName,
+        ) =>
+            setState(
+          () {
+            _fontFamily = fontName;
+            _fontDisplayName = fontDisplayName;
+          },
         ),
       ),
     );
@@ -179,7 +145,7 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                 CountdownEvent event = CountdownEvent(
                   title: _textBox,
                   eventDate: _dateTime!,
-                  color: _color,
+                  backgroundColor: _backgroundColor,
                   icon: _icon,
                   fontFamily: _fontFamily,
                   contentColor: _contentColor,
@@ -210,7 +176,7 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                 child: CountdownCardBuilder(
                   title: _textBox,
                   eventDate: _dateTime,
-                  color: _color,
+                  color: _backgroundColor,
                   icon: _icon,
                   fontFamily: _fontFamily,
                   contentColor: _contentColor,
@@ -269,7 +235,7 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                       color: _contentColor,
                       colorCallback: (color) => setState(
                         () {
-                          _color = color;
+                          _backgroundColor = color;
                         },
                       ),
                     ),
@@ -277,7 +243,7 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                   title: Text('Color'),
                   trailing: Icon(
                     Icons.circle,
-                    color: _color,
+                    color: _backgroundColor,
                   ),
                 ),
                 ListTile(
@@ -303,8 +269,8 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                   onTap: () => _showFontPicker(),
                   title: Text('Font'),
                   trailing: _fontFamily == null
-                      ? Text('Regular')
-                      : Text(_selectedFont!),
+                      ? Text('Default')
+                      : Text(_fontDisplayName!),
                 ),
                 ListTile(
                   onTap: () => showModalBottomSheet(

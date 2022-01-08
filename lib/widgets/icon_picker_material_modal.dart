@@ -28,7 +28,6 @@ class _IconPickerMaterialModalState extends State<IconPickerMaterialModal> {
   final List<IconData> _icons = [
     Icons.calendar_today,
     Icons.celebration,
-    Icons.baby_changing_station,
     Icons.cake,
     Icons.local_dining,
     Icons.icecream,
@@ -66,6 +65,20 @@ class _IconPickerMaterialModalState extends State<IconPickerMaterialModal> {
     Icons.work,
     Icons.business,
     Icons.group,
+    Icons.add_to_drive,
+    Icons.blender,
+    Icons.block,
+    Icons.cabin,
+    Icons.cached,
+    Icons.delete,
+    Icons.delete_forever,
+    Icons.tram_sharp,
+    Icons.train,
+    Icons.traffic,
+    Icons.map,
+    Icons.flutter_dash,
+    Icons.golf_course,
+    Icons.tty_sharp,
   ];
 
   @override

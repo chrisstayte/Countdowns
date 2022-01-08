@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:countdowns/enums/sorting_method.dart';
 import 'package:countdowns/models/countdown_event.dart';
 import 'package:countdowns/utilities/settings_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -43,7 +44,8 @@ class CountdownsProvider extends ChangeNotifier {
       CountdownEvent(
         title: 'Random',
         eventDate: DateTime(2023, 3, 4),
-        color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
+        backgroundColor:
+            Colors.primaries[Random().nextInt(Colors.primaries.length)],
       ),
     );
     notifyListeners();
@@ -118,6 +120,12 @@ class CountdownsProvider extends ChangeNotifier {
         return;
       }
       String stringFromFile = await file.readAsString();
+
+      // printing out file for user to see
+      if (kDebugMode) {
+        print("\n\nCountdowns\n$stringFromFile");
+      }
+
       List<dynamic> parsedListJson = jsonDecode(stringFromFile);
 
       _events = List<CountdownEvent>.from(
@@ -125,6 +133,7 @@ class CountdownsProvider extends ChangeNotifier {
     } catch (e) {
       print(e.toString());
     }
+
     notifyListeners();
   }
 

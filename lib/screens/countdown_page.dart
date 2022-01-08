@@ -27,8 +27,8 @@ class _CountdownPageState extends State<CountdownPage> {
 
   late final Color _contentColor = widget.countdownEvent.contentColor != null
       ? widget.countdownEvent.contentColor!
-      : widget.countdownEvent.color != null
-          ? widget.countdownEvent.color!.computeLuminance() > 0.5
+      : widget.countdownEvent.backgroundColor != null
+          ? widget.countdownEvent.backgroundColor!.computeLuminance() > 0.5
               ? Colors.black
               : Colors.white
           : Colors.white;
@@ -92,7 +92,8 @@ class _CountdownPageState extends State<CountdownPage> {
           size: 32.0,
         ),
         elevation: 0,
-        backgroundColor: widget.countdownEvent.color ?? Colors.blue.shade200,
+        backgroundColor:
+            widget.countdownEvent.backgroundColor ?? Colors.blue.shade200,
         actions: [
           IconButton(
             onPressed: () {
@@ -133,7 +134,7 @@ class _CountdownPageState extends State<CountdownPage> {
           )
         ],
       ),
-      backgroundColor: widget.countdownEvent.color ?? Colors.blue,
+      backgroundColor: widget.countdownEvent.backgroundColor ?? Colors.blue,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 15.0),
         child: Column(
