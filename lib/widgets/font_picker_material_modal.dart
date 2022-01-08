@@ -30,30 +30,42 @@ class _FontPickerMaterialModalState extends State<FontPickerMaterialModal> {
     'ComicNeue': 'Comic Neue',
     'GoodTimes': 'Good Times',
     'Roboto': 'Roboto',
+    'LuxuriousRoman': 'Luxurious Roman',
+    'Starjedi': 'Not Starwars',
+    'Sunnyspells': 'Sunnyspells',
+    'NewWaltDisney': 'Not Disney',
   };
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: _fonts.length,
-      itemBuilder: (context, index) {
-        String fontName = _fonts.keys.toList()[index];
-        String fontDisplayName = _fonts.values.toList()[index];
-        return ListTile(
-          title: Text(
-            fontDisplayName,
-            style: TextStyle(
-              fontFamily: fontName,
-            ),
-          ),
-          trailing: _selectedFont == _fonts.keys.toList()[index]
-              ? Icon(Icons.check)
-              : null,
-          onTap: () {
-            setState(() {
-              _selectedFont = fontName;
-            });
-            widget.fontCallback(fontName, fontDisplayName);
+    return DraggableScrollableSheet(
+      expand: false,
+      builder: (context, scrollController) {
+        return ListView.builder(
+          controller: scrollController,
+          itemCount: _fonts.length,
+          itemBuilder: (context, index) {
+            String fontName = _fonts.keys.toList()[index];
+            String fontDisplayName = _fonts.values.toList()[index];
+            return ListTile(
+              title: Text(
+                fontDisplayName,
+                style: TextStyle(
+                  fontFamily: fontName,
+                ),
+              ),
+              trailing: _selectedFont == _fonts.keys.toList()[index]
+                  ? const Icon(Icons.check)
+                  : null,
+              onTap: () {
+                setState(
+                  () {
+                    _selectedFont = fontName;
+                  },
+                );
+                widget.fontCallback(fontName, fontDisplayName);
+              },
+            );
           },
         );
       },

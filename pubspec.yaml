@@ -106,6 +106,21 @@ flutter:
       fonts:
         - asset: fonts/GoodTimes-Regular.otf
           weight: 400
-
+    - family: LuxuriousRoman
+      fonts:
+        - asset: fonts/LuxuriousRoman-Regular.ttf
+          weight: 400
+    - family: Starjedi
+      fonts:
+        - asset: fonts/Starjedi.ttf
+          weight: 400
+    - family: Sunnyspells
+      fonts:
+        - asset: fonts/Sunnyspells.otf
+          weight: 400
+    - family: NewWaltDisney
+      fonts:
+        - asset: fonts/NewWaltDisney.ttf
+          weight: 400
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

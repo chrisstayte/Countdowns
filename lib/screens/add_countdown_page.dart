@@ -104,26 +104,6 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
     );
   }
 
-  void _showFontPicker() {
-    showModalBottomSheet(
-      context: context,
-      shape: _modalShape,
-      builder: (context) => FontPickerMaterialModal(
-        fontName: _fontFamily,
-        fontCallback: (
-          fontName,
-          fontDisplayName,
-        ) =>
-            setState(
-          () {
-            _fontFamily = fontName;
-            _fontDisplayName = fontDisplayName;
-          },
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -266,7 +246,24 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                       : Icon(_icon),
                 ),
                 ListTile(
-                  onTap: () => _showFontPicker(),
+                  onTap: () => showModalBottomSheet(
+                    isScrollControlled: true,
+                    context: context,
+                    shape: _modalShape,
+                    builder: (context) => FontPickerMaterialModal(
+                      fontName: _fontFamily,
+                      fontCallback: (
+                        fontName,
+                        fontDisplayName,
+                      ) =>
+                          setState(
+                        () {
+                          _fontFamily = fontName;
+                          _fontDisplayName = fontDisplayName;
+                        },
+                      ),
+                    ),
+                  ),
                   title: Text('Font'),
                   trailing: _fontFamily == null
                       ? Text('Default')
