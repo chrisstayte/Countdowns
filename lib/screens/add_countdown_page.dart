@@ -130,7 +130,7 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                   fontFamily: _fontFamily,
                   contentColor: _contentColor,
                 );
-                // TODO: add a visible message if the user does not add a name or date
+
                 context.read<CountdownsProvider>()
                   ..addEvent(event)
                   ..sortEvents(
@@ -218,8 +218,9 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                     isScrollControlled: true,
                     shape: _modalShape,
                     context: context,
+                    // TODO: Fix Check Mark Box
                     builder: (context) => ColorPickerMaterialModal(
-                      color: _contentColor,
+                      color: _backgroundColor,
                       colorCallback: (color) => setState(
                         () {
                           _backgroundColor = color;
