@@ -34,6 +34,7 @@ class _FontPickerMaterialModalState extends State<FontPickerMaterialModal> {
     'Starjedi': 'Not Starwars',
     'Sunnyspells': 'Sunnyspells',
     'NewWaltDisney': 'Not Disney',
+    'DiarioDeAndy': 'Diario De Andy'
   };
 
   @override

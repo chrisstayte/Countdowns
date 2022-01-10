@@ -94,7 +94,7 @@ class CountdownCard extends StatelessWidget {
     return SizedBox(
       height: 74,
       child: Card(
-        color: countdownEvent.backgroundColor ?? Colors.blue.shade300,
+        color: countdownEvent.backgroundColor ?? Colors.blue.shade200,
         child: Row(
           children: [
             SizedBox(
@@ -116,7 +116,7 @@ class CountdownCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: _contentColor,
-                    fontSize: 16,
+                    fontSize: 17,
                     fontWeight: FontWeight.w700,
                     fontFamily: countdownEvent.fontFamily,
                   ),

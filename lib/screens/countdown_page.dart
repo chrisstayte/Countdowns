@@ -60,7 +60,6 @@ class _CountdownPageState extends State<CountdownPage> {
       hours = timeDifference.inHours % 24;
       days = (timeDifference.inDays % 365);
 
-      //TODO: calculate months
       years = (timeDifference.inDays / 365.0).floor();
     });
   }
@@ -134,7 +133,8 @@ class _CountdownPageState extends State<CountdownPage> {
           )
         ],
       ),
-      backgroundColor: widget.countdownEvent.backgroundColor ?? Colors.blue,
+      backgroundColor:
+          widget.countdownEvent.backgroundColor ?? Colors.blue.shade200,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 15.0),
         child: Column(
@@ -174,112 +174,80 @@ class _CountdownPageState extends State<CountdownPage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(
-                      flex: 1,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          FittedBox(
-                            child: Text(
-                              years.toString(),
-                              style: numberStyle,
-                            ),
-                          ),
-                          Text("Years", style: labelStyle)
-                        ],
+                    FittedBox(
+                      child: Text(
+                        years.toString(),
+                        style: numberStyle,
                       ),
                     ),
-                    Expanded(
-                      flex: 1,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            months.toString(),
-                            style: numberStyle,
-                          ),
-                          Text(
-                            "Months",
-                            style: labelStyle,
-                          )
-                        ],
-                      ),
+                    const SizedBox(
+                      width: 10,
                     ),
+                    Text("Years", style: labelStyle)
                   ],
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(
-                      flex: 1,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            days.toString(),
-                            style: numberStyle,
-                          ),
-                          Text(
-                            "Days",
-                            style: labelStyle,
-                          )
-                        ],
-                      ),
+                    Text(
+                      days.toString(),
+                      style: numberStyle,
                     ),
-                    Expanded(
-                      flex: 1,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            hours.toString(),
-                            textAlign: TextAlign.center,
-                            style: numberStyle,
-                          ),
-                          Text("Hours", style: labelStyle)
-                        ],
-                      ),
+                    const SizedBox(
+                      width: 10,
                     ),
+                    Text(
+                      "Days",
+                      style: labelStyle,
+                    )
                   ],
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(
-                      flex: 1,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            minutes.toString(),
-                            style: numberStyle,
-                          ),
-                          Text(
-                            "Minutes",
-                            style: labelStyle,
-                          )
-                        ],
-                      ),
+                    Text(
+                      hours.toString(),
+                      textAlign: TextAlign.center,
+                      style: numberStyle,
                     ),
-                    Expanded(
-                      flex: 1,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            seconds.toString(),
-                            style: numberStyle,
-                          ),
-                          Text(
-                            "Seconds",
-                            style: labelStyle,
-                          )
-                        ],
-                      ),
+                    const SizedBox(
+                      width: 10,
                     ),
+                    Text("Hours", style: labelStyle)
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      minutes.toString(),
+                      style: numberStyle,
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Minutes",
+                      style: labelStyle,
+                    )
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      seconds.toString(),
+                      style: numberStyle,
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Seconds",
+                      style: labelStyle,
+                    )
                   ],
                 )
               ],

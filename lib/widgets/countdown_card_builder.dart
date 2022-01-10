@@ -119,7 +119,7 @@ class CountdownCardBuilder extends StatelessWidget {
                 title ?? '',
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 17,
                   fontWeight: FontWeight.w700,
                   // color: color != null ? Colors.white : null,
                   color: defaultContentColor,

@@ -122,5 +122,9 @@ flutter:
       fonts:
         - asset: fonts/NewWaltDisney.ttf
           weight: 400
+    - family: DiarioDeAndy
+      fonts:
+        - asset: fonts/DiarioDeAndy.otf
+          weight: 400
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

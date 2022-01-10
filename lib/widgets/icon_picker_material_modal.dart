@@ -79,6 +79,19 @@ class _IconPickerMaterialModalState extends State<IconPickerMaterialModal> {
     Icons.flutter_dash,
     Icons.golf_course,
     Icons.tty_sharp,
+    Icons.attractions,
+    Icons.assignment_sharp,
+    Icons.camera_rear,
+    Icons.cloud_sharp,
+    Icons.coronavirus,
+    Icons.motion_photos_auto,
+    Icons.email,
+    Icons.phone,
+    Icons.wallet_giftcard,
+    Icons.smart_button,
+    Icons.brunch_dining_rounded,
+    Icons.bakery_dining,
+    Icons.library_add,
   ];
 
   @override

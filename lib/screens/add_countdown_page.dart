@@ -137,6 +137,24 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                     context.read<SettingsProvider>().settings.sortingMethod,
                   );
                 Navigator.pop(context);
+              } else {
+                // var snackBar = SnackBar(
+                //   content: Text('A name and date are required!'),
+                //   action: SnackBarAction(label: 'Dismiss', onPressed: () {}),
+                // );
+                // ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                var materialBanner = MaterialBanner(
+                  content: Text('A name and date are required'),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () {},
+                      child: const Text('DISMISS'),
+                    ),
+                  ],
+                );
+
+                ScaffoldMessenger.of(context)
+                    .showMaterialBanner(materialBanner);
               }
             },
             child: Text('Add'),
@@ -220,7 +238,7 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                       ),
                     ),
                   ),
-                  title: Text('Color'),
+                  title: Text('Background Color'),
                   trailing: Icon(
                     Icons.circle,
                     color: _backgroundColor,
