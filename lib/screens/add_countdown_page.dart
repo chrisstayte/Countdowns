@@ -138,23 +138,12 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                   );
                 Navigator.pop(context);
               } else {
-                // var snackBar = SnackBar(
-                //   content: Text('A name and date are required!'),
-                //   action: SnackBarAction(label: 'Dismiss', onPressed: () {}),
-                // );
-                // ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                var materialBanner = MaterialBanner(
+                var snackBar = const SnackBar(
                   content: Text('A name and date are required'),
-                  actions: <Widget>[
-                    TextButton(
-                      onPressed: () {},
-                      child: const Text('DISMISS'),
-                    ),
-                  ],
+                  duration: Duration(seconds: 2),
+                  //action: SnackBarAction(label: 'Dismiss', onPressed: () {}),
                 );
-
-                ScaffoldMessenger.of(context)
-                    .showMaterialBanner(materialBanner);
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
               }
             },
             child: Text('Add'),
