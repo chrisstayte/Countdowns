@@ -26,3 +26,14 @@ The objective of Countdown Timer is to provide a continuously decrementing displ
 - [ ]  User can see an alert when the event is reached
 - [X]  User can specify more than one event.
 - [X]  User can see a countdown timers for each event that has been defined.
+
+<div
+  class="store-badge"
+  data-name="Countdowns"
+
+  data-app-store-url="https://apps.apple.com/us/app/countdowns-chris-stayte/id1603744166"
+></div>
+<script
+  async
+  src="https://cdn.jsdelivr.net/npm/store-badge@1/build/bundle.js"
+></script>
