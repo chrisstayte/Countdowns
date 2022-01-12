@@ -92,7 +92,7 @@ class _CountdownPageState extends State<CountdownPage> {
         ),
         elevation: 0,
         backgroundColor:
-            widget.countdownEvent.backgroundColor ?? Colors.blue.shade200,
+            widget.countdownEvent.backgroundColor ?? Color(0XFF857DB1),
         actions: [
           IconButton(
             onPressed: () {
@@ -134,7 +134,7 @@ class _CountdownPageState extends State<CountdownPage> {
         ],
       ),
       backgroundColor:
-          widget.countdownEvent.backgroundColor ?? Colors.blue.shade200,
+          widget.countdownEvent.backgroundColor ?? Color(0XFF857DB1),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 15.0),
         child: Column(
