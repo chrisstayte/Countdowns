@@ -1,9 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.chrisstayte.flutter_countdown">
+    package="com.chrisstayte.countdowns">
    <application
-        android:label="flutter_countdown"
+        android:label="Countdowns"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/countdowns">
         <activity
             android:name=".MainActivity"
             android:exported="true"
