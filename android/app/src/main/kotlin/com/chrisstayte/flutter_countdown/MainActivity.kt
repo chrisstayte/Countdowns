@@ -1,4 +1,4 @@
-package com.chrisstayte.flutter_countdown
+package com.chrisstayte.countdowns
 
 import io.flutter.embedding.android.FlutterActivity
 
