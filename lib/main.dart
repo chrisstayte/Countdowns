@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget {
             fontSize: 22,
           ),
         ),
-        cupertinoOverrideTheme: NoDefaultCupertinoThemeData(
+        cupertinoOverrideTheme: const NoDefaultCupertinoThemeData(
           textTheme:
               CupertinoTextThemeData(primaryColor: CupertinoColors.white),
         ),
