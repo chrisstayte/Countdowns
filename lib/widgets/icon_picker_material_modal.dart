@@ -93,6 +93,8 @@ class _IconPickerMaterialModalState extends State<IconPickerMaterialModal> {
     Icons.brunch_dining_rounded,
     Icons.bakery_dining,
     Icons.library_add,
+    Icons.favorite,
+    Icons.park,
   ];
 
   @override
