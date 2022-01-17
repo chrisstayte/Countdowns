@@ -16,7 +16,6 @@ class IconPickerMaterialModal extends StatefulWidget {
 
 typedef void IconCallback(IconData icon);
 
-//TODO: Fixed icon that is selected when user first opens from default
 class _IconPickerMaterialModalState extends State<IconPickerMaterialModal> {
   IconData? _selectedIcon;
 
@@ -93,6 +92,8 @@ class _IconPickerMaterialModalState extends State<IconPickerMaterialModal> {
     Icons.brunch_dining_rounded,
     Icons.bakery_dining,
     Icons.library_add,
+    Icons.favorite,
+    Icons.park,
   ];
 
   @override

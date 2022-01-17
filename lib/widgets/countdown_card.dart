@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:countdowns/global.dart/global.dart';
 import 'package:countdowns/models/countdown_event.dart';
 import 'package:countdowns/screens/countdown_page.dart';
 
@@ -19,6 +20,9 @@ class CountdownCard extends StatelessWidget {
               ? Colors.black
               : Colors.white
           : Colors.white;
+
+  late final Color _backgroundColor =
+      countdownEvent.backgroundColor ?? Global.colors.defaultBackgroundColor;
 
   List<Widget> _getStatus() {
     List<Widget> widgets = [];
@@ -94,7 +98,7 @@ class CountdownCard extends StatelessWidget {
     return SizedBox(
       height: 74,
       child: Card(
-        color: countdownEvent.backgroundColor ?? Color(0XFF857DB1),
+        color: _backgroundColor,
         child: Row(
           children: [
             SizedBox(

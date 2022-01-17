@@ -1,3 +1,4 @@
+import 'package:countdowns/global.dart/global.dart';
 import 'package:flutter/material.dart';
 
 class FontPickerMaterialModal extends StatefulWidget {
@@ -23,20 +24,6 @@ class _FontPickerMaterialModalState extends State<FontPickerMaterialModal> {
     super.initState();
   }
 
-  final Map<String, String> _fonts = {
-    'Default': 'Default',
-    'LibreBaskerville': 'Baskerville',
-    'CarnivaleeFreakshow': 'Carnivalee Freakshow',
-    'ComicNeue': 'Comic Neue',
-    'GoodTimes': 'Good Times',
-    'Roboto': 'Roboto',
-    'LuxuriousRoman': 'Luxurious Roman',
-    'Starjedi': 'Not Starwars',
-    'Sunnyspells': 'Sunnyspells',
-    'NewWaltDisney': 'Not Disney',
-    'DiarioDeAndy': 'Diario De Andy'
-  };
-
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
@@ -44,10 +31,11 @@ class _FontPickerMaterialModalState extends State<FontPickerMaterialModal> {
       builder: (context, scrollController) {
         return ListView.builder(
           controller: scrollController,
-          itemCount: _fonts.length,
+          itemCount: Global.fonts.fontMap.length,
           itemBuilder: (context, index) {
-            String fontName = _fonts.keys.toList()[index];
-            String fontDisplayName = _fonts.values.toList()[index];
+            String fontName = Global.fonts.fontMap.keys.toList()[index];
+            String fontDisplayName =
+                Global.fonts.fontMap.values.toList()[index];
             return ListTile(
               title: Text(
                 fontDisplayName,
@@ -55,9 +43,10 @@ class _FontPickerMaterialModalState extends State<FontPickerMaterialModal> {
                   fontFamily: fontName,
                 ),
               ),
-              trailing: _selectedFont == _fonts.keys.toList()[index]
-                  ? const Icon(Icons.check)
-                  : null,
+              trailing:
+                  _selectedFont == Global.fonts.fontMap.keys.toList()[index]
+                      ? const Icon(Icons.check)
+                      : null,
               onTap: () {
                 setState(
                   () {
