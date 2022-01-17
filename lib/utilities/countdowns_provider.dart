@@ -95,6 +95,13 @@ class CountdownsProvider extends ChangeNotifier {
     await _saveEvents();
   }
 
+  void editEvent(CountdownEvent event) async {
+    if (_events.contains(event)) {
+      notifyListeners();
+      _saveEvents();
+    }
+  }
+
   void addEvent(CountdownEvent event) async {
     _events.add(event);
     notifyListeners();

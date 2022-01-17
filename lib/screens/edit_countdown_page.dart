@@ -1,5 +1,5 @@
+import 'package:countdowns/global.dart/global.dart';
 import 'package:countdowns/models/countdown_event.dart';
-import 'package:countdowns/screens/settings_page.dart';
 import 'package:countdowns/utilities/countdowns_provider.dart';
 import 'package:countdowns/utilities/settings_provider.dart';
 import 'package:countdowns/widgets/color_picker_material_modal.dart';
@@ -9,43 +9,29 @@ import 'package:countdowns/widgets/font_picker_material_modal.dart';
 import 'package:countdowns/widgets/icon_picker_material_modal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:provider/src/provider.dart';
 
-class AddCountdownPage extends StatefulWidget {
-  const AddCountdownPage({Key? key}) : super(key: key);
+class EditCountdownPage extends StatefulWidget {
+  const EditCountdownPage({Key? key, required this.countdownEvent})
+      : super(key: key);
+
+  final CountdownEvent countdownEvent;
 
   @override
-  _AddCountdownPageState createState() => _AddCountdownPageState();
+  _EditCountdownPageState createState() => _EditCountdownPageState();
 }
 
-class _AddCountdownPageState extends State<AddCountdownPage> {
-  @override
-  void initState() {
-    super.initState();
-
-    _focusNode = FocusNode();
-  }
-
-  @override
-  void dispose() {
-    // Clean up the focus node when the Form is disposed.
-    _focusNode.dispose();
-
-    super.dispose();
-  }
+class _EditCountdownPageState extends State<EditCountdownPage> {
+  final FocusNode _focusNode = FocusNode();
+  final TextEditingController _textEditingController = TextEditingController();
 
   String _textBox = '';
-  DateTime? _dateTime;
+  late DateTime _dateTime;
   Color? _backgroundColor;
   IconData? _icon;
   String? _fontFamily;
   String? _fontDisplayName;
   Color? _contentColor;
-
-  late FocusNode _focusNode;
-
-  final _rowHeight = 42.0;
 
   final _modalShape = const RoundedRectangleBorder(
     borderRadius: BorderRadius.only(
@@ -55,11 +41,30 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
   );
 
   @override
+  void initState() {
+    _textEditingController.text = widget.countdownEvent.title;
+    _textBox = widget.countdownEvent.title;
+    _dateTime = widget.countdownEvent.eventDate;
+    _backgroundColor = widget.countdownEvent.backgroundColor;
+    _icon = widget.countdownEvent.icon;
+    _contentColor = widget.countdownEvent.contentColor;
+    _fontFamily = widget.countdownEvent.fontFamily;
+    _fontDisplayName = Global.fonts.fontMap[widget.countdownEvent.fontFamily];
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        title: const Text('Add Countdown'),
+        title: Text('Edit Countdown'),
         actions: [
           TextButton(
             style: ButtonStyle(
@@ -72,20 +77,15 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
             ),
             onPressed: () {
               if (_textBox.isNotEmpty && _dateTime != null) {
-                CountdownEvent event = CountdownEvent(
-                  title: _textBox,
-                  eventDate: _dateTime!,
-                  backgroundColor: _backgroundColor,
-                  icon: _icon,
-                  fontFamily: _fontFamily,
-                  contentColor: _contentColor,
-                );
-
-                context.read<CountdownsProvider>()
-                  ..addEvent(event)
-                  ..sortEvents(
-                    context.read<SettingsProvider>().settings.sortingMethod,
-                  );
+                widget.countdownEvent.title = _textBox;
+                widget.countdownEvent.eventDate = _dateTime;
+                widget.countdownEvent.icon = _icon;
+                widget.countdownEvent.backgroundColor = _backgroundColor;
+                widget.countdownEvent.contentColor = _contentColor;
+                widget.countdownEvent.fontFamily = _fontFamily;
+                context
+                    .read<CountdownsProvider>()
+                    .editEvent(widget.countdownEvent);
                 Navigator.pop(context);
               } else {
                 var snackBar = const SnackBar(
@@ -96,13 +96,13 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
               }
             },
-            child: Text('Add'),
+            child: Text(
+              'Save',
+            ),
           )
         ],
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
@@ -129,6 +129,7 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                     children: [
                       Flexible(
                         child: TextField(
+                          controller: _textEditingController,
                           focusNode: _focusNode,
                           textCapitalization: TextCapitalization.words,
                           textDirection: TextDirection.ltr,
@@ -156,6 +157,7 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                   ),
                 ),
                 ListTile(
+                  // onTap: () => _showDatePicker(),
                   onTap: () => showCupertinoModalPopup(
                     context: context,
                     builder: (context) => DatePickerCupertinoModal(
@@ -171,7 +173,7 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                   trailing: _dateTime == null
                       ? Icon(Icons.chevron_right_rounded)
                       : Text(
-                          '${_dateTime?.month.toString()}/${_dateTime?.day.toString()}/${_dateTime?.year.toString()}'),
+                          '${_dateTime.month.toString()}/${_dateTime.day.toString()}/${_dateTime.year.toString()}'),
                 ),
                 ListTile(
                   onTap: () => showModalBottomSheet(
