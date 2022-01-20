@@ -76,7 +76,8 @@ class _EditCountdownPageState extends State<EditCountdownPage> {
               ),
             ),
             onPressed: () {
-              if (_textBox.isNotEmpty && _dateTime != null) {
+              var trimmed = _textBox.trim();
+              if (trimmed.isNotEmpty && _dateTime != null) {
                 widget.countdownEvent.title = _textBox;
                 widget.countdownEvent.eventDate = _dateTime;
                 widget.countdownEvent.icon = _icon;

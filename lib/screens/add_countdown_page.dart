@@ -71,7 +71,8 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
               ),
             ),
             onPressed: () {
-              if (_textBox.isNotEmpty && _dateTime != null) {
+              var trimmed = _textBox.trim();
+              if (trimmed.isNotEmpty && _dateTime != null) {
                 CountdownEvent event = CountdownEvent(
                   title: _textBox,
                   eventDate: _dateTime!,
