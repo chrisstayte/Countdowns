@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:countdowns/global.dart/global.dart';
+import 'package:countdowns/global/global.dart';
 import 'package:countdowns/models/countdown_event.dart';
 import 'package:countdowns/screens/countdown_page.dart';
 

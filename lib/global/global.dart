@@ -6,7 +6,8 @@ class Global {
 }
 
 class _Colors {
-  final defaultBackgroundColor = const Color(0XFF857DB1);
+  final lightBackgroundColor = const Color(0XFFE9EDF7);
+  final defaultBackgroundColor = const Color(0XFF95B0BB);
 }
 
 class _Fonts {

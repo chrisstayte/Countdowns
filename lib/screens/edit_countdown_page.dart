@@ -1,4 +1,4 @@
-import 'package:countdowns/global.dart/global.dart';
+import 'package:countdowns/global/global.dart';
 import 'package:countdowns/models/countdown_event.dart';
 import 'package:countdowns/utilities/countdowns_provider.dart';
 import 'package:countdowns/utilities/settings_provider.dart';
@@ -64,7 +64,7 @@ class _EditCountdownPageState extends State<EditCountdownPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Countdown'),
+        title: const Text('Edit Countdown'),
         actions: [
           TextButton(
             style: ButtonStyle(
@@ -72,12 +72,12 @@ class _EditCountdownPageState extends State<EditCountdownPage> {
               foregroundColor: MaterialStateProperty.all(
                 context.watch<SettingsProvider>().settings.darkMode
                     ? Colors.white
-                    : Color(0XFF536372),
+                    : const Color(0XFF536372),
               ),
             ),
             onPressed: () {
               var trimmed = _textBox.trim();
-              if (trimmed.isNotEmpty && _dateTime != null) {
+              if (trimmed.isNotEmpty) {
                 widget.countdownEvent.title = _textBox;
                 widget.countdownEvent.eventDate = _dateTime;
                 widget.countdownEvent.icon = _icon;
@@ -170,18 +170,15 @@ class _EditCountdownPageState extends State<EditCountdownPage> {
                       ),
                     ),
                   ),
-                  title: Text('Date'),
-                  trailing: _dateTime == null
-                      ? Icon(Icons.chevron_right_rounded)
-                      : Text(
-                          '${_dateTime.month.toString()}/${_dateTime.day.toString()}/${_dateTime.year.toString()}'),
+                  title: const Text('Date'),
+                  trailing: Text(
+                      '${_dateTime.month.toString()}/${_dateTime.day.toString()}/${_dateTime.year.toString()}'),
                 ),
                 ListTile(
                   onTap: () => showModalBottomSheet(
                     isScrollControlled: true,
                     shape: _modalShape,
                     context: context,
-                    // TODO: Fix Check Mark Box
                     builder: (context) => ColorPickerMaterialModal(
                       color: _backgroundColor,
                       colorCallback: (color) => setState(
@@ -191,7 +188,7 @@ class _EditCountdownPageState extends State<EditCountdownPage> {
                       ),
                     ),
                   ),
-                  title: Text('Background Color'),
+                  title: const Text('Background Color'),
                   trailing: Icon(
                     Icons.circle,
                     color: _backgroundColor,
@@ -211,9 +208,9 @@ class _EditCountdownPageState extends State<EditCountdownPage> {
                       ),
                     ),
                   ),
-                  title: Text('Icon'),
+                  title: const Text('Icon'),
                   trailing: _icon == null
-                      ? Icon(Icons.chevron_right_rounded)
+                      ? const Icon(Icons.chevron_right_rounded)
                       : Icon(_icon),
                 ),
                 ListTile(
@@ -235,9 +232,9 @@ class _EditCountdownPageState extends State<EditCountdownPage> {
                       ),
                     ),
                   ),
-                  title: Text('Font'),
+                  title: const Text('Font'),
                   trailing: _fontFamily == null
-                      ? Text('Default')
+                      ? const Text('Default')
                       : Text(_fontDisplayName!),
                 ),
                 ListTile(
@@ -254,7 +251,7 @@ class _EditCountdownPageState extends State<EditCountdownPage> {
                       ),
                     ),
                   ),
-                  title: Text('Content Color'),
+                  title: const Text('Content Color'),
                   trailing: _contentColor == null
                       ? Icon(Icons.circle)
                       : Icon(

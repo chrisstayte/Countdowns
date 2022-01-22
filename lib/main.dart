@@ -1,3 +1,4 @@
+import 'package:countdowns/global/global.dart';
 import 'package:countdowns/screens/home_page.dart';
 import 'package:countdowns/utilities/countdowns_provider.dart';
 import 'package:countdowns/utilities/settings_provider.dart';
@@ -34,8 +35,8 @@ class MyApp extends StatelessWidget {
       showSemanticsDebugger: false,
       title: 'Countdowns',
       theme: ThemeData.light().copyWith(
-        appBarTheme: const AppBarTheme(
-          color: Colors.white,
+        appBarTheme: AppBarTheme(
+          color: Global.colors.lightBackgroundColor,
           elevation: 0,
           iconTheme: IconThemeData(
             color: Color(0XFF536372),
@@ -48,8 +49,8 @@ class MyApp extends StatelessWidget {
             fontSize: 22,
           ),
         ),
-        backgroundColor: Colors.white,
-        scaffoldBackgroundColor: Colors.white,
+        backgroundColor: Global.colors.lightBackgroundColor,
+        scaffoldBackgroundColor: Global.colors.lightBackgroundColor,
       ),
       darkTheme: ThemeData.dark().copyWith(
         appBarTheme: const AppBarTheme(

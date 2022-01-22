@@ -7,6 +7,7 @@ import 'package:countdowns/screens/settings_page.dart';
 import 'package:countdowns/utilities/countdowns_provider.dart';
 import 'package:countdowns/widgets/countdown_card.dart';
 import 'package:countdowns/widgets/countdown_card_builder.dart';
+import 'package:countdowns/widgets/countdown_card_empty.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -78,48 +79,50 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: context.watch<CountdownsProvider>().events.isNotEmpty
-            ? ListView.builder(
-                itemCount: context.watch<CountdownsProvider>().events.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return GestureDetector(
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => CountdownPage(
-                          countdownEvent:
-                              context.watch<CountdownsProvider>().events[index],
+          padding: const EdgeInsets.all(8.0),
+          child: context.watch<CountdownsProvider>().events.isNotEmpty
+              ? ListView.builder(
+                  itemCount: context.watch<CountdownsProvider>().events.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return GestureDetector(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => CountdownPage(
+                            countdownEvent: context
+                                .watch<CountdownsProvider>()
+                                .events[index],
+                          ),
                         ),
                       ),
-                    ),
-                    child: CountdownCard(
-                      countdownEvent:
-                          context.read<CountdownsProvider>().events[index],
-                    ),
-                  );
-                },
-              )
-            : GestureDetector(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return const AddCountdownPage();
-                    },
-                  ),
-                ),
-                child: Hero(
-                  tag: 'emptycard',
-                  child: Material(
-                    type: MaterialType.transparency,
-                    child: CountdownCardBuilder(
-                      title: 'Create a countdown',
-                    ),
-                  ),
-                ),
-              ),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+                      child: CountdownCard(
+                        countdownEvent:
+                            context.read<CountdownsProvider>().events[index],
+                      ),
+                    );
+                  },
+                )
+              : CountdownCardEmpty()
+          // : GestureDetector(
+          //     onTap: () => Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder: (context) {
+          //           return const AddCountdownPage();
+          //         },
+          //       ),
+          //     ),
+          //     child: Hero(
+          //       tag: 'emptycard',
+          //       child: Material(
+          //         type: MaterialType.transparency,
+          //         child: CountdownCardBuilder(
+          //           title: 'Create a countdown',
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
