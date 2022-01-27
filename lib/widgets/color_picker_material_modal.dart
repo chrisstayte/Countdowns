@@ -26,6 +26,8 @@ class _ColorPickerMaterialModalState extends State<ColorPickerMaterialModal> {
   }
 
   final List<Color> _colors = [
+    const Color(0XFF223843),
+    const Color(0XFFD77A61),
     const Color(0XFFBB84E7),
     const Color(0XFFA3C4F3),
     const Color(0XFF568D66),

@@ -1,5 +1,7 @@
 import 'package:countdowns/global/global.dart';
+import 'package:countdowns/utilities/settings_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/src/provider.dart';
 
 class CountdownCardEmpty extends StatelessWidget {
   const CountdownCardEmpty({Key? key}) : super(key: key);
@@ -10,22 +12,23 @@ class CountdownCardEmpty extends StatelessWidget {
       decoration: BoxDecoration(
         color: Global.colors.defaultBackgroundColor,
         borderRadius: BorderRadius.all(
-          Radius.circular(45.0),
+          Radius.circular(20.0),
         ),
       ),
-      width: 175,
-      height: 175,
+      height: 85,
       child: Center(
         child: Container(
-          width: 65,
-          height: 65,
+          width: 45,
+          height: 45,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Colors.white,
+            color: context.watch<SettingsProvider>().settings.darkMode
+                ? Global.colors.darkIconColor
+                : Global.colors.lightIconColor,
           ),
           child: Icon(
             Icons.add_rounded,
-            size: 55,
+            size: 25,
             color: Global.colors.defaultBackgroundColor,
           ),
         ),

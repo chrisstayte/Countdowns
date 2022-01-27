@@ -6,8 +6,14 @@ class Global {
 }
 
 class _Colors {
-  final lightBackgroundColor = const Color(0XFFE9EDF7);
-  final defaultBackgroundColor = const Color(0XFF95B0BB);
+  final lightIconColor = const Color(0XFFE7EAEB);
+  late final lightIconColorDarker =
+      HSLColor.fromColor(lightIconColor).withLightness(0.55).toColor();
+  final darkIconColor = const Color(0XFF323031);
+  late final darkIconColorLighter =
+      HSLColor.fromColor(darkIconColor).withLightness(0.75).toColor();
+  final defaultBackgroundColor = const Color(0XFF223843);
+  late final defaultContentColor = lightIconColor;
 }
 
 class _Fonts {

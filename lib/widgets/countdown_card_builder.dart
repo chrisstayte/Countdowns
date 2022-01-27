@@ -1,3 +1,5 @@
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:countdowns/global/global.dart';
 import 'package:countdowns/utilities/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/src/provider.dart';
@@ -25,9 +27,9 @@ class CountdownCardBuilder extends StatelessWidget {
       ? contentColor!
       : color != null
           ? color!.computeLuminance() > 0.5
-              ? Colors.black
-              : Colors.white
-          : null;
+              ? Global.colors.darkIconColor
+              : Global.colors.lightIconColor
+          : Global.colors.defaultContentColor;
 
   List<Widget> getStatus() {
     List<Widget> widgets = [];
@@ -102,24 +104,25 @@ class CountdownCardBuilder extends StatelessWidget {
   Widget getRow() => Row(
         children: [
           SizedBox(
-            width: 44,
+            width: 50,
             child: Align(
               alignment: Alignment.center,
               child: Icon(
                 icon ?? Icons.calendar_today,
                 color: defaultContentColor,
-                size: 24,
+                size: 26,
               ),
             ),
           ),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(right: 15.0),
-              child: Text(
+              child: AutoSizeText(
                 title ?? '',
                 overflow: TextOverflow.ellipsis,
+                maxLines: 2,
                 style: TextStyle(
-                  fontSize: 17,
+                  fontSize: 28,
                   fontWeight: FontWeight.w700,
                   // color: color != null ? Colors.white : null,
                   color: defaultContentColor,
@@ -141,25 +144,15 @@ class CountdownCardBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return color != null
-        ? SizedBox(
-            height: 74,
-            child: Card(color: color, child: getRow()),
-          )
-        : Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: context.watch<SettingsProvider>().settings.darkMode
-                    ? Colors.white
-                    : Colors.black,
-                width: 1,
-              ),
-              borderRadius: const BorderRadius.all(
-                Radius.circular(4.0),
-              ),
-            ),
-            height: 74,
-            child: getRow(),
-          );
+    return Container(
+      height: 85,
+      decoration: BoxDecoration(
+        color: color ?? Global.colors.defaultBackgroundColor,
+        borderRadius: const BorderRadius.all(
+          Radius.circular(20.0),
+        ),
+      ),
+      child: getRow(),
+    );
   }
 }

@@ -29,100 +29,98 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text(widget.title),
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.settings_outlined),
-          onPressed: () {
-            // UPDATE: Add ios style modal on top another
-            // Navigator.push(
-            //   context,
-            //   PageRouteBuilder(
-            //     transitionDuration: const Duration(milliseconds: 500),
-            //     pageBuilder: (context, _, __) {
-            //       return const SettingsPage();
-            //     },
-            //     transitionsBuilder: (context, primaryRouteAnimation,
-            //         secondaryRouteAnimation, child) {
-            //       return CupertinoFullscreenDialogTransition(
-            //         primaryRouteAnimation: primaryRouteAnimation,
-            //         secondaryRouteAnimation: secondaryRouteAnimation,
-            //         child: child,
-            //         linearTransition: true,
-            //       );
-            //     },
-            //   ),
-            // );
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                fullscreenDialog: true,
-                builder: (context) {
-                  return const SettingsPage();
-                },
-              ),
-            );
-          },
-        ),
         actions: [
+          Visibility(
+            visible: context.read<CountdownsProvider>().events.isNotEmpty,
+            child: IconButton(
+              iconSize: 28,
+              icon: const Icon(Icons.add_rounded),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return const AddCountdownPage();
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
           IconButton(
-            icon: const Icon(Icons.add),
+            icon: const Icon(Icons.settings_rounded),
             onPressed: () {
+              // UPDATE: Add ios style modal on top another
+              // Navigator.push(
+              //   context,
+              //   PageRouteBuilder(
+              //     transitionDuration: const Duration(milliseconds: 500),
+              //     pageBuilder: (context, _, __) {
+              //       return const SettingsPage();
+              //     },
+              //     transitionsBuilder: (context, primaryRouteAnimation,
+              //         secondaryRouteAnimation, child) {
+              //       return CupertinoFullscreenDialogTransition(
+              //         primaryRouteAnimation: primaryRouteAnimation,
+              //         secondaryRouteAnimation: secondaryRouteAnimation,
+              //         child: child,
+              //         linearTransition: true,
+              //       );
+              //     },
+              //   ),
+              // );
               Navigator.push(
                 context,
                 MaterialPageRoute(
+                  fullscreenDialog: true,
                   builder: (context) {
-                    return const AddCountdownPage();
+                    return const SettingsPage();
                   },
                 ),
               );
             },
-          )
+          ),
         ],
       ),
+
       body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: context.watch<CountdownsProvider>().events.isNotEmpty
-              ? ListView.builder(
-                  itemCount: context.watch<CountdownsProvider>().events.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return GestureDetector(
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => CountdownPage(
-                            countdownEvent: context
-                                .watch<CountdownsProvider>()
-                                .events[index],
-                          ),
+        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 0.0),
+        child: context.watch<CountdownsProvider>().events.isNotEmpty
+            ? ListView.builder(
+                itemCount: context.watch<CountdownsProvider>().events.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return GestureDetector(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => CountdownPage(
+                          countdownEvent:
+                              context.watch<CountdownsProvider>().events[index],
                         ),
                       ),
-                      child: CountdownCard(
-                        countdownEvent:
-                            context.read<CountdownsProvider>().events[index],
-                      ),
-                    );
-                  },
-                )
-              : CountdownCardEmpty()
-          // : GestureDetector(
-          //     onTap: () => Navigator.push(
-          //       context,
-          //       MaterialPageRoute(
-          //         builder: (context) {
-          //           return const AddCountdownPage();
-          //         },
-          //       ),
-          //     ),
-          //     child: Hero(
-          //       tag: 'emptycard',
-          //       child: Material(
-          //         type: MaterialType.transparency,
-          //         child: CountdownCardBuilder(
-          //           title: 'Create a countdown',
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-          ), // This trailing comma makes auto-formatting nicer for build methods.
+                    ),
+                    child: CountdownCard(
+                      countdownEvent:
+                          context.read<CountdownsProvider>().events[index],
+                    ),
+                  );
+                },
+              )
+            : ListView(
+                children: [
+                  GestureDetector(
+                      onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return const AddCountdownPage();
+                              },
+                            ),
+                          ),
+                      child: CountdownCardEmpty())
+                ],
+              ),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

@@ -239,6 +239,7 @@ class _CountdownPageState extends State<CountdownPage> {
                     widget.countdownEvent.title,
                     overflow: TextOverflow.visible,
                     maxLines: 2,
+                    minFontSize: 14,
                     textAlign: TextAlign.center,
                     style: numberStyle(),
                   ),
