@@ -1,4 +1,5 @@
 import 'package:countdowns/enums/sorting_method.dart';
+import 'package:countdowns/global/global.dart';
 import 'package:countdowns/screens/setttings/credits_page.dart';
 import 'package:countdowns/utilities/countdowns_provider.dart';
 import 'package:countdowns/utilities/settings_provider.dart';
@@ -73,6 +74,13 @@ class _SettingsPageState extends State<SettingsPage> {
         appBar: AppBar(
           title: Text('Settings'),
           elevation: 0,
+          automaticallyImplyLeading: false,
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('Done'),
+            )
+          ],
         ),
         body: ListView(
           padding: EdgeInsets.only(top: 15.0),
@@ -90,7 +98,12 @@ class _SettingsPageState extends State<SettingsPage> {
             ListTile(
               title: Text("Sorting"),
               trailing: DropdownButton(
+                dropdownColor:
+                    context.watch<SettingsProvider>().settings.darkMode
+                        ? Global.colors.darkIconColor
+                        : Global.colors.lightIconColor,
                 value: _sortingMethod,
+                underline: Container(),
                 items: const [
                   DropdownMenuItem<SortingMethod>(
                     child: Text('Alpha Ascending'),
@@ -228,12 +241,18 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             fullDivider,
             SizedBox(
-              height: 42,
+              height: 100,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [Text('v${_packageInfo.version}')],
+                children: [
+                  Chip(label: Text('v${_packageInfo.version}')),
+                  const Chip(
+                    label: SizedBox(
+                        height: 28, child: Text('Made with ❤️ using flutter')),
+                  )
+                ],
               ),
-            )
+            ),
           ],
         ));
   }

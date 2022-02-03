@@ -1,10 +1,13 @@
 import 'dart:async';
 
-import 'package:countdowns/global.dart/global.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:countdowns/global/global.dart';
 import 'package:countdowns/models/countdown_event.dart';
 import 'package:countdowns/screens/countdown_page.dart';
+import 'package:countdowns/utilities/settings_provider.dart';
 
 import 'package:flutter/material.dart';
+import 'package:provider/src/provider.dart';
 
 /// This countdown card is used to show on the homescreen.
 /// It takes a [CountdownEvent] object and sets the information on the card accordingly
@@ -95,32 +98,40 @@ class CountdownCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 74,
-      child: Card(
-        color: _backgroundColor,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: _backgroundColor,
+          borderRadius: const BorderRadius.all(
+            Radius.circular(20.0),
+          ),
+        ),
+        height: 85,
         child: Row(
           children: [
             SizedBox(
-              width: 44,
+              width: 50,
               child: Align(
                 alignment: Alignment.center,
                 child: Icon(
                   countdownEvent.icon ?? Icons.calendar_today,
                   color: _contentColor,
-                  size: 24,
+                  size: 26,
                 ),
               ),
             ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.only(right: 15.0),
-                child: Text(
+                child: AutoSizeText(
                   countdownEvent.title,
+                  minFontSize: 14,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
+                    fontSize: 28,
                     color: _contentColor,
-                    fontSize: 17,
                     fontWeight: FontWeight.w700,
                     fontFamily: countdownEvent.fontFamily,
                   ),

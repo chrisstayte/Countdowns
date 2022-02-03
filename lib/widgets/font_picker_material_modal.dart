@@ -1,4 +1,4 @@
-import 'package:countdowns/global.dart/global.dart';
+import 'package:countdowns/global/global.dart';
 import 'package:flutter/material.dart';
 
 class FontPickerMaterialModal extends StatefulWidget {

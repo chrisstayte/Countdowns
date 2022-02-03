@@ -62,16 +62,9 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
         title: const Text('Add Countdown'),
         actions: [
           TextButton(
-            style: ButtonStyle(
-              overlayColor: MaterialStateProperty.all(Colors.transparent),
-              foregroundColor: MaterialStateProperty.all(
-                context.watch<SettingsProvider>().settings.darkMode
-                    ? Colors.white
-                    : Color(0XFF536372),
-              ),
-            ),
             onPressed: () {
-              if (_textBox.isNotEmpty && _dateTime != null) {
+              var trimmed = _textBox.trim();
+              if (trimmed.isNotEmpty && _dateTime != null) {
                 CountdownEvent event = CountdownEvent(
                   title: _textBox,
                   eventDate: _dateTime!,
@@ -105,7 +98,8 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 15.0, vertical: 0.0),
             child: GestureDetector(
               onTap: () => _focusNode.requestFocus(),
               child: Hero(

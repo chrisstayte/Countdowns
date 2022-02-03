@@ -1,3 +1,4 @@
+import 'package:countdowns/global/global.dart';
 import 'package:countdowns/screens/home_page.dart';
 import 'package:countdowns/utilities/countdowns_provider.dart';
 import 'package:countdowns/utilities/settings_provider.dart';
@@ -34,36 +35,85 @@ class MyApp extends StatelessWidget {
       showSemanticsDebugger: false,
       title: 'Countdowns',
       theme: ThemeData.light().copyWith(
-        appBarTheme: const AppBarTheme(
-          color: Colors.white,
+        appBarTheme: AppBarTheme(
+          color: Global.colors.lightIconColor,
           elevation: 0,
           iconTheme: IconThemeData(
-            color: Color(0XFF536372),
+            //color: Color(0XFF536372),
+            color: Global.colors.lightIconColorDarker,
           ),
           actionsIconTheme: IconThemeData(
-            color: Color(0XFF536372),
+            //color: Color(0XFF536372),
+            color: Global.colors.lightIconColorDarker,
           ),
           titleTextStyle: TextStyle(
-            color: Colors.black,
-            fontSize: 22,
+            color: Global.colors.darkIconColor,
+            fontFamily: 'DiarioDeAndy',
+            fontSize: 26,
           ),
         ),
-        backgroundColor: Colors.white,
-        scaffoldBackgroundColor: Colors.white,
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            primary: Global.colors.lightIconColorDarker,
+          ),
+        ),
+        scaffoldBackgroundColor: Global.colors.lightIconColor,
+        chipTheme: Theme.of(context).chipTheme.copyWith(
+              backgroundColor: Global.colors.lightIconColorDarker,
+              labelStyle: TextStyle(
+                color: Global.colors.lightIconColor,
+              ),
+            ),
+        textTheme: TextTheme(
+          bodyText2: TextStyle(
+            color: Global.colors.darkIconColor,
+          ),
+          subtitle1: TextStyle(
+            color: Global.colors.darkIconColor,
+          ),
+          headline6: TextStyle(
+            color: Global.colors.darkIconColor,
+          ),
+        ),
+        listTileTheme: Theme.of(context).listTileTheme.copyWith(
+              iconColor: Global.colors.lightIconColorDarker,
+            ),
       ),
       darkTheme: ThemeData.dark().copyWith(
-        appBarTheme: const AppBarTheme(
+        appBarTheme: AppBarTheme(
           elevation: 0,
-          foregroundColor: Colors.white,
-          actionsIconTheme: IconThemeData(color: Colors.white),
+          backgroundColor: Global.colors.darkIconColor,
+          foregroundColor: Global.colors.lightIconColor,
+          actionsIconTheme: IconThemeData(
+            color: Global.colors.darkIconColorLighter,
+          ),
+          iconTheme: IconThemeData(
+            //color: Color(0XFF536372),
+            color: Global.colors.darkIconColorLighter,
+          ),
           titleTextStyle: TextStyle(
-            color: Colors.white,
-            fontSize: 22,
+            color: Global.colors.lightIconColor,
+            fontFamily: 'DiarioDeAndy',
+            fontSize: 26,
           ),
         ),
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            primary: Global.colors.darkIconColorLighter,
+          ),
+        ),
+        scaffoldBackgroundColor: Global.colors.darkIconColor,
         cupertinoOverrideTheme: const NoDefaultCupertinoThemeData(
           textTheme:
               CupertinoTextThemeData(primaryColor: CupertinoColors.white),
+        ),
+        switchTheme: SwitchThemeData(
+          thumbColor: MaterialStateProperty.all(
+            Global.colors.lightIconColor,
+          ),
+          trackColor: MaterialStateProperty.all(
+            Global.colors.lightIconColorDarker,
+          ),
         ),
       ),
       themeMode: context.watch<SettingsProvider>().settings.darkMode
