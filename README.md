@@ -36,3 +36,5 @@ The objective of Countdown Timer is to provide a continuously decrementing displ
 - [X]  User can see a countdown timers for each event that has been defined.
 
 
+
+Google Play and the Google Play logo are trademarks of Google LLC.
