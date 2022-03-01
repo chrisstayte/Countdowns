@@ -5,12 +5,12 @@
 Created: December 22, 2021 9:38 PM
 Tier: Beginner
 
-Android - https://play.google.com/store/apps/details?id=com.chrisstayte.countdowns&hl=en&gl=US
-
 
 The objective of Countdown Timer is to provide a continuously decrementing display of the he months, days, hours, minutes, and seconds to a user entered event.
 
 <a href="https://apps.apple.com/us/app/countdowns-chris-stayte/id1603744166?itsct=apps_box_badge&amp;itscg=30200" style="display: inline-block; overflow: hidden; border-top-left-radius: 13px; border-top-right-radius: 13px; border-bottom-right-radius: 13px; border-bottom-left-radius: 13px; width: 250px; height: 83px;"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83&amp;releaseDate=1641945600&h=168d3d34b1d848b7b277d2b09c78d296" alt="Download on the App Store" style="border-top-left-radius: 13px; border-top-right-radius: 13px; border-bottom-right-radius: 13px; border-bottom-left-radius: 13px; width: 250px; height: 83px;"></a>
+
+<a href='https://play.google.com/store/apps/details?id=com.chrisstayte.countdowns&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
 
 ### Constraints
 
