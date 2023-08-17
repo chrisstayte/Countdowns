@@ -4,11 +4,9 @@ import 'dart:math';
 
 import 'package:countdowns/enums/sorting_method.dart';
 import 'package:countdowns/models/countdown_event.dart';
-import 'package:countdowns/utilities/settings_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:provider/provider.dart';
 
 class CountdownsProvider extends ChangeNotifier {
   final String _fileName = 'countdownevents.json';

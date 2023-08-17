@@ -11,7 +11,7 @@ class CountdownCardEmpty extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Global.colors.defaultBackgroundColor,
-        borderRadius: BorderRadius.all(
+        borderRadius: const BorderRadius.all(
           Radius.circular(20.0),
         ),
       ),

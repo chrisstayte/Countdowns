@@ -13,7 +13,7 @@ class FontPickerMaterialModal extends StatefulWidget {
       _FontPickerMaterialModalState();
 }
 
-typedef void FontCallback(String fontName, String fontDisplayName);
+typedef FontCallback = void Function(String fontName, String fontDisplayName);
 
 class _FontPickerMaterialModalState extends State<FontPickerMaterialModal> {
   String? _selectedFont;

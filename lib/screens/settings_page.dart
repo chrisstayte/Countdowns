@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/src/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:store_redirect/store_redirect.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -72,18 +71,18 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Settings'),
+          title: const Text('Settings'),
           elevation: 0,
           automaticallyImplyLeading: false,
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('Done'),
+              child: const Text('Done'),
             )
           ],
         ),
         body: ListView(
-          padding: EdgeInsets.only(top: 15.0),
+          padding: const EdgeInsets.only(top: 15.0),
           children: [
             const Padding(
               padding: EdgeInsets.only(left: 8.0),
@@ -96,7 +95,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             fullDivider,
             ListTile(
-              title: Text("Sorting"),
+              title: const Text("Sorting"),
               trailing: DropdownButton(
                 dropdownColor:
                     context.watch<SettingsProvider>().settings.darkMode
@@ -176,7 +175,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             fullDivider,
             ListTile(
-              title: Text('Dark Theme'),
+              title: const Text('Dark Theme'),
               trailing: Switch(
                 value: context.watch<SettingsProvider>().settings.darkMode,
                 onChanged: (isDark) =>
@@ -215,8 +214,8 @@ class _SettingsPageState extends State<SettingsPage> {
               },
             ),
             partialDivider,
-            AboutListTile(
-              child: const Text('About'),
+            const AboutListTile(
+              child: Text('About'),
             ),
             // partialDivider,
             // ListTile(
@@ -228,8 +227,8 @@ class _SettingsPageState extends State<SettingsPage> {
             // ),
             partialDivider,
             ListTile(
-              title: Text('Credits'),
-              trailing: Icon(Icons.chevron_right_rounded),
+              title: const Text('Credits'),
+              trailing: const Icon(Icons.chevron_right_rounded),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(

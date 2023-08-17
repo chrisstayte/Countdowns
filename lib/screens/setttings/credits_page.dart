@@ -10,12 +10,12 @@ class CreditsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Credits'),
+          title: const Text('Credits'),
         ),
         body: ListView(
           children: [
             Card(
-              color: Color(0XFFCCCCEE),
+              color: const Color(0XFFCCCCEE),
               child: Padding(
                 padding: const EdgeInsets.all(18.0),
                 child: Column(

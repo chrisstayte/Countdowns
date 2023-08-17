@@ -1,5 +1,4 @@
 import 'package:countdowns/models/countdown_event.dart';
-import 'package:countdowns/screens/settings_page.dart';
 import 'package:countdowns/utilities/countdowns_provider.dart';
 import 'package:countdowns/utilities/settings_provider.dart';
 import 'package:countdowns/widgets/color_picker_material_modal.dart';
@@ -10,7 +9,7 @@ import 'package:countdowns/widgets/icon_picker_material_modal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
 class AddCountdownPage extends StatefulWidget {
   const AddCountdownPage({Key? key}) : super(key: key);
@@ -44,8 +43,6 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
   Color? _contentColor;
 
   late FocusNode _focusNode;
-
-  final _rowHeight = 42.0;
 
   final _modalShape = const RoundedRectangleBorder(
     borderRadius: BorderRadius.only(
@@ -89,7 +86,7 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
               }
             },
-            child: Text('Add'),
+            child: const Text('Add'),
           )
         ],
       ),
@@ -128,11 +125,11 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                           textDirection: TextDirection.ltr,
                           style:
                               // subtitle1 was used because this is the default text theme of a 'listTile'
-                              Theme.of(context).textTheme.subtitle1?.copyWith(
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
                                     overflow: TextOverflow.ellipsis,
                                   ),
                           decoration: InputDecoration(
-                            hintStyle: Theme.of(context).textTheme.subtitle1,
+                            hintStyle: Theme.of(context).textTheme.titleMedium,
                             hintTextDirection: TextDirection.ltr,
                             border: InputBorder.none,
                             hintText: 'Name',
@@ -161,9 +158,9 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                       ),
                     ),
                   ),
-                  title: Text('Date'),
+                  title: const Text('Date'),
                   trailing: _dateTime == null
-                      ? Icon(Icons.chevron_right_rounded)
+                      ? const Icon(Icons.chevron_right_rounded)
                       : Text(
                           '${_dateTime?.month.toString()}/${_dateTime?.day.toString()}/${_dateTime?.year.toString()}'),
                 ),
@@ -182,7 +179,7 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                       ),
                     ),
                   ),
-                  title: Text('Background Color'),
+                  title: const Text('Background Color'),
                   trailing: Icon(
                     Icons.circle,
                     color: _backgroundColor,
@@ -202,9 +199,9 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                       ),
                     ),
                   ),
-                  title: Text('Icon'),
+                  title: const Text('Icon'),
                   trailing: _icon == null
-                      ? Icon(Icons.chevron_right_rounded)
+                      ? const Icon(Icons.chevron_right_rounded)
                       : Icon(_icon),
                 ),
                 ListTile(
@@ -226,9 +223,9 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                       ),
                     ),
                   ),
-                  title: Text('Font'),
+                  title: const Text('Font'),
                   trailing: _fontFamily == null
-                      ? Text('Default')
+                      ? const Text('Default')
                       : Text(_fontDisplayName!),
                 ),
                 ListTile(
@@ -245,9 +242,9 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                       ),
                     ),
                   ),
-                  title: Text('Content Color'),
+                  title: const Text('Content Color'),
                   trailing: _contentColor == null
-                      ? Icon(Icons.circle)
+                      ? const Icon(Icons.circle)
                       : Icon(
                           Icons.circle,
                           color: _contentColor,

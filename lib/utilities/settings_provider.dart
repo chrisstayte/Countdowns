@@ -3,9 +3,7 @@ import 'dart:io';
 
 import 'package:countdowns/enums/sorting_method.dart';
 import 'package:countdowns/models/settings.dart';
-import 'package:countdowns/utilities/countdowns_provider.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
 class SettingsProvider extends ChangeNotifier {

@@ -1,13 +1,9 @@
-import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:countdowns/global/global.dart';
 import 'package:countdowns/models/countdown_event.dart';
-import 'package:countdowns/screens/countdown_page.dart';
-import 'package:countdowns/utilities/settings_provider.dart';
 
 import 'package:flutter/material.dart';
-import 'package:provider/src/provider.dart';
 
 /// This countdown card is used to show on the homescreen.
 /// It takes a [CountdownEvent] object and sets the information on the card accordingly

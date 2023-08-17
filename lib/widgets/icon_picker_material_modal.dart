@@ -14,7 +14,7 @@ class IconPickerMaterialModal extends StatefulWidget {
       _IconPickerMaterialModalState();
 }
 
-typedef void IconCallback(IconData icon);
+typedef IconCallback = void Function(IconData icon);
 
 class _IconPickerMaterialModalState extends State<IconPickerMaterialModal> {
   IconData? _selectedIcon;
@@ -129,7 +129,7 @@ class _IconPickerMaterialModalState extends State<IconPickerMaterialModal> {
                               shape: BoxShape.circle,
                             ),
                           )
-                        : Text(''),
+                        : const Text(''),
                     Icon(
                       _icons[index],
                       color: _selectedIcon == _icons[index]

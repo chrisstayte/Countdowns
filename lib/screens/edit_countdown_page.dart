@@ -97,7 +97,7 @@ class _EditCountdownPageState extends State<EditCountdownPage> {
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
               }
             },
-            child: Text(
+            child: const Text(
               'Save',
             ),
           )
@@ -136,11 +136,11 @@ class _EditCountdownPageState extends State<EditCountdownPage> {
                           textDirection: TextDirection.ltr,
                           style:
                               // subtitle1 was used because this is the default text theme of a 'listTile'
-                              Theme.of(context).textTheme.subtitle1?.copyWith(
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
                                     overflow: TextOverflow.ellipsis,
                                   ),
                           decoration: InputDecoration(
-                            hintStyle: Theme.of(context).textTheme.subtitle1,
+                            hintStyle: Theme.of(context).textTheme.titleMedium,
                             hintTextDirection: TextDirection.ltr,
                             border: InputBorder.none,
                             hintText: 'Name',
@@ -253,7 +253,7 @@ class _EditCountdownPageState extends State<EditCountdownPage> {
                   ),
                   title: const Text('Content Color'),
                   trailing: _contentColor == null
-                      ? Icon(Icons.circle)
+                      ? const Icon(Icons.circle)
                       : Icon(
                           Icons.circle,
                           color: _contentColor,

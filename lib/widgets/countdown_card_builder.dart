@@ -1,8 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:countdowns/global/global.dart';
-import 'package:countdowns/utilities/settings_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/src/provider.dart';
 
 /// This is the countdown card that is used to show a preview on the 'add countdown page'
 class CountdownCardBuilder extends StatelessWidget {

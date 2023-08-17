@@ -16,7 +16,7 @@ class DatePickerCupertinoModal extends StatefulWidget {
       _DatePickerCupertinoModalState();
 }
 
-typedef void DateTimeCallback(DateTime dateTime);
+typedef DateTimeCallback = void Function(DateTime dateTime);
 
 class _DatePickerCupertinoModalState extends State<DatePickerCupertinoModal> {
   DateTime? _dateTime;
@@ -39,7 +39,7 @@ class _DatePickerCupertinoModalState extends State<DatePickerCupertinoModal> {
         children: [
           Container(
               color: context.watch<SettingsProvider>().settings.darkMode
-                  ? Color(0XFF424242)
+                  ? const Color(0XFF424242)
                   : Colors.white,
               height: 40,
               child: Row(
@@ -54,7 +54,7 @@ class _DatePickerCupertinoModalState extends State<DatePickerCupertinoModal> {
                       foregroundColor: MaterialStateProperty.all(
                         context.watch<SettingsProvider>().settings.darkMode
                             ? Colors.white
-                            : Color(0XFF536372),
+                            : const Color(0XFF536372),
                       ),
                     ),
                   ),

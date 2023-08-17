@@ -35,7 +35,6 @@ class CountdownEvent {
     if (json['contentColor'] != null) {
       contentColor = Color(json['contentColor']).withOpacity(1);
     }
-    ;
     return CountdownEvent(
       title: title,
       eventDate: eventDate,

@@ -1,4 +1,5 @@
 import 'package:countdowns/global/global.dart';
+import 'package:countdowns/screens/home/home_screen.dart';
 import 'package:countdowns/screens/home_page.dart';
 import 'package:countdowns/utilities/countdowns_provider.dart';
 import 'package:countdowns/utilities/settings_provider.dart';
@@ -48,13 +49,12 @@ class MyApp extends StatelessWidget {
           ),
           titleTextStyle: TextStyle(
             color: Global.colors.darkIconColor,
-            fontFamily: 'DiarioDeAndy',
             fontSize: 26,
           ),
         ),
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
-            primary: Global.colors.lightIconColorDarker,
+            foregroundColor: Global.colors.lightIconColorDarker,
           ),
         ),
         scaffoldBackgroundColor: Global.colors.lightIconColor,
@@ -65,13 +65,13 @@ class MyApp extends StatelessWidget {
               ),
             ),
         textTheme: TextTheme(
-          bodyText2: TextStyle(
+          bodyMedium: TextStyle(
             color: Global.colors.darkIconColor,
           ),
-          subtitle1: TextStyle(
+          titleMedium: TextStyle(
             color: Global.colors.darkIconColor,
           ),
-          headline6: TextStyle(
+          titleLarge: TextStyle(
             color: Global.colors.darkIconColor,
           ),
         ),
@@ -93,13 +93,12 @@ class MyApp extends StatelessWidget {
           ),
           titleTextStyle: TextStyle(
             color: Global.colors.lightIconColor,
-            fontFamily: 'DiarioDeAndy',
             fontSize: 26,
           ),
         ),
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
-            primary: Global.colors.darkIconColorLighter,
+            foregroundColor: Global.colors.darkIconColorLighter,
           ),
         ),
         scaffoldBackgroundColor: Global.colors.darkIconColor,
@@ -119,7 +118,7 @@ class MyApp extends StatelessWidget {
       themeMode: context.watch<SettingsProvider>().settings.darkMode
           ? ThemeMode.dark
           : ThemeMode.light,
-      home: const HomePage(title: 'Countdowns'),
+      home: const HomeScreen(),
     );
   }
 }

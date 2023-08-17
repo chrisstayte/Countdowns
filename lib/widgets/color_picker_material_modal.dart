@@ -1,6 +1,4 @@
-import 'package:countdowns/utilities/settings_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/src/provider.dart';
 
 class ColorPickerMaterialModal extends StatefulWidget {
   //const ColorPickerMaterialModal.empty({Key? key}) : super(key: key);
@@ -14,7 +12,7 @@ class ColorPickerMaterialModal extends StatefulWidget {
       _ColorPickerMaterialModalState();
 }
 
-typedef void ColorCallback(Color color);
+typedef ColorCallback = void Function(Color color);
 
 class _ColorPickerMaterialModalState extends State<ColorPickerMaterialModal> {
   Color? _selectedColor;
