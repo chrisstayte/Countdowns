@@ -1,4 +1,6 @@
 import 'package:countdowns/models/countdown_event.dart';
+import 'package:countdowns/models/event.dart';
+import 'package:countdowns/providers/event_provider.dart';
 import 'package:countdowns/utilities/countdowns_provider.dart';
 import 'package:countdowns/utilities/settings_provider.dart';
 import 'package:countdowns/widgets/color_picker_material_modal.dart';
@@ -70,6 +72,17 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                   fontFamily: _fontFamily,
                   contentColor: _contentColor,
                 );
+
+                Event event2 = Event(
+                  title: _textBox,
+                  eventDate: _dateTime!,
+                  backgroundColor: _backgroundColor,
+                  icon: _icon,
+                  fontFamily: _fontFamily,
+                  contentColor: _contentColor,
+                );
+
+                context.read<EventProvider>().addEvent(event2);
 
                 context.read<CountdownsProvider>()
                   ..addEvent(event)

@@ -1,13 +1,14 @@
 import 'package:countdowns/enums/sorting_method.dart';
 
 class Settings {
-  bool darkMode;
+  // Theme Mode: 0 = System, 1 = Light, 2 = Dark
+  int themeMode = 0;
   SortingMethod sortingMethod = SortingMethod.alphaAscending;
 
-  Settings({required this.darkMode, required this.sortingMethod});
+  Settings({required this.themeMode, required this.sortingMethod});
 
   factory Settings.fromJson(Map<String, dynamic> json) {
-    bool darkMode = json['darkMode'] as bool;
+    int themeMode = json['themeMode'] as int;
 
     SortingMethod? sortingMethod;
     if (json['sortingMethod'] != null) {
@@ -15,12 +16,12 @@ class Settings {
     }
 
     return Settings(
-        darkMode: darkMode,
+        themeMode: themeMode,
         sortingMethod: sortingMethod ?? SortingMethod.alphaAscending);
   }
 
   Map<String, dynamic> toJson() => {
-        'darkMode': darkMode,
+        'themeMode': themeMode,
         'sortingMethod': sortingMethod.toString(),
       };
 

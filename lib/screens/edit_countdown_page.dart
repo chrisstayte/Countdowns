@@ -70,7 +70,7 @@ class _EditCountdownPageState extends State<EditCountdownPage> {
             style: ButtonStyle(
               overlayColor: MaterialStateProperty.all(Colors.transparent),
               foregroundColor: MaterialStateProperty.all(
-                context.watch<SettingsProvider>().settings.darkMode
+                context.watch<SettingsProvider>().settings.themeMode == 2
                     ? Colors.white
                     : const Color(0XFF536372),
               ),

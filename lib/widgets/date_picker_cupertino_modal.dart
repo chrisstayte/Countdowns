@@ -30,17 +30,17 @@ class _DatePickerCupertinoModalState extends State<DatePickerCupertinoModal> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: context.watch<SettingsProvider>().settings.darkMode
-          ? const Color(0XFF303030)
-          : Colors.white,
+      // color: context.watch<SettingsProvider>().settings.darkMode
+      //     ? const Color(0XFF303030)
+      //     : Colors.white,
       height: 250,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
-              color: context.watch<SettingsProvider>().settings.darkMode
-                  ? const Color(0XFF424242)
-                  : Colors.white,
+              // color: context.watch<SettingsProvider>().settings.darkMode
+              //     ? const Color(0XFF424242)
+              //     : Colors.white,
               height: 40,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -51,11 +51,11 @@ class _DatePickerCupertinoModalState extends State<DatePickerCupertinoModal> {
                     style: ButtonStyle(
                       overlayColor:
                           MaterialStateProperty.all(Colors.transparent),
-                      foregroundColor: MaterialStateProperty.all(
-                        context.watch<SettingsProvider>().settings.darkMode
-                            ? Colors.white
-                            : const Color(0XFF536372),
-                      ),
+                      // foregroundColor: MaterialStateProperty.all(
+                      //   // context.watch<SettingsProvider>().settings.darkMode
+                      //   //     ? Colors.white
+                      //   //     : const Color(0XFF536372),
+                      // ),
                     ),
                   ),
                 ],

@@ -1,3 +1,8 @@
+/* 
+This was my original method for storing the data for the app. 
+I am migrating to a new database thus creating a new class.
+*/
+
 import 'package:flutter/material.dart';
 
 class CountdownEvent {

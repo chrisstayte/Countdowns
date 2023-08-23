@@ -12,7 +12,7 @@ class SettingsProvider extends ChangeNotifier {
   }
 
   late Settings settings =
-      Settings(darkMode: false, sortingMethod: SortingMethod.alphaAscending);
+      Settings(themeMode: 0, sortingMethod: SortingMethod.alphaAscending);
 
   final String _fileName = 'settings.json';
 
@@ -26,8 +26,8 @@ class SettingsProvider extends ChangeNotifier {
     return File('$path/$_fileName');
   }
 
-  void setDarkMode(bool isDark) {
-    settings.darkMode = isDark;
+  void setThemeMode(int themeMode) {
+    settings.themeMode = themeMode;
     _saveSettings();
     notifyListeners();
   }

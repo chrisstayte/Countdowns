@@ -1,9 +1,12 @@
 import 'package:countdowns/enums/sorting_method.dart';
 import 'package:countdowns/global/global.dart';
+import 'package:countdowns/providers/event_provider.dart';
 import 'package:countdowns/screens/setttings/credits_page.dart';
+import 'package:countdowns/screens/setttings/widget/settings_container.dart';
 import 'package:countdowns/utilities/countdowns_provider.dart';
 import 'package:countdowns/utilities/settings_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/src/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -24,10 +27,6 @@ class _SettingsPageState extends State<SettingsPage> {
     buildSignature: 'Unknown',
   );
 
-  late Widget fullDivider;
-  late Widget partialDivider;
-  final dividerThickness = 0.75;
-
   late SortingMethod _sortingMethod;
 
   @override
@@ -40,22 +39,6 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    fullDivider = Divider(
-      thickness: dividerThickness,
-      color: context.watch<SettingsProvider>().settings.darkMode
-          ? Colors.grey.shade700
-          : Colors.grey.shade300,
-    );
-
-    partialDivider = Padding(
-      padding: const EdgeInsets.only(left: 8.0),
-      child: Divider(
-        thickness: dividerThickness,
-        color: context.watch<SettingsProvider>().settings.darkMode
-            ? Colors.grey.shade700
-            : Colors.grey.shade300,
-      ),
-    );
 
     _sortingMethod = context.watch<SettingsProvider>().settings.sortingMethod;
   }
@@ -71,118 +54,118 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Settings'),
+          title: const Text(
+            'Settings',
+          ),
+          centerTitle: false,
           elevation: 0,
-          automaticallyImplyLeading: false,
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Done'),
-            )
-          ],
         ),
+        backgroundColor: Color(0XFFDEE2FF),
         body: ListView(
-          padding: const EdgeInsets.only(top: 15.0),
+          padding: const EdgeInsets.only(
+            top: 15.0,
+            left: 15.0,
+            right: 15.0,
+          ),
           children: [
+            SettingsContainer(title: 'events', children: [
+              ListTile(
+                title: const Text("Sort"),
+                trailing: DropdownButton(
+                  // dropdownColor:
+                  // context.watch<SettingsProvider>().settings.darkMode
+                  //     ? Global.colors.darkIconColor
+                  //     : Global.colors.lightIconColor,
+                  value: _sortingMethod,
+                  underline: Container(),
+                  items: const [
+                    DropdownMenuItem<SortingMethod>(
+                      child: FaIcon(FontAwesomeIcons.arrowDownAZ),
+                      value: SortingMethod.alphaAscending,
+                    ),
+                    DropdownMenuItem<SortingMethod>(
+                      child: FaIcon(FontAwesomeIcons.arrowDownZA),
+                      value: SortingMethod.alphaDescending,
+                    ),
+                    DropdownMenuItem<SortingMethod>(
+                      child: FaIcon(FontAwesomeIcons.arrowDown19),
+                      value: SortingMethod.dateAscending,
+                    ),
+                    DropdownMenuItem<SortingMethod>(
+                      child: FaIcon(FontAwesomeIcons.arrowDown91),
+                      value: SortingMethod.dateDescending,
+                    )
+                  ],
+                  onChanged: (value) {
+                    context
+                        .read<SettingsProvider>()
+                        .setSortingMethod(value as SortingMethod);
+                    context.read<CountdownsProvider>().sortEvents(value);
+                  },
+                ),
+              ),
+              ListTile(
+                onTap: () => showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Delete All Events'),
+                      content: const Text('This is not reversable.'),
+                      actions: [
+                        TextButton(
+                          child: const Text(
+                            "Yes",
+                          ),
+                          onPressed: () {
+                            context.read<EventProvider>().deleteAllEvents();
+                            Navigator.pop(context);
+                          },
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text(
+                            'No',
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+                title: const Text('Delete All Events'),
+                trailing: const Icon(Icons.delete),
+              ),
+            ]),
+
             const Padding(
               padding: EdgeInsets.only(left: 8.0),
               child: Text(
-                'COUNTDOWNS',
+                'DISPLAY',
                 style: TextStyle(
-                  fontSize: 10,
+                  fontSize: 14,
                 ),
               ),
             ),
-            fullDivider,
-            ListTile(
-              title: const Text("Sorting"),
-              trailing: DropdownButton(
-                dropdownColor:
-                    context.watch<SettingsProvider>().settings.darkMode
-                        ? Global.colors.darkIconColor
-                        : Global.colors.lightIconColor,
-                value: _sortingMethod,
-                underline: Container(),
-                items: const [
-                  DropdownMenuItem<SortingMethod>(
-                    child: Text('Alpha Ascending'),
-                    value: SortingMethod.alphaAscending,
-                  ),
-                  DropdownMenuItem<SortingMethod>(
-                    child: Text('Alpha Descending'),
-                    value: SortingMethod.alphaDescending,
-                  ),
-                  DropdownMenuItem<SortingMethod>(
-                    child: Text('Date Ascending'),
-                    value: SortingMethod.dateAscending,
-                  ),
-                  DropdownMenuItem<SortingMethod>(
-                    child: Text('Date Descending'),
-                    value: SortingMethod.dateDescending,
-                  )
-                ],
-                onChanged: (value) {
-                  context
-                      .read<SettingsProvider>()
-                      .setSortingMethod(value as SortingMethod);
-                  context.read<CountdownsProvider>().sortEvents(value);
-                },
-              ),
-            ),
-            partialDivider,
-            ListTile(
-              onTap: () => showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text('Delete All Countdowns'),
-                    content: const Text('This is not reversable.'),
-                    actions: [
-                      TextButton(
-                        child: const Text(
-                          "Yes",
-                        ),
-                        onPressed: () {
-                          context.read<CountdownsProvider>().deleteAll();
-                          Navigator.pop(context);
-                        },
-                      ),
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text(
-                          'No',
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
-              title: const Text('Delete All Countdowns'),
-              trailing: const Icon(Icons.delete),
-            ),
-            fullDivider,
-            const SizedBox(
-              height: 30,
-            ),
-            const Padding(
-              padding: EdgeInsets.only(left: 8.0),
-              child: Text(
-                'DESIGN',
-                style: TextStyle(
-                  fontSize: 10,
+
+            Container(
+              child: Column(children: [
+                ListTile(
+                  title: const Text('Dark Theme'),
+                  // trailing: Switch(
+                  //   value: context.watch<SettingsProvider>().settings.darkMode,
+                  //   onChanged: (isDark) =>
+                  //       context.read<SettingsProvider>().setDarkMode(isDark),
+                  // ),
                 ),
-              ),
+                ListTile(
+                    // title: const Text('Dark Theme'),
+                    // trailing: Switch(
+                    //   value: context.watch<SettingsProvider>().settings.darkMode,
+                    //   onChanged: (isDark) =>
+                    //       context.read<SettingsProvider>().setDarkMode(isDark),
+                    // ),
+                    ),
+              ]),
             ),
-            fullDivider,
-            ListTile(
-              title: const Text('Dark Theme'),
-              trailing: Switch(
-                value: context.watch<SettingsProvider>().settings.darkMode,
-                onChanged: (isDark) =>
-                    context.read<SettingsProvider>().setDarkMode(isDark),
-              ),
-            ),
-            fullDivider,
             const SizedBox(
               height: 30,
             ),
@@ -195,7 +178,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
             ),
-            fullDivider,
+
             ListTile(
               title: const Text('Feedback'),
               trailing: const Text('countdowns@chrisstayte.com'),
@@ -213,11 +196,11 @@ class _SettingsPageState extends State<SettingsPage> {
                 }
               },
             ),
-            partialDivider,
+
             const AboutListTile(
               child: Text('About'),
             ),
-            // partialDivider,
+
             // ListTile(
             //   title: const Text("Rate Countdowns"),
             //   trailing: const Icon(Icons.rate_review),
@@ -225,20 +208,19 @@ class _SettingsPageState extends State<SettingsPage> {
             //     StoreRedirect.redirect();
             //   },
             // ),
-            partialDivider,
-            ListTile(
-              title: const Text('Credits'),
-              trailing: const Icon(Icons.chevron_right_rounded),
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return CreditsPage();
-                  },
-                ),
-              ),
-            ),
-            fullDivider,
+
+            // ListTile(
+            //   title: const Text('Credits'),
+            //   trailing: const Icon(Icons.chevron_right_rounded),
+            //   onTap: () => Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //       builder: (context) {
+            //         return CreditsPage();
+            //       },
+            //     ),
+            //   ),
+            // ),
             SizedBox(
               height: 100,
               child: Column(

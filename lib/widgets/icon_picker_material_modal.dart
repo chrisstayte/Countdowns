@@ -120,25 +120,25 @@ class _IconPickerMaterialModalState extends State<IconPickerMaterialModal> {
                             height: 45,
                             width: 45,
                             decoration: BoxDecoration(
-                              color: context
-                                      .watch<SettingsProvider>()
-                                      .settings
-                                      .darkMode
-                                  ? Colors.white
-                                  : Colors.black,
+                              // color: context
+                              //         .watch<SettingsProvider>()
+                              //         .settings
+                              //         .darkMode
+                              //     ? Colors.white
+                              // : Colors.black,
                               shape: BoxShape.circle,
                             ),
                           )
                         : const Text(''),
                     Icon(
                       _icons[index],
-                      color: _selectedIcon == _icons[index]
-                          ? context.watch<SettingsProvider>().settings.darkMode
-                              ? Colors.black
-                              : Colors.white
-                          : context.watch<SettingsProvider>().settings.darkMode
-                              ? Colors.white
-                              : Colors.black,
+                      // color: _selectedIcon == _icons[index]
+                      //     ? context.watch<SettingsProvider>().settings.darkMode
+                      //         ? Colors.black
+                      //         : Colors.white
+                      //     : context.watch<SettingsProvider>().settings.darkMode
+                      //         ? Colors.white
+                      //         : Colors.black,
                     ),
                   ],
                 ),

@@ -3,15 +3,18 @@ import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:countdowns/global/global.dart';
 import 'package:countdowns/models/countdown_event.dart';
+import 'package:countdowns/models/event.dart';
+import 'package:countdowns/providers/event_provider.dart';
 import 'package:countdowns/screens/edit_countdown_page.dart';
 import 'package:countdowns/utilities/countdowns_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/src/provider.dart';
 
 class CountdownPage extends StatefulWidget {
-  final CountdownEvent countdownEvent;
+  //final CountdownEvent countdownEvent;
+  final dynamic countdownEventKey;
 
-  const CountdownPage({Key? key, required this.countdownEvent})
+  const CountdownPage({Key? key, required this.countdownEventKey})
       : super(key: key);
 
   @override
@@ -21,6 +24,7 @@ class CountdownPage extends StatefulWidget {
 class _CountdownPageState extends State<CountdownPage> {
   bool _eventOccured = false;
   late Timer _timer;
+  late final Event _countdownEvent;
 
   int seconds = 0;
   int minutes = 0;
@@ -31,9 +35,14 @@ class _CountdownPageState extends State<CountdownPage> {
 
   @override
   void initState() {
+    super.initState();
+    var provider = Provider.of<EventProvider>(context, listen: false);
+    var key = provider.box.keys.elementAt(int.parse(widget.countdownEventKey));
+    _countdownEvent = provider.box.get(key) ??
+        Event(title: "ERROR", eventDate: DateTime.now());
+
     _getTime();
     _timer = Timer.periodic(const Duration(seconds: 1), (_) => _getTime());
-    super.initState();
   }
 
   @override
@@ -44,8 +53,7 @@ class _CountdownPageState extends State<CountdownPage> {
 
   bool _getTime() {
     DateTime currentTime = DateTime.now();
-    Duration timeDifference =
-        widget.countdownEvent.eventDate.difference(currentTime);
+    Duration timeDifference = _countdownEvent.eventDate.difference(currentTime);
 
     if (timeDifference < Duration.zero) {
       if (!_eventOccured) {
@@ -71,13 +79,12 @@ class _CountdownPageState extends State<CountdownPage> {
   }
 
   Color _backgroundColor() =>
-      widget.countdownEvent.backgroundColor ??
-      Global.colors.defaultBackgroundColor;
+      _countdownEvent.backgroundColor ?? Global.colors.defaultBackgroundColor;
 
-  Color _contentColor() => widget.countdownEvent.contentColor != null
-      ? widget.countdownEvent.contentColor!
-      : widget.countdownEvent.backgroundColor != null
-          ? widget.countdownEvent.backgroundColor!.computeLuminance() > 0.5
+  Color _contentColor() => _countdownEvent.contentColor != null
+      ? _countdownEvent.contentColor!
+      : _countdownEvent.backgroundColor != null
+          ? _countdownEvent.backgroundColor!.computeLuminance() > 0.5
               ? Colors.black
               : Colors.white
           : Colors.white;
@@ -86,14 +93,14 @@ class _CountdownPageState extends State<CountdownPage> {
         fontSize: 50,
         fontWeight: FontWeight.bold,
         color: _contentColor(),
-        fontFamily: widget.countdownEvent.fontFamily,
+        fontFamily: _countdownEvent.fontFamily,
       );
 
   TextStyle labelStyle() => TextStyle(
         fontSize: 19,
         fontWeight: FontWeight.w300,
         color: _contentColor(),
-        fontFamily: widget.countdownEvent.fontFamily,
+        fontFamily: _countdownEvent.fontFamily,
       );
 
   @override
@@ -104,7 +111,7 @@ class _CountdownPageState extends State<CountdownPage> {
           color: _contentColor(),
         ),
         title: Icon(
-          widget.countdownEvent.icon ?? Icons.calendar_today,
+          _countdownEvent.icon ?? Icons.calendar_today,
           color: _contentColor(),
           size: 32.0,
         ),
@@ -140,15 +147,15 @@ class _CountdownPageState extends State<CountdownPage> {
             onSelected: (value) async {
               switch (value) {
                 case 1:
-                  await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return EditCountdownPage(
-                            countdownEvent: widget.countdownEvent);
-                      },
-                    ),
-                  );
+                  // await Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) {
+                  //       return EditCountdownPage(
+                  //           countdownEvent: _countdownEvent);
+                  //     },
+                  //   ),
+                  // );
                   setState(() {
                     _eventOccured = _getTime();
                   });
@@ -174,12 +181,12 @@ class _CountdownPageState extends State<CountdownPage> {
                               ),
                             ),
                             onPressed: () {
-                              context
-                                  .read<CountdownsProvider>()
-                                  .deleteEvent(widget.countdownEvent);
-                              Navigator.of(context)
-                                ..pop()
-                                ..pop();
+                              // context
+                              //     .read<CountdownsProvider>()
+                              //     .deleteEvent(_countdownEvent);
+                              // Navigator.of(context)
+                              //   ..pop()
+                              //   ..pop();
                             },
                           ),
                           TextButton(
@@ -236,7 +243,7 @@ class _CountdownPageState extends State<CountdownPage> {
               children: [
                 Expanded(
                   child: AutoSizeText(
-                    widget.countdownEvent.title,
+                    _countdownEvent.title,
                     overflow: TextOverflow.visible,
                     maxLines: 2,
                     minFontSize: 14,
@@ -253,7 +260,7 @@ class _CountdownPageState extends State<CountdownPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "${widget.countdownEvent.eventDate.month.toString()}/${widget.countdownEvent.eventDate.day.toString()}/${widget.countdownEvent.eventDate.year.toString()}",
+                    "${_countdownEvent.eventDate.month.toString()}/${_countdownEvent.eventDate.day.toString()}/${_countdownEvent.eventDate.year.toString()}",
                     style: labelStyle(),
                   ),
                 ],

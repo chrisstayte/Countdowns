@@ -22,9 +22,9 @@ class CountdownCardEmpty extends StatelessWidget {
           height: 45,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: context.watch<SettingsProvider>().settings.darkMode
-                ? Global.colors.darkIconColor
-                : Global.colors.lightIconColor,
+            // color: context.watch<SettingsProvider>().settings.darkMode
+            //     ? Global.colors.darkIconColor
+            //     : Global.colors.lightIconColor,
           ),
           child: Icon(
             Icons.add_rounded,
