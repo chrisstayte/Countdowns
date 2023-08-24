@@ -3,8 +3,6 @@ import 'package:countdowns/models/event.dart';
 
 import 'package:countdowns/providers/event_provider.dart';
 import 'package:countdowns/router.dart';
-import 'package:countdowns/screens/home/home_screen.dart';
-import 'package:countdowns/screens/home_page.dart';
 import 'package:countdowns/utilities/countdowns_provider.dart';
 import 'package:countdowns/utilities/settings_provider.dart';
 import 'package:flutter/cupertino.dart';

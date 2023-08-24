@@ -1,7 +1,5 @@
-import 'package:countdowns/utilities/settings_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/src/provider.dart';
 
 class DatePickerCupertinoModal extends StatefulWidget {
   DatePickerCupertinoModal(
@@ -29,7 +27,7 @@ class _DatePickerCupertinoModalState extends State<DatePickerCupertinoModal> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       // color: context.watch<SettingsProvider>().settings.darkMode
       //     ? const Color(0XFF303030)
       //     : Colors.white,
@@ -37,7 +35,7 @@ class _DatePickerCupertinoModalState extends State<DatePickerCupertinoModal> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Container(
+          SizedBox(
               // color: context.watch<SettingsProvider>().settings.darkMode
               //     ? const Color(0XFF424242)
               //     : Colors.white,
@@ -46,7 +44,6 @@ class _DatePickerCupertinoModalState extends State<DatePickerCupertinoModal> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
-                    child: const Text("Done"),
                     onPressed: () => Navigator.pop(context),
                     style: ButtonStyle(
                       overlayColor:
@@ -57,6 +54,7 @@ class _DatePickerCupertinoModalState extends State<DatePickerCupertinoModal> {
                       //   //     : const Color(0XFF536372),
                       // ),
                     ),
+                    child: const Text("Done"),
                   ),
                 ],
               )),

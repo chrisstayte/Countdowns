@@ -105,6 +105,10 @@ class _ColorPickerMaterialModalState extends State<ColorPickerMaterialModal> {
                 child: Container(
                   height: 25,
                   width: 25,
+                  decoration: BoxDecoration(
+                    color: _colors[index],
+                    shape: BoxShape.circle,
+                  ),
                   child: _selectedColor == _colors[index]
                       ? Icon(
                           Icons.check,
@@ -116,10 +120,6 @@ class _ColorPickerMaterialModalState extends State<ColorPickerMaterialModal> {
                               : null,
                         )
                       : null,
-                  decoration: BoxDecoration(
-                    color: _colors[index],
-                    shape: BoxShape.circle,
-                  ),
                 ),
               );
             },

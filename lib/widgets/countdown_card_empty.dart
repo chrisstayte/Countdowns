@@ -1,7 +1,5 @@
 import 'package:countdowns/global/global.dart';
-import 'package:countdowns/utilities/settings_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/src/provider.dart';
 
 class CountdownCardEmpty extends StatelessWidget {
   const CountdownCardEmpty({Key? key}) : super(key: key);
@@ -20,7 +18,7 @@ class CountdownCardEmpty extends StatelessWidget {
         child: Container(
           width: 45,
           height: 45,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             shape: BoxShape.circle,
             // color: context.watch<SettingsProvider>().settings.darkMode
             //     ? Global.colors.darkIconColor

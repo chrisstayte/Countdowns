@@ -2,7 +2,6 @@ import 'package:countdowns/screens/add_countdown_page.dart';
 import 'package:countdowns/screens/countdown_page.dart';
 import 'package:countdowns/screens/home/home_screen.dart';
 import 'package:countdowns/screens/settings_screen.dart';
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 final router = GoRouter(

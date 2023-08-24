@@ -2,11 +2,8 @@ import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:countdowns/global/global.dart';
-import 'package:countdowns/models/countdown_event.dart';
 import 'package:countdowns/models/event.dart';
 import 'package:countdowns/providers/event_provider.dart';
-import 'package:countdowns/screens/edit_countdown_page.dart';
-import 'package:countdowns/utilities/countdowns_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/src/provider.dart';
 

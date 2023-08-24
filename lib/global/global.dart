@@ -15,10 +15,10 @@ class _Colors {
   final defaultBackgroundColor = const Color(0XFF223843);
   late final defaultContentColor = lightIconColor;
 
-  final Color primaryColor = Color(0Xff7877E6);
-  final Color secondaryColor = Color(0XFF4A0D67);
-  final Color accentColor = Color(0XFFB3B2F7);
-  final Color lightBackgroundColor = Color(0XFFDEE2FF);
+  final Color primaryColor = const Color(0Xff7877E6);
+  final Color secondaryColor = const Color(0XFF4A0D67);
+  final Color accentColor = const Color(0XFFB3B2F7);
+  final Color lightBackgroundColor = const Color(0XFFDEE2FF);
 }
 
 class _Fonts {

@@ -1,12 +1,10 @@
 import 'package:countdowns/enums/sorting_method.dart';
 import 'package:countdowns/global/global.dart';
 import 'package:countdowns/providers/event_provider.dart';
-import 'package:countdowns/screens/setttings/credits_page.dart';
 import 'package:countdowns/screens/setttings/widget/settings_container.dart';
 import 'package:countdowns/utilities/countdowns_provider.dart';
 import 'package:countdowns/utilities/settings_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/src/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -99,16 +97,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   underline: Container(),
                   items: const [
                     DropdownMenuItem<int>(
-                      child: Text('System'),
                       value: 0,
+                      child: Text('System'),
                     ),
                     DropdownMenuItem<int>(
-                      child: Text('Light'),
                       value: 1,
+                      child: Text('Light'),
                     ),
                     DropdownMenuItem<int>(
-                      child: Text('Dark'),
                       value: 2,
+                      child: Text('Dark'),
                     ),
                   ],
                   onChanged: (int? value) {
@@ -121,7 +119,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               title: 'sounds and haptics',
               children: [
                 ListTile(
-                  title: Text('Sounds Effects'),
+                  title: const Text('Sounds Effects'),
                   trailing: Switch.adaptive(
                     value:
                         context.watch<SettingsProvider>().settings.soundEffects,
@@ -133,7 +131,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ),
                 ListTile(
-                  title: Text('Haptic Feedback'),
+                  title: const Text('Haptic Feedback'),
                   trailing: Switch.adaptive(
                     value: context
                         .watch<SettingsProvider>()
@@ -162,15 +160,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     Uri.parse('https://chrisstayte.app/countdowns/terms/')),
               ),
               AboutListTile(
-                child: Text('About'),
                 applicationName: 'Countdowns',
                 applicationVersion: _packageInfo.version,
                 applicationIcon: const Icon(Icons.info_outline_rounded),
                 applicationLegalese: 'What am I made of?',
+                child: const Text('About'),
               ),
               ListTile(
                 title: const Text('Contact'),
-                trailing: Text('countdowns@chrisstayte.com'),
+                trailing: const Text('countdowns@chrisstayte.com'),
                 onTap: () async {
                   final Uri uri = Uri(
                     scheme: 'mailto',
@@ -236,7 +234,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         : Global.colors.accentColor,
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(
                   'Version ${_packageInfo.version} Build ${_packageInfo.buildNumber}',
                   style: const TextStyle(
@@ -245,8 +243,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     color: Color(0xffa6a5f6),
                   ),
                 ),
-                SizedBox(height: 10),
-                Text(
+                const SizedBox(height: 10),
+                const Text(
                   'Made with ❤️ using flutter',
                   style: TextStyle(
                     fontSize: 14,

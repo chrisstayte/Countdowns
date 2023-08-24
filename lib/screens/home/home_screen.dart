@@ -1,9 +1,6 @@
 import 'package:countdowns/providers/event_provider.dart';
-import 'package:countdowns/screens/countdown_page.dart';
 import 'package:countdowns/screens/home/event_square.dart';
-import 'package:countdowns/utilities/countdowns_provider.dart';
 import 'package:countdowns/utilities/settings_provider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -45,10 +42,10 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: [
             if (_showButton)
               IconButton(
-                  onPressed: () => context.push('/add'), icon: Icon(Icons.add)),
+                  onPressed: () => context.push('/add'), icon: const Icon(Icons.add)),
             IconButton(
                 onPressed: () => context.push('/settings'),
-                icon: Icon(Icons.tune_rounded))
+                icon: const Icon(Icons.tune_rounded))
           ],
         ),
         body: SingleChildScrollView(
@@ -60,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           child: Align(
             alignment:
-                events.length > 0 ? Alignment.topCenter : Alignment.topLeft,
+                events.isNotEmpty ? Alignment.topCenter : Alignment.topLeft,
             child: Wrap(
               spacing: 10,
               runSpacing: 10,
@@ -72,9 +69,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 169,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Color(0xffb3b2f7),
+                      color: const Color(0xffb3b2f7),
                     ),
-                    child: Center(
+                    child: const Center(
                       child: Icon(
                         Icons.add_rounded,
                         color: Color(0XFF4A0D67),

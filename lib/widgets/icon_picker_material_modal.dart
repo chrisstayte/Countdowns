@@ -1,6 +1,4 @@
-import 'package:countdowns/utilities/settings_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/src/provider.dart';
 
 class IconPickerMaterialModal extends StatefulWidget {
   IconPickerMaterialModal({Key? key, this.icon, required this.iconCallback})
@@ -119,7 +117,7 @@ class _IconPickerMaterialModalState extends State<IconPickerMaterialModal> {
                         ? Container(
                             height: 45,
                             width: 45,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               // color: context
                               //         .watch<SettingsProvider>()
                               //         .settings

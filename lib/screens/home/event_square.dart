@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:countdowns/models/event.dart';
 import 'package:countdowns/utilities/settings_provider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -67,10 +66,10 @@ class _CountdownSquareState extends State<CountdownSquare> {
         );
       },
       child: Container(
-        padding: EdgeInsets.all(15),
+        padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: widget.event.backgroundColor ?? Color(0xff7877E6),
+          color: widget.event.backgroundColor ?? const Color(0xff7877E6),
         ),
         width: 169,
         height: 169,
@@ -86,11 +85,11 @@ class _CountdownSquareState extends State<CountdownSquare> {
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 18,
-                fontFamily: widget.event.fontFamily ?? null,
+                fontFamily: widget.event.fontFamily,
                 color: widget.event.contentColor ?? Colors.white,
               ),
             ),
-            Spacer(),
+            const Spacer(),
             Row(
               children: [
                 AutoSizeText(
@@ -102,11 +101,11 @@ class _CountdownSquareState extends State<CountdownSquare> {
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 18,
-                    fontFamily: widget.event.fontFamily ?? null,
+                    fontFamily: widget.event.fontFamily,
                     color: widget.event.contentColor ?? Colors.white,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 5,
                 ),
                 AutoSizeText(
@@ -118,13 +117,13 @@ class _CountdownSquareState extends State<CountdownSquare> {
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 18,
-                    fontFamily: widget.event.fontFamily ?? null,
+                    fontFamily: widget.event.fontFamily,
                     color: widget.event.contentColor ?? Colors.white,
                   ),
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 8,
             ),
             Row(
@@ -134,7 +133,7 @@ class _CountdownSquareState extends State<CountdownSquare> {
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 16,
-                    fontFamily: widget.event.fontFamily ?? null,
+                    fontFamily: widget.event.fontFamily,
                     color: widget.event.contentColor ?? Colors.white,
                   ),
                 ),
