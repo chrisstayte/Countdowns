@@ -11,8 +11,12 @@ class SettingsProvider extends ChangeNotifier {
     _loadSettings();
   }
 
-  late Settings settings =
-      Settings(themeMode: 0, sortingMethod: SortingMethod.alphaAscending);
+  late Settings settings = Settings(
+    themeMode: 0,
+    sortingMethod: SortingMethod.alphaAscending,
+    hapticFeedback: true,
+    soundEffects: true,
+  );
 
   final String _fileName = 'settings.json';
 
@@ -32,9 +36,20 @@ class SettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setHapticFeedbackMode(bool hapticFeedback) {
+    settings.hapticFeedback = hapticFeedback;
+    _saveSettings();
+    notifyListeners();
+  }
+
+  void setSoundEffectsMode(bool soundEffects) {
+    settings.soundEffects = soundEffects;
+    _saveSettings();
+    notifyListeners();
+  }
+
   void setSortingMethod(SortingMethod sortingMethod) {
     settings.sortingMethod = sortingMethod;
-
     _saveSettings();
     notifyListeners();
   }

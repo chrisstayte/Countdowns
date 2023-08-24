@@ -29,6 +29,11 @@ class EventProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void deleteEvent(Event event) {
+    box.delete(event.key);
+    notifyListeners();
+  }
+
   void deleteAllEvents() {
     box.clear();
     notifyListeners();

@@ -1,5 +1,6 @@
 import 'package:countdowns/global/global.dart';
 import 'package:countdowns/models/event.dart';
+
 import 'package:countdowns/providers/event_provider.dart';
 import 'package:countdowns/router.dart';
 import 'package:countdowns/screens/home/home_screen.dart';
@@ -45,9 +46,12 @@ class MyApp extends StatelessWidget {
     ThemeMode themeMode;
     switch (themeModeSetting) {
       case 0:
-        themeMode = ThemeMode.light;
+        themeMode = ThemeMode.system;
         break;
       case 1:
+        themeMode = ThemeMode.light;
+        break;
+      case 2:
         themeMode = ThemeMode.dark;
         break;
       default:
@@ -62,54 +66,56 @@ class MyApp extends StatelessWidget {
       showSemanticsDebugger: false,
       title: 'Countdowns',
       theme: ThemeData.light().copyWith(
-          appBarTheme: AppBarTheme(
-            color: Colors.white,
-            elevation: 0,
-            iconTheme: IconThemeData(
-              //color: Color(0XFF536372),
-              color: Colors.black,
-            ),
-            titleTextStyle: TextStyle(
-              color: Color(0XFF4A0D67),
-              fontWeight: FontWeight.w600,
-              fontSize: 24,
-            ),
+        useMaterial3: true,
+        appBarTheme: AppBarTheme(
+          color: Colors.white,
+          surfaceTintColor: Colors.transparent,
+          elevation: 0,
+          scrolledUnderElevation: 4,
+          centerTitle: false,
+          iconTheme: IconThemeData(
+            color: Global.colors.secondaryColor,
           ),
-          textButtonTheme: TextButtonThemeData(
-            style: TextButton.styleFrom(
-              foregroundColor: Global.colors.lightIconColorDarker,
-            ),
+          titleTextStyle: TextStyle(
+            color: Global.colors.secondaryColor,
+            fontWeight: FontWeight.w600,
+            fontSize: 24,
           ),
-          scaffoldBackgroundColor: Colors.white,
-          chipTheme: Theme.of(context).chipTheme.copyWith(
-                backgroundColor: Global.colors.lightIconColorDarker,
-                labelStyle: TextStyle(
-                  color: Global.colors.lightIconColor,
-                ),
+        ),
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            foregroundColor: Global.colors.lightIconColorDarker,
+          ),
+        ),
+        scaffoldBackgroundColor: Global.colors.lightBackgroundColor,
+        chipTheme: Theme.of(context).chipTheme.copyWith(
+              backgroundColor: Global.colors.lightIconColorDarker,
+              labelStyle: TextStyle(
+                color: Global.colors.lightIconColor,
               ),
-          textTheme: TextTheme(
-            bodyMedium: TextStyle(
-              color: Global.colors.darkIconColor,
             ),
-            titleMedium: TextStyle(
-              color: Global.colors.darkIconColor,
+        // textTheme: TextTheme(
+        //   bodyMedium: TextStyle(
+        //     color: Global.colors.darkIconColor,
+        //   ),
+        //   titleMedium: TextStyle(
+        //     color: Global.colors.darkIconColor,
+        //   ),
+        //   titleLarge: TextStyle(
+        //     color: Global.colors.darkIconColor,
+        //   ),
+        // ),
+        listTileTheme: Theme.of(context).listTileTheme.copyWith(
+              iconColor: Global.colors.secondaryColor,
             ),
-            titleLarge: TextStyle(
-              color: Global.colors.darkIconColor,
-            ),
-          ),
-          listTileTheme: Theme.of(context).listTileTheme.copyWith(
-              // iconColor: Global.colors.lightIconColorDarker,
-              ),
-          floatingActionButtonTheme: FloatingActionButtonThemeData(
-            backgroundColor: Color(0xff7877E6),
-            foregroundColor: Global.colors.lightIconColor,
-          )),
+      ),
       darkTheme: ThemeData.dark().copyWith(
+        useMaterial3: true,
         appBarTheme: AppBarTheme(
           elevation: 0,
-          backgroundColor: Global.colors.darkIconColor,
-          foregroundColor: Global.colors.lightIconColor,
+          scrolledUnderElevation: 4,
+          centerTitle: false,
+          surfaceTintColor: Colors.transparent,
           actionsIconTheme: IconThemeData(
             color: Global.colors.darkIconColorLighter,
           ),
@@ -118,8 +124,9 @@ class MyApp extends StatelessWidget {
             color: Global.colors.darkIconColorLighter,
           ),
           titleTextStyle: TextStyle(
-            color: Global.colors.lightIconColor,
-            fontSize: 26,
+            color: Global.colors.accentColor,
+            fontWeight: FontWeight.w600,
+            fontSize: 24,
           ),
         ),
         textButtonTheme: TextButtonThemeData(
@@ -127,7 +134,6 @@ class MyApp extends StatelessWidget {
             foregroundColor: Global.colors.darkIconColorLighter,
           ),
         ),
-        scaffoldBackgroundColor: Global.colors.darkIconColor,
         cupertinoOverrideTheme: const NoDefaultCupertinoThemeData(
           textTheme:
               CupertinoTextThemeData(primaryColor: CupertinoColors.white),
@@ -140,6 +146,7 @@ class MyApp extends StatelessWidget {
             Global.colors.lightIconColorDarker,
           ),
         ),
+        dialogBackgroundColor: Global.colors.darkIconColor,
       ),
       themeMode: themeMode,
     );

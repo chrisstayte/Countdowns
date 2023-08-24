@@ -31,4 +31,18 @@ class Event extends HiveObject {
     this.fontFamily,
     this.contentColor,
   });
+
+  Duration getTimeDifference() {
+    DateTime now = DateTime.now();
+    DateTime eventDate = this.eventDate;
+    DateTime eventDateWithoutTime = DateTime(
+      eventDate.year,
+      eventDate.month,
+      eventDate.day,
+    );
+    DateTime nowWithoutTime = DateTime(
+        now.year, now.month, now.day, now.hour, now.minute, now.second);
+    Duration difference = eventDateWithoutTime.difference(nowWithoutTime);
+    return difference;
+  }
 }

@@ -12,7 +12,7 @@ import 'package:provider/src/provider.dart';
 
 class CountdownPage extends StatefulWidget {
   //final CountdownEvent countdownEvent;
-  final dynamic countdownEventKey;
+  final String countdownEventKey;
 
   const CountdownPage({Key? key, required this.countdownEventKey})
       : super(key: key);
@@ -37,9 +37,9 @@ class _CountdownPageState extends State<CountdownPage> {
   void initState() {
     super.initState();
     var provider = Provider.of<EventProvider>(context, listen: false);
-    var key = provider.box.keys.elementAt(int.parse(widget.countdownEventKey));
-    _countdownEvent = provider.box.get(key) ??
-        Event(title: "ERROR", eventDate: DateTime.now());
+    _countdownEvent = provider.box.get(int.parse(widget.countdownEventKey),
+            defaultValue: Event(title: "ERROR", eventDate: DateTime.now()))
+        as Event;
 
     _getTime();
     _timer = Timer.periodic(const Duration(seconds: 1), (_) => _getTime());
@@ -107,6 +107,7 @@ class _CountdownPageState extends State<CountdownPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         iconTheme: IconThemeData(
           color: _contentColor(),
         ),
@@ -181,12 +182,12 @@ class _CountdownPageState extends State<CountdownPage> {
                               ),
                             ),
                             onPressed: () {
-                              // context
-                              //     .read<CountdownsProvider>()
-                              //     .deleteEvent(_countdownEvent);
-                              // Navigator.of(context)
-                              //   ..pop()
-                              //   ..pop();
+                              context
+                                  .read<EventProvider>()
+                                  .deleteEvent(_countdownEvent);
+                              Navigator.of(context)
+                                ..pop()
+                                ..pop();
                             },
                           ),
                           TextButton(
