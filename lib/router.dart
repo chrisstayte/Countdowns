@@ -1,4 +1,5 @@
 import 'package:countdowns/screens/add_countdown_page.dart';
+import 'package:countdowns/screens/add_event/add_event_screen.dart';
 import 'package:countdowns/screens/countdown_page.dart';
 import 'package:countdowns/screens/home/home_screen.dart';
 import 'package:countdowns/screens/settings_screen.dart';
@@ -23,7 +24,7 @@ final router = GoRouter(
     ),
     GoRoute(
       path: '/add',
-      builder: (context, state) => const AddCountdownPage(),
+      builder: (context, state) => const AddEventScreen(),
     ),
   ],
   // errorBuilder: (context, state) => const PageNotFoundScreen(),

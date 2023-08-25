@@ -8,7 +8,7 @@ class CountdownCardEmpty extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Global.colors.defaultBackgroundColor,
+        color: Global.colors.primaryColor,
         borderRadius: const BorderRadius.all(
           Radius.circular(20.0),
         ),
@@ -27,7 +27,7 @@ class CountdownCardEmpty extends StatelessWidget {
           child: Icon(
             Icons.add_rounded,
             size: 25,
-            color: Global.colors.defaultBackgroundColor,
+            color: Global.colors.primaryColor,
           ),
         ),
       ),

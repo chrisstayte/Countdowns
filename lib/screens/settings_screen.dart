@@ -168,7 +168,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               ListTile(
                 title: const Text('Contact'),
-                trailing: const Text('countdowns@chrisstayte.com'),
+                trailing: const Text(
+                  'countdowns@chrisstayte.com',
+                  style: TextStyle(
+                    fontSize: 12,
+                  ),
+                ),
                 onTap: () async {
                   final Uri uri = Uri(
                     scheme: 'mailto',

@@ -1,4 +1,3 @@
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:countdowns/global/global.dart';
 import 'package:countdowns/models/countdown_event.dart';
@@ -21,7 +20,7 @@ class CountdownCard extends StatelessWidget {
           : Colors.white;
 
   late final Color _backgroundColor =
-      countdownEvent.backgroundColor ?? Global.colors.defaultBackgroundColor;
+      countdownEvent.backgroundColor ?? Global.colors.primaryColor;
 
   List<Widget> _getStatus() {
     List<Widget> widgets = [];

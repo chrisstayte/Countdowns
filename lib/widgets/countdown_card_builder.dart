@@ -25,9 +25,9 @@ class CountdownCardBuilder extends StatelessWidget {
       ? contentColor!
       : color != null
           ? color!.computeLuminance() > 0.5
-              ? Global.colors.darkIconColor
-              : Global.colors.lightIconColor
-          : Global.colors.defaultContentColor;
+              ? Colors.black
+              : Colors.white
+          : Global.colors.primaryColor;
 
   List<Widget> getStatus() {
     List<Widget> widgets = [];
@@ -145,7 +145,7 @@ class CountdownCardBuilder extends StatelessWidget {
     return Container(
       height: 85,
       decoration: BoxDecoration(
-        color: color ?? Global.colors.defaultBackgroundColor,
+        color: color ?? Global.colors.primaryColor,
         borderRadius: const BorderRadius.all(
           Radius.circular(20.0),
         ),

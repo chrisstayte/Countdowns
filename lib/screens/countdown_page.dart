@@ -76,7 +76,7 @@ class _CountdownPageState extends State<CountdownPage> {
   }
 
   Color _backgroundColor() =>
-      _countdownEvent.backgroundColor ?? Global.colors.defaultBackgroundColor;
+      _countdownEvent.backgroundColor ?? Global.colors.primaryColor;
 
   Color _contentColor() => _countdownEvent.contentColor != null
       ? _countdownEvent.contentColor!

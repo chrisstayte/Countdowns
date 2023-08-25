@@ -65,11 +65,15 @@ class MyApp extends StatelessWidget {
       title: 'Countdowns',
       theme: ThemeData.light().copyWith(
         useMaterial3: true,
+        primaryColor: Global.colors.primaryColor,
+        colorScheme:
+            ColorScheme.fromSeed(seedColor: Global.colors.primaryColor),
         appBarTheme: AppBarTheme(
           color: Colors.white,
           surfaceTintColor: Colors.transparent,
           elevation: 0,
           scrolledUnderElevation: 4,
+          toolbarHeight: 77,
           centerTitle: false,
           iconTheme: IconThemeData(
             color: Global.colors.secondaryColor,
@@ -80,18 +84,9 @@ class MyApp extends StatelessWidget {
             fontSize: 24,
           ),
         ),
-        textButtonTheme: TextButtonThemeData(
-          style: TextButton.styleFrom(
-            foregroundColor: Global.colors.lightIconColorDarker,
-          ),
-        ),
+        textButtonTheme: TextButtonThemeData(),
         scaffoldBackgroundColor: Global.colors.lightBackgroundColor,
-        chipTheme: Theme.of(context).chipTheme.copyWith(
-              backgroundColor: Global.colors.lightIconColorDarker,
-              labelStyle: TextStyle(
-                color: Global.colors.lightIconColor,
-              ),
-            ),
+
         // textTheme: TextTheme(
         //   bodyMedium: TextStyle(
         //     color: Global.colors.darkIconColor,
@@ -109,42 +104,28 @@ class MyApp extends StatelessWidget {
       ),
       darkTheme: ThemeData.dark().copyWith(
         useMaterial3: true,
+        primaryColor: Global.colors.primaryColor,
+        colorScheme:
+            ColorScheme.fromSeed(seedColor: Global.colors.primaryColor),
         appBarTheme: AppBarTheme(
           elevation: 0,
           scrolledUnderElevation: 4,
           centerTitle: false,
+          toolbarHeight: 77,
+          color: Global.colors.darkBackgroundColor,
           surfaceTintColor: Colors.transparent,
-          actionsIconTheme: IconThemeData(
-            color: Global.colors.darkIconColorLighter,
-          ),
-          iconTheme: IconThemeData(
-            //color: Color(0XFF536372),
-            color: Global.colors.darkIconColorLighter,
-          ),
           titleTextStyle: TextStyle(
             color: Global.colors.accentColor,
             fontWeight: FontWeight.w600,
             fontSize: 24,
           ),
         ),
-        textButtonTheme: TextButtonThemeData(
-          style: TextButton.styleFrom(
-            foregroundColor: Global.colors.darkIconColorLighter,
-          ),
-        ),
+        scaffoldBackgroundColor: Global.colors.darkBackgroundColorLighter,
         cupertinoOverrideTheme: const NoDefaultCupertinoThemeData(
           textTheme:
               CupertinoTextThemeData(primaryColor: CupertinoColors.white),
         ),
-        switchTheme: SwitchThemeData(
-          thumbColor: MaterialStateProperty.all(
-            Global.colors.lightIconColor,
-          ),
-          trackColor: MaterialStateProperty.all(
-            Global.colors.lightIconColorDarker,
-          ),
-        ),
-        dialogBackgroundColor: Global.colors.darkIconColor,
+        dialogBackgroundColor: Global.colors.darkBackgroundColor,
       ),
       themeMode: themeMode,
     );

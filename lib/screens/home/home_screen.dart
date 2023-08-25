@@ -38,11 +38,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Countdowns'),
+          title: const Text('Events'),
           actions: [
             if (_showButton)
               IconButton(
-                  onPressed: () => context.push('/add'), icon: const Icon(Icons.add)),
+                  onPressed: () => context.push('/add'),
+                  icon: const Icon(Icons.add)),
             IconButton(
                 onPressed: () => context.push('/settings'),
                 icon: const Icon(Icons.tune_rounded))
