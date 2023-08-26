@@ -2,7 +2,9 @@ import 'package:countdowns/global/global.dart';
 import 'package:flutter/cupertino.dart';
 
 class EventSquareConstructor extends StatelessWidget {
-  const EventSquareConstructor({super.key});
+  const EventSquareConstructor({super.key, required this.title});
+
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +16,11 @@ class EventSquareConstructor extends StatelessWidget {
           25,
         ),
         color: Global.colors.primaryColor,
+      ),
+      child: Center(
+        child: Text(
+          title,
+        ),
       ),
     );
   }

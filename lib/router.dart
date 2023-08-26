@@ -24,7 +24,11 @@ final router = GoRouter(
     ),
     GoRoute(
       path: '/add',
-      builder: (context, state) => const AddEventScreen(),
+      builder: (context, state) => AddEventScreen(),
+    ),
+    GoRoute(
+      path: '/addOld',
+      builder: (context, state) => const AddCountdownPage(),
     ),
   ],
   // errorBuilder: (context, state) => const PageNotFoundScreen(),

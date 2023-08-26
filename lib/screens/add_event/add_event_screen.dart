@@ -1,4 +1,5 @@
 import 'package:countdowns/global/global.dart';
+import 'package:countdowns/models/event.dart';
 import 'package:countdowns/screens/add_event/event_square_constructor.dart';
 import 'package:countdowns/screens/add_event/option_circle.dart';
 import 'package:countdowns/screens/add_event/options/background_container.dart';
@@ -13,14 +14,19 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class AddEventScreen extends StatefulWidget {
-  const AddEventScreen({super.key});
+  AddEventScreen({super.key, this.eventKey});
+
+  String? eventKey;
 
   @override
   State<AddEventScreen> createState() => _AddEventScreenState();
 }
 
 class _AddEventScreenState extends State<AddEventScreen> {
+  late DateTime _eventDate;
+
   int _selectedOption = 0;
+  final TextEditingController _titleController = TextEditingController();
 
   void _selectOption(int index) {
     if (context.read<SettingsProvider>().settings.hapticFeedback) {
@@ -29,6 +35,23 @@ class _AddEventScreenState extends State<AddEventScreen> {
     setState(() {
       _selectedOption = index;
     });
+  }
+
+  @override
+  void initState() {
+    _titleController.addListener(() {
+      setState(() {});
+    });
+
+    _eventDate = DateTime.now();
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    super.dispose();
   }
 
   @override
@@ -73,9 +96,11 @@ class _AddEventScreenState extends State<AddEventScreen> {
           Expanded(
             child: Column(
               children: [
-                const Expanded(
+                Expanded(
                   child: Center(
-                    child: EventSquareConstructor(),
+                    child: EventSquareConstructor(
+                      title: _titleController.text,
+                    ),
                   ),
                 ),
                 Container(
@@ -127,7 +152,15 @@ class _AddEventScreenState extends State<AddEventScreen> {
             child: IndexedStack(
               index: _selectedOption,
               children: [
-                NameAndDateContainer(),
+                NameAndDateContainer(
+                  controller: _titleController,
+                  dateTime: _eventDate,
+                  onDateTimeChanged: (value) {
+                    setState(() {
+                      _eventDate = value;
+                    });
+                  },
+                ),
                 StyleContainer(),
                 BackgroundContainer(),
                 FontContainer()

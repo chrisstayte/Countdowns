@@ -23,6 +23,9 @@ class Event extends HiveObject {
   @HiveField(5)
   String? fontFamily;
 
+  @HiveField(6)
+  bool? allDayEvent;
+
   Event({
     required this.title,
     required this.eventDate,
@@ -30,6 +33,7 @@ class Event extends HiveObject {
     this.backgroundColor,
     this.fontFamily,
     this.contentColor,
+    this.allDayEvent,
   });
 
   Duration getTimeDifference() {
