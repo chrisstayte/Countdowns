@@ -64,7 +64,7 @@ class MyApp extends StatelessWidget {
       showSemanticsDebugger: false,
       title: 'Countdowns',
       theme: ThemeData.light().copyWith(
-        useMaterial3: true,
+        useMaterial3: false,
         primaryColor: Global.colors.primaryColor,
         colorScheme:
             ColorScheme.fromSeed(seedColor: Global.colors.primaryColor),
@@ -103,7 +103,7 @@ class MyApp extends StatelessWidget {
             ),
       ),
       darkTheme: ThemeData.dark().copyWith(
-        useMaterial3: true,
+        useMaterial3: false,
         primaryColor: Global.colors.primaryColor,
         colorScheme:
             ColorScheme.fromSeed(seedColor: Global.colors.primaryColor),

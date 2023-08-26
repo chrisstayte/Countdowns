@@ -31,8 +31,8 @@ class Event extends HiveObject {
     required this.eventDate,
     this.icon,
     this.backgroundColor,
-    this.fontFamily,
     this.contentColor,
+    this.fontFamily,
     this.allDayEvent,
   });
 

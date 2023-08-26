@@ -21,15 +21,16 @@ class EventAdapter extends TypeAdapter<Event> {
       eventDate: fields[1] as DateTime,
       icon: fields[2] == null ? null : IconData(fields[2] as int),
       backgroundColor: fields[3] == null ? null : Color(fields[3] as int),
-      fontFamily: fields[5] as String?,
       contentColor: fields[4] == null ? null : Color(fields[4] as int),
+      fontFamily: fields[5] as String?,
+      allDayEvent: fields[6] as bool?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Event obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
@@ -41,7 +42,9 @@ class EventAdapter extends TypeAdapter<Event> {
       ..writeByte(4)
       ..write(obj.contentColor?.value)
       ..writeByte(5)
-      ..write(obj.fontFamily);
+      ..write(obj.fontFamily)
+      ..writeByte(6)
+      ..write(obj.allDayEvent);
   }
 
   @override

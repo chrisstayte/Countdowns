@@ -24,6 +24,7 @@ class AddEventScreen extends StatefulWidget {
 
 class _AddEventScreenState extends State<AddEventScreen> {
   late DateTime _eventDate;
+  late bool _allDay;
 
   int _selectedOption = 0;
   final TextEditingController _titleController = TextEditingController();
@@ -44,6 +45,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
     });
 
     _eventDate = DateTime.now();
+    _allDay = true;
 
     super.initState();
   }
@@ -155,11 +157,13 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 NameAndDateContainer(
                   controller: _titleController,
                   dateTime: _eventDate,
-                  onDateTimeChanged: (value) {
-                    setState(() {
-                      _eventDate = value;
-                    });
-                  },
+                  onDateTimeChanged: (value) => setState(() {
+                    _eventDate = value;
+                  }),
+                  allDay: _allDay,
+                  onAllDayChanged: (value) => setState(() {
+                    _allDay = value;
+                  }),
                 ),
                 StyleContainer(),
                 BackgroundContainer(),

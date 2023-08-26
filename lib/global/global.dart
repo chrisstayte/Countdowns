@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class Global {
   static final colors = _Colors();
   static final fonts = _Fonts();
+  static final styles = _Styles();
 }
 
 class _Colors {
@@ -13,6 +14,10 @@ class _Colors {
   final Color darkBackgroundColor = const Color(0XFF121212);
   final Color darkBackgroundColorLighter = const Color(0XFF282828);
   final Color offColor = Color(0xFFCC5803);
+}
+
+class _Styles {
+  final BorderRadius containerCornerRadius = BorderRadius.circular(20);
 }
 
 class _Fonts {
