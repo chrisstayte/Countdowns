@@ -10,14 +10,14 @@ class NameAndDateContainer extends StatelessWidget {
   const NameAndDateContainer({
     super.key,
     required this.controller,
-    required this.dateTime,
+    required this.eventDateTime,
     required this.onDateTimeChanged,
     required this.allDay,
     required this.onAllDayChanged,
   });
 
   final TextEditingController controller;
-  final DateTime dateTime;
+  final DateTime eventDateTime;
   final OnDateTimeChanged onDateTimeChanged;
   final bool allDay;
   final OnAllDayChanged onAllDayChanged;
@@ -67,7 +67,7 @@ class NameAndDateContainer extends StatelessWidget {
                   .push(
                 MaterialPageRoute(
                   builder: (context) => DatePickerScreen(
-                    dateTime: dateTime,
+                    eventDateTime: eventDateTime,
                     allDay: allDay,
                   ),
                 ),
@@ -102,7 +102,7 @@ class NameAndDateContainer extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        DateFormat('MM/dd/yyyy').format(dateTime),
+                        DateFormat('MM/dd/yyyy').format(eventDateTime),
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
@@ -111,7 +111,7 @@ class NameAndDateContainer extends StatelessWidget {
                       Text(
                         allDay
                             ? 'All Day'
-                            : DateFormat("hh:mm a").format(dateTime),
+                            : DateFormat("hh:mm a").format(eventDateTime),
                       ),
                     ],
                   ),

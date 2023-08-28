@@ -6,11 +6,11 @@ import 'package:intl/intl.dart';
 class DatePickerScreen extends StatefulWidget {
   const DatePickerScreen({
     super.key,
-    this.dateTime,
+    this.eventDateTime,
     required this.allDay,
   });
 
-  final DateTime? dateTime;
+  final DateTime? eventDateTime;
   final bool allDay;
 
   @override
@@ -23,7 +23,7 @@ class _DatePickerScreenState extends State<DatePickerScreen> {
 
   @override
   void initState() {
-    _dateTime = widget.dateTime ?? DateTime.now();
+    _dateTime = widget.eventDateTime ?? DateTime.now();
     _allDay = widget.allDay;
     super.initState();
   }

@@ -3,8 +3,15 @@ import 'package:countdowns/global/global.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+typedef void OnFontSelected(String fontFamily);
+
 class FontContainer extends StatelessWidget {
-  const FontContainer({super.key});
+  const FontContainer(
+      {super.key,
+      String? fontFamily = "Regular",
+      required this.onFontSelected});
+
+  final OnFontSelected onFontSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -16,23 +23,26 @@ class FontContainer extends StatelessWidget {
       crossAxisCount: 3,
       children: Global.fonts.fontMap.keys
           .map(
-            (key) => Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.red,
-                  width: 4,
+            (key) => GestureDetector(
+              onTap: () => onFontSelected(key),
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: key == "Default" ? Colors.green : Colors.red,
+                    width: 4,
+                  ),
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  borderRadius: BorderRadius.circular(60),
                 ),
-                color: Colors.blue,
-                borderRadius: BorderRadius.circular(60),
-              ),
-              child: Center(
-                child: AutoSizeText(
-                  Global.fonts.fontMap[key]!,
-                  maxLines: 2,
-                  textAlign: TextAlign.center,
-                  minFontSize: 12,
-                  style: TextStyle(fontFamily: key, fontSize: 17),
+                child: Center(
+                  child: AutoSizeText(
+                    Global.fonts.fontMap[key]!,
+                    maxLines: 2,
+                    textAlign: TextAlign.center,
+                    minFontSize: 12,
+                    style: TextStyle(fontFamily: key, fontSize: 17),
+                  ),
                 ),
               ),
             ),

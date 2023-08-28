@@ -22,9 +22,10 @@ class AddEventScreen extends StatefulWidget {
 }
 
 class _AddEventScreenState extends State<AddEventScreen> {
-  late DateTime _eventDate;
+  late DateTime _eventDateTime;
   late bool _allDay;
   IconData? _selectedIcon;
+  String? _fontFamily;
 
   int _selectedOption = 0;
   final TextEditingController _titleController = TextEditingController();
@@ -44,7 +45,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
       setState(() {});
     });
 
-    _eventDate = DateTime.now();
+    _eventDateTime = DateTime.now();
     _allDay = true;
 
     super.initState();
@@ -103,6 +104,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     child: EventSquareConstructor(
                       title: _titleController.text,
                       icon: _selectedIcon,
+                      fontFamily: _fontFamily,
+                      dateTime: _eventDateTime,
                     ),
                   ),
                 ),
@@ -157,9 +160,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
               children: [
                 NameAndDateContainer(
                   controller: _titleController,
-                  dateTime: _eventDate,
+                  eventDateTime: _eventDateTime,
                   onDateTimeChanged: (value) => setState(() {
-                    _eventDate = value;
+                    _eventDateTime = value;
                   }),
                   allDay: _allDay,
                   onAllDayChanged: (value) => setState(() {
@@ -177,7 +180,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     _selectedIcon = value;
                   }),
                 ),
-                FontContainer()
+                FontContainer(
+                  fontFamily: _fontFamily,
+                  onFontSelected: (fontFamily) => setState(() {
+                    _fontFamily = fontFamily;
+                  }),
+                )
               ],
             ),
           ))

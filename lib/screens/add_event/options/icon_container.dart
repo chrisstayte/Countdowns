@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 typedef void IconSelectedCallback(IconData? selectedIcon);
 
 class IconContainer extends StatelessWidget {
-  IconContainer(
-      {super.key, IconData? selectedIcon, required this.onIconChanged}) {
+  IconContainer({
+    super.key,
+    IconData? selectedIcon,
+    required this.onIconChanged,
+  }) {
     _selectedIcon = selectedIcon;
   }
 
