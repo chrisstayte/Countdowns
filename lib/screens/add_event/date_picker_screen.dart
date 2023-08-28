@@ -4,15 +4,29 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class DatePickerScreen extends StatefulWidget {
-  const DatePickerScreen({super.key});
+  const DatePickerScreen({
+    super.key,
+    this.dateTime,
+    required this.allDay,
+  });
+
+  final DateTime? dateTime;
+  final bool allDay;
 
   @override
   State<DatePickerScreen> createState() => _DatePickerScreenState();
 }
 
 class _DatePickerScreenState extends State<DatePickerScreen> {
-  DateTime _dateTime = DateTime.now();
-  bool _allDay = true;
+  late DateTime _dateTime;
+  late bool _allDay;
+
+  @override
+  void initState() {
+    _dateTime = widget.dateTime ?? DateTime.now();
+    _allDay = widget.allDay;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,11 +58,13 @@ class _DatePickerScreenState extends State<DatePickerScreen> {
                 initialDate: _dateTime,
                 firstDate: DateTime(DateTime.now().year - 100),
                 lastDate: DateTime(DateTime.now().year + 100),
-                onDateChanged: (dateTime) => {
-                  setState(() {
-                    _dateTime = dateTime;
-                  })
-                },
+                onDateChanged: (dateTime) => _dateTime = DateTime(
+                  dateTime.year,
+                  dateTime.month,
+                  dateTime.day,
+                  _dateTime.hour,
+                  _dateTime.minute,
+                ),
               ),
             ),
             SizedBox(height: 10),
@@ -63,11 +79,25 @@ class _DatePickerScreenState extends State<DatePickerScreen> {
                     title: _allDay ? Text('All Day') : null,
                     leading: !_allDay
                         ? TextButton(
-                            onPressed: () {
-                              showTimePicker(
+                            onPressed: () async {
+                              await showTimePicker(
                                 context: context,
-                                initialTime: TimeOfDay.now(),
-                              );
+                                initialTime: TimeOfDay(
+                                  hour: _dateTime.hour,
+                                  minute: _dateTime.minute,
+                                ),
+                              ).then((value) {
+                                if (value != null) {
+                                  setState(() {
+                                    _dateTime = DateTime(
+                                        _dateTime.year,
+                                        _dateTime.month,
+                                        _dateTime.day,
+                                        value.hour,
+                                        value.minute);
+                                  });
+                                }
+                              });
                             },
                             child: Text(
                               DateFormat("hh:mm a").format(_dateTime),
@@ -75,8 +105,9 @@ class _DatePickerScreenState extends State<DatePickerScreen> {
                           )
                         : null,
                     trailing: Switch.adaptive(
-                        value: _allDay,
-                        onChanged: (value) => setState(() => _allDay = value)),
+                      value: _allDay,
+                      onChanged: (value) => setState(() => _allDay = value),
+                    ),
                   ),
                 ],
               ),

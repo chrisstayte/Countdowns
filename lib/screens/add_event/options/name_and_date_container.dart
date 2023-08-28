@@ -44,7 +44,7 @@ class NameAndDateContainer extends StatelessWidget {
             ),
             child: TextField(
               controller: controller,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'Event Name',
                 hintStyle: TextStyle(
                   fontSize: 15,
@@ -52,7 +52,7 @@ class NameAndDateContainer extends StatelessWidget {
                 ),
                 border: InputBorder.none,
               ),
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
               ),
@@ -66,12 +66,14 @@ class NameAndDateContainer extends StatelessWidget {
               await Navigator.of(context)
                   .push(
                 MaterialPageRoute(
-                  builder: (context) => DatePickerScreen(),
+                  builder: (context) => DatePickerScreen(
+                    dateTime: dateTime,
+                    allDay: allDay,
+                  ),
                 ),
               )
                   .then((result) {
                 if (result != null) {
-                  print(result.toString());
                   onDateTimeChanged(result[0]);
                   onAllDayChanged(result[1]);
                 }
@@ -100,7 +102,7 @@ class NameAndDateContainer extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${dateTime.day}/${dateTime.month}/${dateTime.year}',
+                        DateFormat('MM/dd/yyyy').format(dateTime),
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,

@@ -84,7 +84,6 @@ class MyApp extends StatelessWidget {
             fontSize: 24,
           ),
         ),
-        textButtonTheme: TextButtonThemeData(),
         scaffoldBackgroundColor: Global.colors.lightBackgroundColor,
 
         // textTheme: TextTheme(

@@ -1,11 +1,10 @@
 import 'package:countdowns/global/global.dart';
-import 'package:countdowns/models/event.dart';
 import 'package:countdowns/screens/add_event/event_square_constructor.dart';
 import 'package:countdowns/screens/add_event/option_circle.dart';
 import 'package:countdowns/screens/add_event/options/background_container.dart';
 import 'package:countdowns/screens/add_event/options/font_container.dart';
 import 'package:countdowns/screens/add_event/options/name_and_date_container.dart';
-import 'package:countdowns/screens/add_event/options/style_container.dart';
+import 'package:countdowns/screens/add_event/options/icon_container.dart';
 import 'package:countdowns/utilities/settings_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +24,7 @@ class AddEventScreen extends StatefulWidget {
 class _AddEventScreenState extends State<AddEventScreen> {
   late DateTime _eventDate;
   late bool _allDay;
+  IconData? _selectedIcon;
 
   int _selectedOption = 0;
   final TextEditingController _titleController = TextEditingController();
@@ -102,6 +102,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                   child: Center(
                     child: EventSquareConstructor(
                       title: _titleController.text,
+                      icon: _selectedIcon,
                     ),
                   ),
                 ),
@@ -124,14 +125,14 @@ class _AddEventScreenState extends State<AddEventScreen> {
                           onTap: () => _selectOption(1),
                           child: OptionCircle(
                             selected: _selectedOption == 1,
-                            icon: Icons.add_reaction_rounded,
+                            icon: Icons.palette_rounded,
                           ),
                         ),
                         GestureDetector(
                           onTap: () => _selectOption(2),
                           child: OptionCircle(
+                            icon: Icons.add_reaction_rounded,
                             selected: _selectedOption == 2,
-                            icon: Icons.palette_rounded,
                           ),
                         ),
                         GestureDetector(
@@ -165,8 +166,17 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     _allDay = value;
                   }),
                 ),
-                StyleContainer(),
                 BackgroundContainer(),
+                IconContainer(
+                  selectedIcon: _selectedIcon,
+                  onIconChanged: (value) => setState(() {
+                    if (value == _selectedIcon) {
+                      _selectedIcon = null;
+                      return;
+                    }
+                    _selectedIcon = value;
+                  }),
+                ),
                 FontContainer()
               ],
             ),

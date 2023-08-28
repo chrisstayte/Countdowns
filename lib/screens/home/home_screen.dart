@@ -40,10 +40,10 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           title: const Text('Events'),
           actions: [
-            IconButton(
-              onPressed: () => context.push('/addOld'),
-              icon: Icon(Icons.add_circle_outline),
-            ),
+            // IconButton(
+            //   onPressed: () => context.push('/addOld'),
+            //   icon: Icon(Icons.add_circle_outline),
+            // ),
             if (_showButton)
               IconButton(
                   onPressed: () => context.push('/add'),

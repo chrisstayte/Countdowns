@@ -21,8 +21,9 @@ class _Styles {
 }
 
 class _Fonts {
+  // list of fonts associated with theri pretty names
   final Map<String, String> fontMap = const {
-    'Default': 'Default',
+    'Default': 'Regular',
     'LibreBaskerville': 'Baskerville',
     'CarnivaleeFreakshow': 'Carnivalee Freakshow',
     'ComicNeue': 'Comic Neue',
