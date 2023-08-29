@@ -1,11 +1,13 @@
 import 'package:countdowns/global/global.dart';
+import 'package:countdowns/models/event.dart';
+import 'package:countdowns/providers/event_provider.dart';
 import 'package:countdowns/screens/add_event/event_square_constructor.dart';
 import 'package:countdowns/screens/add_event/option_circle.dart';
 import 'package:countdowns/screens/add_event/options/background_container.dart';
 import 'package:countdowns/screens/add_event/options/font_container.dart';
 import 'package:countdowns/screens/add_event/options/name_and_date_container.dart';
 import 'package:countdowns/screens/add_event/options/icon_container.dart';
-import 'package:countdowns/utilities/settings_provider.dart';
+import 'package:countdowns/providers/settings_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -67,7 +69,17 @@ class _AddEventScreenState extends State<AddEventScreen> {
             padding: const EdgeInsets.only(right: 8.0),
             child: OutlinedButton(
               onPressed: () {
-                // context.read<SettingsProvider>().saveSettings();
+                if (_titleController.text.isNotEmpty) {
+                  Event newEvent = Event(
+                    title: _titleController.text,
+                    icon: _selectedIcon,
+                    fontFamily: _fontFamily,
+                    eventDate: _eventDateTime,
+                    allDayEvent: _allDay,
+                  );
+
+                  context.read<EventProvider>().addEvent(newEvent);
+                }
                 context.pop();
               },
               style: ButtonStyle(
@@ -105,7 +117,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                       title: _titleController.text,
                       icon: _selectedIcon,
                       fontFamily: _fontFamily,
-                      dateTime: _eventDateTime,
+                      eventDateTime: _eventDateTime,
+                      allDay: _allDay,
                     ),
                   ),
                 ),

@@ -35,8 +35,10 @@ class _CountdownPageState extends State<CountdownPage> {
     super.initState();
     var provider = Provider.of<EventProvider>(context, listen: false);
     _countdownEvent = provider.box.get(int.parse(widget.countdownEventKey),
-            defaultValue: Event(title: "ERROR", eventDate: DateTime.now()))
-        as Event;
+        defaultValue: Event(
+            title: "ERROR",
+            eventDate: DateTime.now(),
+            allDayEvent: true)) as Event;
 
     _getTime();
     _timer = Timer.periodic(const Duration(seconds: 1), (_) => _getTime());

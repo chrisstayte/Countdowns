@@ -23,7 +23,7 @@ class EventAdapter extends TypeAdapter<Event> {
       backgroundColor: fields[3] == null ? null : Color(fields[3] as int),
       contentColor: fields[4] == null ? null : Color(fields[4] as int),
       fontFamily: fields[5] as String?,
-      allDayEvent: fields[6] as bool?,
+      allDayEvent: fields[6] as bool,
     );
   }
 

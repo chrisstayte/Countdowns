@@ -102,14 +102,19 @@ class IconContainer extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
+                  color: iconData == _selectedIcon
+                      ? Theme.of(context).scaffoldBackgroundColor
+                      : Theme.of(context).cardColor,
                   border: Border.all(
                     color: iconData == _selectedIcon
-                        ? Colors.green
+                        ? Theme.of(context).primaryColor
                         : Theme.of(context).primaryColor,
                     width: iconData == _selectedIcon ? 4 : 2,
                   ),
                 ),
-                child: Icon(iconData),
+                child: Icon(
+                  iconData,
+                ),
               ),
             ),
           )

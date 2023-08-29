@@ -2,7 +2,7 @@ import 'package:countdowns/models/countdown_event.dart';
 import 'package:countdowns/models/event.dart';
 import 'package:countdowns/providers/event_provider.dart';
 import 'package:countdowns/utilities/countdowns_provider.dart';
-import 'package:countdowns/utilities/settings_provider.dart';
+import 'package:countdowns/providers/settings_provider.dart';
 import 'package:countdowns/widgets/color_picker_material_modal.dart';
 import 'package:countdowns/widgets/countdown_card_builder.dart';
 import 'package:countdowns/widgets/date_picker_cupertino_modal.dart';
@@ -80,6 +80,7 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
                   icon: _icon,
                   fontFamily: _fontFamily,
                   contentColor: _contentColor,
+                  allDayEvent: true,
                 );
 
                 context.read<EventProvider>().addEvent(event2);

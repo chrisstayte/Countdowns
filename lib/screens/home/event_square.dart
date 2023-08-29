@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:countdowns/models/event.dart';
-import 'package:countdowns/utilities/settings_provider.dart';
+import 'package:countdowns/providers/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -18,11 +18,8 @@ class CountdownSquare extends StatefulWidget {
 }
 
 class _CountdownSquareState extends State<CountdownSquare> {
-  late int _years;
-  late int _days;
-  late int _hours;
-  late int _minutes;
-  late int _seconds;
+  late String _premierText;
+  late String? _secondaryText;
   late Timer _timer;
 
   bool _eventOccured = false;
@@ -30,28 +27,46 @@ class _CountdownSquareState extends State<CountdownSquare> {
   @override
   void initState() {
     super.initState();
-    _updateTime();
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) => _updateTime());
+    _updateTimeUI();
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) => _updateTimeUI());
   }
 
-  void _updateTime() {
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  void _updateTimeUI() {
+    // Determine the time difference (also incorporate if it's all day or specific time)
     Duration timeDifference = widget.event.getTimeDifference();
 
-    if (timeDifference < Duration.zero) {
-      setState(() {
-        _eventOccured = true;
-      });
-      _timer.cancel();
-      return;
+    int years = (timeDifference.inDays / 365).floor();
+    // set the premier text
+    if (years > 0) {
+      _premierText = '${years} years';
+      _secondaryText =
+          '${timeDifference.inDays % 365} days, ${timeDifference.inHours % 24} hr';
+    } else if (timeDifference.inDays > 0) {
+      _premierText = '${timeDifference.inDays} days';
+      _secondaryText = '${timeDifference.inHours % 24} hr, '
+          '${timeDifference.inMinutes % 60} min';
+    } else if (timeDifference.inHours > 0) {
+      _premierText = '${timeDifference.inHours} hours';
+      _secondaryText = '${timeDifference.inMinutes % 60} min, '
+          '${timeDifference.inSeconds % 60} sec';
+    } else if (timeDifference.inMinutes > 0) {
+      _premierText = '${timeDifference.inMinutes} min';
+      _secondaryText = '${timeDifference.inSeconds % 60} sec';
+    } else if (timeDifference.inSeconds > 0) {
+      _premierText = '${timeDifference.inSeconds} sec';
+      _secondaryText = null;
+    } else {
+      _premierText = 'Complete';
+      _secondaryText = null;
     }
 
-    setState(() {
-      _seconds = timeDifference.inSeconds % 60;
-      _minutes = timeDifference.inMinutes % 60;
-      _hours = timeDifference.inHours % 24;
-      _days = (timeDifference.inDays % 365);
-      _years = (timeDifference.inDays / 365.0).floor();
-    });
+    setState(() {});
   }
 
   @override
@@ -90,55 +105,28 @@ class _CountdownSquareState extends State<CountdownSquare> {
               ),
             ),
             const Spacer(),
-            Row(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AutoSizeText(
-                  _days.toString(),
-                  maxLines: 1,
-                  minFontSize: 12,
-                  maxFontSize: 18,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
+                Text(
+                  _premierText,
+                  style: const TextStyle(
+                    color: Colors.white,
                     fontSize: 18,
-                    fontFamily: widget.event.fontFamily,
-                    color: widget.event.contentColor ?? Colors.white,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
-                const SizedBox(
-                  width: 5,
-                ),
-                AutoSizeText(
-                  'Days',
-                  maxLines: 1,
-                  minFontSize: 12,
-                  maxFontSize: 18,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 18,
-                    fontFamily: widget.event.fontFamily,
-                    color: widget.event.contentColor ?? Colors.white,
+                if (_secondaryText != null)
+                  AutoSizeText(
+                    _secondaryText!,
+                    maxLines: 1,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
                   ),
-                ),
               ],
             ),
-            const SizedBox(
-              height: 8,
-            ),
-            Row(
-              children: [
-                AutoSizeText(
-                  '${_hours.toString()} hr, ${_minutes.toString()} min',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                    fontFamily: widget.event.fontFamily,
-                    color: widget.event.contentColor ?? Colors.white,
-                  ),
-                ),
-              ],
-            )
           ],
         ),
       ),

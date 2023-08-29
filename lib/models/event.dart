@@ -24,29 +24,25 @@ class Event extends HiveObject {
   String? fontFamily;
 
   @HiveField(6)
-  bool? allDayEvent;
+  bool allDayEvent;
 
   Event({
     required this.title,
     required this.eventDate,
+    required this.allDayEvent,
     this.icon,
     this.backgroundColor,
     this.contentColor,
     this.fontFamily,
-    this.allDayEvent,
   });
 
   Duration getTimeDifference() {
     DateTime now = DateTime.now();
-    DateTime eventDate = this.eventDate;
-    DateTime eventDateWithoutTime = DateTime(
-      eventDate.year,
-      eventDate.month,
-      eventDate.day,
-    );
-    DateTime nowWithoutTime = DateTime(
-        now.year, now.month, now.day, now.hour, now.minute, now.second);
-    Duration difference = eventDateWithoutTime.difference(nowWithoutTime);
+    DateTime eventDate = allDayEvent
+        ? DateTime(
+            this.eventDate.year, this.eventDate.month, this.eventDate.day)
+        : this.eventDate;
+    Duration difference = eventDate.difference(now);
     return difference;
   }
 }

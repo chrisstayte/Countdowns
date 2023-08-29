@@ -4,7 +4,7 @@ import 'package:countdowns/models/event.dart';
 import 'package:countdowns/providers/event_provider.dart';
 import 'package:countdowns/router.dart';
 import 'package:countdowns/utilities/countdowns_provider.dart';
-import 'package:countdowns/utilities/settings_provider.dart';
+import 'package:countdowns/providers/settings_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
