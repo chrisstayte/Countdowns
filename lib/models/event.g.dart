@@ -18,8 +18,10 @@ class EventAdapter extends TypeAdapter<Event> {
     };
     return Event(
       title: fields[0] as String,
-      eventDate: fields[1] as DateTime,
-      icon: fields[2] == null ? null : IconData(fields[2] as int),
+      eventDateTime: fields[1] as DateTime,
+      icon: fields[2] == null
+          ? null
+          : IconData(fields[2] as int, fontFamily: 'MaterialIcons'),
       backgroundColor: fields[3] == null ? null : Color(fields[3] as int),
       contentColor: fields[4] == null ? null : Color(fields[4] as int),
       fontFamily: fields[5] as String?,
@@ -34,7 +36,7 @@ class EventAdapter extends TypeAdapter<Event> {
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
-      ..write(obj.eventDate)
+      ..write(obj.eventDateTime)
       ..writeByte(2)
       ..write(obj.icon?.codePoint)
       ..writeByte(3)
