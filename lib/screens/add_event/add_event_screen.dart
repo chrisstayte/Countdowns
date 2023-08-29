@@ -1,13 +1,14 @@
 import 'package:countdowns/global/global.dart';
 import 'package:countdowns/models/event.dart';
 import 'package:countdowns/providers/event_provider.dart';
-import 'package:countdowns/screens/add_event/event_square_constructor.dart';
+
 import 'package:countdowns/screens/add_event/option_circle.dart';
 import 'package:countdowns/screens/add_event/options/background_container.dart';
 import 'package:countdowns/screens/add_event/options/font_container.dart';
 import 'package:countdowns/screens/add_event/options/name_and_date_container.dart';
 import 'package:countdowns/screens/add_event/options/icon_container.dart';
 import 'package:countdowns/providers/settings_provider.dart';
+import 'package:countdowns/widgets/event_square.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,19 +16,18 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class AddEventScreen extends StatefulWidget {
-  AddEventScreen({super.key, this.eventKey});
+  const AddEventScreen({super.key, this.eventKey});
 
-  String? eventKey;
+  final String? eventKey;
 
   @override
   State<AddEventScreen> createState() => _AddEventScreenState();
 }
 
 class _AddEventScreenState extends State<AddEventScreen> {
-  late DateTime _eventDateTime;
-  late bool _allDay;
-  IconData? _selectedIcon;
-  String? _fontFamily;
+  late Event _eventDraft;
+  late Event _existingEvent;
+  bool _newEvent = true;
 
   int _selectedOption = 0;
   final TextEditingController _titleController = TextEditingController();
@@ -44,11 +44,25 @@ class _AddEventScreenState extends State<AddEventScreen> {
   @override
   void initState() {
     _titleController.addListener(() {
-      setState(() {});
+      setState(() {
+        _eventDraft.title = _titleController.text;
+      });
     });
 
-    _eventDateTime = DateTime.now();
-    _allDay = true;
+    Event? event = context.read<EventProvider>().getEvent(widget.eventKey);
+
+    if (event == null) {
+      _eventDraft = Event(
+        title: '',
+        eventDateTime: DateTime.now(),
+        allDayEvent: true,
+      );
+    } else {
+      _newEvent = false;
+      _existingEvent = event;
+      _eventDraft = event.copy();
+      _titleController.text = _eventDraft.title;
+    }
 
     super.initState();
   }
@@ -70,15 +84,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
             child: OutlinedButton(
               onPressed: () {
                 if (_titleController.text.isNotEmpty) {
-                  Event newEvent = Event(
-                    title: _titleController.text,
-                    icon: _selectedIcon,
-                    fontFamily: _fontFamily,
-                    eventDate: _eventDateTime,
-                    allDayEvent: _allDay,
-                  );
-
-                  context.read<EventProvider>().addEvent(newEvent);
+                  if (_newEvent) {
+                    context.read<EventProvider>().addEvent(_eventDraft);
+                  } else {
+                    _existingEvent.update(_eventDraft);
+                    context.read<EventProvider>().saveEvent(_existingEvent);
+                  }
                 }
                 context.pop();
               },
@@ -113,12 +124,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
               children: [
                 Expanded(
                   child: Center(
-                    child: EventSquareConstructor(
-                      title: _titleController.text,
-                      icon: _selectedIcon,
-                      fontFamily: _fontFamily,
-                      eventDateTime: _eventDateTime,
-                      allDay: _allDay,
+                    child: EventSquare(
+                      event: _eventDraft,
                     ),
                   ),
                 ),
@@ -173,30 +180,30 @@ class _AddEventScreenState extends State<AddEventScreen> {
               children: [
                 NameAndDateContainer(
                   controller: _titleController,
-                  eventDateTime: _eventDateTime,
+                  eventDateTime: _eventDraft.eventDateTime,
                   onDateTimeChanged: (value) => setState(() {
-                    _eventDateTime = value;
+                    _eventDraft.eventDateTime = value;
                   }),
-                  allDay: _allDay,
+                  allDay: _eventDraft.allDayEvent,
                   onAllDayChanged: (value) => setState(() {
-                    _allDay = value;
+                    _eventDraft.allDayEvent = value;
                   }),
                 ),
                 BackgroundContainer(),
                 IconContainer(
-                  selectedIcon: _selectedIcon,
+                  selectedIcon: _eventDraft.icon,
                   onIconChanged: (value) => setState(() {
-                    if (value == _selectedIcon) {
-                      _selectedIcon = null;
+                    if (value == _eventDraft.icon) {
+                      _eventDraft.icon = null;
                       return;
                     }
-                    _selectedIcon = value;
+                    _eventDraft.icon = value;
                   }),
                 ),
                 FontContainer(
-                  fontFamily: _fontFamily,
+                  fontFamily: _eventDraft.fontFamily,
                   onFontSelected: (fontFamily) => setState(() {
-                    _fontFamily = fontFamily;
+                    _eventDraft.fontFamily = fontFamily;
                   }),
                 )
               ],

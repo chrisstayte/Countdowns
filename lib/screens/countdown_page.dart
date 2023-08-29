@@ -4,7 +4,9 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:countdowns/global/global.dart';
 import 'package:countdowns/models/event.dart';
 import 'package:countdowns/providers/event_provider.dart';
+import 'package:countdowns/screens/add_event/add_event_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/src/provider.dart';
 
 class CountdownPage extends StatefulWidget {
@@ -37,7 +39,7 @@ class _CountdownPageState extends State<CountdownPage> {
     _countdownEvent = provider.box.get(int.parse(widget.countdownEventKey),
         defaultValue: Event(
             title: "ERROR",
-            eventDate: DateTime.now(),
+            eventDateTime: DateTime.now(),
             allDayEvent: true)) as Event;
 
     _getTime();
@@ -51,8 +53,7 @@ class _CountdownPageState extends State<CountdownPage> {
   }
 
   bool _getTime() {
-    DateTime currentTime = DateTime.now();
-    Duration timeDifference = _countdownEvent.eventDate.difference(currentTime);
+    Duration timeDifference = _countdownEvent.getTimeDifference();
 
     if (timeDifference < Duration.zero) {
       if (!_eventOccured) {
@@ -67,11 +68,11 @@ class _CountdownPageState extends State<CountdownPage> {
       return true;
     } else {
       setState(() {
-        seconds = timeDifference.inSeconds % 60;
-        minutes = timeDifference.inMinutes % 60;
-        hours = timeDifference.inHours % 24;
-        days = (timeDifference.inDays % 365);
-        years = (timeDifference.inDays / 365.0).floor();
+        seconds = _countdownEvent.getTimeDifferenceInSeconds();
+        minutes = _countdownEvent.getTimeDifferenceInMinutes();
+        hours = _countdownEvent.getTimeDifferenceInHours();
+        days = _countdownEvent.getTimeDifferenceInDays();
+        years = _countdownEvent.getTimeDifferenceInYears();
       });
       return false;
     }
@@ -147,15 +148,15 @@ class _CountdownPageState extends State<CountdownPage> {
             onSelected: (value) async {
               switch (value) {
                 case 1:
-                  // await Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) {
-                  //       return EditCountdownPage(
-                  //           countdownEvent: _countdownEvent);
-                  //     },
-                  //   ),
-                  // );
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return AddEventScreen(
+                            eventKey: _countdownEvent.key.toString());
+                      },
+                    ),
+                  );
                   setState(() {
                     _eventOccured = _getTime();
                   });
@@ -260,7 +261,10 @@ class _CountdownPageState extends State<CountdownPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "${_countdownEvent.eventDate.month.toString()}/${_countdownEvent.eventDate.day.toString()}/${_countdownEvent.eventDate.year.toString()}",
+                    DateFormat(_countdownEvent.allDayEvent
+                            ? "MM/dd/yyyy"
+                            : "MM/dd/yyyy hh:mm a")
+                        .format(_countdownEvent.eventDateTime),
                     style: labelStyle(),
                   ),
                 ],

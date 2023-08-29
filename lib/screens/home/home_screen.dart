@@ -1,5 +1,6 @@
+import 'package:countdowns/global/global.dart';
 import 'package:countdowns/providers/event_provider.dart';
-import 'package:countdowns/screens/home/event_square.dart';
+import 'package:countdowns/widgets/event_square.dart';
 import 'package:countdowns/providers/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -73,8 +74,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: 169,
                     height: 169,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: const Color(0xffb3b2f7),
+                      borderRadius: Global.styles.containerCornerRadius,
+                      color: Global.colors.accentColor,
                     ),
                     child: const Center(
                       child: Icon(
@@ -85,7 +86,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-                ...events.map((e) => CountdownSquare(event: e)).toList()
+                ...events
+                    .map(
+                      (e) => GestureDetector(
+                        onTap: () => context.push('/event/${e.key}'),
+                        child: EventSquare(event: e),
+                      ),
+                    )
+                    .toList()
               ],
             ),
           ),

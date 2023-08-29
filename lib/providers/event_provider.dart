@@ -17,12 +17,22 @@ class EventProvider extends ChangeNotifier {
       return b.title.toLowerCase().compareTo(a.title.toLowerCase());
     },
     SortingMethod.dateAscending: (a, b) {
-      return a.eventDate.compareTo(b.eventDate);
+      return a.eventDateTime.compareTo(b.eventDateTime);
     },
     SortingMethod.dateDescending: (a, b) {
-      return b.eventDate.compareTo(a.eventDate);
+      return b.eventDateTime.compareTo(a.eventDateTime);
     },
   };
+
+  Event? getEvent(String? key) {
+    if (key == null) return null;
+    return box.get(int.tryParse(key));
+  }
+
+  void saveEvent(Event event) {
+    event.save();
+    notifyListeners();
+  }
 
   void addEvent(Event event) {
     box.add(event);

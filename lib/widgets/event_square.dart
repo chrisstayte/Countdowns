@@ -2,31 +2,21 @@ import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:countdowns/global/global.dart';
+import 'package:countdowns/models/event.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class EventSquareConstructor extends StatefulWidget {
-  const EventSquareConstructor({
-    super.key,
-    required this.title,
-    required this.eventDateTime,
-    required this.allDay,
-    this.icon,
-    this.fontFamily,
-  });
+class EventSquare extends StatefulWidget {
+  const EventSquare({super.key, required this.event});
 
-  final String title;
-  final IconData? icon;
-  final String? fontFamily;
-  final DateTime eventDateTime;
-  final bool allDay;
+  final Event event;
 
   @override
-  State<EventSquareConstructor> createState() => _EventSquareConstructorState();
+  State<EventSquare> createState() => _EventSquareState();
 }
 
-class _EventSquareConstructorState extends State<EventSquareConstructor> {
+class _EventSquareState extends State<EventSquare> {
   Timer? _timer;
   late String premierText;
   late String? secondaryText;
@@ -48,17 +38,7 @@ class _EventSquareConstructorState extends State<EventSquareConstructor> {
   }
 
   void _updateTimeUI() {
-    // Determine the time difference (also incorporate if it's all day or specific time)
-    DateTime now = DateTime.now();
-    Duration timeDifference;
-    if (widget.allDay) {
-      DateTime eventDateTimeWithoutTime = DateTime(widget.eventDateTime.year,
-          widget.eventDateTime.month, widget.eventDateTime.day);
-      timeDifference = eventDateTimeWithoutTime.difference(now);
-    } else {
-      timeDifference = widget.eventDateTime.difference(now);
-    }
-
+    Duration timeDifference = widget.event.getTimeDifference();
     int years = (timeDifference.inDays / 365).floor();
     // set the premier text
     if (years > 0) {
@@ -109,50 +89,49 @@ class _EventSquareConstructorState extends State<EventSquareConstructor> {
             children: [
               Expanded(
                 child: AutoSizeText(
-                  widget.title,
+                  widget.event.title,
                   minFontSize: 14,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
                   style: TextStyle(
                     fontSize: 20,
                     color: Colors.white,
-                    fontFamily: widget.fontFamily,
+                    fontFamily: widget.event.fontFamily,
                   ),
                 ),
               ),
-              if (widget.icon != null)
+              if (widget.event.icon != null)
                 Padding(
                   padding: const EdgeInsets.only(left: 5),
                   child: Icon(
-                    widget.icon,
+                    widget.event.icon,
                     color: Colors.white,
                   ),
                 )
             ],
           ),
-          if (widget.eventDateTime != null)
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  premierText,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                premierText,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              if (secondaryText != null)
+                AutoSizeText(
+                  secondaryText!,
+                  maxLines: 1,
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
+                    fontSize: 16,
                   ),
                 ),
-                if (secondaryText != null)
-                  AutoSizeText(
-                    secondaryText!,
-                    maxLines: 1,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                    ),
-                  ),
-              ],
-            ),
+            ],
+          ),
         ],
       ),
     );

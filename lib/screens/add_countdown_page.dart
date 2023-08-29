@@ -75,7 +75,7 @@ class _AddCountdownPageState extends State<AddCountdownPage> {
 
                 Event event2 = Event(
                   title: _textBox,
-                  eventDate: _dateTime!,
+                  eventDateTime: _dateTime!,
                   backgroundColor: _backgroundColor,
                   icon: _icon,
                   fontFamily: _fontFamily,
