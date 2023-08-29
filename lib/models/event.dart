@@ -26,10 +26,14 @@ class Event extends HiveObject {
   @HiveField(6)
   bool allDayEvent;
 
+  @HiveField(7)
+  bool backgroundGradient;
+
   Event({
     required this.title,
     required this.eventDateTime,
-    required this.allDayEvent,
+    this.allDayEvent = true,
+    this.backgroundGradient = false,
     this.icon,
     this.backgroundColor,
     this.contentColor,
@@ -46,6 +50,7 @@ class Event extends HiveObject {
       backgroundColor: backgroundColor,
       contentColor: contentColor,
       fontFamily: fontFamily,
+      backgroundGradient: backgroundGradient,
     );
   }
 

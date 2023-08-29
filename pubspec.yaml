@@ -25,6 +25,7 @@ dependencies:
   hive_flutter: ^1.1.0
   font_awesome_flutter: ^10.5.0
   intl: ^0.18.1
+  flutter_animate: ^4.2.0+1
 
 dev_dependencies:
   flutter_test:

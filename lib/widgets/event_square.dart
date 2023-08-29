@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:countdowns/global/global.dart';
 import 'package:countdowns/models/event.dart';
+import 'package:countdowns/utilities/extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -77,7 +78,10 @@ class _EventSquareState extends State<EventSquare> {
         borderRadius: BorderRadius.circular(
           25,
         ),
-        color: Global.colors.primaryColor,
+        color: widget.event.backgroundColor,
+        gradient: widget.event.backgroundGradient
+            ? widget.event.backgroundColor?.gradient
+            : null,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

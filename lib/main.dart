@@ -124,6 +124,7 @@ class MyApp extends StatelessWidget {
           textTheme:
               CupertinoTextThemeData(primaryColor: CupertinoColors.white),
         ),
+        shadowColor: Colors.white,
         dialogBackgroundColor: Global.colors.darkBackgroundColor,
       ),
       themeMode: themeMode,

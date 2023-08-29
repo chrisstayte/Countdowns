@@ -13,7 +13,7 @@ class _Colors {
   final Color lightBackgroundColor = const Color(0XFFDEE2FF);
   final Color darkBackgroundColor = const Color(0XFF121212);
   final Color darkBackgroundColorLighter = const Color(0XFF282828);
-  final Color offColor = Color(0xFFCC5803);
+  final Color offColor = Color(0xFF1B998B);
 }
 
 class _Styles {

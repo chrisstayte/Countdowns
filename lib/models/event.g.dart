@@ -26,13 +26,14 @@ class EventAdapter extends TypeAdapter<Event> {
       contentColor: fields[4] == null ? null : Color(fields[4] as int),
       fontFamily: fields[5] as String?,
       allDayEvent: fields[6] as bool,
+      backgroundGradient: fields[7] != null ? fields[7] as bool : false,
     );
   }
 
   @override
   void write(BinaryWriter writer, Event obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
@@ -46,7 +47,9 @@ class EventAdapter extends TypeAdapter<Event> {
       ..writeByte(5)
       ..write(obj.fontFamily)
       ..writeByte(6)
-      ..write(obj.allDayEvent);
+      ..write(obj.allDayEvent)
+      ..writeByte(7)
+      ..write(obj.backgroundGradient);
   }
 
   @override

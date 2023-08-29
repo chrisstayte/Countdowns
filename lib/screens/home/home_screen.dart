@@ -38,73 +38,68 @@ class _HomeScreenState extends State<HomeScreen> {
         context.watch<SettingsProvider>().settings.sortingMethod]);
 
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Events'),
-          actions: [
-            // IconButton(
-            //   onPressed: () => context.push('/addOld'),
-            //   icon: Icon(Icons.add_circle_outline),
-            // ),
-            if (_showButton)
-              IconButton(
-                  onPressed: () => context.push('/add'),
-                  icon: const Icon(Icons.add)),
+      appBar: AppBar(
+        title: const Text('Events'),
+        actions: [
+          if (_showButton)
             IconButton(
-                onPressed: () => context.push('/settings'),
-                icon: const Icon(Icons.tune_rounded))
-          ],
-        ),
-        body: SingleChildScrollView(
-          controller: _scrollController,
-          padding: const EdgeInsets.only(
-            top: 15,
-            left: 15,
-            right: 15,
+              onPressed: () => context.push('/eventDraft'),
+              icon: const Icon(Icons.add),
+            ),
+          IconButton(
+            onPressed: () => context.push('/settings'),
+            icon: const Icon(Icons.tune_rounded),
           ),
-          child: Align(
-            alignment:
-                events.isNotEmpty ? Alignment.topCenter : Alignment.topLeft,
-            child: Wrap(
-              spacing: 10,
-              runSpacing: 10,
-              children: [
-                GestureDetector(
-                  onTap: () => context.push('/add'),
-                  child: Container(
-                    width: 169,
-                    height: 169,
-                    decoration: BoxDecoration(
-                      borderRadius: Global.styles.containerCornerRadius,
-                      color: Global.colors.accentColor,
-                    ),
-                    child: const Center(
-                      child: Icon(
-                        Icons.add_rounded,
-                        color: Color(0XFF4A0D67),
-                        size: 50,
-                      ),
+          IconButton(
+            icon: Icon(Icons.bug_report),
+            onPressed: () => context.push('/event2/test'),
+          )
+        ],
+      ),
+      body: SingleChildScrollView(
+        controller: _scrollController,
+        padding: const EdgeInsets.only(
+          top: 15,
+          left: 15,
+          right: 15,
+        ),
+        child: Align(
+          alignment:
+              events.isNotEmpty ? Alignment.topCenter : Alignment.topLeft,
+          child: Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: [
+              GestureDetector(
+                onTap: () => context.push('/eventDraft'),
+                child: Container(
+                  width: 169,
+                  height: 169,
+                  decoration: BoxDecoration(
+                    borderRadius: Global.styles.containerCornerRadius,
+                    color: Global.colors.accentColor,
+                  ),
+                  child: const Center(
+                    child: Icon(
+                      Icons.add_rounded,
+                      color: Color(0XFF4A0D67),
+                      size: 50,
                     ),
                   ),
                 ),
-                ...events
-                    .map(
-                      (e) => GestureDetector(
-                        onTap: () => context.push('/event/${e.key}'),
-                        child: EventSquare(event: e),
-                      ),
-                    )
-                    .toList()
-              ],
-            ),
+              ),
+              ...events
+                  .map(
+                    (e) => GestureDetector(
+                      onTap: () => context.push('/event/${e.key}'),
+                      child: EventSquare(event: e),
+                    ),
+                  )
+                  .toList()
+            ],
           ),
-        )
-
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () => context.push('/add'),
-        //   child: Icon(
-        //     Icons.add_rounded,
-        //   ),
-        // ),
-        );
+        ),
+      ),
+    );
   }
 }
