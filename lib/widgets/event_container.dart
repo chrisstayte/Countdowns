@@ -89,32 +89,34 @@ class _EventContainerState extends State<EventContainer> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: AutoSizeText(
-                  widget.event.title,
-                  minFontSize: 14,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                  style: TextStyle(
-                    fontSize: 26,
-                    color: widget.event.backgroundColor.contentColor,
-                    fontFamily: widget.event.fontFamily,
+          Flexible(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: AutoSizeText(
+                    widget.event.title,
+                    minFontSize: 14,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    style: TextStyle(
+                      fontSize: 26,
+                      color: widget.event.backgroundColor.contentColor,
+                      fontFamily: widget.event.fontFamily,
+                    ),
                   ),
                 ),
-              ),
-              if (widget.event.icon != null)
-                Padding(
-                  padding: const EdgeInsets.only(left: 5),
-                  child: Icon(
-                    widget.event.icon,
-                    color: Colors.white,
-                  ),
-                )
-            ],
+                if (widget.event.icon != null)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 5),
+                    child: Icon(
+                      widget.event.icon,
+                      color: Colors.white,
+                    ),
+                  )
+              ],
+            ),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,

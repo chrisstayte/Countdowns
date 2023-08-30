@@ -4,6 +4,7 @@ import 'package:countdowns/widgets/event_container.dart';
 import 'package:countdowns/providers/settings_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -50,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           IconButton(
             onPressed: () => context.push('/settings'),
-            icon: const Icon(Icons.tune_rounded),
+            icon: const Icon(Icons.settings),
           ),
         ],
       ),
@@ -65,8 +66,12 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           CupertinoSlidingSegmentedControl(
             groupValue: context.watch<SettingsProvider>().settings.squareView,
-            onValueChanged: (value) =>
-                {context.read<SettingsProvider>().setSquareView(value as bool)},
+            onValueChanged: (value) {
+              if (context.read<SettingsProvider>().settings.hapticFeedback) {
+                HapticFeedback.mediumImpact();
+              }
+              context.read<SettingsProvider>().setSquareView(value as bool);
+            },
             children: const <bool, Widget>{
               true: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10),
@@ -109,7 +114,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ...events.map(
                 (event) => GestureDetector(
-                  onTap: () => context.push('/event/${event.key}'),
+                  onTap: () {
+                    if (context
+                        .read<SettingsProvider>()
+                        .settings
+                        .hapticFeedback) {
+                      HapticFeedback.lightImpact();
+                    }
+                    context.push('/event/${event.key}');
+                  },
                   child: EventContainer(event: event),
                 ),
               )

@@ -1,4 +1,4 @@
-import 'package:countdowns/screens/event_draft/date_picker_screen.dart';
+import 'package:countdowns/screens/event_draft/options/name_and_date/date_picker_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';

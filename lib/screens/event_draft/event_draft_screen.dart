@@ -5,7 +5,7 @@ import 'package:countdowns/providers/event_provider.dart';
 import 'package:countdowns/screens/event_draft/option_circle.dart';
 import 'package:countdowns/screens/event_draft/options/background/background_container.dart';
 import 'package:countdowns/screens/event_draft/options/font_container.dart';
-import 'package:countdowns/screens/event_draft/options/name_and_date_container.dart';
+import 'package:countdowns/screens/event_draft/options/name_and_date/name_and_date_container.dart';
 import 'package:countdowns/screens/event_draft/options/icon_container.dart';
 import 'package:countdowns/providers/settings_provider.dart';
 import 'package:countdowns/widgets/event_container.dart';
@@ -99,6 +99,12 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
                   setState(() {
                     _selectedOption = 0;
                     _shouldShakeName = !_shouldShakeName;
+                    if (context
+                        .read<SettingsProvider>()
+                        .settings
+                        .hapticFeedback) {
+                      HapticFeedback.vibrate();
+                    }
                   });
                 }
               },
