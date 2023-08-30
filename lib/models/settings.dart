@@ -6,12 +6,16 @@ class Settings {
   SortingMethod sortingMethod = SortingMethod.alphaAscending;
   bool hapticFeedback = true;
   bool soundEffects = true;
+  bool squareView = true;
+  bool notify = true;
 
   Settings({
     required this.themeMode,
     required this.sortingMethod,
     required this.hapticFeedback,
     required this.soundEffects,
+    required this.squareView,
+    required this.notify,
   });
 
   factory Settings.fromJson(Map<String, dynamic> json) {
@@ -24,12 +28,16 @@ class Settings {
 
     bool hasHapticFeedback = json['hapticFeedback'] as bool;
     bool hasSoundFeedback = json['soundEffects'] as bool;
+    bool squareView = json['squareView'] as bool;
+    bool notify = json['notify'] as bool;
 
     return Settings(
       themeMode: themeMode,
       sortingMethod: sortingMethod ?? SortingMethod.alphaAscending,
       hapticFeedback: hasHapticFeedback,
       soundEffects: hasSoundFeedback,
+      squareView: squareView,
+      notify: notify,
     );
   }
 
@@ -38,6 +46,8 @@ class Settings {
         'sortingMethod': sortingMethod.toString(),
         'hapticFeedback': hapticFeedback,
         'soundEffects': soundEffects,
+        'squareView': squareView,
+        'notify': notify,
       };
 
   static SortingMethod _getStatusFromString(String sortingMethodAsString) {

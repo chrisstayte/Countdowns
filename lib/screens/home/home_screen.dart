@@ -2,6 +2,7 @@ import 'package:countdowns/global/global.dart';
 import 'package:countdowns/providers/event_provider.dart';
 import 'package:countdowns/widgets/event_square.dart';
 import 'package:countdowns/providers/settings_provider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -41,7 +42,8 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text('Events'),
         actions: [
-          if (_showButton)
+          if (_showButton ||
+              context.read<SettingsProvider>().settings.squareView == false)
             IconButton(
               onPressed: () => context.push('/eventDraft'),
               icon: const Icon(Icons.add),
@@ -52,49 +54,68 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
+      body: ListView(
+        physics: AlwaysScrollableScrollPhysics(),
         controller: _scrollController,
         padding: const EdgeInsets.only(
           top: 15,
           left: 15,
           right: 15,
         ),
-        child: Align(
-          alignment:
-              events.isNotEmpty ? Alignment.topCenter : Alignment.topLeft,
-          child: Wrap(
-            spacing: 10,
-            runSpacing: 10,
+        children: [
+          CupertinoSlidingSegmentedControl(
+            groupValue: context.watch<SettingsProvider>().settings.squareView,
+            onValueChanged: (value) =>
+                {context.read<SettingsProvider>().setSquareView(value as bool)},
+            children: const <bool, Widget>{
+              true: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Icon(Icons.apps)),
+              false: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: Icon(Icons.table_rows),
+              ),
+            },
+          ),
+          const SizedBox(height: 15),
+          GridView.count(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 10,
+            childAspectRatio:
+                context.read<SettingsProvider>().settings.squareView ? 1 : 2.4,
+            crossAxisCount:
+                context.read<SettingsProvider>().settings.squareView ? 2 : 1,
             children: [
-              GestureDetector(
-                onTap: () => context.push('/eventDraft'),
-                child: Container(
-                  width: 169,
-                  height: 169,
-                  decoration: BoxDecoration(
-                    borderRadius: Global.styles.containerCornerRadius,
-                    color: Global.colors.accentColor,
-                  ),
-                  child: const Center(
-                    child: Icon(
-                      Icons.add_rounded,
-                      color: Color(0XFF4A0D67),
-                      size: 50,
+              if (context.read<SettingsProvider>().settings.squareView == true)
+                GestureDetector(
+                  onTap: () => context.push('/eventDraft'),
+                  child: Container(
+                    width: 169,
+                    height: 169,
+                    decoration: BoxDecoration(
+                      borderRadius: Global.styles.containerCornerRadius,
+                      color: Global.colors.accentColor,
+                    ),
+                    child: const Center(
+                      child: Icon(
+                        Icons.add_rounded,
+                        color: Color(0XFF4A0D67),
+                        size: 50,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              ...events
-                  .map(
-                    (e) => GestureDetector(
-                      onTap: () => context.push('/event/${e.key}'),
-                      child: EventSquare(event: e),
-                    ),
-                  )
-                  .toList()
+              ...events.map(
+                (event) => GestureDetector(
+                  onTap: () => context.push('/event/${event.key}'),
+                  child: EventSquare(event: event),
+                ),
+              )
             ],
           ),
-        ),
+        ],
       ),
     );
   }

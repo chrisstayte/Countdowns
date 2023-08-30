@@ -3,7 +3,7 @@ import 'package:countdowns/models/event.dart';
 import 'package:countdowns/providers/event_provider.dart';
 
 import 'package:countdowns/screens/event_draft/option_circle.dart';
-import 'package:countdowns/screens/event_draft/options/background_container.dart';
+import 'package:countdowns/screens/event_draft/options/background/background_container.dart';
 import 'package:countdowns/screens/event_draft/options/font_container.dart';
 import 'package:countdowns/screens/event_draft/options/name_and_date_container.dart';
 import 'package:countdowns/screens/event_draft/options/icon_container.dart';
@@ -29,6 +29,7 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
   late Event _existingEvent;
   bool _newEvent = true;
   bool _shouldShakeName = false;
+  bool _isSquare = true;
 
   int _selectedOption = 0;
   final TextEditingController _titleController = TextEditingController();
@@ -83,7 +84,7 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
         scrolledUnderElevation: 0,
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 10, top: 10),
+            padding: const EdgeInsets.all(8),
             child: OutlinedButton(
               onPressed: () {
                 if (_titleController.text.isNotEmpty) {
@@ -118,6 +119,7 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
                     borderRadius: Global.styles.containerCornerRadius,
                   ),
                 ),
+                elevation: MaterialStateProperty.all<double>(2),
               ),
               child: const Row(
                 children: [
@@ -134,19 +136,62 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
         children: [
           Expanded(
             child: Center(
-              child: Container(
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Theme.of(context).shadowColor.withOpacity(0.3),
-                      blurRadius: 20,
-                      offset: const Offset(0, 5),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () => setState(() {
+                          _isSquare = true;
+                        }),
+                        child: Text(
+                          'Small',
+                          style: TextStyle(
+                            fontWeight: _isSquare ? FontWeight.bold : null,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      GestureDetector(
+                        onTap: () => setState(() {
+                          _isSquare = false;
+                        }),
+                        child: Text(
+                          'Large',
+                          style: TextStyle(
+                            fontWeight: !_isSquare ? FontWeight.bold : null,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: _isSquare ? 0 : 15),
+                    constraints: BoxConstraints(
+                      maxWidth: _isSquare ? 169 : 500,
                     ),
-                  ],
-                ),
-                child: EventSquare(
-                  event: _eventDraft,
-                ),
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Theme.of(context).shadowColor.withOpacity(0.3),
+                          blurRadius: 20,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                    child: EventSquare(
+                      event: _eventDraft,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -192,7 +237,7 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
           ),
           Expanded(
             child: Container(
-              color: Theme.of(context).canvasColor,
+              color: Theme.of(context).cardColor,
               child: IndexedStack(
                 index: _selectedOption,
                 children: [

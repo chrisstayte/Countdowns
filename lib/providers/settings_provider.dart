@@ -16,6 +16,8 @@ class SettingsProvider extends ChangeNotifier {
     sortingMethod: SortingMethod.alphaAscending,
     hapticFeedback: true,
     soundEffects: true,
+    squareView: true,
+    notify: true,
   );
 
   final String _fileName = 'settings.json';
@@ -38,6 +40,18 @@ class SettingsProvider extends ChangeNotifier {
 
   void setHapticFeedbackMode(bool hapticFeedback) {
     settings.hapticFeedback = hapticFeedback;
+    _saveSettings();
+    notifyListeners();
+  }
+
+  void setSquareView(bool squareView) {
+    settings.squareView = squareView;
+    _saveSettings();
+    notifyListeners();
+  }
+
+  void setNotify(bool notify) {
+    settings.notify = notify;
     _saveSettings();
     notifyListeners();
   }

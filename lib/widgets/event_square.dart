@@ -71,8 +71,10 @@ class _EventSquareState extends State<EventSquare> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 169,
-      height: 169,
+      constraints: BoxConstraints(
+        // maxWidth: 169,
+        maxHeight: 169,
+      ),
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(
@@ -80,7 +82,7 @@ class _EventSquareState extends State<EventSquare> {
         ),
         color: widget.event.backgroundColor,
         gradient: widget.event.backgroundGradient
-            ? widget.event.backgroundColor?.gradient
+            ? widget.event.backgroundColor.gradient
             : null,
       ),
       child: Column(
@@ -98,8 +100,8 @@ class _EventSquareState extends State<EventSquare> {
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
                   style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
+                    fontSize: 26,
+                    color: widget.event.backgroundColor.contentColor,
                     fontFamily: widget.event.fontFamily,
                   ),
                 ),
@@ -121,19 +123,22 @@ class _EventSquareState extends State<EventSquare> {
                 premierText,
                 maxLines: 1,
                 minFontSize: 20,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: widget.event.backgroundColor.contentColor,
                   fontSize: 26,
                   fontWeight: FontWeight.w700,
+                  fontFamily: widget.event.fontFamily,
                 ),
               ),
               if (secondaryText != null)
                 AutoSizeText(
                   secondaryText!,
                   maxLines: 1,
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: widget.event.backgroundColor.contentColor
+                        .withOpacity(.8),
                     fontSize: 18,
+                    fontFamily: widget.event.fontFamily,
                   ),
                 ),
             ],

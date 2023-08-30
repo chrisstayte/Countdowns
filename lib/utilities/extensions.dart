@@ -15,8 +15,8 @@ extension GradientColor on Color {
 
     return LinearGradient(
       colors: [this, complimentary.toColor()],
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
     );
   }
 

@@ -60,7 +60,7 @@ class _EventScreenState extends State<EventScreen> {
     if (_event == null) {
       return Scaffold(
         appBar: AppBar(),
-        body: Center(
+        body: const Center(
           child: Text('Event Not Found'),
         ),
       );
@@ -120,6 +120,7 @@ class _EventScreenState extends State<EventScreen> {
                     });
                     break;
                   case 2:
+                    if (!(context.mounted)) return;
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -141,9 +142,8 @@ class _EventScreenState extends State<EventScreen> {
                                 context
                                     .read<EventProvider>()
                                     .deleteEvent(_event!);
-                                Navigator.of(context)
-                                  ..pop()
-                                  ..pop();
+                                Navigator.popUntil(
+                                    context, ModalRoute.withName('/'));
                               },
                             ),
                             TextButton(
@@ -171,14 +171,17 @@ class _EventScreenState extends State<EventScreen> {
             flex: 1,
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              AutoSizeText(
-                _event!.title,
-                maxLines: 2,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 48,
-                  fontFamily: _event!.fontFamily,
-                  color: _event!.backgroundColor.contentColor,
+              Expanded(
+                child: AutoSizeText(
+                  _event!.title,
+                  maxLines: 2,
+                  minFontSize: 32,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 48,
+                    fontFamily: _event!.fontFamily,
+                    color: _event!.backgroundColor.contentColor,
+                  ),
                 ),
               ),
               const SizedBox(height: 10),
