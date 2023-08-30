@@ -22,7 +22,7 @@ class EventAdapter extends TypeAdapter<Event> {
       icon: fields[2] == null
           ? null
           : IconData(fields[2] as int, fontFamily: 'MaterialIcons'),
-      backgroundColor: fields[3] == null ? null : Color(fields[3] as int),
+      backgroundColor: Color(fields[3] as int),
       contentColor: fields[4] == null ? null : Color(fields[4] as int),
       fontFamily: fields[5] as String?,
       allDayEvent: fields[6] as bool,
@@ -41,7 +41,7 @@ class EventAdapter extends TypeAdapter<Event> {
       ..writeByte(2)
       ..write(obj.icon?.codePoint)
       ..writeByte(3)
-      ..write(obj.backgroundColor?.value)
+      ..write(obj.backgroundColor.value)
       ..writeByte(4)
       ..write(obj.contentColor?.value)
       ..writeByte(5)

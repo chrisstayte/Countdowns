@@ -1,3 +1,4 @@
+import 'package:countdowns/global/global.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
@@ -15,7 +16,7 @@ class Event extends HiveObject {
   IconData? icon;
 
   @HiveField(3)
-  Color? backgroundColor;
+  Color backgroundColor;
 
   @HiveField(4)
   Color? contentColor;
@@ -35,7 +36,7 @@ class Event extends HiveObject {
     this.allDayEvent = true,
     this.backgroundGradient = false,
     this.icon,
-    this.backgroundColor,
+    this.backgroundColor = const Color(0Xff7877E6),
     this.contentColor,
     this.fontFamily,
   });

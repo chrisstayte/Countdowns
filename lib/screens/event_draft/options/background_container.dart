@@ -1,4 +1,3 @@
-import 'package:countdowns/global/global.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -28,8 +27,8 @@ class BackgroundContainer extends StatelessWidget {
     Colors.orange,
     Colors.grey,
     Colors.pinkAccent,
-    Colors.limeAccent,
-    Colors.tealAccent,
+    const Color(0XFFF15152),
+    const Color(0XFF008000),
   ];
 
   @override
@@ -73,10 +72,42 @@ class BackgroundContainer extends StatelessWidget {
           height: 10,
         ),
         Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Text('Gradient'),
-            Switch.adaptive(value: gradient, onChanged: onGradientChanged)
+            Container(
+              height: 48,
+              width: 48,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  stops: [0, 1 / 6, 2 / 6, 3 / 6, 4 / 6, 5 / 6, 1],
+                  colors: [
+                    Colors.red,
+                    Colors.orange,
+                    Colors.yellow,
+                    Colors.green,
+                    Colors.blue,
+                    Colors.indigo,
+                    Colors.purple,
+                  ],
+                ),
+                color: Colors.green,
+                shape: BoxShape.circle,
+              ),
+            ),
+            Row(
+              children: [
+                Text(
+                  'Gradient',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Switch.adaptive(value: gradient, onChanged: onGradientChanged)
+              ],
+            ),
           ],
         )
       ],

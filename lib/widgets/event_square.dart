@@ -117,11 +117,13 @@ class _EventSquareState extends State<EventSquare> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              AutoSizeText(
                 premierText,
+                maxLines: 1,
+                minFontSize: 20,
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 18,
+                  fontSize: 26,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -131,7 +133,7 @@ class _EventSquareState extends State<EventSquare> {
                   maxLines: 1,
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: 18,
                   ),
                 ),
             ],
