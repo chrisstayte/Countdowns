@@ -8,7 +8,7 @@ import 'package:countdowns/screens/event_draft/options/font_container.dart';
 import 'package:countdowns/screens/event_draft/options/name_and_date_container.dart';
 import 'package:countdowns/screens/event_draft/options/icon_container.dart';
 import 'package:countdowns/providers/settings_provider.dart';
-import 'package:countdowns/widgets/event_square.dart';
+import 'package:countdowns/widgets/event_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -187,7 +187,7 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
                         ),
                       ],
                     ),
-                    child: EventSquare(
+                    child: EventContainer(
                       event: _eventDraft,
                     ),
                   ),

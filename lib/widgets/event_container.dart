@@ -8,16 +8,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class EventSquare extends StatefulWidget {
-  const EventSquare({super.key, required this.event});
+class EventContainer extends StatefulWidget {
+  const EventContainer({super.key, required this.event});
 
   final Event event;
 
   @override
-  State<EventSquare> createState() => _EventSquareState();
+  State<EventContainer> createState() => _EventContainerState();
 }
 
-class _EventSquareState extends State<EventSquare> {
+class _EventContainerState extends State<EventContainer> {
   Timer? _timer;
   late String premierText;
   late String? secondaryText;

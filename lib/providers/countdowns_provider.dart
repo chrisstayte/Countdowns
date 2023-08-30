@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+// THIS IS LEGACY CODE, TO BE REMOVED
+
 import 'package:countdowns/enums/sorting_method.dart';
 import 'package:countdowns/models/countdown_event.dart';
 import 'package:flutter/foundation.dart';

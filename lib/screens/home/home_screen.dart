@@ -1,6 +1,6 @@
 import 'package:countdowns/global/global.dart';
 import 'package:countdowns/providers/event_provider.dart';
-import 'package:countdowns/widgets/event_square.dart';
+import 'package:countdowns/widgets/event_container.dart';
 import 'package:countdowns/providers/settings_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -110,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ...events.map(
                 (event) => GestureDetector(
                   onTap: () => context.push('/event/${event.key}'),
-                  child: EventSquare(event: event),
+                  child: EventContainer(event: event),
                 ),
               )
             ],

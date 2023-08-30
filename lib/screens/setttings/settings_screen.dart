@@ -2,11 +2,12 @@ import 'package:countdowns/enums/sorting_method.dart';
 import 'package:countdowns/global/global.dart';
 import 'package:countdowns/providers/event_provider.dart';
 import 'package:countdowns/screens/setttings/widget/settings_container.dart';
-import 'package:countdowns/utilities/countdowns_provider.dart';
+import 'package:countdowns/providers/countdowns_provider.dart';
 import 'package:countdowns/providers/settings_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/src/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -52,6 +53,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(Theme.of(context).brightness);
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -66,6 +68,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
           bottom: 85.0,
         ),
         children: [
+          if (kDebugMode)
+            SettingsContainer(title: 'Debug', children: [
+              ListTile(
+                title: Text('Inject Version 1 File'),
+                trailing: IconButton(
+                  icon: Icon(Icons.download),
+                  onPressed: () {},
+                ),
+              ),
+              ListTile(
+                title: Text('Delete Version 1 File'),
+                trailing: IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {},
+                ),
+              )
+            ]),
           SettingsContainer(
             title: 'events',
             children: [
@@ -249,6 +268,50 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
             ],
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 50),
+            child: Column(
+              children: [
+                const Text(
+                  'Leave a review',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Center(
+                  child: GestureDetector(
+                    onTap: () => InAppReview.instance.openStoreListing(
+                      appStoreId: '1603744166',
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                          color: Theme.of(context).cardColor,
+                          borderRadius: BorderRadius.circular(5),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 3,
+                              blurRadius: 5,
+                              offset: const Offset(0, 3),
+                            ),
+                          ]),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: List.generate(
+                          5,
+                          (index) => const Icon(Icons.star_rounded,
+                              color: Colors.amber),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,

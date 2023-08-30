@@ -1,7 +1,7 @@
 import 'package:countdowns/screens/event_draft/event_draft_screen.dart';
 import 'package:countdowns/screens/event_screen/event_screen.dart';
 import 'package:countdowns/screens/home/home_screen.dart';
-import 'package:countdowns/screens/settings_screen.dart';
+import 'package:countdowns/screens/setttings/settings_screen.dart';
 import 'package:go_router/go_router.dart';
 
 final router = GoRouter(

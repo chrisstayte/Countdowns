@@ -3,7 +3,7 @@ import 'package:countdowns/models/event.dart';
 
 import 'package:countdowns/providers/event_provider.dart';
 import 'package:countdowns/router.dart';
-import 'package:countdowns/utilities/countdowns_provider.dart';
+import 'package:countdowns/providers/countdowns_provider.dart';
 import 'package:countdowns/providers/settings_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -103,6 +103,7 @@ class MyApp extends StatelessWidget {
       ),
       darkTheme: ThemeData.dark().copyWith(
         useMaterial3: false,
+        brightness: Brightness.dark,
         primaryColor: Global.colors.primaryColor,
         colorScheme:
             ColorScheme.fromSeed(seedColor: Global.colors.primaryColor),
@@ -111,6 +112,9 @@ class MyApp extends StatelessWidget {
           scrolledUnderElevation: 4,
           centerTitle: false,
           toolbarHeight: 77,
+          iconTheme: const IconThemeData(
+            color: Colors.white,
+          ),
           color: Global.colors.darkBackgroundColor,
           surfaceTintColor: Colors.transparent,
           titleTextStyle: TextStyle(
