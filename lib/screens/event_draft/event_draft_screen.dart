@@ -80,6 +80,7 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
       backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
       appBar: AppBar(
         toolbarHeight: 55,
+        scrolledUnderElevation: 0,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10, top: 10),

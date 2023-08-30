@@ -22,7 +22,7 @@ class Event extends HiveObject {
   Color? contentColor;
 
   @HiveField(5)
-  String? fontFamily;
+  String fontFamily;
 
   @HiveField(6)
   bool allDayEvent;
@@ -33,12 +33,12 @@ class Event extends HiveObject {
   Event({
     required this.title,
     required this.eventDateTime,
+    this.fontFamily = 'Default',
     this.allDayEvent = true,
     this.backgroundGradient = false,
     this.icon,
     this.backgroundColor = const Color(0Xff7877E6),
     this.contentColor,
-    this.fontFamily,
   });
 
   Event copy() {
@@ -63,6 +63,7 @@ class Event extends HiveObject {
     backgroundColor = event.backgroundColor;
     contentColor = event.contentColor;
     fontFamily = event.fontFamily;
+    backgroundGradient = event.backgroundGradient;
   }
 
   Duration getTimeDifference() {

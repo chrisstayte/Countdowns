@@ -50,10 +50,6 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () => context.push('/settings'),
             icon: const Icon(Icons.tune_rounded),
           ),
-          IconButton(
-            icon: Icon(Icons.bug_report),
-            onPressed: () => context.push('/event2/test'),
-          )
         ],
       ),
       body: SingleChildScrollView(

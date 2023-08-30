@@ -25,8 +25,8 @@ class BackgroundContainer extends StatelessWidget {
     Colors.green,
     Colors.purple,
     Colors.orange,
-    Colors.grey,
-    Colors.pinkAccent,
+    Colors.white,
+    Colors.black,
     const Color(0XFFF15152),
     const Color(0XFF008000),
   ];

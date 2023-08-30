@@ -24,7 +24,7 @@ class EventAdapter extends TypeAdapter<Event> {
           : IconData(fields[2] as int, fontFamily: 'MaterialIcons'),
       backgroundColor: Color(fields[3] as int),
       contentColor: fields[4] == null ? null : Color(fields[4] as int),
-      fontFamily: fields[5] as String?,
+      fontFamily: fields[5] as String,
       allDayEvent: fields[6] as bool,
       backgroundGradient: fields[7] != null ? fields[7] as bool : false,
     );
