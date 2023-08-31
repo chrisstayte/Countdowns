@@ -9,7 +9,6 @@ import 'package:countdowns/screens/event_draft/options/name_and_date/name_and_da
 import 'package:countdowns/screens/event_draft/options/icon_container.dart';
 import 'package:countdowns/providers/settings_provider.dart';
 import 'package:countdowns/widgets/event_container.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -160,7 +159,7 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 15,
                       ),
                       GestureDetector(
@@ -177,7 +176,7 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
                       )
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
                   Container(

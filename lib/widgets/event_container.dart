@@ -1,12 +1,10 @@
 import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:countdowns/global/global.dart';
 import 'package:countdowns/models/event.dart';
 import 'package:countdowns/utilities/extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class EventContainer extends StatefulWidget {
   const EventContainer({super.key, required this.event});
@@ -27,7 +25,7 @@ class _EventContainerState extends State<EventContainer> {
     // every second grab the current status of the countdown event, if the event has not passed show the time remaining
     // if the event has passed, show the time since the event has passed
     _updateTimeUI();
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) => _updateTimeUI());
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) => _updateTimeUI());
 
     super.initState();
   }
@@ -43,7 +41,7 @@ class _EventContainerState extends State<EventContainer> {
     int years = (timeDifference.inDays / 365).floor();
     // set the premier text
     if (years > 0) {
-      premierText = '${years} years';
+      premierText = '$years years';
       secondaryText =
           '${timeDifference.inDays % 365} days, ${timeDifference.inHours % 24} hr';
     } else if (timeDifference.inDays > 0) {
@@ -71,7 +69,7 @@ class _EventContainerState extends State<EventContainer> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: BoxConstraints(
+      constraints: const BoxConstraints(
         // maxWidth: 169,
         maxHeight: 169,
       ),

@@ -1,9 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:countdowns/global/global.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-typedef void OnFontSelected(String fontFamily);
+typedef OnFontSelected = void Function(String fontFamily);
 
 class FontContainer extends StatelessWidget {
   const FontContainer(

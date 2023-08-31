@@ -1,7 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-typedef void IconSelectedCallback(IconData? selectedIcon);
+typedef IconSelectedCallback = void Function(IconData? selectedIcon);
 
 class IconContainer extends StatelessWidget {
   IconContainer({
@@ -89,7 +88,7 @@ class IconContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.count(
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       crossAxisCount: 5,
       mainAxisSpacing: 5,
       crossAxisSpacing: 5,

@@ -1,5 +1,4 @@
 import 'package:countdowns/global/global.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -67,7 +66,7 @@ class _DatePickerScreenState extends State<DatePickerScreen> {
                 ),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Container(
               decoration: BoxDecoration(
                 borderRadius: Global.styles.containerCornerRadius,
@@ -76,7 +75,7 @@ class _DatePickerScreenState extends State<DatePickerScreen> {
               child: Column(
                 children: [
                   ListTile(
-                    title: _allDay ? Text('All Day') : null,
+                    title: _allDay ? const Text('All Day') : null,
                     leading: !_allDay
                         ? TextButton(
                             onPressed: () async {

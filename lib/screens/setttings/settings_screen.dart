@@ -8,10 +8,8 @@ import 'package:countdowns/screens/debug/v1_events_list.dart';
 import 'package:countdowns/screens/setttings/widget/settings_container.dart';
 import 'package:countdowns/providers/countdowns_provider.dart';
 import 'package:countdowns/providers/settings_provider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
@@ -76,18 +74,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
           if (kDebugMode)
             SettingsContainer(title: 'Debug', children: [
               ListTile(
-                title: Text('Inject Version 1 File'),
+                title: const Text('Inject Version 1 File'),
                 trailing: IconButton(
-                  icon: Icon(Icons.download),
+                  icon: const Icon(Icons.download),
                   onPressed: () {
                     context.read<CountdownsProvider>().addRandomEvent();
                   },
                 ),
               ),
               ListTile(
-                title: Text('Delete Version 1 File'),
+                title: const Text('Delete Version 1 File'),
                 trailing: IconButton(
-                  icon: Icon(Icons.delete),
+                  icon: const Icon(Icons.delete),
                   onPressed: () async {
                     // if countdownEvents file exists delete it
 
@@ -101,12 +99,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                     ScaffoldMessenger.of(context).showMaterialBanner(
                       MaterialBanner(
-                        content: Text('Deleted V1 File'),
+                        content: const Text('Deleted V1 File'),
                         actions: [
                           IconButton(
                             onPressed: () => ScaffoldMessenger.of(context)
                                 .clearMaterialBanners(),
-                            icon: Icon(Icons.close),
+                            icon: const Icon(Icons.close),
                           )
                         ],
                       ),
@@ -115,13 +113,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
               ListTile(
-                title: Text('Show V1 Events'),
+                title: const Text('Show V1 Events'),
                 trailing: IconButton(
-                  icon: Icon(Icons.list),
+                  icon: const Icon(Icons.list),
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => V1EventList(),
+                        builder: (context) => const V1EventList(),
                       ),
                     );
                   },

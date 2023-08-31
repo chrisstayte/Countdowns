@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-typedef void OnColorChanged(Color color);
+typedef OnColorChanged = void Function(Color color);
 
 class ColorSelector extends StatelessWidget {
   const ColorSelector({

@@ -4,7 +4,7 @@ import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-typedef void OnColorChanged(Color color);
+typedef OnColorChanged = void Function(Color color);
 
 class CustomColorModal extends StatefulWidget {
   const CustomColorModal({
@@ -54,7 +54,6 @@ class _CustomColorModalState extends State<CustomColorModal> {
               ),
               OutlinedButton(
                 onPressed: () => context.pop(),
-                child: const Icon(Icons.check_circle_outline_outlined),
                 style: ButtonStyle(
                   foregroundColor: MaterialStateProperty.all<Color>(
                     Colors.white,
@@ -74,6 +73,7 @@ class _CustomColorModalState extends State<CustomColorModal> {
                   ),
                   elevation: MaterialStateProperty.all<double>(2),
                 ),
+                child: const Icon(Icons.check_circle_outline_outlined),
               )
             ],
           ),

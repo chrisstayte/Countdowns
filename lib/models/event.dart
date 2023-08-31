@@ -1,4 +1,3 @@
-import 'package:countdowns/global/global.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 

@@ -5,7 +5,6 @@ import 'package:countdowns/models/event.dart';
 import 'package:countdowns/providers/event_provider.dart';
 import 'package:countdowns/screens/event_screen/time_label.dart';
 import 'package:countdowns/utilities/extensions.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';

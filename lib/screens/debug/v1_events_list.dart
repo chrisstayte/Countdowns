@@ -1,5 +1,4 @@
 import 'package:countdowns/providers/countdowns_provider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -10,7 +9,7 @@ class V1EventList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('V1 Events'),
+        title: const Text('V1 Events'),
       ),
       body: ListView(
         children: context

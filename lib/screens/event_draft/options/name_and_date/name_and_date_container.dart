@@ -1,11 +1,10 @@
 import 'package:countdowns/screens/event_draft/options/name_and_date/date_picker_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:intl/intl.dart';
 
-typedef void OnDateTimeChanged(DateTime dateTime);
-typedef void OnAllDayChanged(bool allDay);
+typedef OnDateTimeChanged = void Function(DateTime dateTime);
+typedef OnAllDayChanged = void Function(bool allDay);
 
 class NameAndDateContainer extends StatelessWidget {
   const NameAndDateContainer({
@@ -66,7 +65,7 @@ class NameAndDateContainer extends StatelessWidget {
                 autoPlay: false,
               )
               .shakeX(),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
           GestureDetector(

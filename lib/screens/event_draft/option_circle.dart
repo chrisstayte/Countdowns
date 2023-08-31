@@ -1,5 +1,4 @@
 import 'package:countdowns/global/global.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class OptionCircle extends StatelessWidget {

@@ -54,7 +54,7 @@ void loadV1Events() async {
 
     final Box<Event> box = Hive.box<Event>(EventProvider.BoxName);
 
-    events.forEach((event) {
+    for (var event in events) {
       Event existingEvent = Event(
         title: event.title,
         eventDateTime: event.eventDate,
@@ -67,7 +67,7 @@ void loadV1Events() async {
       }
 
       box.add(existingEvent);
-    });
+    }
 
     v1File.deleteSync();
   }

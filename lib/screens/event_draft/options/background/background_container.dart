@@ -1,11 +1,9 @@
 import 'package:countdowns/screens/event_draft/options/background/color_selector.dart';
 import 'package:countdowns/screens/event_draft/options/background/custom_color_modal.dart';
-import 'package:countdowns/utilities/extensions.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-typedef void OnColorChanged(Color color);
-typedef void OnGradientChanged(bool gradient);
+typedef OnColorChanged = void Function(Color color);
+typedef OnGradientChanged = void Function(bool gradient);
 
 class BackgroundContainer extends StatelessWidget {
   const BackgroundContainer({
@@ -39,7 +37,7 @@ class BackgroundContainer extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        SizedBox(
+        const SizedBox(
           height: 25,
         ),
         Row(
@@ -74,7 +72,7 @@ class BackgroundContainer extends StatelessWidget {
               )
               .toList(),
         ),
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
         Row(
