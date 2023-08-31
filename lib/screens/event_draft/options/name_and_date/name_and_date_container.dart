@@ -70,6 +70,8 @@ class NameAndDateContainer extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () async {
+              // hide the keyboard if it's open
+              FocusManager.instance.primaryFocus?.unfocus();
               await Navigator.of(context)
                   .push(
                 MaterialPageRoute(

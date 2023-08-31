@@ -204,7 +204,8 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
               ),
             ),
           ),
-          Container(
+          AnimatedContainer(
+            duration: Duration(milliseconds: 200),
             height: MediaQuery.of(context).viewInsets.bottom > 0 ? 0 : 63,
             color: Theme.of(context).scaffoldBackgroundColor,
             child: Padding(

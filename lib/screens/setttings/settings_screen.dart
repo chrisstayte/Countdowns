@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:countdowns/enums/sorting_method.dart';
 import 'package:countdowns/global/global.dart';
+import 'package:countdowns/main.dart';
 import 'package:countdowns/providers/event_provider.dart';
 import 'package:countdowns/screens/debug/v1_events_list.dart';
 import 'package:countdowns/screens/setttings/widget/settings_container.dart';
@@ -10,9 +12,13 @@ import 'package:countdowns/providers/countdowns_provider.dart';
 import 'package:countdowns/providers/settings_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/src/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -72,60 +78,94 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         children: [
           if (kDebugMode)
-            SettingsContainer(title: 'Debug', children: [
-              ListTile(
-                title: const Text('Inject Version 1 File'),
-                trailing: IconButton(
-                  icon: const Icon(Icons.download),
-                  onPressed: () {
-                    context.read<CountdownsProvider>().addRandomEvent();
-                  },
+            SettingsContainer(
+              title: 'Debug',
+              children: [
+                ListTile(
+                  title: const Text('Inject Version 1 File'),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.download),
+                    onPressed: () {
+                      context.read<CountdownsProvider>().addRandomEvent();
+                    },
+                  ),
                 ),
-              ),
-              ListTile(
-                title: const Text('Delete Version 1 File'),
-                trailing: IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () async {
-                    // if countdownEvents file exists delete it
+                ListTile(
+                  title: const Text('Delete Version 1 File'),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () async {
+                      // if countdownEvents file exists delete it
 
-                    final directory = await getApplicationDocumentsDirectory();
-                    File v1Path =
-                        File('${directory.path}/countdownevents.json');
+                      final directory =
+                          await getApplicationDocumentsDirectory();
+                      File v1Path =
+                          File('${directory.path}/countdownevents.json');
 
-                    if (v1Path.existsSync()) {
-                      v1Path.deleteSync();
-                    }
+                      if (v1Path.existsSync()) {
+                        v1Path.deleteSync();
+                      }
 
-                    ScaffoldMessenger.of(context).showMaterialBanner(
-                      MaterialBanner(
-                        content: const Text('Deleted V1 File'),
-                        actions: [
-                          IconButton(
-                            onPressed: () => ScaffoldMessenger.of(context)
-                                .clearMaterialBanners(),
-                            icon: const Icon(Icons.close),
-                          )
-                        ],
+                      ScaffoldMessenger.of(context).showMaterialBanner(
+                        MaterialBanner(
+                          content: const Text('Deleted V1 File'),
+                          actions: [
+                            IconButton(
+                              onPressed: () => ScaffoldMessenger.of(context)
+                                  .clearMaterialBanners(),
+                              icon: const Icon(Icons.close),
+                            )
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                ListTile(
+                  title: const Text('Show V1 Events'),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.list),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const V1EventList(),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                ListTile(
+                  title: Text('Send Notification'),
+                  trailing: Icon(Icons.notification_add),
+                  onTap: () async {
+                    await Future.delayed(const Duration(seconds: 2), () {
+                      flutterLocalNotificationsPlugin.cancelAll();
+                    });
+                    flutterLocalNotificationsPlugin.show(
+                      0,
+                      'Countdowns',
+                      'This is a test notification',
+                      NotificationDetails(
+                        android: AndroidNotificationDetails(
+                          'test',
+                          'test',
+                          importance: Importance.max,
+                          priority: Priority.high,
+                          showWhen: false,
+                          enableVibration: true,
+                          playSound: true,
+                          enableLights: true,
+                          color: Global.colors.primaryColor,
+                          ledColor: Colors.red,
+                          ledOnMs: 1000,
+                          ledOffMs: 500,
+                        ),
                       ),
                     );
                   },
                 ),
-              ),
-              ListTile(
-                title: const Text('Show V1 Events'),
-                trailing: IconButton(
-                  icon: const Icon(Icons.list),
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const V1EventList(),
-                      ),
-                    );
-                  },
-                ),
-              )
-            ]),
+              ],
+            ),
           SettingsContainer(
             title: 'events',
             children: [
@@ -219,8 +259,86 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 title: const Text('When Event Ends'),
                 trailing: Switch.adaptive(
                   value: context.watch<SettingsProvider>().settings.notify,
-                  onChanged: (value) {
-                    context.read<SettingsProvider>().setNotify(value);
+                  onChanged: (value) async {
+                    // If the user is requesting to turn them off, simply do so.
+                    if (!value) {
+                      // TODO: delete all pending notifications
+                      context.read<SettingsProvider>().setNotify(value);
+                      await flutterLocalNotificationsPlugin.cancelAll();
+                      return;
+                    }
+
+                    AlertDialog goToSettingsAlertDialog = AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: Global.styles.containerCornerRadius,
+                      ),
+                      title: Text('Permissions Required'),
+                      content: Text('Please enable notifications.'),
+                      actions: [
+                        OutlinedButton(
+                          onPressed: () => context.pop(),
+                          child: const Text('Nevermind'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            openAppSettings();
+                            context.pop();
+                            return;
+                          },
+                          child: const Text('Take Me There'),
+                        )
+                      ],
+                    );
+
+                    if (Platform.isIOS) {
+                      final bool? permissionGranted =
+                          await flutterLocalNotificationsPlugin
+                              .resolvePlatformSpecificImplementation<
+                                  IOSFlutterLocalNotificationsPlugin>()
+                              ?.requestPermissions(
+                                alert: true,
+                                badge: true,
+                                sound: true,
+                              );
+
+                      if (permissionGranted != null) {
+                        if (permissionGranted) {
+                          if (!mounted) return;
+                          context.read<SettingsProvider>().setNotify(true);
+                        } else {
+                          if (!mounted) return;
+                          await showDialog(
+                            context: context,
+                            builder: (context) => goToSettingsAlertDialog,
+                          );
+                        }
+                      }
+                    }
+
+                    if (Platform.isAndroid) {
+                      bool? permissionGranted =
+                          await flutterLocalNotificationsPlugin
+                              .resolvePlatformSpecificImplementation<
+                                  AndroidFlutterLocalNotificationsPlugin>()
+                              ?.requestPermission();
+
+                      if (!mounted) return;
+
+                      if (permissionGranted != null) {
+                        if (permissionGranted) {
+                          if (!mounted) return;
+                          context.read<SettingsProvider>().setNotify(true);
+                        } else {
+                          if (!mounted) return;
+                          await showDialog(
+                            context: context,
+                            builder: (context) => goToSettingsAlertDialog,
+                          );
+                        }
+                      }
+                    }
+
+                    // TODO: setup all notifications
                   },
                 ),
               ),
@@ -248,6 +366,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
               applicationIcon: const Icon(Icons.info_outline_rounded),
               applicationLegalese: 'What am I made of?',
               child: const Text('About'),
+            ),
+            ListTile(
+              leading: FaIcon(FontAwesomeIcons.github),
+              title: const Text('Source Code'),
+              trailing: const Icon(Icons.chevron_right_rounded),
+              onTap: () => launchUrl(
+                Uri.parse('https://github.com/chrisstayte/countdowns'),
+              ),
             ),
             ListTile(
               leading: const Icon(Icons.email),

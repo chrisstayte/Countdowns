@@ -5,22 +5,30 @@ import 'package:countdowns/global/global.dart';
 import 'package:countdowns/models/countdown_event.dart';
 import 'package:countdowns/models/event.dart';
 import 'package:countdowns/providers/event_provider.dart';
+import 'package:countdowns/providers/timer_provider.dart';
 import 'package:countdowns/router.dart';
 import 'package:countdowns/providers/countdowns_provider.dart';
 import 'package:countdowns/providers/settings_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
+late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   Hive.registerAdapter(EventAdapter());
   await Hive.initFlutter();
   await Hive.openBox<Event>(EventProvider.BoxName);
 
   // This is done as a precaution of v1 users who have not updated to v2 yet
   loadV1Events();
+
+  initializeLocalNotifications();
 
   runApp(
     MultiProvider(
@@ -36,10 +44,42 @@ void main() async {
         ChangeNotifierProvider<CountdownsProvider>(
           create: (_) => CountdownsProvider(),
         ),
+        ChangeNotifierProvider<TimerProvider>(
+          create: (_) => TimerProvider(),
+        )
       ],
       child: const MyApp(),
     ),
   );
+}
+
+void initializeLocalNotifications() async {
+  const initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/countdowns');
+
+  var initializationSettingsIOS = DarwinInitializationSettings(
+      requestAlertPermission: false,
+      requestBadgePermission: false,
+      requestSoundPermission: false,
+      onDidReceiveLocalNotification: (id, title, body, payload) async {
+        print('onDidReceiveLocalNotification called');
+      });
+
+  var initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+  flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+  flutterLocalNotificationsPlugin.initialize(initializationSettings,
+      onDidReceiveNotificationResponse: (payload) {
+    // Handle notification tapped logic here
+    while (router.canPop()) {
+      router.pop();
+    }
+    router.push('/event/${payload.id}');
+  });
+
+  final NotificationAppLaunchDetails? notificationAppLaunchDetails =
+      await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
 }
 
 void loadV1Events() async {
@@ -144,8 +184,10 @@ class MyApp extends StatelessWidget {
         useMaterial3: false,
         brightness: Brightness.dark,
         primaryColor: Global.colors.primaryColor,
-        colorScheme:
-            ColorScheme.fromSeed(seedColor: Global.colors.primaryColor),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Global.colors.primaryColor,
+          brightness: Brightness.dark,
+        ),
         appBarTheme: AppBarTheme(
           elevation: 0,
           scrolledUnderElevation: 4,
@@ -162,13 +204,25 @@ class MyApp extends StatelessWidget {
             fontSize: 24,
           ),
         ),
+        textButtonTheme: TextButtonThemeData(
+          style: ButtonStyle(
+            textStyle: MaterialStateProperty.all(
+              TextStyle(
+                color: Global.colors.accentColor,
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+              ),
+            ),
+            foregroundColor:
+                MaterialStateProperty.all(Global.colors.accentColor),
+          ),
+        ),
         scaffoldBackgroundColor: Global.colors.darkBackgroundColorLighter,
         cupertinoOverrideTheme: const NoDefaultCupertinoThemeData(
           textTheme:
               CupertinoTextThemeData(primaryColor: CupertinoColors.white),
         ),
-        shadowColor: Colors.white,
-        dialogBackgroundColor: Global.colors.darkBackgroundColor,
+        // shadowColor: Colors.grey,
       ),
       themeMode: themeMode,
     );

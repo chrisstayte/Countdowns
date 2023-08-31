@@ -13,9 +13,22 @@ final router = GoRouter(
     ),
     GoRoute(
       path: '/event/:id',
-      builder: (context, state) => EventScreen(
-        key: state.pageKey,
-        eventKey: state.pathParameters['id']!,
+      // builder: (context, state) => EventScreen(
+      //   key: state.pageKey,
+      //   eventKey: state.pathParameters['id']!,
+      // ),
+      pageBuilder: (context, state) => CustomTransitionPage<void>(
+        child: EventScreen(
+          key: state.pageKey,
+          eventKey: state.pathParameters['id']!,
+        ),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+            CupertinoFullscreenDialogTransition(
+          primaryRouteAnimation: animation,
+          secondaryRouteAnimation: secondaryAnimation,
+          linearTransition: true,
+          child: child,
+        ),
       ),
     ),
     GoRoute(

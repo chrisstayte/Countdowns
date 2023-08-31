@@ -28,6 +28,8 @@ dependencies:
   flutter_animate: ^4.2.0+1
   flex_color_picker: ^3.3.0
   in_app_review: ^2.0.6
+  flutter_local_notifications: ^15.1.1
+  permission_handler: ^10.4.3
 
 dev_dependencies:
   flutter_test:

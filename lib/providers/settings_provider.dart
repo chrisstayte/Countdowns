@@ -17,7 +17,7 @@ class SettingsProvider extends ChangeNotifier {
     hapticFeedback: true,
     soundEffects: true,
     squareView: true,
-    notify: true,
+    notify: false,
   );
 
   final String _fileName = 'settings.json';

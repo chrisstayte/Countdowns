@@ -7,7 +7,7 @@ class Settings {
   bool hapticFeedback = true;
   bool soundEffects = true;
   bool squareView = true;
-  bool notify = true;
+  bool notify = false;
 
   Settings({
     required this.themeMode,
