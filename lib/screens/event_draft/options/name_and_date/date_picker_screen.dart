@@ -1,6 +1,11 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:countdowns/global/global.dart';
+import 'package:countdowns/providers/settings_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class DatePickerScreen extends StatefulWidget {
   const DatePickerScreen({
@@ -32,9 +37,31 @@ class _DatePickerScreenState extends State<DatePickerScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Date'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            var settings = context.read<SettingsProvider>().settings;
+            if (settings.hapticFeedback) {
+              HapticFeedback.lightImpact();
+            }
+            if (settings.soundEffects) {
+              AudioPlayer().play(AssetSource('sounds/tap.mp3'),
+                  mode: PlayerMode.lowLatency);
+            }
+            context.pop();
+          },
+        ),
         actions: [
           IconButton(
             onPressed: () {
+              var settings = context.read<SettingsProvider>().settings;
+              if (settings.hapticFeedback) {
+                HapticFeedback.lightImpact();
+              }
+              if (settings.soundEffects) {
+                AudioPlayer().play(AssetSource('sounds/tap.mp3'),
+                    mode: PlayerMode.lowLatency);
+              }
               Navigator.pop(context, [
                 _dateTime,
                 _allDay,

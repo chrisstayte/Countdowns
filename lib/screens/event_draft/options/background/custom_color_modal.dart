@@ -1,8 +1,12 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:countdowns/global/global.dart';
+import 'package:countdowns/providers/settings_provider.dart';
 import 'package:countdowns/utilities/extensions.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 typedef OnColorChanged = void Function(Color color);
 
@@ -53,7 +57,17 @@ class _CustomColorModalState extends State<CustomColorModal> {
                 ),
               ),
               OutlinedButton(
-                onPressed: () => context.pop(),
+                onPressed: () {
+                  var settings = context.read<SettingsProvider>().settings;
+                  if (settings.hapticFeedback) {
+                    HapticFeedback.lightImpact();
+                  }
+                  if (settings.soundEffects) {
+                    AudioPlayer().play(AssetSource('sounds/tap.mp3'),
+                        mode: PlayerMode.lowLatency);
+                  }
+                  context.pop();
+                },
                 style: ButtonStyle(
                   foregroundColor: MaterialStateProperty.all<Color>(
                     Colors.white,

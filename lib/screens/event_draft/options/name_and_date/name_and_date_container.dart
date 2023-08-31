@@ -1,7 +1,11 @@
+import 'package:audioplayers/audioplayers.dart';
+import 'package:countdowns/providers/settings_provider.dart';
 import 'package:countdowns/screens/event_draft/options/name_and_date/date_picker_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 typedef OnDateTimeChanged = void Function(DateTime dateTime);
 typedef OnAllDayChanged = void Function(bool allDay);
@@ -46,6 +50,7 @@ class NameAndDateContainer extends StatelessWidget {
             ),
             child: TextField(
               controller: controller,
+              enableSuggestions: false,
               decoration: const InputDecoration(
                 hintText: 'Event Name',
                 hintStyle: TextStyle(
@@ -72,6 +77,14 @@ class NameAndDateContainer extends StatelessWidget {
             onTap: () async {
               // hide the keyboard if it's open
               FocusManager.instance.primaryFocus?.unfocus();
+              var settings = context.read<SettingsProvider>().settings;
+              if (settings.hapticFeedback) {
+                HapticFeedback.lightImpact();
+              }
+              if (settings.soundEffects) {
+                AudioPlayer().play(AssetSource('sounds/tap.mp3'),
+                    mode: PlayerMode.lowLatency);
+              }
               await Navigator.of(context)
                   .push(
                 MaterialPageRoute(

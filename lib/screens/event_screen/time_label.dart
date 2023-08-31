@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 class TimeLabel extends StatelessWidget {
@@ -18,7 +19,7 @@ class TimeLabel extends StatelessWidget {
       padding: rightSide
           ? const EdgeInsets.only(left: 5)
           : const EdgeInsets.only(right: 5),
-      child: Text(label, style: style),
+      child: AutoSizeText(label, style: style),
     );
   }
 }

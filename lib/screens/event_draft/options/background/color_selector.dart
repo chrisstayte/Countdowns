@@ -1,4 +1,8 @@
+import 'package:audioplayers/audioplayers.dart';
+import 'package:countdowns/providers/settings_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 typedef OnColorChanged = void Function(Color color);
 
@@ -17,7 +21,17 @@ class ColorSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => onColorChanged(color),
+      onTap: () {
+        var settings = context.read<SettingsProvider>().settings;
+        if (settings.hapticFeedback) {
+          HapticFeedback.lightImpact();
+        }
+        if (settings.soundEffects) {
+          AudioPlayer()
+              .play(AssetSource('sounds/tap.mp3'), mode: PlayerMode.lowLatency);
+        }
+        onColorChanged(color);
+      },
       child: Container(
         padding: const EdgeInsets.all(3),
         decoration: BoxDecoration(

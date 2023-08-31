@@ -35,8 +35,13 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
   final TextEditingController _titleController = TextEditingController();
 
   void _selectOption(int index) {
-    if (context.read<SettingsProvider>().settings.hapticFeedback) {
+    var settings = context.read<SettingsProvider>().settings;
+    if (settings.hapticFeedback) {
       HapticFeedback.lightImpact();
+    }
+    if (settings.soundEffects) {
+      AudioPlayer()
+          .play(AssetSource('sounds/select.mp3'), mode: PlayerMode.lowLatency);
     }
     setState(() {
       _selectedOption = index;
@@ -82,6 +87,20 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
       appBar: AppBar(
         toolbarHeight: MediaQuery.of(context).viewInsets.bottom > 0 ? 0 : 55,
         scrolledUnderElevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            var settings = context.read<SettingsProvider>().settings;
+            if (settings.hapticFeedback) {
+              HapticFeedback.lightImpact();
+            }
+            if (settings.soundEffects) {
+              AudioPlayer().play(AssetSource('sounds/tap.mp3'),
+                  mode: PlayerMode.lowLatency);
+            }
+            context.pop();
+          },
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8),
@@ -93,6 +112,14 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
                   } else {
                     _existingEvent.update(_eventDraft);
                     context.read<EventProvider>().saveEvent(_existingEvent);
+                  }
+                  var settings = context.read<SettingsProvider>().settings;
+                  if (settings.hapticFeedback) {
+                    HapticFeedback.lightImpact();
+                  }
+                  if (settings.soundEffects) {
+                    AudioPlayer().play(AssetSource('sounds/success.mp3'),
+                        mode: PlayerMode.lowLatency);
                   }
                   context.pop();
                 } else {
@@ -109,7 +136,9 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
                         .read<SettingsProvider>()
                         .settings
                         .soundEffects) {
-                      AudioPlayer().play(AssetSource('sounds/error.mp3'));
+                      AudioPlayer().play(
+                        AssetSource('sounds/error.mp3'),
+                      );
                     }
                   });
                 }
@@ -155,9 +184,23 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       GestureDetector(
-                        onTap: () => setState(() {
-                          _isSquare = true;
-                        }),
+                        onTap: () {
+                          if (!_isSquare) {
+                            var settings =
+                                context.read<SettingsProvider>().settings;
+                            if (settings.hapticFeedback) {
+                              HapticFeedback.lightImpact();
+                            }
+                            if (settings.soundEffects) {
+                              AudioPlayer().play(
+                                  AssetSource('sounds/select.mp3'),
+                                  mode: PlayerMode.lowLatency);
+                            }
+                            setState(() {
+                              _isSquare = true;
+                            });
+                          }
+                        },
                         child: Text(
                           'Small',
                           style: TextStyle(
@@ -170,9 +213,23 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
                         width: 15,
                       ),
                       GestureDetector(
-                        onTap: () => setState(() {
-                          _isSquare = false;
-                        }),
+                        onTap: () {
+                          if (_isSquare) {
+                            var settings =
+                                context.read<SettingsProvider>().settings;
+                            if (settings.hapticFeedback) {
+                              HapticFeedback.lightImpact();
+                            }
+                            if (settings.soundEffects) {
+                              AudioPlayer().play(
+                                  AssetSource('sounds/select.mp3'),
+                                  mode: PlayerMode.lowLatency);
+                            }
+                            setState(() {
+                              _isSquare = false;
+                            });
+                          }
+                        },
                         child: Text(
                           'Large',
                           style: TextStyle(
@@ -212,7 +269,7 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
             ),
           ),
           AnimatedContainer(
-            duration: Duration(milliseconds: 200),
+            duration: const Duration(milliseconds: 50),
             height: MediaQuery.of(context).viewInsets.bottom > 0 ? 0 : 63,
             color: Theme.of(context).scaffoldBackgroundColor,
             child: Padding(

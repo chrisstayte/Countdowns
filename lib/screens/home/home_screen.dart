@@ -47,11 +47,31 @@ class _HomeScreenState extends State<HomeScreen> {
           if (_showButton ||
               context.read<SettingsProvider>().settings.squareView == false)
             IconButton(
-              onPressed: () => context.push('/eventDraft'),
+              onPressed: () {
+                var settings = context.read<SettingsProvider>().settings;
+                if (settings.hapticFeedback) {
+                  HapticFeedback.lightImpact();
+                }
+                if (settings.soundEffects) {
+                  AudioPlayer().play(AssetSource('sounds/tap.mp3'),
+                      mode: PlayerMode.lowLatency);
+                }
+                context.push('/eventDraft');
+              },
               icon: const Icon(Icons.add),
             ),
           IconButton(
-            onPressed: () => context.push('/settings'),
+            onPressed: () {
+              var settings = context.read<SettingsProvider>().settings;
+              if (settings.hapticFeedback) {
+                HapticFeedback.lightImpact();
+              }
+              if (settings.soundEffects) {
+                AudioPlayer().play(AssetSource('sounds/tap.mp3'),
+                    mode: PlayerMode.lowLatency);
+              }
+              context.push('/settings');
+            },
             icon: const Icon(Icons.settings),
           ),
         ],
@@ -68,8 +88,13 @@ class _HomeScreenState extends State<HomeScreen> {
           CupertinoSlidingSegmentedControl(
             groupValue: context.watch<SettingsProvider>().settings.squareView,
             onValueChanged: (value) {
-              if (context.read<SettingsProvider>().settings.hapticFeedback) {
+              var settings = context.read<SettingsProvider>().settings;
+              if (settings.hapticFeedback) {
                 HapticFeedback.mediumImpact();
+              }
+              if (settings.soundEffects) {
+                AudioPlayer().play(AssetSource('sounds/select.mp3'),
+                    mode: PlayerMode.lowLatency);
               }
               context.read<SettingsProvider>().setSquareView(value as bool);
             },
@@ -97,17 +122,13 @@ class _HomeScreenState extends State<HomeScreen> {
               if (context.read<SettingsProvider>().settings.squareView == true)
                 GestureDetector(
                   onTap: () {
-                    if (context
-                        .read<SettingsProvider>()
-                        .settings
-                        .hapticFeedback) {
+                    var settings = context.read<SettingsProvider>().settings;
+                    if (settings.hapticFeedback) {
                       HapticFeedback.lightImpact();
                     }
-                    if (context
-                        .read<SettingsProvider>()
-                        .settings
-                        .soundEffects) {
-                      AudioPlayer().play(AssetSource('sounds/tap.mp3'));
+                    if (settings.soundEffects) {
+                      AudioPlayer().play(AssetSource('sounds/tap.mp3'),
+                          mode: PlayerMode.lowLatency);
                     }
                     context.push('/eventDraft');
                   },
@@ -130,11 +151,13 @@ class _HomeScreenState extends State<HomeScreen> {
               ...events.map(
                 (event) => GestureDetector(
                   onTap: () {
-                    if (context
-                        .read<SettingsProvider>()
-                        .settings
-                        .hapticFeedback) {
+                    var settings = context.read<SettingsProvider>().settings;
+                    if (settings.hapticFeedback) {
                       HapticFeedback.lightImpact();
+                    }
+                    if (settings.soundEffects) {
+                      AudioPlayer().play(AssetSource('sounds/tap.mp3'),
+                          mode: PlayerMode.lowLatency);
                     }
                     context.push('/event/${event.key}');
                   },

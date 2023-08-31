@@ -1,6 +1,10 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:countdowns/global/global.dart';
+import 'package:countdowns/providers/settings_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 typedef OnFontSelected = void Function(String fontFamily);
 
@@ -22,7 +26,17 @@ class FontContainer extends StatelessWidget {
       children: Global.fonts.fontMap.keys
           .map(
             (key) => GestureDetector(
-              onTap: () => onFontSelected(key),
+              onTap: () {
+                var settings = context.read<SettingsProvider>().settings;
+                if (settings.hapticFeedback) {
+                  HapticFeedback.lightImpact();
+                }
+                if (settings.soundEffects) {
+                  AudioPlayer().play(AssetSource('sounds/tap.mp3'),
+                      mode: PlayerMode.lowLatency);
+                }
+                onFontSelected(key);
+              },
               child: Container(
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(

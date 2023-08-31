@@ -1,6 +1,10 @@
+import 'package:audioplayers/audioplayers.dart';
+import 'package:countdowns/providers/settings_provider.dart';
 import 'package:countdowns/screens/event_draft/options/background/color_selector.dart';
 import 'package:countdowns/screens/event_draft/options/background/custom_color_modal.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 typedef OnColorChanged = void Function(Color color);
 typedef OnGradientChanged = void Function(bool gradient);
@@ -80,6 +84,14 @@ class BackgroundContainer extends StatelessWidget {
           children: [
             GestureDetector(
               onTap: () async {
+                var settings = context.read<SettingsProvider>().settings;
+                if (settings.hapticFeedback) {
+                  HapticFeedback.lightImpact();
+                }
+                if (settings.soundEffects) {
+                  AudioPlayer().play(AssetSource('sounds/tap.mp3'),
+                      mode: PlayerMode.lowLatency);
+                }
                 await showModalBottomSheet(
                   context: context,
                   builder: (context) => CustomColorModal(

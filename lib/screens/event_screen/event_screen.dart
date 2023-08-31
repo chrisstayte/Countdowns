@@ -1,12 +1,15 @@
 import 'dart:async';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:countdowns/models/event.dart';
 import 'package:countdowns/providers/event_provider.dart';
+import 'package:countdowns/providers/settings_provider.dart';
 import 'package:countdowns/providers/timer_provider.dart';
 import 'package:countdowns/screens/event_screen/time_label.dart';
 import 'package:countdowns/utilities/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -77,7 +80,17 @@ class _EventScreenState extends State<EventScreen> {
               centerTitle: true,
               leading: IconButton(
                 icon: const Icon(Icons.close),
-                onPressed: () => context.pop(),
+                onPressed: () {
+                  var settings = context.read<SettingsProvider>().settings;
+                  if (settings.hapticFeedback) {
+                    HapticFeedback.lightImpact();
+                  }
+                  if (settings.soundEffects) {
+                    AudioPlayer().play(AssetSource('sounds/tap.mp3'),
+                        mode: PlayerMode.lowLatency);
+                  }
+                  context.pop();
+                },
               ),
               title: Icon(
                 _event!.icon ?? Icons.event,
@@ -114,6 +127,15 @@ class _EventScreenState extends State<EventScreen> {
                   onSelected: (value) async {
                     switch (value) {
                       case 1:
+                        var settings =
+                            context.read<SettingsProvider>().settings;
+                        if (settings.hapticFeedback) {
+                          HapticFeedback.lightImpact();
+                        }
+                        if (settings.soundEffects) {
+                          AudioPlayer().play(AssetSource('sounds/tap.mp3'),
+                              mode: PlayerMode.lowLatency);
+                        }
                         await context.push('/eventDraft/${_event?.key}');
                         setState(() {
                           _contentColor = _event!.backgroundColor.contentColor;
@@ -140,6 +162,17 @@ class _EventScreenState extends State<EventScreen> {
                                     ),
                                   ),
                                   onPressed: () {
+                                    var settings = context
+                                        .read<SettingsProvider>()
+                                        .settings;
+                                    if (settings.hapticFeedback) {
+                                      HapticFeedback.lightImpact();
+                                    }
+                                    if (settings.soundEffects) {
+                                      AudioPlayer().play(
+                                          AssetSource('sounds/trash.mp3'),
+                                          mode: PlayerMode.lowLatency);
+                                    }
                                     context
                                         .read<EventProvider>()
                                         .deleteEvent(_event!);

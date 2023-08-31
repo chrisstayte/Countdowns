@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:countdowns/enums/sorting_method.dart';
 import 'package:countdowns/global/global.dart';
 import 'package:countdowns/main.dart';
@@ -12,6 +13,7 @@ import 'package:countdowns/providers/countdowns_provider.dart';
 import 'package:countdowns/providers/settings_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
@@ -67,6 +69,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
       appBar: AppBar(
         title: const Text(
           'Settings',
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            var settings = context.read<SettingsProvider>().settings;
+            if (settings.hapticFeedback) {
+              HapticFeedback.lightImpact();
+            }
+            if (settings.soundEffects) {
+              AudioPlayer().play(AssetSource('sounds/tap.mp3'),
+                  mode: PlayerMode.lowLatency);
+            }
+            context.pop();
+          },
         ),
       ),
       body: ListView(
@@ -420,6 +436,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             "Yes",
                           ),
                           onPressed: () {
+                            var settings =
+                                context.read<SettingsProvider>().settings;
+                            if (settings.hapticFeedback) {
+                              HapticFeedback.lightImpact();
+                            }
+                            if (settings.soundEffects) {
+                              AudioPlayer().play(
+                                  AssetSource('sounds/trash.mp3'),
+                                  mode: PlayerMode.lowLatency);
+                            }
                             context.read<EventProvider>().deleteAllEvents();
                             Navigator.pop(context);
                           },

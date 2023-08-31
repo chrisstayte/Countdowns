@@ -1,4 +1,8 @@
+import 'package:audioplayers/audioplayers.dart';
+import 'package:countdowns/providers/settings_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 typedef IconSelectedCallback = void Function(IconData? selectedIcon);
 
@@ -96,6 +100,14 @@ class IconContainer extends StatelessWidget {
           .map(
             (iconData) => GestureDetector(
               onTap: () {
+                var settings = context.read<SettingsProvider>().settings;
+                if (settings.hapticFeedback) {
+                  HapticFeedback.lightImpact();
+                }
+                if (settings.soundEffects) {
+                  AudioPlayer().play(AssetSource('sounds/tap.mp3'),
+                      mode: PlayerMode.lowLatency);
+                }
                 onIconChanged(iconData);
               },
               child: Container(
