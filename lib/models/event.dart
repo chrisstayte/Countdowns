@@ -70,38 +70,11 @@ class Event extends HiveObject {
     DateTime eventDate = allDayEvent
         ? DateTime(eventDateTime.year, eventDateTime.month, eventDateTime.day)
         : eventDateTime;
+
+    // print(eventDate);
     Duration difference = eventDate.difference(now);
+    // print(difference);
     return difference;
-  }
-
-  int getTimeDifferenceInYears() {
-    Duration difference = getTimeDifference();
-    int years = (difference.inDays / 365).floor();
-    return years;
-  }
-
-  int getTimeDifferenceInDays({bool includeAllTime = false}) {
-    Duration difference = getTimeDifference();
-    int days = difference.inDays;
-    return includeAllTime ? days : days % 365;
-  }
-
-  int getTimeDifferenceInHours({bool includeAllTime = false}) {
-    Duration difference = getTimeDifference();
-    int hours = difference.inHours;
-    return includeAllTime ? hours : hours % 24;
-  }
-
-  int getTimeDifferenceInMinutes({bool includeAllTime = false}) {
-    Duration difference = getTimeDifference();
-    int minutes = difference.inMinutes;
-    return includeAllTime ? minutes : minutes % 60;
-  }
-
-  int getTimeDifferenceInSeconds({bool includeAllTime = false}) {
-    Duration difference = getTimeDifference();
-    int seconds = difference.inSeconds;
-    return includeAllTime ? seconds : seconds % 60;
   }
 
   bool isPast() {

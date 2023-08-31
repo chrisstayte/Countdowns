@@ -65,6 +65,8 @@ class _EventScreenState extends State<EventScreen> {
       );
     }
 
+    Duration timeDifference = _event!.getTimeDifference();
+
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -205,7 +207,8 @@ class _EventScreenState extends State<EventScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       TimeLabel(
-                        label: _event!.getTimeDifferenceInYears().toString(),
+                        label:
+                            timeDifference.timeDifferenceOnlyYears.toString(),
                         style: numberTextStyle,
                       ),
                       TimeLabel(
@@ -221,7 +224,7 @@ class _EventScreenState extends State<EventScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       TimeLabel(
-                        label: _event!.getTimeDifferenceInDays().toString(),
+                        label: timeDifference.timeDifferenceOnlyDays.toString(),
                         style: numberTextStyle,
                       ),
                       TimeLabel(
@@ -237,7 +240,9 @@ class _EventScreenState extends State<EventScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       TimeLabel(
-                        label: _event!.getTimeDifferenceInHours().toString(),
+                        label: timeDifference.timeDifferenceOnlyHours > 0
+                            ? timeDifference.timeDifferenceOnlyHours.toString()
+                            : '0',
                         style: numberTextStyle,
                       ),
                       TimeLabel(
@@ -253,7 +258,8 @@ class _EventScreenState extends State<EventScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       TimeLabel(
-                        label: _event!.getTimeDifferenceInMinutes().toString(),
+                        label:
+                            timeDifference.timeDifferenceOnlyMinutes.toString(),
                         style: numberTextStyle,
                       ),
                       TimeLabel(
@@ -269,7 +275,8 @@ class _EventScreenState extends State<EventScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       TimeLabel(
-                        label: _event!.getTimeDifferenceInSeconds().toString(),
+                        label:
+                            timeDifference.timeDifferenceOnlySeconds.toString(),
                         style: numberTextStyle,
                       ),
                       TimeLabel(

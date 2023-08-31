@@ -189,9 +189,10 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
                       borderRadius: Global.styles.containerCornerRadius,
                       boxShadow: [
                         BoxShadow(
-                          color: _eventDraft.backgroundColor.withOpacity(.5),
-                          blurRadius: 4,
-                          offset: const Offset(0, 3),
+                          color: Colors.grey.withOpacity(0.5), // Shadow color
+                          spreadRadius: 2, // Spread radius
+                          blurRadius: 25, // Blur radius
+                          offset: Offset(0, 3), // changes position of shadow
                         ),
                       ],
                     ),

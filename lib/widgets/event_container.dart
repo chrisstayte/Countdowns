@@ -25,7 +25,8 @@ class _EventContainerState extends State<EventContainer> {
     // every second grab the current status of the countdown event, if the event has not passed show the time remaining
     // if the event has passed, show the time since the event has passed
     _updateTimeUI();
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) => _updateTimeUI());
+    _timer =
+        Timer.periodic(const Duration(seconds: 1), (timer) => _updateTimeUI());
 
     super.initState();
   }
@@ -43,18 +44,18 @@ class _EventContainerState extends State<EventContainer> {
     if (years > 0) {
       premierText = '$years years';
       secondaryText =
-          '${timeDifference.inDays % 365} days, ${timeDifference.inHours % 24} hr';
+          '${timeDifference.timeDifferenceOnlyDays} days, ${timeDifference.timeDifferenceOnlyHours} hr';
     } else if (timeDifference.inDays > 0) {
       premierText = '${timeDifference.inDays} days';
-      secondaryText = '${timeDifference.inHours % 24} hr, '
+      secondaryText = '${timeDifference.timeDifferenceOnlyHours} hr, '
           '${timeDifference.inMinutes % 60} min';
     } else if (timeDifference.inHours > 0) {
       premierText = '${timeDifference.inHours} hours';
-      secondaryText = '${timeDifference.inMinutes % 60} min, '
-          '${timeDifference.inSeconds % 60} sec';
+      secondaryText = '${timeDifference.timeDifferenceOnlyMinutes} min, '
+          '${timeDifference.timeDifferenceOnlySeconds} sec';
     } else if (timeDifference.inMinutes > 0) {
       premierText = '${timeDifference.inMinutes} min';
-      secondaryText = '${timeDifference.inSeconds % 60} sec';
+      secondaryText = '${timeDifference.timeDifferenceOnlySeconds} sec';
     } else if (timeDifference.inSeconds > 0) {
       premierText = '${timeDifference.inSeconds} sec';
       secondaryText = null;
@@ -102,6 +103,14 @@ class _EventContainerState extends State<EventContainer> {
                       fontSize: 26,
                       color: widget.event.backgroundColor.contentColor,
                       fontFamily: widget.event.fontFamily,
+                      shadows: <Shadow>[
+                        Shadow(
+                          offset: Offset(1.0, 1.0),
+                          blurRadius: 2.0,
+                          color: Color.fromARGB(125, 0, 0,
+                              0), // Half the opacity compared to previous example
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -111,6 +120,15 @@ class _EventContainerState extends State<EventContainer> {
                     child: Icon(
                       widget.event.icon,
                       color: widget.event.backgroundColor.contentColor,
+                      size: 30,
+                      shadows: const <Shadow>[
+                        Shadow(
+                          offset: Offset(1.0, 1.0),
+                          blurRadius: 2.0,
+                          color: Color.fromARGB(125, 0, 0,
+                              0), // Half the opacity compared to previous example
+                        ),
+                      ],
                     ),
                   )
               ],
@@ -128,6 +146,14 @@ class _EventContainerState extends State<EventContainer> {
                   fontSize: 26,
                   fontWeight: FontWeight.w700,
                   fontFamily: widget.event.fontFamily,
+                  shadows: <Shadow>[
+                    Shadow(
+                      offset: Offset(1.0, 1.0),
+                      blurRadius: 2.0,
+                      color: Color.fromARGB(125, 0, 0,
+                          0), // Half the opacity compared to previous example
+                    ),
+                  ],
                 ),
               ),
               if (secondaryText != null)
@@ -139,6 +165,14 @@ class _EventContainerState extends State<EventContainer> {
                         .withOpacity(.8),
                     fontSize: 18,
                     fontFamily: widget.event.fontFamily,
+                    shadows: <Shadow>[
+                      Shadow(
+                        offset: Offset(1.0, 1.0),
+                        blurRadius: 2.0,
+                        color: Color.fromARGB(125, 0, 0,
+                            0), // Half the opacity compared to previous example
+                      ),
+                    ],
                   ),
                 ),
             ],

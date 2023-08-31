@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
 
+extension TimeDifference on Duration {
+  int get timeDifferenceOnlyYears => inDays > 0 ? (inDays / 365).floor() : 0;
+  int get timeDifferenceOnlyDays => inDays > 0 ? inDays % 365 : 0;
+  int get timeDifferenceOnlyHours => inHours > 0 ? inHours % 24 : 0;
+  int get timeDifferenceOnlyMinutes => inMinutes > 0 ? inMinutes % 60 : 0;
+  int get timeDifferenceOnlySeconds => inSeconds > 0 ? inSeconds % 60 : 0;
+}
+
 extension GradientColor on Color {
   Color get contentColor {
     return computeLuminance() >= .5 ? Colors.black : Colors.white;
