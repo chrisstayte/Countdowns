@@ -28,8 +28,6 @@ void main() async {
   // This is done as a precaution of v1 users who have not updated to v2 yet
   loadV1Events();
 
-  initializeLocalNotifications();
-
   runApp(
     MultiProvider(
       providers: [
@@ -51,25 +49,25 @@ void main() async {
       child: const MyApp(),
     ),
   );
+
+  initializeLocalNotifications();
 }
 
 void initializeLocalNotifications() async {
   const initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/countdowns');
 
-  var initializationSettingsIOS = DarwinInitializationSettings(
-      requestAlertPermission: false,
-      requestBadgePermission: false,
-      requestSoundPermission: false,
-      onDidReceiveLocalNotification: (id, title, body, payload) async {
-        print('onDidReceiveLocalNotification called');
-      });
+  var initializationSettingsIOS = const DarwinInitializationSettings(
+    requestAlertPermission: false,
+    requestBadgePermission: false,
+    requestSoundPermission: false,
+  );
 
   var initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
   flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-  flutterLocalNotificationsPlugin.initialize(initializationSettings,
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings,
       onDidReceiveNotificationResponse: (payload) {
     // Handle notification tapped logic here
     while (router.canPop()) {
@@ -80,6 +78,15 @@ void initializeLocalNotifications() async {
 
   final NotificationAppLaunchDetails? notificationAppLaunchDetails =
       await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+
+  if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
+    // Handle notification tapped logic here
+    while (router.canPop()) {
+      router.pop();
+    }
+    router.push(
+        '/event/${notificationAppLaunchDetails?.notificationResponse?.id ?? ''}');
+  }
 }
 
 void loadV1Events() async {

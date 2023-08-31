@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:countdowns/global/global.dart';
 import 'package:countdowns/models/event.dart';
 import 'package:countdowns/providers/event_provider.dart';
@@ -103,6 +104,12 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
                         .settings
                         .hapticFeedback) {
                       HapticFeedback.vibrate();
+                    }
+                    if (context
+                        .read<SettingsProvider>()
+                        .settings
+                        .soundEffects) {
+                      AudioPlayer().play(AssetSource('sounds/error.mp3'));
                     }
                   });
                 }

@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:countdowns/global/global.dart';
 import 'package:countdowns/providers/event_provider.dart';
 import 'package:countdowns/widgets/event_container.dart';
@@ -95,7 +96,21 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               if (context.read<SettingsProvider>().settings.squareView == true)
                 GestureDetector(
-                  onTap: () => context.push('/eventDraft'),
+                  onTap: () {
+                    if (context
+                        .read<SettingsProvider>()
+                        .settings
+                        .hapticFeedback) {
+                      HapticFeedback.lightImpact();
+                    }
+                    if (context
+                        .read<SettingsProvider>()
+                        .settings
+                        .soundEffects) {
+                      AudioPlayer().play(AssetSource('sounds/tap.mp3'));
+                    }
+                    context.push('/eventDraft');
+                  },
                   child: Container(
                     width: 169,
                     height: 169,

@@ -30,6 +30,7 @@ dependencies:
   in_app_review: ^2.0.6
   flutter_local_notifications: ^15.1.1
   permission_handler: ^10.4.3
+  audioplayers: ^5.1.0
 
 dev_dependencies:
   flutter_test:
@@ -44,6 +45,7 @@ flutter:
 
   assets:
     - assets/
+    - assets/sounds/
 
   fonts:
     - family: ComicNeue

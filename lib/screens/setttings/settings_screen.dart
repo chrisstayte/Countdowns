@@ -160,6 +160,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           ledOnMs: 1000,
                           ledOffMs: 500,
                         ),
+                        iOS: const DarwinNotificationDetails(
+                          presentAlert: false,
+                          presentBadge: false,
+                          presentSound: false,
+                          presentBanner: false,
+                        ),
                       ),
                     );
                   },
