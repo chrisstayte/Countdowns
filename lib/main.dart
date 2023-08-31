@@ -1,6 +1,9 @@
-import 'package:countdowns/global/global.dart';
-import 'package:countdowns/models/event.dart';
+import 'dart:convert';
+import 'dart:io';
 
+import 'package:countdowns/global/global.dart';
+import 'package:countdowns/models/countdown_event.dart';
+import 'package:countdowns/models/event.dart';
 import 'package:countdowns/providers/event_provider.dart';
 import 'package:countdowns/router.dart';
 import 'package:countdowns/providers/countdowns_provider.dart';
@@ -8,12 +11,16 @@ import 'package:countdowns/providers/settings_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   Hive.registerAdapter(EventAdapter());
   await Hive.initFlutter();
   await Hive.openBox<Event>(EventProvider.BoxName);
+
+  // This is done as a precaution of v1 users who have not updated to v2 yet
+  loadV1Events();
 
   runApp(
     MultiProvider(
@@ -24,6 +31,7 @@ void main() async {
         ),
         ChangeNotifierProvider<SettingsProvider>(
           create: (_) => SettingsProvider(),
+          lazy: false,
         ),
         ChangeNotifierProvider<CountdownsProvider>(
           create: (_) => CountdownsProvider(),
@@ -32,6 +40,37 @@ void main() async {
       child: const MyApp(),
     ),
   );
+}
+
+void loadV1Events() async {
+  final directory = await getApplicationDocumentsDirectory();
+  File v1File = File('${directory.path}/countdownevents.json');
+
+  if (v1File.existsSync()) {
+    String v1Events = v1File.readAsStringSync();
+    List<dynamic> v1EventsList = jsonDecode(v1Events);
+    List<CountdownEvent> events =
+        v1EventsList.map((e) => CountdownEvent.fromJson(e)).toList();
+
+    final Box<Event> box = Hive.box<Event>(EventProvider.BoxName);
+
+    events.forEach((event) {
+      Event existingEvent = Event(
+        title: event.title,
+        eventDateTime: event.eventDate,
+        backgroundColor: event.backgroundColor ?? Global.colors.primaryColor,
+        icon: event.icon,
+      );
+
+      if (event.fontFamily != null) {
+        existingEvent.fontFamily = event.fontFamily!;
+      }
+
+      box.add(existingEvent);
+    });
+
+    v1File.deleteSync();
+  }
 }
 
 class MyApp extends StatelessWidget {

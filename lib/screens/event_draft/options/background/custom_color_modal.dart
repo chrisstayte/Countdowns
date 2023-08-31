@@ -1,4 +1,5 @@
 import 'package:countdowns/global/global.dart';
+import 'package:countdowns/utilities/extensions.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -10,10 +11,12 @@ class CustomColorModal extends StatefulWidget {
     super.key,
     required this.selectedColor,
     required this.onColorChanged,
+    required this.gradient,
   });
 
   final Color selectedColor;
   final OnColorChanged onColorChanged;
+  final bool gradient;
 
   @override
   State<CustomColorModal> createState() => _CustomColorModalState();
@@ -41,6 +44,7 @@ class _CustomColorModalState extends State<CustomColorModal> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
                 'Background Color',
@@ -48,16 +52,6 @@ class _CustomColorModalState extends State<CustomColorModal> {
                   fontSize: 22,
                 ),
               ),
-              const Spacer(),
-              Container(
-                height: 25,
-                width: 25,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: _selectedColor,
-                ),
-              ),
-              const SizedBox(width: 10),
               OutlinedButton(
                 onPressed: () => context.pop(),
                 child: const Icon(Icons.check_circle_outline_outlined),
@@ -86,25 +80,46 @@ class _CustomColorModalState extends State<CustomColorModal> {
           const SizedBox(
             height: 15,
           ),
-          ColorPicker(
-            color: _selectedColor,
-            onColorChanged: (color) {
-              setState(() {
-                _selectedColor = color;
-              });
-              widget.onColorChanged(color);
-            },
-            pickersEnabled: const <ColorPickerType, bool>{
-              ColorPickerType.primary: false,
-              ColorPickerType.accent: false,
-              ColorPickerType.bw: false,
-              ColorPickerType.custom: false,
-              ColorPickerType.wheel: true,
-            },
-            wheelSquareBorderRadius:
-                Global.styles.containerCornerRadius.topLeft.x,
-            enableShadesSelection: false,
-            enableTonalPalette: false,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Expanded(
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: _selectedColor,
+                      gradient:
+                          widget.gradient ? _selectedColor.gradient : null,
+                      borderRadius: Global.styles.containerCornerRadius,
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: ColorPicker(
+                  color: _selectedColor,
+                  onColorChanged: (color) {
+                    setState(() {
+                      _selectedColor = color;
+                    });
+                    widget.onColorChanged(color);
+                  },
+                  pickersEnabled: const <ColorPickerType, bool>{
+                    ColorPickerType.primary: false,
+                    ColorPickerType.accent: false,
+                    ColorPickerType.bw: false,
+                    ColorPickerType.custom: false,
+                    ColorPickerType.wheel: true,
+                  },
+                  wheelSquareBorderRadius:
+                      Global.styles.containerCornerRadius.topLeft.x,
+                  enableShadesSelection: false,
+                  enableTonalPalette: false,
+                ),
+              ),
+            ],
           )
         ],
       ),

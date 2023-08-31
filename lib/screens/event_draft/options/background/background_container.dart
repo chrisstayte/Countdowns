@@ -1,5 +1,6 @@
 import 'package:countdowns/screens/event_draft/options/background/color_selector.dart';
 import 'package:countdowns/screens/event_draft/options/background/custom_color_modal.dart';
+import 'package:countdowns/utilities/extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -84,32 +85,45 @@ class BackgroundContainer extends StatelessWidget {
                 await showModalBottomSheet(
                   context: context,
                   builder: (context) => CustomColorModal(
-                    selectedColor: selectedColor!,
+                    selectedColor: selectedColor,
                     onColorChanged: onColorChanged,
+                    gradient: gradient,
                   ),
                   backgroundColor: Colors.transparent,
                 );
               },
               child: Container(
-                height: 48,
-                width: 48,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    stops: [0, 1 / 6, 2 / 6, 3 / 6, 4 / 6, 5 / 6, 1],
-                    colors: [
-                      Colors.red,
-                      Colors.orange,
-                      Colors.yellow,
-                      Colors.green,
-                      Colors.blue,
-                      Colors.indigo,
-                      Colors.purple,
-                    ],
-                  ),
-                  color: Colors.green,
+                padding: const EdgeInsets.all(3),
+                decoration: BoxDecoration(
                   shape: BoxShape.circle,
+                  border: Border.all(
+                    width: 2,
+                    color: !_colors.contains(selectedColor)
+                        ? Theme.of(context).primaryColor
+                        : Colors.transparent,
+                  ),
+                ),
+                child: Container(
+                  height: 48,
+                  width: 48,
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      stops: [0, 1 / 6, 2 / 6, 3 / 6, 4 / 6, 5 / 6, 1],
+                      colors: [
+                        Colors.red,
+                        Colors.orange,
+                        Colors.yellow,
+                        Colors.green,
+                        Colors.blue,
+                        Colors.indigo,
+                        Colors.purple,
+                      ],
+                    ),
+                    color: Colors.green,
+                    shape: BoxShape.circle,
+                  ),
                 ),
               ),
             ),

@@ -78,7 +78,7 @@ class SettingsProvider extends ChangeNotifier {
 
       // printing out file for user to see
       if (kDebugMode) {
-        print("\n\nSettings\n$stringFromFile");
+        print("Settings: $stringFromFile");
       }
 
       settings = Settings.fromJson(jsonDecode(stringFromFile));

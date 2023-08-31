@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
-// THIS IS LEGACY CODE, TO BE REMOVED
+// THIS IS LEGACY CODE, TO BE REMOVED AFTER OFFICIAL RELEASE AND WORKING CANDIDATE
 
 import 'package:countdowns/enums/sorting_method.dart';
 import 'package:countdowns/models/countdown_event.dart';
@@ -40,15 +40,15 @@ class CountdownsProvider extends ChangeNotifier {
   List<CountdownEvent> get events => _events;
 
   void addRandomEvent() {
-    _events.add(
+    int randomNumber = Random().nextInt(5);
+    addEvent(
       CountdownEvent(
         title: 'Random',
-        eventDate: DateTime(2023, 3, 4),
+        eventDate: DateTime(2025 + randomNumber, randomNumber, 4),
         backgroundColor:
             Colors.primaries[Random().nextInt(Colors.primaries.length)],
       ),
     );
-    notifyListeners();
   }
 
   void _sortEventsAlphaAscending() {

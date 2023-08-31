@@ -156,6 +156,7 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
                           'Small',
                           style: TextStyle(
                             fontWeight: _isSquare ? FontWeight.bold : null,
+                            fontSize: 18,
                           ),
                         ),
                       ),
@@ -170,6 +171,7 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
                           'Large',
                           style: TextStyle(
                             fontWeight: !_isSquare ? FontWeight.bold : null,
+                            fontSize: 18,
                           ),
                         ),
                       )
