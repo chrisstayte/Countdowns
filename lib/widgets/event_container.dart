@@ -112,7 +112,7 @@ class _EventContainerState extends State<EventContainer> {
                     padding: const EdgeInsets.only(left: 5),
                     child: Icon(
                       widget.event.icon,
-                      color: Colors.white,
+                      color: widget.event.backgroundColor.contentColor,
                     ),
                   )
               ],

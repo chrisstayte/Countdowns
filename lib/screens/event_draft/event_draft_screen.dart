@@ -80,7 +80,7 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
       appBar: AppBar(
-        toolbarHeight: 55,
+        toolbarHeight: MediaQuery.of(context).viewInsets.bottom > 0 ? 0 : 55,
         scrolledUnderElevation: 0,
         actions: [
           Padding(
@@ -187,11 +187,12 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
                       maxWidth: _isSquare ? 169 : 500,
                     ),
                     decoration: BoxDecoration(
+                      borderRadius: Global.styles.containerCornerRadius,
                       boxShadow: [
                         BoxShadow(
-                          color: Theme.of(context).shadowColor.withOpacity(0.3),
-                          blurRadius: 20,
-                          offset: const Offset(0, 5),
+                          color: _eventDraft.backgroundColor.withOpacity(.5),
+                          blurRadius: 4,
+                          offset: const Offset(0, 3),
                         ),
                       ],
                     ),
