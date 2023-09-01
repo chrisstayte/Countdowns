@@ -15,6 +15,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:in_app_review/in_app_review.dart';
@@ -186,6 +187,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     );
                   },
                 ),
+                ListTile(
+                  title: Text("Print Current Time Zone"),
+                  onTap: () async {
+                    String timeZone = await FlutterTimezone.getLocalTimezone();
+                    print(timeZone);
+                  },
+                ),
+                ListTile(
+                  title: Text("Print Scheduled Events"),
+                  onTap: () async {
+                    final List<PendingNotificationRequest>
+                        pendingNotificationRequests =
+                        await flutterLocalNotificationsPlugin
+                            .pendingNotificationRequests();
+
+                    pendingNotificationRequests.forEach((element) {
+                      print(element.id);
+                    });
+                  },
+                )
               ],
             ),
           SettingsContainer(
@@ -327,12 +348,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         if (permissionGranted) {
                           if (!mounted) return;
                           context.read<SettingsProvider>().setNotify(true);
+                          context
+                              .read<EventProvider>()
+                              .events
+                              .forEach((event) => event.scheduleNotification());
                         } else {
                           if (!mounted) return;
                           await showDialog(
                             context: context,
                             builder: (context) => goToSettingsAlertDialog,
                           );
+                          return;
                         }
                       }
                     }
@@ -350,17 +376,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         if (permissionGranted) {
                           if (!mounted) return;
                           context.read<SettingsProvider>().setNotify(true);
+                          context
+                              .read<EventProvider>()
+                              .events
+                              .forEach((event) => event.scheduleNotification());
                         } else {
                           if (!mounted) return;
                           await showDialog(
                             context: context,
                             builder: (context) => goToSettingsAlertDialog,
                           );
+                          return;
                         }
                       }
                     }
-
-                    // TODO: setup all notifications
                   },
                 ),
               ),

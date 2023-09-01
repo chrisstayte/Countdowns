@@ -16,9 +16,9 @@ extension SortingMethodExtension on SortingMethod {
       case SortingMethod.alphaDescending:
         return 'Alphabetical Reversed';
       case SortingMethod.dateAscending:
-        return 'Closest First';
+        return 'Soonest First';
       case SortingMethod.dateDescending:
-        return 'Farthest First';
+        return 'Latest First';
     }
   }
 

@@ -2,7 +2,6 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:countdowns/global/global.dart';
 import 'package:countdowns/models/event.dart';
 import 'package:countdowns/providers/event_provider.dart';
-
 import 'package:countdowns/screens/event_draft/option_circle.dart';
 import 'package:countdowns/screens/event_draft/options/background/background_container.dart';
 import 'package:countdowns/screens/event_draft/options/font_container.dart';
@@ -88,7 +87,7 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
         toolbarHeight: MediaQuery.of(context).viewInsets.bottom > 0 ? 0 : 55,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             var settings = context.read<SettingsProvider>().settings;
             if (settings.hapticFeedback) {
@@ -109,9 +108,15 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
                 if (_titleController.text.isNotEmpty) {
                   if (_newEvent) {
                     context.read<EventProvider>().addEvent(_eventDraft);
+                    if (context.read<SettingsProvider>().settings.notify) {
+                      _eventDraft.scheduleNotification();
+                    }
                   } else {
                     _existingEvent.update(_eventDraft);
                     context.read<EventProvider>().saveEvent(_existingEvent);
+                    if (context.read<SettingsProvider>().settings.notify) {
+                      _existingEvent.rescheduleNotification();
+                    }
                   }
                   var settings = context.read<SettingsProvider>().settings;
                   if (settings.hapticFeedback) {
@@ -121,6 +126,7 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
                     AudioPlayer().play(AssetSource('sounds/success.mp3'),
                         mode: PlayerMode.lowLatency);
                   }
+
                   context.pop();
                 } else {
                   setState(() {

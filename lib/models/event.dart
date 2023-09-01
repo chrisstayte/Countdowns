@@ -1,5 +1,10 @@
+import 'package:countdowns/main.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:hive/hive.dart';
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 part 'event.g.dart';
 
@@ -80,5 +85,50 @@ class Event extends HiveObject {
   bool isPast() {
     Duration difference = getTimeDifference();
     return difference.isNegative;
+  }
+
+  void rescheduleNotification() async {
+    await flutterLocalNotificationsPlugin.cancel(key);
+    scheduleNotification();
+  }
+
+  void scheduleNotification() async {
+    if (isPast()) return;
+
+    tz.initializeTimeZones();
+
+    final String currentTimeZone = await FlutterTimezone.getLocalTimezone();
+
+    tz.Location location = tz.getLocation(currentTimeZone);
+
+    tz.TZDateTime eventDateTime = tz.TZDateTime.from(
+      this.eventDateTime,
+      location,
+    );
+
+    flutterLocalNotificationsPlugin.zonedSchedule(
+      key,
+      title,
+      'Event is happening now!',
+      eventDateTime,
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'event_notification',
+          'Event Notification',
+          importance: Importance.defaultImportance,
+          priority: Priority.defaultPriority,
+          showWhen: true,
+        ),
+        iOS: DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+        ),
+      ),
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: DateTimeComponents.time,
+      androidScheduleMode: AndroidScheduleMode.exact,
+    );
   }
 }
