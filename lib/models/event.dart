@@ -120,6 +120,7 @@ class Event extends HiveObject {
           priority: Priority.max,
           showWhen: true,
           enableVibration: true,
+          // Had to add this to get android banner notifications showing
           styleInformation: BigTextStyleInformation(''),
         ),
         iOS: DarwinNotificationDetails(
