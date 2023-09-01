@@ -46,6 +46,11 @@ class _DatePickerScreenState extends State<DatePickerScreen> {
             }
             if (settings.soundEffects) {
               AudioPlayer().play(AssetSource('sounds/tap.mp3'),
+                  ctx: const AudioContext(
+                    iOS: AudioContextIOS(
+                      category: AVAudioSessionCategory.ambient,
+                    ),
+                  ),
                   mode: PlayerMode.lowLatency);
             }
             context.pop();
@@ -60,6 +65,11 @@ class _DatePickerScreenState extends State<DatePickerScreen> {
               }
               if (settings.soundEffects) {
                 AudioPlayer().play(AssetSource('sounds/tap.mp3'),
+                    ctx: const AudioContext(
+                      iOS: AudioContextIOS(
+                        category: AVAudioSessionCategory.ambient,
+                      ),
+                    ),
                     mode: PlayerMode.lowLatency);
               }
               Navigator.pop(context, [

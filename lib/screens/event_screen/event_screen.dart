@@ -87,6 +87,11 @@ class _EventScreenState extends State<EventScreen> {
                   }
                   if (settings.soundEffects) {
                     AudioPlayer().play(AssetSource('sounds/tap.mp3'),
+                        ctx: const AudioContext(
+                          iOS: AudioContextIOS(
+                            category: AVAudioSessionCategory.ambient,
+                          ),
+                        ),
                         mode: PlayerMode.lowLatency);
                   }
                   context.pop();
@@ -134,6 +139,11 @@ class _EventScreenState extends State<EventScreen> {
                         }
                         if (settings.soundEffects) {
                           AudioPlayer().play(AssetSource('sounds/tap.mp3'),
+                              ctx: const AudioContext(
+                                iOS: AudioContextIOS(
+                                  category: AVAudioSessionCategory.ambient,
+                                ),
+                              ),
                               mode: PlayerMode.lowLatency);
                         }
                         await context.push('/eventDraft/${_event?.key}');
@@ -171,6 +181,12 @@ class _EventScreenState extends State<EventScreen> {
                                     if (settings.soundEffects) {
                                       AudioPlayer().play(
                                           AssetSource('sounds/trash.mp3'),
+                                          ctx: const AudioContext(
+                                            iOS: AudioContextIOS(
+                                              category: AVAudioSessionCategory
+                                                  .ambient,
+                                            ),
+                                          ),
                                           mode: PlayerMode.lowLatency);
                                     }
                                     context

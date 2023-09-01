@@ -48,21 +48,43 @@ class NameAndDateContainer extends StatelessWidget {
               ),
               color: Theme.of(context).scaffoldBackgroundColor,
             ),
-            child: TextField(
-              controller: controller,
-              enableSuggestions: false,
-              decoration: const InputDecoration(
-                hintText: 'Event Name',
-                hintStyle: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
+            child: Row(
+              children: [
+                Icon(Icons.title),
+                const SizedBox(
+                  width: 15,
                 ),
-                border: InputBorder.none,
-              ),
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-              ),
+                Expanded(
+                  child: TextField(
+                    controller: controller,
+                    enableSuggestions: false,
+                    decoration: const InputDecoration(
+                      hintText: 'Event Name',
+                      hintStyle: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      border: InputBorder.none,
+                    ),
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: controller.text.isNotEmpty,
+                  child: IconButton(
+                    onPressed: () => {
+                      controller.clear(),
+                      FocusManager.instance.primaryFocus?.unfocus(),
+                    },
+                    icon: const Icon(
+                      Icons.clear,
+                    ),
+                  ),
+                ),
+              ],
             ),
           )
               .animate(
@@ -83,6 +105,11 @@ class NameAndDateContainer extends StatelessWidget {
               }
               if (settings.soundEffects) {
                 AudioPlayer().play(AssetSource('sounds/tap.mp3'),
+                    ctx: const AudioContext(
+                      iOS: AudioContextIOS(
+                        category: AVAudioSessionCategory.ambient,
+                      ),
+                    ),
                     mode: PlayerMode.lowLatency);
               }
               await Navigator.of(context)

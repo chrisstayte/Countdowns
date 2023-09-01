@@ -24,7 +24,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.chrisstayte.countdowns"
-    compileSdkVersion 33
+    compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
     compileOptions {

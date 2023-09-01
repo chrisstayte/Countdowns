@@ -95,6 +95,11 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
             }
             if (settings.soundEffects) {
               AudioPlayer().play(AssetSource('sounds/tap.mp3'),
+                  ctx: const AudioContext(
+                    iOS: AudioContextIOS(
+                      category: AVAudioSessionCategory.ambient,
+                    ),
+                  ),
                   mode: PlayerMode.lowLatency);
             }
             context.pop();
@@ -124,6 +129,11 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
                   }
                   if (settings.soundEffects) {
                     AudioPlayer().play(AssetSource('sounds/success.mp3'),
+                        ctx: const AudioContext(
+                          iOS: AudioContextIOS(
+                            category: AVAudioSessionCategory.ambient,
+                          ),
+                        ),
                         mode: PlayerMode.lowLatency);
                   }
 
@@ -144,6 +154,12 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
                         .soundEffects) {
                       AudioPlayer().play(
                         AssetSource('sounds/error.mp3'),
+                        ctx: const AudioContext(
+                          iOS: AudioContextIOS(
+                            category: AVAudioSessionCategory.ambient,
+                          ),
+                        ),
+                        mode: PlayerMode.lowLatency,
                       );
                     }
                   });
@@ -200,6 +216,11 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
                             if (settings.soundEffects) {
                               AudioPlayer().play(
                                   AssetSource('sounds/select.mp3'),
+                                  ctx: const AudioContext(
+                                    iOS: AudioContextIOS(
+                                      category: AVAudioSessionCategory.ambient,
+                                    ),
+                                  ),
                                   mode: PlayerMode.lowLatency);
                             }
                             setState(() {
@@ -229,6 +250,11 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
                             if (settings.soundEffects) {
                               AudioPlayer().play(
                                   AssetSource('sounds/select.mp3'),
+                                  ctx: const AudioContext(
+                                    iOS: AudioContextIOS(
+                                      category: AVAudioSessionCategory.ambient,
+                                    ),
+                                  ),
                                   mode: PlayerMode.lowLatency);
                             }
                             setState(() {

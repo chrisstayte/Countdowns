@@ -33,6 +33,11 @@ class FontContainer extends StatelessWidget {
                 }
                 if (settings.soundEffects) {
                   AudioPlayer().play(AssetSource('sounds/tap.mp3'),
+                      ctx: const AudioContext(
+                        iOS: AudioContextIOS(
+                          category: AVAudioSessionCategory.ambient,
+                        ),
+                      ),
                       mode: PlayerMode.lowLatency);
                 }
                 onFontSelected(key);

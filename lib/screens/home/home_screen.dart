@@ -54,6 +54,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
                 if (settings.soundEffects) {
                   AudioPlayer().play(AssetSource('sounds/tap.mp3'),
+                      ctx: const AudioContext(
+                        iOS: AudioContextIOS(
+                          category: AVAudioSessionCategory.ambient,
+                        ),
+                      ),
                       mode: PlayerMode.lowLatency);
                 }
                 context.push('/eventDraft');
@@ -68,6 +73,11 @@ class _HomeScreenState extends State<HomeScreen> {
               }
               if (settings.soundEffects) {
                 AudioPlayer().play(AssetSource('sounds/tap.mp3'),
+                    ctx: const AudioContext(
+                      iOS: AudioContextIOS(
+                        category: AVAudioSessionCategory.ambient,
+                      ),
+                    ),
                     mode: PlayerMode.lowLatency);
               }
               context.push('/settings');
@@ -94,6 +104,11 @@ class _HomeScreenState extends State<HomeScreen> {
               }
               if (settings.soundEffects) {
                 AudioPlayer().play(AssetSource('sounds/select.mp3'),
+                    ctx: const AudioContext(
+                      iOS: AudioContextIOS(
+                        category: AVAudioSessionCategory.ambient,
+                      ),
+                    ),
                     mode: PlayerMode.lowLatency);
               }
               context.read<SettingsProvider>().setSquareView(value as bool);
@@ -128,6 +143,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     }
                     if (settings.soundEffects) {
                       AudioPlayer().play(AssetSource('sounds/tap.mp3'),
+                          ctx: const AudioContext(
+                            iOS: AudioContextIOS(
+                              category: AVAudioSessionCategory.ambient,
+                            ),
+                          ),
                           mode: PlayerMode.lowLatency);
                     }
                     context.push('/eventDraft');
@@ -157,6 +177,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     }
                     if (settings.soundEffects) {
                       AudioPlayer().play(AssetSource('sounds/tap.mp3'),
+                          ctx: const AudioContext(
+                            iOS: AudioContextIOS(
+                              category: AVAudioSessionCategory.ambient,
+                            ),
+                          ),
                           mode: PlayerMode.lowLatency);
                     }
                     context.push('/event/${event.key}');

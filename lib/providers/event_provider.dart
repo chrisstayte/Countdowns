@@ -41,7 +41,7 @@ class EventProvider extends ChangeNotifier {
   }
 
   void deleteEvent(Event event) {
-    flutterLocalNotificationsPlugin.cancel(event.key);
+    event.cancelNotification();
     box.delete(event.key);
     notifyListeners();
   }

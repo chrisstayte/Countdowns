@@ -87,9 +87,10 @@ class Event extends HiveObject {
     return difference.isNegative;
   }
 
-  void rescheduleNotification() async {
-    await flutterLocalNotificationsPlugin.cancel(key);
-    scheduleNotification();
+  void cancelNotification() async {
+    if (key != null) {
+      await flutterLocalNotificationsPlugin.cancel(key);
+    }
   }
 
   void scheduleNotification() async {
@@ -115,9 +116,11 @@ class Event extends HiveObject {
         android: AndroidNotificationDetails(
           'event_notification',
           'Event Notification',
-          importance: Importance.defaultImportance,
-          priority: Priority.defaultPriority,
+          importance: Importance.max,
+          priority: Priority.max,
           showWhen: true,
+          enableVibration: true,
+          styleInformation: BigTextStyleInformation(''),
         ),
         iOS: DarwinNotificationDetails(
           presentAlert: true,
@@ -130,5 +133,10 @@ class Event extends HiveObject {
       matchDateTimeComponents: DateTimeComponents.time,
       androidScheduleMode: AndroidScheduleMode.exact,
     );
+  }
+
+  void rescheduleNotification() async {
+    cancelNotification();
+    scheduleNotification();
   }
 }
