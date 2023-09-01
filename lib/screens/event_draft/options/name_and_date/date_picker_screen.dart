@@ -38,7 +38,7 @@ class _DatePickerScreenState extends State<DatePickerScreen> {
       appBar: AppBar(
         title: const Text('Date'),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             var settings = context.read<SettingsProvider>().settings;
             if (settings.hapticFeedback) {

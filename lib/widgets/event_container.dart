@@ -1,10 +1,8 @@
-import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:countdowns/models/event.dart';
 import 'package:countdowns/providers/timer_provider.dart';
 import 'package:countdowns/utilities/extensions.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -94,7 +92,7 @@ class _EventContainerState extends State<EventContainer> {
                           fontSize: 26,
                           color: widget.event.backgroundColor.contentColor,
                           fontFamily: widget.event.fontFamily,
-                          shadows: <Shadow>[
+                          shadows: const <Shadow>[
                             Shadow(
                               offset: Offset(1.0, 1.0),
                               blurRadius: 2.0,
@@ -140,7 +138,7 @@ class _EventContainerState extends State<EventContainer> {
                             fontSize: 26,
                             fontWeight: FontWeight.w700,
                             fontFamily: widget.event.fontFamily,
-                            shadows: <Shadow>[
+                            shadows: const <Shadow>[
                               Shadow(
                                 offset: Offset(1.0, 1.0),
                                 blurRadius: 2.0,
@@ -153,7 +151,7 @@ class _EventContainerState extends State<EventContainer> {
                       ),
                       if (widget.event.isPast())
                         Padding(
-                          padding: EdgeInsets.only(left: 5),
+                          padding: const EdgeInsets.only(left: 5),
                           child: Icon(
                             Icons.check_circle,
                             color: widget.event.backgroundColor.contentColor,
@@ -170,7 +168,7 @@ class _EventContainerState extends State<EventContainer> {
                             .withOpacity(.8),
                         fontSize: 18,
                         fontFamily: widget.event.fontFamily,
-                        shadows: <Shadow>[
+                        shadows: const <Shadow>[
                           Shadow(
                             offset: Offset(1.0, 1.0),
                             blurRadius: 2.0,

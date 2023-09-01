@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:countdowns/enums/sorting_method.dart';
@@ -72,7 +71,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           'Settings',
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             var settings = context.read<SettingsProvider>().settings;
             if (settings.hapticFeedback) {
@@ -157,8 +156,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ),
                 ListTile(
-                  title: Text('Send Notification'),
-                  trailing: Icon(Icons.notification_add),
+                  title: const Text('Send Notification'),
+                  trailing: const Icon(Icons.notification_add),
                   onTap: () async {
                     await Future.delayed(const Duration(seconds: 2), () {
                       flutterLocalNotificationsPlugin.cancelAll();
@@ -193,23 +192,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   },
                 ),
                 ListTile(
-                  title: Text("Print Current Time Zone"),
+                  title: const Text("Print Current Time Zone"),
                   onTap: () async {
                     String timeZone = await FlutterTimezone.getLocalTimezone();
                     print(timeZone);
                   },
                 ),
                 ListTile(
-                  title: Text("Print Scheduled Events"),
+                  title: const Text("Print Scheduled Events"),
                   onTap: () async {
                     final List<PendingNotificationRequest>
                         pendingNotificationRequests =
                         await flutterLocalNotificationsPlugin
                             .pendingNotificationRequests();
 
-                    pendingNotificationRequests.forEach((element) {
+                    for (var element in pendingNotificationRequests) {
                       print(element.id);
-                    });
+                    }
                   },
                 )
               ],
@@ -320,8 +319,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       shape: RoundedRectangleBorder(
                         borderRadius: Global.styles.containerCornerRadius,
                       ),
-                      title: Text('Permissions Required'),
-                      content: Text('Please enable notifications.'),
+                      title: const Text('Permissions Required'),
+                      content: const Text('Please enable notifications.'),
                       actions: [
                         OutlinedButton(
                           onPressed: () => context.pop(),
@@ -424,7 +423,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: const Text('About'),
             ),
             ListTile(
-              leading: FaIcon(FontAwesomeIcons.github),
+              leading: const FaIcon(FontAwesomeIcons.github),
               title: const Text('Source Code'),
               trailing: const Icon(Icons.chevron_right_rounded),
               onTap: () => launchUrl(

@@ -50,7 +50,7 @@ class NameAndDateContainer extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Icon(Icons.title),
+                const Icon(Icons.title),
                 const SizedBox(
                   width: 15,
                 ),

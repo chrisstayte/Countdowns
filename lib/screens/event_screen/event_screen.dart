@@ -1,4 +1,3 @@
-import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:auto_size_text/auto_size_text.dart';

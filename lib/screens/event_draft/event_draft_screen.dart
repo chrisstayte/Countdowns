@@ -288,7 +288,7 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
                           color: Colors.grey.withOpacity(0.5), // Shadow color
                           spreadRadius: 2, // Spread radius
                           blurRadius: 25, // Blur radius
-                          offset: Offset(0, 3), // changes position of shadow
+                          offset: const Offset(0, 3), // changes position of shadow
                         ),
                       ],
                     ),

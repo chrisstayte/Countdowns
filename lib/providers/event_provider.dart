@@ -1,5 +1,4 @@
 import 'package:countdowns/enums/sorting_method.dart';
-import 'package:countdowns/main.dart';
 import 'package:countdowns/models/event.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
