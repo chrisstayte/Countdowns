@@ -22,6 +22,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   Hive.registerAdapter(EventAdapter());
+
+  /// Initializes Hive for Flutter and opens the [Event] box.
   await Hive.initFlutter();
   await Hive.openBox<Event>(EventProvider.BoxName);
 
