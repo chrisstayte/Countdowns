@@ -1,13 +1,12 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:countdowns/enums/sorting_method.dart';
 import 'package:countdowns/global/global.dart';
 import 'package:countdowns/main.dart';
 import 'package:countdowns/providers/event_provider.dart';
 import 'package:countdowns/screens/debug/v1_events_list.dart';
-import 'package:countdowns/screens/setttings/widget/settings_container.dart';
+import 'package:countdowns/screens/settings/widget/settings_container.dart';
 import 'package:countdowns/providers/countdowns_provider.dart';
 import 'package:countdowns/providers/settings_provider.dart';
 import 'package:flutter/foundation.dart';
@@ -21,7 +20,7 @@ import 'package:in_app_review/in_app_review.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -242,33 +241,52 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ],
           ),
-          SettingsContainer(title: 'Display', children: [
-            ListTile(
-              leading: const Icon(Icons.color_lens_rounded),
-              title: const Text('Theme'),
-              trailing: DropdownButton(
-                value: context.watch<SettingsProvider>().settings.themeMode,
-                underline: Container(),
-                items: const [
-                  DropdownMenuItem<int>(
-                    value: 0,
-                    child: Text('System'),
-                  ),
-                  DropdownMenuItem<int>(
-                    value: 1,
-                    child: Text('Light'),
-                  ),
-                  DropdownMenuItem<int>(
-                    value: 2,
-                    child: Text('Dark'),
-                  ),
-                ],
-                onChanged: (int? value) {
-                  context.read<SettingsProvider>().setThemeMode(value!);
-                },
+          SettingsContainer(
+            title: 'Display',
+            children: [
+              ListTile(
+                leading: const Icon(Icons.color_lens_rounded),
+                title: const Text('Theme'),
+                trailing: DropdownButton(
+                  value: context.watch<SettingsProvider>().settings.themeMode,
+                  underline: Container(),
+                  items: const [
+                    DropdownMenuItem<int>(
+                      value: 0,
+                      child: Text('System'),
+                    ),
+                    DropdownMenuItem<int>(
+                      value: 1,
+                      child: Text('Light'),
+                    ),
+                    DropdownMenuItem<int>(
+                      value: 2,
+                      child: Text('Dark'),
+                    ),
+                  ],
+                  onChanged: (int? value) {
+                    context.read<SettingsProvider>().setThemeMode(value!);
+                  },
+                ),
               ),
-            ),
-          ]),
+              if (Platform.isIOS)
+                ListTile(
+                  leading: Container(
+                    clipBehavior: Clip.hardEdge,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(0.2237 * 28),
+                    ),
+                    child: Image.asset(
+                      'assets/images/icons/icon-${context.watch<SettingsProvider>().settings.iconName}.png',
+                      height: 28,
+                    ),
+                  ),
+                  title: const Text('App Icon'),
+                  trailing: Icon(Icons.arrow_forward),
+                  onTap: () => context.push('/settings/appIcon'),
+                ),
+            ],
+          ),
           SettingsContainer(
             title: 'sounds and haptics',
             children: [
@@ -414,13 +432,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               onTap: () => launchUrl(
                   Uri.parse('https://chrisstayte.app/countdowns/terms/')),
             ),
-            AboutListTile(
-              icon: const Icon(Icons.info_outline_rounded),
+            const AboutListTile(
+              icon: Icon(Icons.info_outline_rounded),
               applicationName: 'Countdowns',
-              applicationVersion: _packageInfo.version,
-              applicationIcon: const Icon(Icons.info_outline_rounded),
+              applicationIcon: Icon(Icons.info_outline_rounded),
               applicationLegalese: 'What am I made of?',
-              child: const Text('About'),
+              child: Text('About'),
             ),
             ListTile(
               leading: const FaIcon(FontAwesomeIcons.github),

@@ -68,6 +68,12 @@ class SettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setIconName(String iconName) {
+    settings.iconName = iconName;
+    _saveSettings();
+    notifyListeners();
+  }
+
   Future<void> _loadSettings() async {
     try {
       File file = await _localFile;

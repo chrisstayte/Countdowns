@@ -1,7 +1,8 @@
 import 'package:countdowns/screens/event_draft/event_draft_screen.dart';
 import 'package:countdowns/screens/event_screen/event_screen.dart';
 import 'package:countdowns/screens/home/home_screen.dart';
-import 'package:countdowns/screens/setttings/settings_screen.dart';
+import 'package:countdowns/screens/settings/ios_custom_icon_screen.dart';
+import 'package:countdowns/screens/settings/settings_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 
@@ -44,6 +45,12 @@ final router = GoRouter(
           child: child,
         ),
       ),
+      routes: [
+        GoRoute(
+          path: 'appIcon',
+          builder: (context, state) => const IOSCustomIconScreen(),
+        )
+      ],
     ),
     GoRoute(
       path: '/eventDraft',

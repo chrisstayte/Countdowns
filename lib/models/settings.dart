@@ -8,6 +8,7 @@ class Settings {
   bool soundEffects = true;
   bool squareView = true;
   bool notify = false;
+  String iconName;
 
   Settings({
     required this.themeMode,
@@ -16,6 +17,7 @@ class Settings {
     required this.soundEffects,
     required this.squareView,
     required this.notify,
+    this.iconName = 'light',
   });
 
   factory Settings.fromJson(Map<String, dynamic> json) {
@@ -48,6 +50,7 @@ class Settings {
         'soundEffects': soundEffects,
         'squareView': squareView,
         'notify': notify,
+        'iconName': iconName,
       };
 
   static SortingMethod _getStatusFromString(String sortingMethodAsString) {

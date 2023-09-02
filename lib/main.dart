@@ -171,21 +171,9 @@ class MyApp extends StatelessWidget {
           ),
         ),
         scaffoldBackgroundColor: Global.colors.lightBackgroundColor,
-
-        // textTheme: TextTheme(
-        //   bodyMedium: TextStyle(
-        //     color: Global.colors.darkIconColor,
-        //   ),
-        //   titleMedium: TextStyle(
-        //     color: Global.colors.darkIconColor,
-        //   ),
-        //   titleLarge: TextStyle(
-        //     color: Global.colors.darkIconColor,
-        //   ),
-        // ),
-        listTileTheme: Theme.of(context).listTileTheme.copyWith(
-              iconColor: Global.colors.secondaryColor,
-            ),
+        listTileTheme: Theme.of(context)
+            .listTileTheme
+            .copyWith(iconColor: Global.colors.secondaryColor),
       ),
       darkTheme: ThemeData.dark().copyWith(
         useMaterial3: false,

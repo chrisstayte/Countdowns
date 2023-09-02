@@ -33,6 +33,7 @@ dependencies:
   audioplayers: ^5.1.0
   timezone: ^0.9.2
   flutter_timezone: ^1.0.7
+  flutter_dynamic_icon: ^2.1.0
 
 dev_dependencies:
   flutter_test:
@@ -48,6 +49,7 @@ flutter:
   assets:
     - assets/
     - assets/sounds/
+    - assets/images/icons/
 
   fonts:
     - family: ComicNeue
