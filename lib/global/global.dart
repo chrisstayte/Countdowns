@@ -3,22 +3,27 @@ import 'package:flutter/material.dart';
 class Global {
   static final colors = _Colors();
   static final fonts = _Fonts();
+  static final styles = _Styles();
 }
 
 class _Colors {
-  final lightIconColor = const Color(0XFFE7EAEB);
-  late final lightIconColorDarker =
-      HSLColor.fromColor(lightIconColor).withLightness(0.55).toColor();
-  final darkIconColor = const Color(0XFF323031);
-  late final darkIconColorLighter =
-      HSLColor.fromColor(darkIconColor).withLightness(0.75).toColor();
-  final defaultBackgroundColor = const Color(0XFF223843);
-  late final defaultContentColor = lightIconColor;
+  final Color primaryColor = const Color(0Xff7877E6);
+  final Color secondaryColor = const Color(0XFF4A0D67);
+  final Color accentColor = const Color(0XFFB3B2F7);
+  final Color lightBackgroundColor = const Color(0XFFDEE2FF);
+  final Color darkBackgroundColor = const Color(0XFF121212);
+  final Color darkBackgroundColorLighter = const Color(0XFF282828);
+  final Color offColor = const Color(0xFF1B998B);
+}
+
+class _Styles {
+  final BorderRadius containerCornerRadius = BorderRadius.circular(20);
 }
 
 class _Fonts {
+  // list of fonts associated with theri pretty names
   final Map<String, String> fontMap = const {
-    'Default': 'Default',
+    'Default': 'Regular',
     'LibreBaskerville': 'Baskerville',
     'CarnivaleeFreakshow': 'Carnivalee Freakshow',
     'ComicNeue': 'Comic Neue',

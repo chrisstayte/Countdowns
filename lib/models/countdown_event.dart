@@ -1,3 +1,8 @@
+/* 
+This was my original method for storing the data for the app. 
+I am migrating to a new database thus creating a new class.
+*/
+
 import 'package:flutter/material.dart';
 
 class CountdownEvent {
@@ -35,7 +40,6 @@ class CountdownEvent {
     if (json['contentColor'] != null) {
       contentColor = Color(json['contentColor']).withOpacity(1);
     }
-    ;
     return CountdownEvent(
       title: title,
       eventDate: eventDate,
