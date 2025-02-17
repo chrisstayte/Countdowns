@@ -1,4 +1,3 @@
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:countdowns/models/event.dart';
 import 'package:countdowns/providers/timer_provider.dart';
@@ -30,11 +29,13 @@ class _EventContainerState extends State<EventContainer> {
           '${timeDifference.timeDifferenceOnlyDays} days, ${timeDifference.timeDifferenceOnlyHours} hr';
     } else if (timeDifference.inDays > 0) {
       premierText = '${timeDifference.inDays} days';
-      secondaryText = '${timeDifference.timeDifferenceOnlyHours} hr, '
+      secondaryText =
+          '${timeDifference.timeDifferenceOnlyHours} hr, '
           '${timeDifference.inMinutes % 60} min';
     } else if (timeDifference.inHours > 0) {
       premierText = '${timeDifference.inHours} hours';
-      secondaryText = '${timeDifference.timeDifferenceOnlyMinutes} min, '
+      secondaryText =
+          '${timeDifference.timeDifferenceOnlyMinutes} min, '
           '${timeDifference.timeDifferenceOnlySeconds} sec';
     } else if (timeDifference.inMinutes > 0) {
       premierText = '${timeDifference.inMinutes} min';
@@ -65,13 +66,12 @@ class _EventContainerState extends State<EventContainer> {
           ),
           padding: const EdgeInsets.all(15),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(
-              25,
-            ),
+            borderRadius: BorderRadius.circular(25),
             color: widget.event.backgroundColor,
-            gradient: widget.event.backgroundGradient
-                ? widget.event.backgroundColor.gradient
-                : null,
+            gradient:
+                widget.event.backgroundGradient
+                    ? widget.event.backgroundColor.gradient
+                    : null,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -92,14 +92,6 @@ class _EventContainerState extends State<EventContainer> {
                           fontSize: 26,
                           color: widget.event.backgroundColor.contentColor,
                           fontFamily: widget.event.fontFamily,
-                          shadows: const <Shadow>[
-                            Shadow(
-                              offset: Offset(1.0, 1.0),
-                              blurRadius: 2.0,
-                              color: Color.fromARGB(125, 0, 0,
-                                  0), // Half the opacity compared to previous example
-                            ),
-                          ],
                         ),
                       ),
                     ),
@@ -110,16 +102,8 @@ class _EventContainerState extends State<EventContainer> {
                           widget.event.icon,
                           color: widget.event.backgroundColor.contentColor,
                           size: 30,
-                          shadows: const <Shadow>[
-                            Shadow(
-                              offset: Offset(1.0, 1.0),
-                              blurRadius: 2.0,
-                              color: Color.fromARGB(125, 0, 0,
-                                  0), // Half the opacity compared to previous example
-                            ),
-                          ],
                         ),
-                      )
+                      ),
                   ],
                 ),
               ),
@@ -138,14 +122,6 @@ class _EventContainerState extends State<EventContainer> {
                             fontSize: 26,
                             fontWeight: FontWeight.w700,
                             fontFamily: widget.event.fontFamily,
-                            shadows: const <Shadow>[
-                              Shadow(
-                                offset: Offset(1.0, 1.0),
-                                blurRadius: 2.0,
-                                color: Color.fromARGB(125, 0, 0,
-                                    0), // Half the opacity compared to previous example
-                              ),
-                            ],
                           ),
                         ),
                       ),
@@ -164,18 +140,9 @@ class _EventContainerState extends State<EventContainer> {
                       secondaryText!,
                       maxLines: 1,
                       style: TextStyle(
-                        color: widget.event.backgroundColor.contentColor
-                            .withOpacity(.8),
+                        color: widget.event.backgroundColor.contentColor,
                         fontSize: 18,
                         fontFamily: widget.event.fontFamily,
-                        shadows: const <Shadow>[
-                          Shadow(
-                            offset: Offset(1.0, 1.0),
-                            blurRadius: 2.0,
-                            color: Color.fromARGB(125, 0, 0,
-                                0), // Half the opacity compared to previous example
-                          ),
-                        ],
                       ),
                     ),
                 ],

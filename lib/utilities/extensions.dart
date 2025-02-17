@@ -10,7 +10,9 @@ extension TimeDifference on Duration {
 
 extension GradientColor on Color {
   Color get contentColor {
-    return computeLuminance() >= .5 ? Colors.black : Colors.white;
+    return computeLuminance() >= .5
+        ? toMaterialColor().shade900
+        : toMaterialColor().shade100;
   }
 
   LinearGradient get gradient {
@@ -28,32 +30,92 @@ extension GradientColor on Color {
     );
   }
 
-  //   LinearGradient get gradient => LinearGradient(
-//         colors: [this, withOpacity(0.6)],
-//         begin: Alignment.topCenter,
-//         end: Alignment.bottomCenter,
-//       );
+  /// Converts a [Color] to a [MaterialColor] by generating a swatch with different shades.
+  MaterialColor toMaterialColor() {
+    // Define the standard Material Design shade keys.
+    const List<int> shadeKeys = <int>[
+      50,
+      100,
+      200,
+      300,
+      400,
+      500,
+      600,
+      700,
+      800,
+      900,
+    ];
 
-  //   LinearGradient get gradient {
-  //   // Convert the color to HSL.
-  //   HSLColor hsl = HSLColor.fromColor(this);
+    // Convert the base color to HSL for easier shade manipulation.
+    final HSLColor hslColor = HSLColor.fromColor(this);
 
-  //   // Compute luminance.
-  //   final double luminance = this.computeLuminance();
+    // Initialize the swatch map.
+    final Map<int, Color> swatch = {};
 
-  //   // Determine gradient colors based on luminance.
-  //   Color lighter =
-  //       hsl.withLightness((hsl.lightness + 0.11).clamp(0.0, 1.0)).toColor();
-  //   Color darker =
-  //       hsl.withLightness((hsl.lightness - 0.11).clamp(0.0, 1.0)).toColor();
+    // Generate shades by adjusting the lightness.
+    for (int i = 0; i < shadeKeys.length; i++) {
+      // Calculate the desired lightness for each shade.
+      // These values are based on Material Design guidelines.
+      double lightness;
+      switch (shadeKeys[i]) {
+        case 50:
+          lightness = 0.95;
+          break;
+        case 100:
+          lightness = 0.90;
+          break;
+        case 200:
+          lightness = 0.80;
+          break;
+        case 300:
+          lightness = 0.70;
+          break;
+        case 400:
+          lightness = 0.60;
+          break;
+        case 500:
+          lightness = hslColor.lightness;
+          break;
+        case 600:
+          lightness = 0.50;
+          break;
+        case 700:
+          lightness = 0.40;
+          break;
+        case 800:
+          lightness = 0.30;
+          break;
+        case 900:
+          lightness = 0.20;
+          break;
+        default:
+          lightness = hslColor.lightness;
+      }
 
-  //   final List<Color> gradientColors =
-  //       luminance <= 0.5 ? [this, lighter] : [this, darker];
+      // Create the new shade by adjusting the lightness.
+      final HSLColor adjustedHsl = hslColor.withLightness(
+        lightness.clamp(0.0, 1.0),
+      );
+      final Color adjustedColor = adjustedHsl.toColor();
 
-  //   return LinearGradient(
-  //     colors: gradientColors,
-  //     begin: Alignment.bottomCenter,
-  //     end: Alignment.topCenter,
-  //   );
-  // }
+      // Add the new shade to the swatch.
+      swatch[shadeKeys[i]] = adjustedColor;
+    }
+
+    // Convert channels to hex strings
+    String alpha = a.toInt().toRadixString(16).toUpperCase().padLeft(2, '0');
+    String red = r.toInt().toRadixString(16).toUpperCase().padLeft(2, '0');
+    String green = g.toInt().toRadixString(16).toUpperCase().padLeft(2, '0');
+    String blue = b.toInt().toRadixString(16).toUpperCase().padLeft(2, '0');
+
+    // Convert hex strings back to integers for bitwise operations
+    int aInt = int.parse(alpha, radix: 16);
+    int rInt = int.parse(red, radix: 16);
+    int gInt = int.parse(green, radix: 16);
+    int bInt = int.parse(blue, radix: 16);
+
+    int value = (aInt << 24) | (rInt << 16) | (gInt << 8) | bInt;
+
+    return MaterialColor(value, swatch);
+  }
 }
