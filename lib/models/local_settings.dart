@@ -1,28 +1,39 @@
 import 'package:countdowns/enums/sorting_method.dart';
+import 'package:flutter/material.dart';
 
-class Settings {
-  // Theme Mode: 0 = System, 1 = Light, 2 = Dark
-  int themeMode = 0;
+class LocalSettings {
+  ThemeMode themeMode = ThemeMode.light;
   SortingMethod sortingMethod = SortingMethod.alphaAscending;
   bool hapticFeedback = true;
-  bool soundEffects = true;
+  bool soundEffects = false;
   bool squareView = true;
   bool notify = false;
   String iconName;
 
-  Settings({
+  LocalSettings._({
     required this.themeMode,
     required this.sortingMethod,
     required this.hapticFeedback,
     required this.soundEffects,
     required this.squareView,
     required this.notify,
-    this.iconName = 'light',
+    required this.iconName,
   });
 
-  factory Settings.fromJson(Map<String, dynamic> json) {
-    int themeMode = json['themeMode'] as int;
+  factory LocalSettings.initialSettings() {
+    return LocalSettings._(
+      themeMode: ThemeMode.system,
+      sortingMethod: SortingMethod.alphaAscending,
+      hapticFeedback: true,
+      soundEffects: false,
+      squareView: true,
+      notify: false,
+      iconName: 'light',
+    );
+  }
 
+  factory LocalSettings.fromJson(Map<String, dynamic> json) {
+    int themeMode = json['themeMode'] as int;
     SortingMethod? sortingMethod;
     if (json['sortingMethod'] != null) {
       sortingMethod = _getStatusFromString(json['sortingMethod']);
@@ -33,25 +44,26 @@ class Settings {
     bool squareView = json['squareView'] as bool;
     bool notify = json['notify'] as bool;
 
-    return Settings(
-      themeMode: themeMode,
+    return LocalSettings._(
+      themeMode: ThemeMode.values[themeMode],
       sortingMethod: sortingMethod ?? SortingMethod.alphaAscending,
       hapticFeedback: hasHapticFeedback,
       soundEffects: hasSoundFeedback,
       squareView: squareView,
       notify: notify,
+      iconName: json['iconName'] ?? 'light',
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'themeMode': themeMode,
-        'sortingMethod': sortingMethod.toString(),
-        'hapticFeedback': hapticFeedback,
-        'soundEffects': soundEffects,
-        'squareView': squareView,
-        'notify': notify,
-        'iconName': iconName,
-      };
+    'themeMode': themeMode.index,
+    'sortingMethod': sortingMethod.toString(),
+    'hapticFeedback': hapticFeedback,
+    'soundEffects': soundEffects,
+    'squareView': squareView,
+    'notify': notify,
+    'iconName': iconName,
+  };
 
   static SortingMethod _getStatusFromString(String sortingMethodAsString) {
     for (SortingMethod element in SortingMethod.values) {
