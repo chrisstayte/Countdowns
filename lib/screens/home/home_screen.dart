@@ -1,8 +1,9 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:countdowns/constants.dart';
 import 'package:countdowns/global/global.dart';
 import 'package:countdowns/providers/event_provider.dart';
+import 'package:countdowns/providers/local_settings_provider.dart';
 import 'package:countdowns/widgets/event_container.dart';
-import 'package:countdowns/providers/settings_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,100 +24,114 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController()
-      ..addListener(() {
-        bool showButton = _scrollController.position.pixels > 0;
-        if (_showButton != showButton) {
-          setState(() {
-            _showButton = showButton;
-          });
-        }
-      });
+    _scrollController =
+        ScrollController()..addListener(() {
+          bool showButton = _scrollController.position.pixels > 0;
+          if (_showButton != showButton) {
+            setState(() {
+              _showButton = showButton;
+            });
+          }
+        });
   }
 
   @override
   Widget build(BuildContext context) {
     var events = context.watch<EventProvider>().events.toList();
-    events.sort(context.read<EventProvider>().sortingMethods[
-        context.watch<SettingsProvider>().settings.sortingMethod]);
+    events.sort(
+      context.read<EventProvider>().sortingMethods[context
+          .watch<LocalSettingsProvider>()
+          .localSettings
+          .sortingMethod],
+    );
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Events'),
         actions: [
           if (_showButton ||
-              context.read<SettingsProvider>().settings.squareView == false)
+              context.read<LocalSettingsProvider>().localSettings.squareView ==
+                  false)
             IconButton(
               onPressed: () {
-                var settings = context.read<SettingsProvider>().settings;
+                var settings =
+                    context.read<LocalSettingsProvider>().localSettings;
                 if (settings.hapticFeedback) {
                   HapticFeedback.lightImpact();
                 }
                 if (settings.soundEffects) {
-                  AudioPlayer().play(AssetSource('sounds/tap.mp3'),
-                      ctx: const AudioContext(
-                        iOS: AudioContextIOS(
-                          category: AVAudioSessionCategory.ambient,
-                        ),
+                  AudioPlayer().play(
+                    AssetSource('sounds/tap.mp3'),
+                    ctx: AudioContext(
+                      iOS: AudioContextIOS(
+                        category: AVAudioSessionCategory.ambient,
                       ),
-                      mode: PlayerMode.lowLatency);
+                    ),
+                    mode: PlayerMode.lowLatency,
+                  );
                 }
-                context.push('/eventDraft');
+                context.pushNamed(AppRoutes.eventNew);
               },
               icon: const Icon(Icons.add),
             ),
           IconButton(
             onPressed: () {
-              var settings = context.read<SettingsProvider>().settings;
+              var settings =
+                  context.read<LocalSettingsProvider>().localSettings;
               if (settings.hapticFeedback) {
                 HapticFeedback.lightImpact();
               }
               if (settings.soundEffects) {
-                AudioPlayer().play(AssetSource('sounds/tap.mp3'),
-                    ctx: const AudioContext(
-                      iOS: AudioContextIOS(
-                        category: AVAudioSessionCategory.ambient,
-                      ),
+                AudioPlayer().play(
+                  AssetSource('sounds/tap.mp3'),
+                  ctx: AudioContext(
+                    iOS: AudioContextIOS(
+                      category: AVAudioSessionCategory.ambient,
                     ),
-                    mode: PlayerMode.lowLatency);
+                  ),
+                  mode: PlayerMode.lowLatency,
+                );
               }
-              context.push('/settings');
+              context.pushNamed(AppRoutes.settings);
             },
             icon: const Icon(Icons.settings),
           ),
         ],
       ),
       body: ListView(
-        physics: const AlwaysScrollableScrollPhysics(),
+        physics: const ClampingScrollPhysics(),
         controller: _scrollController,
-        padding: const EdgeInsets.only(
-          top: 15,
-          left: 15,
-          right: 15,
-        ),
+        padding: const EdgeInsets.only(top: 15, left: 15, right: 15),
         children: [
           CupertinoSlidingSegmentedControl(
-            groupValue: context.watch<SettingsProvider>().settings.squareView,
+            groupValue:
+                context.watch<LocalSettingsProvider>().localSettings.squareView,
             onValueChanged: (value) {
-              var settings = context.read<SettingsProvider>().settings;
+              var settings =
+                  context.read<LocalSettingsProvider>().localSettings;
               if (settings.hapticFeedback) {
                 HapticFeedback.mediumImpact();
               }
               if (settings.soundEffects) {
-                AudioPlayer().play(AssetSource('sounds/select.mp3'),
-                    ctx: const AudioContext(
-                      iOS: AudioContextIOS(
-                        category: AVAudioSessionCategory.ambient,
-                      ),
+                AudioPlayer().play(
+                  AssetSource('sounds/select.mp3'),
+                  ctx: AudioContext(
+                    iOS: AudioContextIOS(
+                      category: AVAudioSessionCategory.ambient,
                     ),
-                    mode: PlayerMode.lowLatency);
+                  ),
+                  mode: PlayerMode.lowLatency,
+                );
               }
-              context.read<SettingsProvider>().setSquareView(value as bool);
+              context.read<LocalSettingsProvider>().setSquareView(
+                value as bool,
+              );
             },
             children: const <bool, Widget>{
               true: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Icon(Icons.apps)),
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: Icon(Icons.apps),
+              ),
               false: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 child: Icon(Icons.table_rows),
@@ -130,27 +145,38 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisSpacing: 10,
             crossAxisSpacing: 10,
             childAspectRatio:
-                context.read<SettingsProvider>().settings.squareView ? 1 : 2.4,
+                context.read<LocalSettingsProvider>().localSettings.squareView
+                    ? 1
+                    : 2.4,
             crossAxisCount:
-                context.read<SettingsProvider>().settings.squareView ? 2 : 1,
+                context.read<LocalSettingsProvider>().localSettings.squareView
+                    ? 2
+                    : 1,
             children: [
-              if (context.read<SettingsProvider>().settings.squareView == true)
+              if (context
+                      .read<LocalSettingsProvider>()
+                      .localSettings
+                      .squareView ==
+                  true)
                 GestureDetector(
                   onTap: () {
-                    var settings = context.read<SettingsProvider>().settings;
+                    var settings =
+                        context.read<LocalSettingsProvider>().localSettings;
                     if (settings.hapticFeedback) {
                       HapticFeedback.lightImpact();
                     }
                     if (settings.soundEffects) {
-                      AudioPlayer().play(AssetSource('sounds/tap.mp3'),
-                          ctx: const AudioContext(
-                            iOS: AudioContextIOS(
-                              category: AVAudioSessionCategory.ambient,
-                            ),
+                      AudioPlayer().play(
+                        AssetSource('sounds/tap.mp3'),
+                        ctx: AudioContext(
+                          iOS: AudioContextIOS(
+                            category: AVAudioSessionCategory.ambient,
                           ),
-                          mode: PlayerMode.lowLatency);
+                        ),
+                        mode: PlayerMode.lowLatency,
+                      );
                     }
-                    context.push('/eventDraft');
+                    context.pushNamed(AppRoutes.eventNew);
                   },
                   child: Container(
                     width: 169,
@@ -171,24 +197,30 @@ class _HomeScreenState extends State<HomeScreen> {
               ...events.map(
                 (event) => GestureDetector(
                   onTap: () {
-                    var settings = context.read<SettingsProvider>().settings;
+                    var settings =
+                        context.read<LocalSettingsProvider>().localSettings;
                     if (settings.hapticFeedback) {
                       HapticFeedback.lightImpact();
                     }
                     if (settings.soundEffects) {
-                      AudioPlayer().play(AssetSource('sounds/tap.mp3'),
-                          ctx: const AudioContext(
-                            iOS: AudioContextIOS(
-                              category: AVAudioSessionCategory.ambient,
-                            ),
+                      AudioPlayer().play(
+                        AssetSource('sounds/tap.mp3'),
+                        ctx: AudioContext(
+                          iOS: AudioContextIOS(
+                            category: AVAudioSessionCategory.ambient,
                           ),
-                          mode: PlayerMode.lowLatency);
+                        ),
+                        mode: PlayerMode.lowLatency,
+                      );
                     }
-                    context.push('/event/${event.key}');
+                    context.pushNamed(
+                      AppRoutes.event,
+                      pathParameters: {'id': event.key.toString()},
+                    );
                   },
                   child: EventContainer(event: event),
                 ),
-              )
+              ),
             ],
           ),
         ],

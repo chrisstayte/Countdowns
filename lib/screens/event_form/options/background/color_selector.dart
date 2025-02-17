@@ -1,5 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
-import 'package:countdowns/providers/settings_provider.dart';
+import 'package:countdowns/providers/local_settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -22,13 +22,15 @@ class ColorSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        var settings = context.read<SettingsProvider>().settings;
+        var settings = context.read<LocalSettingsProvider>().localSettings;
         if (settings.hapticFeedback) {
           HapticFeedback.lightImpact();
         }
         if (settings.soundEffects) {
-          AudioPlayer()
-              .play(AssetSource('sounds/tap.mp3'), mode: PlayerMode.lowLatency);
+          AudioPlayer().play(
+            AssetSource('sounds/tap.mp3'),
+            mode: PlayerMode.lowLatency,
+          );
         }
         onColorChanged(color);
       },
@@ -38,18 +40,16 @@ class ColorSelector extends StatelessWidget {
           shape: BoxShape.circle,
           border: Border.all(
             width: 2,
-            color: selectedColor == color
-                ? Theme.of(context).primaryColor
-                : Colors.transparent,
+            color:
+                selectedColor == color
+                    ? Theme.of(context).primaryColor
+                    : Colors.transparent,
           ),
         ),
         child: Container(
           height: 48,
           width: 48,
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-          ),
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
       ),
     );

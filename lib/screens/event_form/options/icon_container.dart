@@ -1,5 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
-import 'package:countdowns/providers/settings_provider.dart';
+import 'package:countdowns/providers/local_settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -96,45 +96,49 @@ class IconContainer extends StatelessWidget {
       crossAxisCount: 5,
       mainAxisSpacing: 5,
       crossAxisSpacing: 5,
-      children: _icons
-          .map(
-            (iconData) => GestureDetector(
-              onTap: () {
-                var settings = context.read<SettingsProvider>().settings;
-                if (settings.hapticFeedback) {
-                  HapticFeedback.lightImpact();
-                }
-                if (settings.soundEffects) {
-                  AudioPlayer().play(AssetSource('sounds/tap.mp3'),
-                      ctx: const AudioContext(
-                        iOS: AudioContextIOS(
-                          category: AVAudioSessionCategory.ambient,
+      children:
+          _icons
+              .map(
+                (iconData) => GestureDetector(
+                  onTap: () {
+                    var settings =
+                        context.read<LocalSettingsProvider>().localSettings;
+                    if (settings.hapticFeedback) {
+                      HapticFeedback.lightImpact();
+                    }
+                    if (settings.soundEffects) {
+                      AudioPlayer().play(
+                        AssetSource('sounds/tap.mp3'),
+                        ctx: AudioContext(
+                          iOS: AudioContextIOS(
+                            category: AVAudioSessionCategory.ambient,
+                          ),
                         ),
+                        mode: PlayerMode.lowLatency,
+                      );
+                    }
+                    onIconChanged(iconData);
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color:
+                          iconData == _selectedIcon
+                              ? Theme.of(context).scaffoldBackgroundColor
+                              : Theme.of(context).cardColor,
+                      border: Border.all(
+                        color:
+                            iconData == _selectedIcon
+                                ? Theme.of(context).primaryColor
+                                : Theme.of(context).unselectedWidgetColor,
+                        width: iconData == _selectedIcon ? 4 : 2,
                       ),
-                      mode: PlayerMode.lowLatency);
-                }
-                onIconChanged(iconData);
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: iconData == _selectedIcon
-                      ? Theme.of(context).scaffoldBackgroundColor
-                      : Theme.of(context).cardColor,
-                  border: Border.all(
-                    color: iconData == _selectedIcon
-                        ? Theme.of(context).primaryColor
-                        : Theme.of(context).unselectedWidgetColor,
-                    width: iconData == _selectedIcon ? 4 : 2,
+                    ),
+                    child: Icon(iconData),
                   ),
                 ),
-                child: Icon(
-                  iconData,
-                ),
-              ),
-            ),
-          )
-          .toList(),
+              )
+              .toList(),
     );
   }
 }

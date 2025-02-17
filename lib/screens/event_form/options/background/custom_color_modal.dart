@@ -1,6 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:countdowns/global/global.dart';
-import 'package:countdowns/providers/settings_provider.dart';
+import 'package:countdowns/providers/local_settings_provider.dart';
 import 'package:countdowns/utilities/extensions.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
@@ -50,26 +50,24 @@ class _CustomColorModalState extends State<CustomColorModal> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Background Color',
-                style: TextStyle(
-                  fontSize: 22,
-                ),
-              ),
+              const Text('Background Color', style: TextStyle(fontSize: 22)),
               OutlinedButton(
                 onPressed: () {
-                  var settings = context.read<SettingsProvider>().settings;
+                  var settings =
+                      context.read<LocalSettingsProvider>().localSettings;
                   if (settings.hapticFeedback) {
                     HapticFeedback.lightImpact();
                   }
                   if (settings.soundEffects) {
-                    AudioPlayer().play(AssetSource('sounds/tap.mp3'),
-                        ctx: const AudioContext(
-                          iOS: AudioContextIOS(
-                            category: AVAudioSessionCategory.ambient,
-                          ),
+                    AudioPlayer().play(
+                      AssetSource('sounds/tap.mp3'),
+                      ctx: AudioContext(
+                        iOS: AudioContextIOS(
+                          category: AVAudioSessionCategory.ambient,
                         ),
-                        mode: PlayerMode.lowLatency);
+                      ),
+                      mode: PlayerMode.lowLatency,
+                    );
                   }
                   context.pop();
                 },
@@ -81,9 +79,7 @@ class _CustomColorModalState extends State<CustomColorModal> {
                     Global.colors.offColor,
                   ),
                   side: MaterialStateProperty.all<BorderSide>(
-                    BorderSide(
-                      color: Global.colors.offColor,
-                    ),
+                    BorderSide(color: Global.colors.offColor),
                   ),
                   shape: MaterialStateProperty.all<OutlinedBorder>(
                     RoundedRectangleBorder(
@@ -93,12 +89,10 @@ class _CustomColorModalState extends State<CustomColorModal> {
                   elevation: MaterialStateProperty.all<double>(2),
                 ),
                 child: const Icon(Icons.check_circle_outline_outlined),
-              )
+              ),
             ],
           ),
-          const SizedBox(
-            height: 15,
-          ),
+          const SizedBox(height: 15),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -139,7 +133,7 @@ class _CustomColorModalState extends State<CustomColorModal> {
                 ),
               ),
             ],
-          )
+          ),
         ],
       ),
     );

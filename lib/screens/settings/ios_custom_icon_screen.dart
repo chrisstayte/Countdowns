@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:countdowns/providers/settings_provider.dart';
+import 'package:countdowns/providers/local_settings_provider.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,9 +16,7 @@ class IOSCustomIconScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('App Icon'),
-      ),
+      appBar: AppBar(title: const Text('App Icon')),
       body: ListView(
         padding: const EdgeInsets.symmetric(vertical: 20),
         children: iconNameList.map((name) => IconListTile(name: name)).toList(),
@@ -28,47 +26,41 @@ class IOSCustomIconScreen extends StatelessWidget {
 }
 
 class IconListTile extends StatelessWidget {
-  const IconListTile({
-    super.key,
-    required this.name,
-  });
+  const IconListTile({super.key, required this.name});
 
   final String name;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 10,
-      ),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: ListTile(
         onTap: () async {
           try {
             if (await FlutterDynamicIcon.supportsAlternateIcons) {
               await FlutterDynamicIcon.setAlternateIconName('icon-$name');
-              context.read<SettingsProvider>().setIconName(name);
+              context.read<LocalSettingsProvider>().setIconName(name);
               return;
             }
           } catch (e) {
             print(e);
           }
         },
-        trailing: context.watch<SettingsProvider>().settings.iconName == name &&
-                Platform.isIOS
-            ? const Icon(
-                Icons.check_circle,
-              )
-            : null,
+        trailing:
+            context.watch<LocalSettingsProvider>().localSettings.iconName ==
+                        name &&
+                    Platform.isIOS
+                ? const Icon(Icons.check_circle)
+                : null,
         title: Text(
           name.capitalize,
-          style: const TextStyle(
-            fontWeight: FontWeight.w600,
-          ),
+          style: const TextStyle(fontWeight: FontWeight.w600),
         ),
         leading: Container(
           clipBehavior: Clip.hardEdge,
-          decoration:
-              BoxDecoration(borderRadius: BorderRadius.circular(0.2237 * 64)),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(0.2237 * 64),
+          ),
           child: Image.asset(
             'assets/images/icons/icon-${name}.png',
             height: 64,

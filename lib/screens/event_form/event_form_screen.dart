@@ -2,28 +2,28 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:countdowns/global/global.dart';
 import 'package:countdowns/models/event.dart';
 import 'package:countdowns/providers/event_provider.dart';
-import 'package:countdowns/screens/event_draft/option_circle.dart';
-import 'package:countdowns/screens/event_draft/options/background/background_container.dart';
-import 'package:countdowns/screens/event_draft/options/font_container.dart';
-import 'package:countdowns/screens/event_draft/options/name_and_date/name_and_date_container.dart';
-import 'package:countdowns/screens/event_draft/options/icon_container.dart';
-import 'package:countdowns/providers/settings_provider.dart';
+import 'package:countdowns/providers/local_settings_provider.dart';
+import 'package:countdowns/screens/event_form/option_circle.dart';
+import 'package:countdowns/screens/event_form/options/background/background_container.dart';
+import 'package:countdowns/screens/event_form/options/font_container.dart';
+import 'package:countdowns/screens/event_form/options/name_and_date/name_and_date_container.dart';
+import 'package:countdowns/screens/event_form/options/icon_container.dart';
 import 'package:countdowns/widgets/event_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class EventDraftScreen extends StatefulWidget {
-  const EventDraftScreen({super.key, this.eventKey});
+class EventFormScreen extends StatefulWidget {
+  const EventFormScreen({super.key, this.eventKey});
 
   final String? eventKey;
 
   @override
-  State<EventDraftScreen> createState() => _EventDraftScreenState();
+  State<EventFormScreen> createState() => _EventFormScreenState();
 }
 
-class _EventDraftScreenState extends State<EventDraftScreen> {
+class _EventFormScreenState extends State<EventFormScreen> {
   late Event _eventDraft;
   late Event _existingEvent;
   bool _newEvent = true;
@@ -34,13 +34,15 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
   final TextEditingController _titleController = TextEditingController();
 
   void _selectOption(int index) {
-    var settings = context.read<SettingsProvider>().settings;
+    var settings = context.read<LocalSettingsProvider>().localSettings;
     if (settings.hapticFeedback) {
       HapticFeedback.lightImpact();
     }
     if (settings.soundEffects) {
-      AudioPlayer()
-          .play(AssetSource('sounds/select.mp3'), mode: PlayerMode.lowLatency);
+      AudioPlayer().play(
+        AssetSource('sounds/select.mp3'),
+        mode: PlayerMode.lowLatency,
+      );
     }
     setState(() {
       _selectedOption = index;
@@ -89,18 +91,20 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            var settings = context.read<SettingsProvider>().settings;
+            var settings = context.read<LocalSettingsProvider>().localSettings;
             if (settings.hapticFeedback) {
               HapticFeedback.lightImpact();
             }
             if (settings.soundEffects) {
-              AudioPlayer().play(AssetSource('sounds/tap.mp3'),
-                  ctx: const AudioContext(
-                    iOS: AudioContextIOS(
-                      category: AVAudioSessionCategory.ambient,
-                    ),
+              AudioPlayer().play(
+                AssetSource('sounds/tap.mp3'),
+                ctx: AudioContext(
+                  iOS: AudioContextIOS(
+                    category: AVAudioSessionCategory.ambient,
                   ),
-                  mode: PlayerMode.lowLatency);
+                ),
+                mode: PlayerMode.lowLatency,
+              );
             }
             context.pop();
           },
@@ -113,28 +117,37 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
                 if (_titleController.text.isNotEmpty) {
                   if (_newEvent) {
                     context.read<EventProvider>().addEvent(_eventDraft);
-                    if (context.read<SettingsProvider>().settings.notify) {
+                    if (context
+                        .read<LocalSettingsProvider>()
+                        .localSettings
+                        .notify) {
                       _eventDraft.scheduleNotification();
                     }
                   } else {
                     _existingEvent.update(_eventDraft);
                     context.read<EventProvider>().saveEvent(_existingEvent);
-                    if (context.read<SettingsProvider>().settings.notify) {
+                    if (context
+                        .read<LocalSettingsProvider>()
+                        .localSettings
+                        .notify) {
                       _existingEvent.rescheduleNotification();
                     }
                   }
-                  var settings = context.read<SettingsProvider>().settings;
+                  var settings =
+                      context.read<LocalSettingsProvider>().localSettings;
                   if (settings.hapticFeedback) {
                     HapticFeedback.lightImpact();
                   }
                   if (settings.soundEffects) {
-                    AudioPlayer().play(AssetSource('sounds/success.mp3'),
-                        ctx: const AudioContext(
-                          iOS: AudioContextIOS(
-                            category: AVAudioSessionCategory.ambient,
-                          ),
+                    AudioPlayer().play(
+                      AssetSource('sounds/success.mp3'),
+                      ctx: AudioContext(
+                        iOS: AudioContextIOS(
+                          category: AVAudioSessionCategory.ambient,
                         ),
-                        mode: PlayerMode.lowLatency);
+                      ),
+                      mode: PlayerMode.lowLatency,
+                    );
                   }
 
                   context.pop();
@@ -143,18 +156,18 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
                     _selectedOption = 0;
                     _shouldShakeName = !_shouldShakeName;
                     if (context
-                        .read<SettingsProvider>()
-                        .settings
+                        .read<LocalSettingsProvider>()
+                        .localSettings
                         .hapticFeedback) {
                       HapticFeedback.vibrate();
                     }
                     if (context
-                        .read<SettingsProvider>()
-                        .settings
+                        .read<LocalSettingsProvider>()
+                        .localSettings
                         .soundEffects) {
                       AudioPlayer().play(
                         AssetSource('sounds/error.mp3'),
-                        ctx: const AudioContext(
+                        ctx: AudioContext(
                           iOS: AudioContextIOS(
                             category: AVAudioSessionCategory.ambient,
                           ),
@@ -166,16 +179,12 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
                 }
               },
               style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all<Color>(
-                  Colors.white,
-                ),
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
                 backgroundColor: MaterialStateProperty.all<Color>(
                   Global.colors.offColor,
                 ),
                 side: MaterialStateProperty.all<BorderSide>(
-                  BorderSide(
-                    color: Global.colors.offColor,
-                  ),
+                  BorderSide(color: Global.colors.offColor),
                 ),
                 shape: MaterialStateProperty.all<OutlinedBorder>(
                   RoundedRectangleBorder(
@@ -192,7 +201,7 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
       body: Column(
@@ -209,19 +218,22 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
                         onTap: () {
                           if (!_isSquare) {
                             var settings =
-                                context.read<SettingsProvider>().settings;
+                                context
+                                    .read<LocalSettingsProvider>()
+                                    .localSettings;
                             if (settings.hapticFeedback) {
                               HapticFeedback.lightImpact();
                             }
                             if (settings.soundEffects) {
                               AudioPlayer().play(
-                                  AssetSource('sounds/select.mp3'),
-                                  ctx: const AudioContext(
-                                    iOS: AudioContextIOS(
-                                      category: AVAudioSessionCategory.ambient,
-                                    ),
+                                AssetSource('sounds/select.mp3'),
+                                ctx: AudioContext(
+                                  iOS: AudioContextIOS(
+                                    category: AVAudioSessionCategory.ambient,
                                   ),
-                                  mode: PlayerMode.lowLatency);
+                                ),
+                                mode: PlayerMode.lowLatency,
+                              );
                             }
                             setState(() {
                               _isSquare = true;
@@ -236,26 +248,27 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        width: 15,
-                      ),
+                      const SizedBox(width: 15),
                       GestureDetector(
                         onTap: () {
                           if (_isSquare) {
                             var settings =
-                                context.read<SettingsProvider>().settings;
+                                context
+                                    .read<LocalSettingsProvider>()
+                                    .localSettings;
                             if (settings.hapticFeedback) {
                               HapticFeedback.lightImpact();
                             }
                             if (settings.soundEffects) {
                               AudioPlayer().play(
-                                  AssetSource('sounds/select.mp3'),
-                                  ctx: const AudioContext(
-                                    iOS: AudioContextIOS(
-                                      category: AVAudioSessionCategory.ambient,
-                                    ),
+                                AssetSource('sounds/select.mp3'),
+                                ctx: AudioContext(
+                                  iOS: AudioContextIOS(
+                                    category: AVAudioSessionCategory.ambient,
                                   ),
-                                  mode: PlayerMode.lowLatency);
+                                ),
+                                mode: PlayerMode.lowLatency,
+                              );
                             }
                             setState(() {
                               _isSquare = false;
@@ -269,15 +282,14 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
                             fontSize: 18,
                           ),
                         ),
-                      )
+                      ),
                     ],
                   ),
-                  const SizedBox(
-                    height: 15,
-                  ),
+                  const SizedBox(height: 15),
                   Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: _isSquare ? 0 : 15),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: _isSquare ? 0 : 15,
+                    ),
                     constraints: BoxConstraints(
                       maxWidth: _isSquare ? 169 : 500,
                     ),
@@ -288,13 +300,14 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
                           color: Colors.grey.withOpacity(0.5), // Shadow color
                           spreadRadius: 2, // Spread radius
                           blurRadius: 25, // Blur radius
-                          offset: const Offset(0, 3), // changes position of shadow
+                          offset: const Offset(
+                            0,
+                            3,
+                          ), // changes position of shadow
                         ),
                       ],
                     ),
-                    child: EventContainer(
-                      event: _eventDraft,
-                    ),
+                    child: EventContainer(event: _eventDraft),
                   ),
                 ],
               ),
@@ -350,49 +363,51 @@ class _EventDraftScreenState extends State<EventDraftScreen> {
                   NameAndDateContainer(
                     controller: _titleController,
                     eventDateTime: _eventDraft.eventDateTime,
-                    onDateTimeChanged: (value) => setState(() {
-                      _eventDraft.eventDateTime = value;
-                    }),
+                    onDateTimeChanged:
+                        (value) => setState(() {
+                          _eventDraft.eventDateTime = value;
+                        }),
                     allDay: _eventDraft.allDayEvent,
-                    onAllDayChanged: (value) => setState(() {
-                      _eventDraft.allDayEvent = value;
-                    }),
+                    onAllDayChanged:
+                        (value) => setState(() {
+                          _eventDraft.allDayEvent = value;
+                        }),
                     shouldShakeName: _shouldShakeName,
                   ),
                   BackgroundContainer(
                     selectedColor: _eventDraft.backgroundColor,
-                    onColorChanged: (color) => setState(() {
-                      _eventDraft.backgroundColor = color;
-                    }),
+                    onColorChanged:
+                        (color) => setState(() {
+                          _eventDraft.backgroundColor = color;
+                        }),
                     gradient: _eventDraft.backgroundGradient,
-                    onGradientChanged: (shouldBeGradient) => setState(() {
-                      _eventDraft.backgroundGradient = shouldBeGradient;
-                    }),
+                    onGradientChanged:
+                        (shouldBeGradient) => setState(() {
+                          _eventDraft.backgroundGradient = shouldBeGradient;
+                        }),
                   ),
                   IconContainer(
                     selectedIcon: _eventDraft.icon,
-                    onIconChanged: (value) => setState(
-                      () {
-                        if (value == _eventDraft.icon) {
-                          _eventDraft.icon = null;
-                          return;
-                        }
-                        _eventDraft.icon = value;
-                      },
-                    ),
+                    onIconChanged:
+                        (value) => setState(() {
+                          if (value == _eventDraft.icon) {
+                            _eventDraft.icon = null;
+                            return;
+                          }
+                          _eventDraft.icon = value;
+                        }),
                   ),
                   FontContainer(
                     fontFamily: _eventDraft.fontFamily ?? 'Default',
-                    onFontSelected: (fontFamily) => setState(
-                      () {
-                        _eventDraft.fontFamily = fontFamily;
-                      },
-                    ),
-                  )
+                    onFontSelected:
+                        (fontFamily) => setState(() {
+                          _eventDraft.fontFamily = fontFamily;
+                        }),
+                  ),
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );

@@ -1,14 +1,16 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:countdowns/constants.dart';
 import 'package:countdowns/enums/sorting_method.dart';
 import 'package:countdowns/global/global.dart';
 import 'package:countdowns/main.dart';
 import 'package:countdowns/providers/event_provider.dart';
-import 'package:countdowns/screens/debug/v1_events_list.dart';
+import 'package:countdowns/providers/local_settings_provider.dart';
+
 import 'package:countdowns/screens/settings/widget/settings_container.dart';
 import 'package:countdowns/providers/countdowns_provider.dart';
-import 'package:countdowns/providers/settings_provider.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -52,7 +54,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    _sortingMethod = context.watch<SettingsProvider>().settings.sortingMethod;
+    _sortingMethod =
+        context.watch<LocalSettingsProvider>().localSettings.sortingMethod;
   }
 
   Future<void> _initPackageInfo() async {
@@ -66,30 +69,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Settings',
-        ),
+        title: const Text('Settings'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            var settings = context.read<SettingsProvider>().settings;
+            var settings = context.read<LocalSettingsProvider>().localSettings;
             if (settings.hapticFeedback) {
               HapticFeedback.lightImpact();
             }
             if (settings.soundEffects) {
-              AudioPlayer().play(AssetSource('sounds/tap.mp3'),
-                  ctx: const AudioContext(
-                    iOS: AudioContextIOS(
-                      category: AVAudioSessionCategory.ambient,
-                    ),
+              AudioPlayer().play(
+                AssetSource('sounds/tap.mp3'),
+                ctx: AudioContext(
+                  iOS: AudioContextIOS(
+                    category: AVAudioSessionCategory.ambient,
                   ),
-                  mode: PlayerMode.lowLatency);
+                ),
+                mode: PlayerMode.lowLatency,
+              );
             }
             context.pop();
           },
         ),
       ),
       body: ListView(
+        shrinkWrap: true,
+        physics: ClampingScrollPhysics(),
         padding: const EdgeInsets.only(
           top: 15.0,
           left: 15.0,
@@ -101,59 +106,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             SettingsContainer(
               title: 'Debug',
               children: [
-                ListTile(
-                  title: const Text('Inject Version 1 File'),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.download),
-                    onPressed: () {
-                      context.read<CountdownsProvider>().addRandomEvent();
-                    },
-                  ),
-                ),
-                ListTile(
-                  title: const Text('Delete Version 1 File'),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () async {
-                      // if countdownEvents file exists delete it
-
-                      final directory =
-                          await getApplicationDocumentsDirectory();
-                      File v1Path =
-                          File('${directory.path}/countdownevents.json');
-
-                      if (v1Path.existsSync()) {
-                        v1Path.deleteSync();
-                      }
-
-                      ScaffoldMessenger.of(context).showMaterialBanner(
-                        MaterialBanner(
-                          content: const Text('Deleted V1 File'),
-                          actions: [
-                            IconButton(
-                              onPressed: () => ScaffoldMessenger.of(context)
-                                  .clearMaterialBanners(),
-                              icon: const Icon(Icons.close),
-                            )
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                ListTile(
-                  title: const Text('Show V1 Events'),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.list),
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const V1EventList(),
-                        ),
-                      );
-                    },
-                  ),
-                ),
                 ListTile(
                   title: const Text('Send Notification'),
                   trailing: const Icon(Icons.notification_add),
@@ -201,7 +153,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   title: const Text("Print Scheduled Events"),
                   onTap: () async {
                     final List<PendingNotificationRequest>
-                        pendingNotificationRequests =
+                    pendingNotificationRequests =
                         await flutterLocalNotificationsPlugin
                             .pendingNotificationRequests();
 
@@ -209,7 +161,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       print(element.id);
                     }
                   },
-                )
+                ),
               ],
             ),
           SettingsContainer(
@@ -222,20 +174,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   alignment: Alignment.centerRight,
                   value: _sortingMethod,
                   underline: Container(),
-                  items: SortingMethod.values
-                      .map((sortingMethod) => DropdownMenuItem(
-                            alignment: Alignment.centerRight,
-                            value: sortingMethod,
-                            child: Text(
-                              sortingMethod.nameReadable,
+                  items:
+                      SortingMethod.values
+                          .map(
+                            (sortingMethod) => DropdownMenuItem(
+                              alignment: Alignment.centerRight,
+                              value: sortingMethod,
+                              child: Text(sortingMethod.nameReadable),
                             ),
-                          ))
-                      .toList(),
+                          )
+                          .toList(),
                   onChanged: (value) {
-                    context
-                        .read<SettingsProvider>()
-                        .setSortingMethod(value as SortingMethod);
-                    context.read<CountdownsProvider>().sortEvents(value);
+                    context.read<LocalSettingsProvider>().setSortingMethod(
+                      value as SortingMethod,
+                    );
                   },
                 ),
               ),
@@ -248,24 +200,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 leading: const Icon(Icons.color_lens_rounded),
                 title: const Text('Theme'),
                 trailing: DropdownButton(
-                  value: context.watch<SettingsProvider>().settings.themeMode,
+                  value:
+                      context
+                          .watch<LocalSettingsProvider>()
+                          .localSettings
+                          .themeMode
+                          .index,
                   underline: Container(),
                   items: const [
-                    DropdownMenuItem<int>(
-                      value: 0,
-                      child: Text('System'),
-                    ),
-                    DropdownMenuItem<int>(
-                      value: 1,
-                      child: Text('Light'),
-                    ),
-                    DropdownMenuItem<int>(
-                      value: 2,
-                      child: Text('Dark'),
-                    ),
+                    DropdownMenuItem<int>(value: 0, child: Text('System')),
+                    DropdownMenuItem<int>(value: 1, child: Text('Light')),
+                    DropdownMenuItem<int>(value: 2, child: Text('Dark')),
                   ],
                   onChanged: (int? value) {
-                    context.read<SettingsProvider>().setThemeMode(value!);
+                    context.read<LocalSettingsProvider>().setThemeMode(value!);
                   },
                 ),
               ),
@@ -277,13 +225,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       borderRadius: BorderRadius.circular(0.2237 * 28),
                     ),
                     child: Image.asset(
-                      'assets/images/icons/icon-${context.watch<SettingsProvider>().settings.iconName}.png',
+                      'assets/images/icons/icon-${context.watch<LocalSettingsProvider>().localSettings.iconName}.png',
                       height: 28,
                     ),
                   ),
                   title: const Text('App Icon'),
                   trailing: Icon(Icons.arrow_forward),
-                  onTap: () => context.push('/settings/appIcon'),
+                  onTap: () => context.pushNamed(AppRoutes.appIcon),
                 ),
             ],
           ),
@@ -295,9 +243,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 title: const Text('Sounds Effects'),
                 trailing: Switch.adaptive(
                   value:
-                      context.watch<SettingsProvider>().settings.soundEffects,
+                      context
+                          .watch<LocalSettingsProvider>()
+                          .localSettings
+                          .soundEffects,
                   onChanged: (value) {
-                    context.read<SettingsProvider>().setSoundEffectsMode(value);
+                    context.read<LocalSettingsProvider>().setSoundEffectsMode(
+                      value,
+                    );
                   },
                 ),
               ),
@@ -306,11 +259,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 title: const Text('Haptic Feedback'),
                 trailing: Switch.adaptive(
                   value:
-                      context.watch<SettingsProvider>().settings.hapticFeedback,
+                      context
+                          .watch<LocalSettingsProvider>()
+                          .localSettings
+                          .hapticFeedback,
                   onChanged: (value) {
-                    context
-                        .read<SettingsProvider>()
-                        .setHapticFeedbackMode(value);
+                    context.read<LocalSettingsProvider>().setHapticFeedbackMode(
+                      value,
+                    );
                   },
                 ),
               ),
@@ -323,12 +279,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 leading: const Icon(Icons.notifications),
                 title: const Text('When Event Ends'),
                 trailing: Switch.adaptive(
-                  value: context.watch<SettingsProvider>().settings.notify,
+                  value:
+                      context
+                          .watch<LocalSettingsProvider>()
+                          .localSettings
+                          .notify,
                   onChanged: (value) async {
                     // If the user is requesting to turn them off, simply do so.
                     if (!value) {
                       // TODO: delete all pending notifications
-                      context.read<SettingsProvider>().setNotify(value);
+                      context.read<LocalSettingsProvider>().setNotify(value);
                       await flutterLocalNotificationsPlugin.cancelAll();
                       return;
                     }
@@ -351,7 +311,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             return;
                           },
                           child: const Text('Take Me There'),
-                        )
+                        ),
                       ],
                     );
 
@@ -359,7 +319,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       final bool? permissionGranted =
                           await flutterLocalNotificationsPlugin
                               .resolvePlatformSpecificImplementation<
-                                  IOSFlutterLocalNotificationsPlugin>()
+                                IOSFlutterLocalNotificationsPlugin
+                              >()
                               ?.requestPermissions(
                                 alert: true,
                                 badge: true,
@@ -369,11 +330,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       if (permissionGranted != null) {
                         if (permissionGranted) {
                           if (!mounted) return;
-                          context.read<SettingsProvider>().setNotify(true);
-                          context
-                              .read<EventProvider>()
-                              .events
-                              .forEach((event) => event.scheduleNotification());
+                          context.read<LocalSettingsProvider>().setNotify(true);
+                          context.read<EventProvider>().events.forEach(
+                            (event) => event.scheduleNotification(),
+                          );
                         } else {
                           if (!mounted) return;
                           await showDialog(
@@ -389,19 +349,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       bool? permissionGranted =
                           await flutterLocalNotificationsPlugin
                               .resolvePlatformSpecificImplementation<
-                                  AndroidFlutterLocalNotificationsPlugin>()
-                              ?.requestPermission();
+                                AndroidFlutterLocalNotificationsPlugin
+                              >()
+                              ?.requestExactAlarmsPermission();
 
                       if (!mounted) return;
 
                       if (permissionGranted != null) {
                         if (permissionGranted) {
                           if (!mounted) return;
-                          context.read<SettingsProvider>().setNotify(true);
-                          context
-                              .read<EventProvider>()
-                              .events
-                              .forEach((event) => event.scheduleNotification());
+                          context.read<LocalSettingsProvider>().setNotify(true);
+                          context.read<EventProvider>().events.forEach(
+                            (event) => event.scheduleNotification(),
+                          );
                         } else {
                           if (!mounted) return;
                           await showDialog(
@@ -417,109 +377,119 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ],
           ),
-          SettingsContainer(title: 'support', children: [
-            ListTile(
-              leading: const Icon(Icons.privacy_tip_rounded),
-              title: const Text('Privacy Policy'),
-              trailing: const Icon(Icons.chevron_right_rounded),
-              onTap: () => launchUrl(
-                  Uri.parse('https://chrisstayte.app/countdowns/privacy/')),
-            ),
-            ListTile(
-              leading: const Icon(Icons.article_rounded),
-              title: const Text('Terms of Use'),
-              trailing: const Icon(Icons.chevron_right_rounded),
-              onTap: () => launchUrl(
-                  Uri.parse('https://chrisstayte.app/countdowns/terms/')),
-            ),
-            const AboutListTile(
-              icon: Icon(Icons.info_outline_rounded),
-              applicationName: 'Countdowns',
-              applicationIcon: Icon(Icons.info_outline_rounded),
-              applicationLegalese: 'What am I made of?',
-              child: Text('About'),
-            ),
-            ListTile(
-              leading: const FaIcon(FontAwesomeIcons.github),
-              title: const Text('Source Code'),
-              trailing: const Icon(Icons.chevron_right_rounded),
-              onTap: () => launchUrl(
-                Uri.parse('https://github.com/chrisstayte/countdowns'),
+          SettingsContainer(
+            title: 'support',
+            children: [
+              ListTile(
+                leading: const Icon(Icons.privacy_tip_rounded),
+                title: const Text('Privacy Policy'),
+                trailing: const Icon(Icons.chevron_right_rounded),
+                onTap:
+                    () => launchUrl(
+                      Uri.parse('https://chrisstayte.app/countdowns/privacy/'),
+                    ),
               ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.email),
-              title: const Text('Contact'),
-              trailing: const Text(
-                'countdowns@chrisstayte.com',
-                style: TextStyle(
-                  fontSize: 12,
-                ),
+              ListTile(
+                leading: const Icon(Icons.article_rounded),
+                title: const Text('Terms of Use'),
+                trailing: const Icon(Icons.chevron_right_rounded),
+                onTap:
+                    () => launchUrl(
+                      Uri.parse('https://chrisstayte.app/countdowns/terms/'),
+                    ),
               ),
-              onTap: () async {
-                final Uri uri = Uri(
-                  scheme: 'mailto',
-                  path: 'countdowns@chrisstayte.com',
-                  query:
-                      'subject=App Feedback&body=\n\n\nApp Version ${_packageInfo.version}', //add subject and body here
-                );
+              const AboutListTile(
+                icon: Icon(Icons.info_outline_rounded),
+                applicationName: 'Countdowns',
+                applicationIcon: Icon(Icons.info_outline_rounded),
 
-                if (await canLaunchUrl(uri)) {
-                  await launchUrl(uri);
-                }
-              },
-            )
-          ]),
+                child: Text('About'),
+              ),
+              ListTile(
+                leading: const FaIcon(FontAwesomeIcons.github),
+                title: const Text('Source Code'),
+                trailing: const Icon(Icons.chevron_right_rounded),
+                onTap:
+                    () => launchUrl(
+                      Uri.parse('https://github.com/chrisstayte/countdowns'),
+                    ),
+              ),
+              ListTile(
+                leading: const FaIcon(FontAwesomeIcons.xTwitter),
+                title: const Text('@chrisstayte'),
+                trailing: const Icon(Icons.chevron_right_rounded),
+                onTap: () => launchUrl(Uri.parse('https://x.com/chrisstayte')),
+              ),
+              ListTile(
+                leading: const Icon(Icons.email),
+                title: const Text('Contact'),
+                trailing: const Text(
+                  'countdowns@chrisstayte.com',
+                  style: TextStyle(fontSize: 12),
+                ),
+                onTap: () async {
+                  final Uri uri = Uri(
+                    scheme: 'mailto',
+                    path: 'countdowns@chrisstayte.com',
+                    query:
+                        'subject=App Feedback&body=\n\n\nApp Version ${_packageInfo.version}', //add subject and body here
+                  );
+
+                  if (await canLaunchUrl(uri)) {
+                    await launchUrl(uri);
+                  }
+                },
+              ),
+            ],
+          ),
           SettingsContainer(
             title: 'danger',
             children: [
               ListTile(
-                onTap: () => showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: const Text('Delete All Events'),
-                      content: const Text('This is not reversable.'),
-                      actions: [
-                        TextButton(
-                          child: const Text(
-                            "Yes",
-                          ),
-                          onPressed: () {
-                            var settings =
-                                context.read<SettingsProvider>().settings;
-                            if (settings.hapticFeedback) {
-                              HapticFeedback.lightImpact();
-                            }
-                            if (settings.soundEffects) {
-                              AudioPlayer().play(
-                                  AssetSource('sounds/trash.mp3'),
-                                  ctx: const AudioContext(
-                                    iOS: AudioContextIOS(
-                                      category: AVAudioSessionCategory.ambient,
+                onTap:
+                    () => showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Delete All Events'),
+                          content: const Text('This is not reversable.'),
+                          actions: [
+                            TextButton(
+                              child: const Text("Yes"),
+                              onPressed: () {
+                                var settings =
+                                    context
+                                        .read<LocalSettingsProvider>()
+                                        .localSettings;
+                                if (settings.hapticFeedback) {
+                                  HapticFeedback.lightImpact();
+                                }
+                                if (settings.soundEffects) {
+                                  AudioPlayer().play(
+                                    AssetSource('sounds/trash.mp3'),
+                                    ctx: AudioContext(
+                                      iOS: AudioContextIOS(
+                                        category:
+                                            AVAudioSessionCategory.ambient,
+                                      ),
                                     ),
-                                  ),
-                                  mode: PlayerMode.lowLatency);
-                            }
-                            context.read<EventProvider>().deleteAllEvents();
-                            Navigator.pop(context);
-                          },
-                        ),
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text(
-                            'No',
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
+                                    mode: PlayerMode.lowLatency,
+                                  );
+                                }
+                                context.read<EventProvider>().deleteAllEvents();
+                                Navigator.pop(context);
+                              },
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text('No'),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                 title: const Text('Delete All Events'),
-                trailing: const Icon(
-                  Icons.delete,
-                  color: Colors.red,
-                ),
+                trailing: const Icon(Icons.delete, color: Colors.red),
               ),
             ],
           ),
@@ -529,41 +499,42 @@ class _SettingsScreenState extends State<SettingsScreen> {
               children: [
                 const Text(
                   'Leave a review',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 10),
                 Center(
                   child: GestureDetector(
-                    onTap: () => InAppReview.instance.openStoreListing(
-                      appStoreId: '1603744166',
-                    ),
+                    onTap:
+                        () => InAppReview.instance.openStoreListing(
+                          appStoreId: '1603744166',
+                        ),
                     child: Container(
                       padding: const EdgeInsets.all(5),
                       decoration: BoxDecoration(
-                          color: Theme.of(context).cardColor,
-                          borderRadius: BorderRadius.circular(5),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 3,
-                              blurRadius: 5,
-                              offset: const Offset(0, 3),
-                            ),
-                          ]),
+                        color: Theme.of(context).cardColor,
+                        borderRadius: BorderRadius.circular(5),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 3,
+                            blurRadius: 5,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: List.generate(
                           5,
-                          (index) => const Icon(Icons.star_rounded,
-                              color: Colors.amber),
+                          (index) => const Icon(
+                            Icons.star_rounded,
+                            color: Colors.amber,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -575,9 +546,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w600,
-                  color: Theme.of(context).brightness == Brightness.light
-                      ? Global.colors.secondaryColor
-                      : Global.colors.accentColor,
+                  color:
+                      Theme.of(context).brightness == Brightness.light
+                          ? Global.colors.secondaryColor
+                          : Global.colors.accentColor,
                 ),
               ),
               const SizedBox(height: 10),

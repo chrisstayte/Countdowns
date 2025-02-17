@@ -1,6 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
-import 'package:countdowns/providers/settings_provider.dart';
-import 'package:countdowns/screens/event_draft/options/name_and_date/date_picker_screen.dart';
+import 'package:countdowns/providers/local_settings_provider.dart';
+import 'package:countdowns/screens/event_form/options/name_and_date/date_picker_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -31,29 +31,19 @@ class NameAndDateContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 15,
-        vertical: 15,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(
-              vertical: 5,
-              horizontal: 15,
-            ),
+            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(
-                15,
-              ),
+              borderRadius: BorderRadius.circular(15),
               color: Theme.of(context).scaffoldBackgroundColor,
             ),
             child: Row(
               children: [
                 const Icon(Icons.title),
-                const SizedBox(
-                  width: 15,
-                ),
+                const SizedBox(width: 15),
                 Expanded(
                   child: TextField(
                     controller: controller,
@@ -75,79 +65,65 @@ class NameAndDateContainer extends StatelessWidget {
                 Visibility(
                   visible: controller.text.isNotEmpty,
                   child: IconButton(
-                    onPressed: () => {
-                      controller.clear(),
-                      FocusManager.instance.primaryFocus?.unfocus(),
-                    },
-                    icon: const Icon(
-                      Icons.clear,
-                    ),
+                    onPressed:
+                        () => {
+                          controller.clear(),
+                          FocusManager.instance.primaryFocus?.unfocus(),
+                        },
+                    icon: const Icon(Icons.clear),
                   ),
                 ),
               ],
             ),
-          )
-              .animate(
-                target: shouldShakeName ? 1 : 0,
-                autoPlay: false,
-              )
-              .shakeX(),
-          const SizedBox(
-            height: 5,
-          ),
+          ).animate(target: shouldShakeName ? 1 : 0, autoPlay: false).shakeX(),
+          const SizedBox(height: 5),
           GestureDetector(
             onTap: () async {
               // hide the keyboard if it's open
               FocusManager.instance.primaryFocus?.unfocus();
-              var settings = context.read<SettingsProvider>().settings;
+              var settings =
+                  context.read<LocalSettingsProvider>().localSettings;
               if (settings.hapticFeedback) {
                 HapticFeedback.lightImpact();
               }
               if (settings.soundEffects) {
-                AudioPlayer().play(AssetSource('sounds/tap.mp3'),
-                    ctx: const AudioContext(
-                      iOS: AudioContextIOS(
-                        category: AVAudioSessionCategory.ambient,
-                      ),
+                AudioPlayer().play(
+                  AssetSource('sounds/tap.mp3'),
+                  ctx: AudioContext(
+                    iOS: AudioContextIOS(
+                      category: AVAudioSessionCategory.ambient,
                     ),
-                    mode: PlayerMode.lowLatency);
+                  ),
+                  mode: PlayerMode.lowLatency,
+                );
               }
               await Navigator.of(context)
                   .push(
-                MaterialPageRoute(
-                  builder: (context) => DatePickerScreen(
-                    eventDateTime: eventDateTime,
-                    allDay: allDay,
-                  ),
-                ),
-              )
+                    MaterialPageRoute(
+                      builder:
+                          (context) => DatePickerScreen(
+                            eventDateTime: eventDateTime,
+                            allDay: allDay,
+                          ),
+                    ),
+                  )
                   .then((result) {
-                if (result != null) {
-                  onDateTimeChanged(result[0]);
-                  onAllDayChanged(result[1]);
-                }
-              });
+                    if (result != null) {
+                      onDateTimeChanged(result[0]);
+                      onAllDayChanged(result[1]);
+                    }
+                  });
             },
             child: Container(
-              padding: const EdgeInsets.symmetric(
-                vertical: 10,
-                horizontal: 15,
-              ),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(
-                  15,
-                ),
+                borderRadius: BorderRadius.circular(15),
                 color: Theme.of(context).scaffoldBackgroundColor,
               ),
               child: Row(
                 children: [
-                  const Icon(
-                    Icons.calendar_month_rounded,
-                    size: 28,
-                  ),
-                  const SizedBox(
-                    width: 15,
-                  ),
+                  const Icon(Icons.calendar_month_rounded, size: 28),
+                  const SizedBox(width: 15),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -166,14 +142,11 @@ class NameAndDateContainer extends StatelessWidget {
                     ],
                   ),
                   const Spacer(),
-                  const Icon(
-                    Icons.arrow_right,
-                    size: 28,
-                  ),
+                  const Icon(Icons.arrow_right, size: 28),
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );

@@ -1,9 +1,9 @@
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:countdowns/constants.dart';
 import 'package:countdowns/models/event.dart';
 import 'package:countdowns/providers/event_provider.dart';
-import 'package:countdowns/providers/settings_provider.dart';
+import 'package:countdowns/providers/local_settings_provider.dart';
 import 'package:countdowns/providers/timer_provider.dart';
 import 'package:countdowns/screens/event_screen/time_label.dart';
 import 'package:countdowns/utilities/extensions.dart';
@@ -52,9 +52,7 @@ class _EventScreenState extends State<EventScreen> {
     if (_event == null) {
       return Scaffold(
         appBar: AppBar(),
-        body: const Center(
-          child: Text('Event Not Found'),
-        ),
+        body: const Center(child: Text('Event Not Found')),
       );
     }
 
@@ -68,9 +66,10 @@ class _EventScreenState extends State<EventScreen> {
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: _event!.backgroundColor,
-            gradient: _event!.backgroundGradient
-                ? _event!.backgroundColor.gradient
-                : null,
+            gradient:
+                _event!.backgroundGradient
+                    ? _event!.backgroundColor.gradient
+                    : null,
           ),
           child: Scaffold(
             appBar: AppBar(
@@ -80,18 +79,21 @@ class _EventScreenState extends State<EventScreen> {
               leading: IconButton(
                 icon: const Icon(Icons.close),
                 onPressed: () {
-                  var settings = context.read<SettingsProvider>().settings;
+                  var settings =
+                      context.read<LocalSettingsProvider>().localSettings;
                   if (settings.hapticFeedback) {
                     HapticFeedback.lightImpact();
                   }
                   if (settings.soundEffects) {
-                    AudioPlayer().play(AssetSource('sounds/tap.mp3'),
-                        ctx: const AudioContext(
-                          iOS: AudioContextIOS(
-                            category: AVAudioSessionCategory.ambient,
-                          ),
+                    AudioPlayer().play(
+                      AssetSource('sounds/tap.mp3'),
+                      ctx: AudioContext(
+                        iOS: AudioContextIOS(
+                          category: AVAudioSessionCategory.ambient,
                         ),
-                        mode: PlayerMode.lowLatency);
+                      ),
+                      mode: PlayerMode.lowLatency,
+                    );
                   }
                   context.pop();
                 },
@@ -103,51 +105,50 @@ class _EventScreenState extends State<EventScreen> {
               ),
               actions: [
                 PopupMenuButton<int>(
-                  icon: Icon(
-                    Icons.more_vert,
-                    color: _contentColor,
-                  ),
+                  icon: Icon(Icons.more_vert, color: _contentColor),
                   color: _contentColor,
-                  itemBuilder: (context) => [
-                    PopupMenuItem(
-                      value: 1,
-                      child: Text(
-                        'Edit',
-                        style: TextStyle(
-                          color: _event!.backgroundColor,
+                  itemBuilder:
+                      (context) => [
+                        PopupMenuItem(
+                          value: 1,
+                          child: Text(
+                            'Edit',
+                            style: TextStyle(color: _event!.backgroundColor),
+                          ),
                         ),
-                      ),
-                    ),
-                    PopupMenuItem(
-                      value: 2,
-                      child: Text(
-                        'Delete',
-                        style: TextStyle(
-                          color: _event!.backgroundColor,
+                        PopupMenuItem(
+                          value: 2,
+                          child: Text(
+                            'Delete',
+                            style: TextStyle(color: _event!.backgroundColor),
+                          ),
                         ),
-                      ),
-                    ),
-                  ],
+                      ],
                   onSelected: (value) async {
                     switch (value) {
                       case 1:
                         var settings =
-                            context.read<SettingsProvider>().settings;
+                            context.read<LocalSettingsProvider>().localSettings;
                         if (settings.hapticFeedback) {
                           HapticFeedback.lightImpact();
                         }
                         if (settings.soundEffects) {
-                          AudioPlayer().play(AssetSource('sounds/tap.mp3'),
-                              ctx: const AudioContext(
-                                iOS: AudioContextIOS(
-                                  category: AVAudioSessionCategory.ambient,
-                                ),
+                          AudioPlayer().play(
+                            AssetSource('sounds/tap.mp3'),
+                            ctx: AudioContext(
+                              iOS: AudioContextIOS(
+                                category: AVAudioSessionCategory.ambient,
                               ),
-                              mode: PlayerMode.lowLatency);
+                            ),
+                            mode: PlayerMode.lowLatency,
+                          );
                         }
-                        await context.push('/eventDraft/${_event?.key}');
+                        await context.pushNamed(
+                          AppRoutes.eventEdit,
+                          pathParameters: {'id': _event.key.toString()},
+                        );
                         setState(() {
-                          _contentColor = _event!.backgroundColor.contentColor;
+                          _contentColor = _event.backgroundColor.contentColor;
                         });
                         break;
                       case 2:
@@ -159,8 +160,7 @@ class _EventScreenState extends State<EventScreen> {
                               backgroundColor: _contentColor,
                               title: Text(
                                 'Delete This Countdown?',
-                                style:
-                                    TextStyle(color: _event!.backgroundColor),
+                                style: TextStyle(color: _event.backgroundColor),
                               ),
                               actions: [
                                 TextButton(
@@ -171,28 +171,32 @@ class _EventScreenState extends State<EventScreen> {
                                     ),
                                   ),
                                   onPressed: () {
-                                    var settings = context
-                                        .read<SettingsProvider>()
-                                        .settings;
+                                    var settings =
+                                        context
+                                            .read<LocalSettingsProvider>()
+                                            .localSettings;
                                     if (settings.hapticFeedback) {
                                       HapticFeedback.lightImpact();
                                     }
                                     if (settings.soundEffects) {
                                       AudioPlayer().play(
-                                          AssetSource('sounds/trash.mp3'),
-                                          ctx: const AudioContext(
-                                            iOS: AudioContextIOS(
-                                              category: AVAudioSessionCategory
-                                                  .ambient,
-                                            ),
+                                        AssetSource('sounds/trash.mp3'),
+                                        ctx: AudioContext(
+                                          iOS: AudioContextIOS(
+                                            category:
+                                                AVAudioSessionCategory.ambient,
                                           ),
-                                          mode: PlayerMode.lowLatency);
+                                        ),
+                                        mode: PlayerMode.lowLatency,
+                                      );
                                     }
-                                    context
-                                        .read<EventProvider>()
-                                        .deleteEvent(_event!);
+                                    context.read<EventProvider>().deleteEvent(
+                                      _event!,
+                                    );
                                     Navigator.popUntil(
-                                        context, ModalRoute.withName('/'));
+                                      context,
+                                      ModalRoute.withName('/'),
+                                    );
                                   },
                                 ),
                                 TextButton(
@@ -215,128 +219,135 @@ class _EventScreenState extends State<EventScreen> {
               ],
             ),
             backgroundColor: Colors.transparent,
-            body: Column(children: [
-              Expanded(
-                child: AutoSizeText(
-                  _event!.title,
-                  maxLines: 2,
-                  minFontSize: 32,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 48,
-                    fontFamily: _event!.fontFamily,
-                    color: _event!.backgroundColor.contentColor,
+            body: Column(
+              children: [
+                Expanded(
+                  child: AutoSizeText(
+                    _event!.title,
+                    maxLines: 2,
+                    minFontSize: 32,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 48,
+                      fontFamily: _event!.fontFamily,
+                      color: _event!.backgroundColor.contentColor,
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: Text(
-                  DateFormat(
-                    _event!.allDayEvent ? "MM/dd/yyyy" : "MM/dd/yyyy hh:mm a",
-                  ).format(_event!.eventDateTime),
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontFamily: _event!.fontFamily,
-                    color: _event!.backgroundColor.contentColor,
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: Text(
+                    DateFormat(
+                      _event!.allDayEvent ? "MM/dd/yyyy" : "MM/dd/yyyy hh:mm a",
+                    ).format(_event!.eventDateTime),
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontFamily: _event!.fontFamily,
+                      color: _event!.backgroundColor.contentColor,
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                flex: 4,
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          TimeLabel(
-                            label: timeDifference.timeDifferenceOnlyYears
-                                .toString(),
-                            style: numberTextStyle,
-                          ),
-                          TimeLabel(
-                            label: 'Years',
-                            style: labelTextStyle,
-                            rightSide: true,
-                          ),
-                        ],
+                Expanded(
+                  flex: 4,
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TimeLabel(
+                              label:
+                                  timeDifference.timeDifferenceOnlyYears
+                                      .toString(),
+                              style: numberTextStyle,
+                            ),
+                            TimeLabel(
+                              label: 'Years',
+                              style: labelTextStyle,
+                              rightSide: true,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          TimeLabel(
-                            label: timeDifference.timeDifferenceOnlyDays
-                                .toString(),
-                            style: numberTextStyle,
-                          ),
-                          TimeLabel(
-                            label: 'Days',
-                            style: labelTextStyle,
-                            rightSide: true,
-                          ),
-                        ],
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TimeLabel(
+                              label:
+                                  timeDifference.timeDifferenceOnlyDays
+                                      .toString(),
+                              style: numberTextStyle,
+                            ),
+                            TimeLabel(
+                              label: 'Days',
+                              style: labelTextStyle,
+                              rightSide: true,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          TimeLabel(
-                            label: timeDifference.timeDifferenceOnlyHours > 0
-                                ? timeDifference.timeDifferenceOnlyHours
-                                    .toString()
-                                : '0',
-                            style: numberTextStyle,
-                          ),
-                          TimeLabel(
-                            label: 'Hours',
-                            style: labelTextStyle,
-                            rightSide: true,
-                          ),
-                        ],
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TimeLabel(
+                              label:
+                                  timeDifference.timeDifferenceOnlyHours > 0
+                                      ? timeDifference.timeDifferenceOnlyHours
+                                          .toString()
+                                      : '0',
+                              style: numberTextStyle,
+                            ),
+                            TimeLabel(
+                              label: 'Hours',
+                              style: labelTextStyle,
+                              rightSide: true,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          TimeLabel(
-                            label: timeDifference.timeDifferenceOnlyMinutes
-                                .toString(),
-                            style: numberTextStyle,
-                          ),
-                          TimeLabel(
-                            label: 'Minutes',
-                            style: labelTextStyle,
-                            rightSide: true,
-                          ),
-                        ],
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TimeLabel(
+                              label:
+                                  timeDifference.timeDifferenceOnlyMinutes
+                                      .toString(),
+                              style: numberTextStyle,
+                            ),
+                            TimeLabel(
+                              label: 'Minutes',
+                              style: labelTextStyle,
+                              rightSide: true,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          TimeLabel(
-                            label: timeDifference.timeDifferenceOnlySeconds
-                                .toString(),
-                            style: numberTextStyle,
-                          ),
-                          TimeLabel(
-                            label: 'Seconds',
-                            style: labelTextStyle,
-                            rightSide: true,
-                          ),
-                        ],
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TimeLabel(
+                              label:
+                                  timeDifference.timeDifferenceOnlySeconds
+                                      .toString(),
+                              style: numberTextStyle,
+                            ),
+                            TimeLabel(
+                              label: 'Seconds',
+                              style: labelTextStyle,
+                              rightSide: true,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              )
-            ]),
+              ],
+            ),
           ),
         ),
       ),

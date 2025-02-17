@@ -1,6 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:countdowns/global/global.dart';
-import 'package:countdowns/providers/settings_provider.dart';
+import 'package:countdowns/providers/local_settings_provider.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -8,11 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class DatePickerScreen extends StatefulWidget {
-  const DatePickerScreen({
-    super.key,
-    this.eventDateTime,
-    required this.allDay,
-  });
+  const DatePickerScreen({super.key, this.eventDateTime, required this.allDay});
 
   final DateTime? eventDateTime;
   final bool allDay;
@@ -40,18 +37,20 @@ class _DatePickerScreenState extends State<DatePickerScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            var settings = context.read<SettingsProvider>().settings;
+            var settings = context.read<LocalSettingsProvider>().localSettings;
             if (settings.hapticFeedback) {
               HapticFeedback.lightImpact();
             }
             if (settings.soundEffects) {
-              AudioPlayer().play(AssetSource('sounds/tap.mp3'),
-                  ctx: const AudioContext(
-                    iOS: AudioContextIOS(
-                      category: AVAudioSessionCategory.ambient,
-                    ),
+              AudioPlayer().play(
+                AssetSource('sounds/tap.mp3'),
+                ctx: AudioContext(
+                  iOS: AudioContextIOS(
+                    category: AVAudioSessionCategory.ambient,
                   ),
-                  mode: PlayerMode.lowLatency);
+                ),
+                mode: PlayerMode.lowLatency,
+              );
             }
             context.pop();
           },
@@ -59,23 +58,23 @@ class _DatePickerScreenState extends State<DatePickerScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              var settings = context.read<SettingsProvider>().settings;
+              var settings =
+                  context.read<LocalSettingsProvider>().localSettings;
               if (settings.hapticFeedback) {
                 HapticFeedback.lightImpact();
               }
               if (settings.soundEffects) {
-                AudioPlayer().play(AssetSource('sounds/tap.mp3'),
-                    ctx: const AudioContext(
-                      iOS: AudioContextIOS(
-                        category: AVAudioSessionCategory.ambient,
-                      ),
+                AudioPlayer().play(
+                  AssetSource('sounds/tap.mp3'),
+                  ctx: AudioContext(
+                    iOS: AudioContextIOS(
+                      category: AVAudioSessionCategory.ambient,
                     ),
-                    mode: PlayerMode.lowLatency);
+                  ),
+                  mode: PlayerMode.lowLatency,
+                );
               }
-              Navigator.pop(context, [
-                _dateTime,
-                _allDay,
-              ]);
+              Navigator.pop(context, [_dateTime, _allDay]);
             },
             icon: const Icon(Icons.check),
           ),
@@ -94,13 +93,15 @@ class _DatePickerScreenState extends State<DatePickerScreen> {
                 initialDate: _dateTime,
                 firstDate: DateTime(DateTime.now().year - 100),
                 lastDate: DateTime(DateTime.now().year + 100),
-                onDateChanged: (dateTime) => _dateTime = DateTime(
-                  dateTime.year,
-                  dateTime.month,
-                  dateTime.day,
-                  _dateTime.hour,
-                  _dateTime.minute,
-                ),
+                onDateChanged:
+                    (dateTime) =>
+                        _dateTime = DateTime(
+                          dateTime.year,
+                          dateTime.month,
+                          dateTime.day,
+                          _dateTime.hour,
+                          _dateTime.minute,
+                        ),
               ),
             ),
             const SizedBox(height: 10),
@@ -113,33 +114,35 @@ class _DatePickerScreenState extends State<DatePickerScreen> {
                 children: [
                   ListTile(
                     title: _allDay ? const Text('All Day') : null,
-                    leading: !_allDay
-                        ? TextButton(
-                            onPressed: () async {
-                              await showTimePicker(
-                                context: context,
-                                initialTime: TimeOfDay(
-                                  hour: _dateTime.hour,
-                                  minute: _dateTime.minute,
-                                ),
-                              ).then((value) {
-                                if (value != null) {
-                                  setState(() {
-                                    _dateTime = DateTime(
+                    leading:
+                        !_allDay
+                            ? TextButton(
+                              onPressed: () async {
+                                await showTimePicker(
+                                  context: context,
+                                  initialTime: TimeOfDay(
+                                    hour: _dateTime.hour,
+                                    minute: _dateTime.minute,
+                                  ),
+                                ).then((value) {
+                                  if (value != null) {
+                                    setState(() {
+                                      _dateTime = DateTime(
                                         _dateTime.year,
                                         _dateTime.month,
                                         _dateTime.day,
                                         value.hour,
-                                        value.minute);
-                                  });
-                                }
-                              });
-                            },
-                            child: Text(
-                              DateFormat("hh:mm a").format(_dateTime),
-                            ),
-                          )
-                        : null,
+                                        value.minute,
+                                      );
+                                    });
+                                  }
+                                });
+                              },
+                              child: Text(
+                                DateFormat("hh:mm a").format(_dateTime),
+                              ),
+                            )
+                            : null,
                     trailing: Switch.adaptive(
                       value: _allDay,
                       onChanged: (value) => setState(() => _allDay = value),
@@ -147,7 +150,7 @@ class _DatePickerScreenState extends State<DatePickerScreen> {
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
