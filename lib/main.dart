@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:countdowns/data/database.dart';
 import 'package:countdowns/theme/app_theme.dart';
+import 'package:countdowns/widgets_bridge/widget_snapshot.dart';
 import 'package:countdowns/providers/event_provider.dart';
 import 'package:countdowns/providers/local_settings_provider.dart';
 import 'package:countdowns/providers/notification_provider.dart';
@@ -49,6 +50,12 @@ Future<void> main() async {
         databaseProvider.overrideWithValue(db),
       ],
     );
+    // Keep the home and lock screen widgets' snapshot current.
+    final widgets = WidgetSnapshotWriter();
+    container.listen(eventsStreamProvider, (_, next) {
+      final events = next.value;
+      if (events != null) unawaited(widgets.write(events));
+    }, fireImmediately: true);
     // Rebuild every pending notification from the new database.
     unawaited(
       container.read(eventsControllerProvider).rescheduleNotifications(),
