@@ -50,7 +50,17 @@ class EditorLook extends ConsumerWidget {
       children: [
         const SectionLabel(
           'Background',
-          trailing: Text('Photo, gradient or color', style: _hint),
+          // Flexible so a large text size or narrow screen trims it
+          // instead of overflowing the heading row.
+          trailing: Flexible(
+            child: Text(
+              'Color, gradient, photo and more',
+              style: _hint,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.end,
+            ),
+          ),
         ),
         const SizedBox(height: 10),
         _BackgroundGrid(
