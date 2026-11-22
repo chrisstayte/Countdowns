@@ -33,7 +33,7 @@
       "allDay": true,
       "yearly": true,
       "unit": "sleeps",
-      "font": "DiarioDeAndy",
+      "font": "Default",
       "text": "#1C1633",
       "colors": [
         "#FF5C7A",

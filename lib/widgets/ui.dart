@@ -481,7 +481,7 @@ class MarkedTitle extends StatelessWidget {
 }
 
 /// The full-width secondary button under a section that opens its whole
-/// catalogue: "All backgrounds", "All 68 icons", "All 11 fonts".
+/// catalogue: "All backgrounds", "All 68 icons", "All 1,805 fonts".
 /// White with a Rule border, Ink label and a chevron; Wash while pressed.
 class SeeAllButton extends StatefulWidget {
   const SeeAllButton({super.key, required this.label, required this.onTap});

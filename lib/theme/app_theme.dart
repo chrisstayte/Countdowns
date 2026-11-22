@@ -63,8 +63,9 @@ abstract final class AppFonts {
   static const display = 'BricolageDisplay';
 }
 
-/// A font bundled with the app. Every other event font is a Google font,
-/// stored by its family name and downloaded when used (see FontLibrary).
+/// Default, the one event font bundled with the app (it's the app's own
+/// Bricolage). Every other event font is a Google font, stored by its
+/// family name and downloaded when used (see FontLibrary).
 class EventFont {
   const EventFont(this.family, this.label);
 
@@ -75,25 +76,23 @@ class EventFont {
   String get fontFamily => resolveEventFont(family);
 }
 
-/// The event fonts that ship with the app: Default (Bricolage) and the
-/// originals that aren't on Google Fonts.
-const bundledEventFonts = [
-  EventFont('Default', 'Default'),
-  EventFont('GoodTimes', 'Good Times'),
-  EventFont('DiarioDeAndy', 'Diario De Andy'),
-  EventFont('Sunnyspells', 'Sunnyspells'),
-  EventFont('CarnivaleeFreakshow', 'Carnivalee Freakshow'),
-  EventFont('Starjedi', 'Not Starwars'),
-  EventFont('NewWaltDisney', 'Not Disney'),
-];
+/// The event fonts that ship with the app.
+const bundledEventFonts = [EventFont('Default', 'Default')];
 
-/// Fonts the app used to bundle that now come from Google Fonts. Countdowns
-/// keep the old value; it reads as the Google family.
+/// Fonts the app used to bundle. Countdowns keep the old value and it reads
+/// as what's here: the same family on Google Fonts, or Default for the
+/// originals that aren't on Google Fonts and were dropped.
 const legacyEventFonts = {
   'LibreBaskerville': 'Libre Baskerville',
   'ComicNeue': 'Comic Neue',
   'LuxuriousRoman': 'Luxurious Roman',
   // 'Roboto' is the same name on Google Fonts.
+  'GoodTimes': 'Default',
+  'DiarioDeAndy': 'Default',
+  'Sunnyspells': 'Default',
+  'CarnivaleeFreakshow': 'Default',
+  'Starjedi': 'Default',
+  'NewWaltDisney': 'Default',
 };
 
 /// The font a stored value means today.
@@ -121,7 +120,6 @@ String eventFontLabel(String family) =>
 String resolveEventFont(String family) {
   final key = canonicalEventFont(family);
   if (key == 'Default') return AppFonts.numerals;
-  if (bundledEventFont(key) != null) return key;
   unawaited(FontLibrary.instance.use(key));
   return FontLibrary.flutterFamily(key);
 }

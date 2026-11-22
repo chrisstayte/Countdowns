@@ -87,27 +87,3 @@ flutter:
       fonts:
         - asset: fonts/BricolageDisplay-800.ttf
           weight: 800
-    - family: CarnivaleeFreakshow
-      fonts:
-        - asset: fonts/CarnivaleeFreakshow-Regular.ttf
-          weight: 400
-    - family: GoodTimes
-      fonts:
-        - asset: fonts/GoodTimes-Regular.otf
-          weight: 400
-    - family: Starjedi
-      fonts:
-        - asset: fonts/Starjedi.ttf
-          weight: 400
-    - family: Sunnyspells
-      fonts:
-        - asset: fonts/Sunnyspells.otf
-          weight: 400
-    - family: NewWaltDisney
-      fonts:
-        - asset: fonts/NewWaltDisney.ttf
-          weight: 400
-    - family: DiarioDeAndy
-      fonts:
-        - asset: fonts/DiarioDeAndy.otf
-          weight: 400

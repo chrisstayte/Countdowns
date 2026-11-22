@@ -19,25 +19,19 @@
 		1548C3AC3A0FECB38446051B /* CountdownsWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D7D19C0773A69EEFA46D21 /* CountdownsWidget.swift */; };
 		2B85E09AD4C41D0A847397DB /* Inter-700.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 42C0D84B37811DD4044CB834 /* Inter-700.ttf */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
-		489A82596D9DD6C71BF36ABE /* DiarioDeAndy.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4BDE84F96DF51BD76F996E50 /* DiarioDeAndy.otf */; };
 		4C577BA9CBEDEC22F8A8955E /* Fonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2421EF5976B8ABE3633069EA /* Fonts.swift */; };
 		645E1C61FEC67A81219193DD /* BricolageDisplay-800.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A0ED9DAC1539BB93A929D3F4 /* BricolageDisplay-800.ttf */; };
 		655E1223C5B9693BC94BE3C4 /* BricolageGrotesque-800.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4EFA607E81B77C4F92BEFD43 /* BricolageGrotesque-800.ttf */; };
 		656E30FCAE5EFAE79DC6BDB1 /* Provider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCA078D6597EF9C253AA361 /* Provider.swift */; };
-		6850A7EBC3BD4CBEA38158B3 /* NewWaltDisney.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 531C66868F4F59346D672F02 /* NewWaltDisney.ttf */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */; };
 		86D5495BC86BF1E8B7A8F897 /* CountdownsWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B9E8659EC860EEF3893C7B63 /* CountdownsWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		92B03956BF96B0C818885110 /* Starjedi.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BB6E46C2BCA2A797F9B6D298 /* Starjedi.ttf */; };
 		96D510F7759FB02C771DC813 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84FED4AD605EF7EC01D939C4 /* Foundation.framework */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
-		9E3295EBA2DFF521C70C27B9 /* GoodTimes-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1EBBB525DBE0D785D4648A05 /* GoodTimes-Regular.otf */; };
 		AB4B2267B601F45EF5163227 /* Inter-600.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D30FC21EF09190EA84C9C52 /* Inter-600.ttf */; };
-		B25FAE1883C63DC6BB40C7E3 /* CarnivaleeFreakshow-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 712973C9AB6385F01D496F1E /* CarnivaleeFreakshow-Regular.ttf */; };
 		B49D470768C34EC29FB18B40 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9143109E42B1D6693D3FDBD /* Configuration.swift */; };
-		C78D50D52900553FE0950592 /* Sunnyspells.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02E247141D0B5D24234EA724 /* Sunnyspells.otf */; };
 		D4386A9489ED663F1B32E368 /* Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC5915502EF3452A38371F51 /* Snapshot.swift */; };
 /* End PBXBuildFile section */
 
@@ -76,7 +70,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		02E247141D0B5D24234EA724 /* Sunnyspells.otf */ = {isa = PBXFileReference; includeInIndex = 1; path = Sunnyspells.otf; sourceTree = "<group>"; };
 		09213B96278F4EF90070B3CA /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 		09D404C42AA39D6D00403237 /* icon-light@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-light@3x.png"; sourceTree = "<group>"; };
 		09D404C52AA39D6D00403237 /* icon-light@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-light@2x.png"; sourceTree = "<group>"; };
@@ -87,14 +80,10 @@
 		0D30FC21EF09190EA84C9C52 /* Inter-600.ttf */ = {isa = PBXFileReference; includeInIndex = 1; path = "Inter-600.ttf"; sourceTree = "<group>"; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
-		1EBBB525DBE0D785D4648A05 /* GoodTimes-Regular.otf */ = {isa = PBXFileReference; includeInIndex = 1; path = "GoodTimes-Regular.otf"; sourceTree = "<group>"; };
 		2421EF5976B8ABE3633069EA /* Fonts.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Fonts.swift; sourceTree = "<group>"; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
 		42C0D84B37811DD4044CB834 /* Inter-700.ttf */ = {isa = PBXFileReference; includeInIndex = 1; path = "Inter-700.ttf"; sourceTree = "<group>"; };
-		4BDE84F96DF51BD76F996E50 /* DiarioDeAndy.otf */ = {isa = PBXFileReference; includeInIndex = 1; path = DiarioDeAndy.otf; sourceTree = "<group>"; };
 		4EFA607E81B77C4F92BEFD43 /* BricolageGrotesque-800.ttf */ = {isa = PBXFileReference; includeInIndex = 1; path = "BricolageGrotesque-800.ttf"; sourceTree = "<group>"; };
-		531C66868F4F59346D672F02 /* NewWaltDisney.ttf */ = {isa = PBXFileReference; includeInIndex = 1; path = NewWaltDisney.ttf; sourceTree = "<group>"; };
-		712973C9AB6385F01D496F1E /* CarnivaleeFreakshow-Regular.ttf */ = {isa = PBXFileReference; includeInIndex = 1; path = "CarnivaleeFreakshow-Regular.ttf"; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		78E0A7A72DC9AD7400C4905E /* FlutterGeneratedPluginSwiftPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = FlutterGeneratedPluginSwiftPackage; path = Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage; sourceTree = "<group>"; };
@@ -113,7 +102,6 @@
 		A3D7D19C0773A69EEFA46D21 /* CountdownsWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CountdownsWidget.swift; sourceTree = "<group>"; };
 		B068CE6375575D14200765A0 /* BricolageGrotesque-700.ttf */ = {isa = PBXFileReference; includeInIndex = 1; path = "BricolageGrotesque-700.ttf"; sourceTree = "<group>"; };
 		B9E8659EC860EEF3893C7B63 /* CountdownsWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CountdownsWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		BB6E46C2BCA2A797F9B6D298 /* Starjedi.ttf */ = {isa = PBXFileReference; includeInIndex = 1; path = Starjedi.ttf; sourceTree = "<group>"; };
 		BC5915502EF3452A38371F51 /* Snapshot.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Snapshot.swift; sourceTree = "<group>"; };
 		D35CA0954E5CEB924FEA74B8 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D9143109E42B1D6693D3FDBD /* Configuration.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
@@ -161,12 +149,6 @@
 				4EFA607E81B77C4F92BEFD43 /* BricolageGrotesque-800.ttf */,
 				0D30FC21EF09190EA84C9C52 /* Inter-600.ttf */,
 				42C0D84B37811DD4044CB834 /* Inter-700.ttf */,
-				1EBBB525DBE0D785D4648A05 /* GoodTimes-Regular.otf */,
-				4BDE84F96DF51BD76F996E50 /* DiarioDeAndy.otf */,
-				02E247141D0B5D24234EA724 /* Sunnyspells.otf */,
-				712973C9AB6385F01D496F1E /* CarnivaleeFreakshow-Regular.ttf */,
-				BB6E46C2BCA2A797F9B6D298 /* Starjedi.ttf */,
-				531C66868F4F59346D672F02 /* NewWaltDisney.ttf */,
 			);
 			name = WidgetFonts;
 			path = ../fonts;
@@ -363,12 +345,6 @@
 				655E1223C5B9693BC94BE3C4 /* BricolageGrotesque-800.ttf in Resources */,
 				AB4B2267B601F45EF5163227 /* Inter-600.ttf in Resources */,
 				2B85E09AD4C41D0A847397DB /* Inter-700.ttf in Resources */,
-				9E3295EBA2DFF521C70C27B9 /* GoodTimes-Regular.otf in Resources */,
-				489A82596D9DD6C71BF36ABE /* DiarioDeAndy.otf in Resources */,
-				C78D50D52900553FE0950592 /* Sunnyspells.otf in Resources */,
-				B25FAE1883C63DC6BB40C7E3 /* CarnivaleeFreakshow-Regular.ttf in Resources */,
-				92B03956BF96B0C818885110 /* Starjedi.ttf in Resources */,
-				6850A7EBC3BD4CBEA38158B3 /* NewWaltDisney.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

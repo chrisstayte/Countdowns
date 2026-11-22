@@ -25,6 +25,7 @@ void main() {
     test('has the families the old bundled fonts move to', () {
       for (final legacy in ['Roboto', ...legacyEventFonts.keys]) {
         final family = canonicalEventFont(legacy);
+        if (family == 'Default') continue;
         expect(catalog[family], isNotNull, reason: family);
       }
       expect(catalog['Libre Baskerville']!.category, FontCategory.serif);
@@ -61,12 +62,23 @@ void main() {
     expect(canonicalEventFont('ComicNeue'), 'Comic Neue');
     expect(canonicalEventFont(''), 'Default');
     expect(isGoogleEventFont('Default'), isFalse);
-    expect(isGoogleEventFont('NewWaltDisney'), isFalse);
     expect(isGoogleEventFont('Roboto'), isTrue);
-    expect(eventFontLabel('Starjedi'), 'Not Starwars');
     expect(eventFontLabel('LuxuriousRoman'), 'Luxurious Roman');
     expect(resolveEventFont('Default'), AppFonts.numerals);
-    expect(resolveEventFont('GoodTimes'), 'GoodTimes');
+    // The originals that weren't on Google Fonts are gone: Default.
+    for (final dropped in [
+      'GoodTimes',
+      'DiarioDeAndy',
+      'Sunnyspells',
+      'CarnivaleeFreakshow',
+      'Starjedi',
+      'NewWaltDisney',
+    ]) {
+      expect(canonicalEventFont(dropped), 'Default');
+      expect(eventFontLabel(dropped), 'Default');
+      expect(isGoogleEventFont(dropped), isFalse);
+      expect(resolveEventFont(dropped), AppFonts.numerals);
+    }
     expect(resolveEventFont('ComicNeue'), 'gf:Comic Neue');
   });
 

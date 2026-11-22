@@ -117,6 +117,6 @@ List<String> fontRow(List<String> recent) => [
     'Default',
     'Libre Baskerville',
     'Comic Neue',
-    'NewWaltDisney',
+    'Pacifico',
   ].where((f) => !recent.contains(f)),
 ].take(4).toList();

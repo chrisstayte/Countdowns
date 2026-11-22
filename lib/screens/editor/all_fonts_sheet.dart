@@ -14,11 +14,11 @@ final fontCatalogProvider = FutureProvider<FontCatalog>(
   (_) => FontCatalog.load(),
 );
 
-/// "1,811 fonts": everything the picker offers.
+/// "1,805 fonts": everything the picker offers.
 String fontCount(FontCatalog catalog) =>
     '${NumberFormat.decimalPattern().format(catalog.fonts.length + bundledEventFonts.length)} fonts';
 
-/// "All 1,811 fonts", or "All fonts" until the catalogue has loaded.
+/// "All 1,805 fonts", or "All fonts" until the catalogue has loaded.
 String allFontsLabel(FontCatalog? catalog) =>
     catalog == null ? 'All fonts' : 'All ${fontCount(catalog)}';
 
@@ -121,8 +121,8 @@ class _FontSampleState extends State<FontSample> {
   }
 }
 
-/// "All fonts": the built-in fonts and every Google font, previewing the
-/// real title, with search and category chips. Returns the picked family.
+/// "All fonts": Default and every Google font, previewing the real title,
+/// with search and category chips. Returns the picked family.
 class AllFontsSheet extends ConsumerStatefulWidget {
   const AllFontsSheet({super.key, required this.draft});
   final Countdown draft;
@@ -131,14 +131,13 @@ class AllFontsSheet extends ConsumerStatefulWidget {
   ConsumerState<AllFontsSheet> createState() => _AllFontsSheetState();
 }
 
-/// A chip: null is All, [_builtIn] the bundled fonts, or a category.
-const _builtIn = 'Built in';
-
 class _AllFontsSheetState extends ConsumerState<AllFontsSheet> {
   final _scroll = ScrollController();
   late String _selected = canonicalEventFont(widget.draft.fontFamily);
   String _query = '';
-  Object? _chip;
+
+  /// The category chip; null is All.
+  FontCategory? _chip;
 
   static const _rowHeight = 64.0;
   static const _rowGap = 8.0;
@@ -170,15 +169,16 @@ class _AllFontsSheetState extends ConsumerState<AllFontsSheet> {
     final catalog = ref.watch(fontCatalogProvider).value;
     final q = _query.trim().toLowerCase();
 
-    final builtIn = _chip == null || _chip == _builtIn
+    // Default sits above the Google fonts in All.
+    final builtIn = _chip == null
         ? bundledEventFonts
               .where((f) => f.label.toLowerCase().contains(q))
               .toList()
         : const <EventFont>[];
-    final google = catalog == null || _chip == _builtIn
+    final google = catalog == null
         ? const <GoogleFont>[]
-        : catalog.matching(_query, category: _chip as FontCategory?);
-    final chips = <Object?>[null, _builtIn, ...FontCategory.values];
+        : catalog.matching(_query, category: _chip);
+    final chips = <FontCategory?>[null, ...FontCategory.values];
 
     Widget row(String family, String label, {GoogleFont? font}) {
       final on = family == _selected;
@@ -324,11 +324,7 @@ class _AllFontsSheetState extends ConsumerState<AllFontsSheet> {
               itemBuilder: (_, i) {
                 final chip = chips[i];
                 return ChoiceChipButton(
-                  label: switch (chip) {
-                    null => 'All',
-                    FontCategory c => c.label,
-                    _ => _builtIn,
-                  },
+                  label: chip?.label ?? 'All',
                   selected: chip == _chip,
                   onTap: () {
                     setState(() => _chip = chip);
@@ -361,10 +357,8 @@ class _AllFontsSheetState extends ConsumerState<AllFontsSheet> {
                       keyboardDismissBehavior:
                           ScrollViewKeyboardDismissBehavior.onDrag,
                       slivers: [
-                        if (builtIn.isNotEmpty) ...[
-                          if (_chip == null) header(_builtIn),
+                        if (builtIn.isNotEmpty)
                           rows(builtIn, (f) => row(f.family, f.label)),
-                        ],
                         if (google.isNotEmpty) ...[
                           if (_chip == null) header('Google Fonts'),
                           rows(google, (f) => row(f.family, f.family, font: f)),

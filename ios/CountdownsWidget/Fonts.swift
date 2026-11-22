@@ -3,7 +3,8 @@ import SwiftUI
 
 /// The fonts the app bundles, by PostScript name. The widget bundles the
 /// same files (see the target's Copy Bundle Resources and UIAppFonts).
-/// Google fonts arrive as files in the App Group, registered at runtime.
+/// Countdown fonts are Google fonts that arrive as files in the App Group,
+/// registered at runtime.
 enum WidgetFont {
   static func numeral(_ size: CGFloat) -> Font {
     .custom(
@@ -20,18 +21,8 @@ enum WidgetFont {
     if let file = event.fontFile, let name = RuntimeFonts.postScriptName(file) {
       return .custom(name, fixedSize: size)
     }
-    let name: String
-    switch event.font {
-    case "GoodTimes": name = "GoodTimesRg-Regular"
-    case "DiarioDeAndy": name = "DIARIO_DE_ANDY"
-    case "Sunnyspells": name = "SunnySpells-Regular"
-    case "CarnivaleeFreakshow": name = "CarnivaleeFreakshow"
-    case "Starjedi": name = "StarJedi"
-    case "NewWaltDisney": name = "NewWaltDisneyUI"
     // Default, and a Google font that hasn't downloaded yet.
-    default: name = "BricolageGrotesque-36ptBold"
-    }
-    return .custom(name, fixedSize: size)
+    return .custom("BricolageGrotesque-36ptBold", fixedSize: size)
   }
 }
 
