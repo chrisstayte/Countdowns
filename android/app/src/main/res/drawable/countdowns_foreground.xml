@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Highlighter mark, matching tool/splash/mark.swift. Scaled into the
+     adaptive icon's central 66dp safe circle; no baked mask or shadow. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="1024" android:viewportHeight="1024">
+    <group android:pivotX="512" android:pivotY="512" android:scaleX="0.62" android:scaleY="0.62">
+        <path android:pathData="M195,184 L830,164 M205,860 L820,840"
+            android:strokeColor="#FFE36E" android:strokeWidth="92"
+            android:strokeLineCap="round" android:strokeLineJoin="round" />
+        <path android:pathData="M249,163 L824,163 L534,665 Z M594,440 L534,335 L249,840 L824,840 L664,568"
+            android:strokeColor="#8C2E2A3A" android:strokeWidth="18"
+            android:strokeLineCap="round" android:strokeLineJoin="round" />
+        <path android:pathData="M225,173 L800,173 L510,675 Z M570,450 L510,345 L225,850 L800,850 L640,578"
+            android:strokeColor="#2E2A3A" android:strokeWidth="26"
+            android:strokeLineCap="round" android:strokeLineJoin="round" />
+    </group>
+</vector>
