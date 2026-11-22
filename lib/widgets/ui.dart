@@ -1,4 +1,5 @@
 import 'package:countdowns/theme/app_theme.dart';
+import 'package:countdowns/widgets/sliding_segmented.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// Uppercase section heading.
@@ -22,7 +23,8 @@ class SectionLabel extends StatelessWidget {
   );
 }
 
-/// A row of options in a rounded track, one selected.
+/// A row of options in a rounded track, one selected. A thin wrapper over
+/// [SlidingSegmented] that keeps the original call sites' look.
 class PillSegmented<T> extends StatelessWidget {
   const PillSegmented({
     super.key,
@@ -51,56 +53,58 @@ class PillSegmented<T> extends StatelessWidget {
   final bool raised;
 
   @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(4),
-    decoration: BoxDecoration(
-      color: trackColor,
-      borderRadius: BorderRadius.circular(height / 2 + 4),
-    ),
-    child: Row(
-      children: [
-        for (final (i, v) in values.indexed) ...[
-          if (i > 0) const SizedBox(width: 4),
-          Expanded(
-            child: Semantics(
-              button: true,
-              selected: v == selected,
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () => onChanged(v),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 160),
-                  height: height,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: v == selected ? selectedColor : Colors.transparent,
-                    borderRadius: BorderRadius.circular(height / 2),
-                    boxShadow: raised && v == selected
-                        ? const [
-                            BoxShadow(
-                              color: Color(0x1F1C1633),
-                              blurRadius: 8,
-                              offset: Offset(0, 2),
-                            ),
-                          ]
-                        : null,
-                  ),
-                  child: Text(
-                    label(v),
-                    maxLines: 1,
-                    style: TextStyle(
-                      fontSize: fontSize,
-                      fontWeight: FontWeight.w700,
-                      color: v == selected ? selectedText : text,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ],
-    ),
+  Widget build(BuildContext context) => SlidingSegmented<T>(
+    values: values,
+    selected: selected,
+    label: label,
+    onChanged: onChanged,
+    height: height,
+    fontSize: fontSize,
+    trackColor: trackColor,
+    pillColor: selectedColor,
+    selectedText: selectedText,
+    text: text,
+    raised: raised,
+  );
+}
+
+/// A chip-style single choice row (outlined options, ink pill), sliding
+/// like the segmented control. Home filters, share Count in, Darken.
+class ChipSegmented<T> extends StatelessWidget {
+  const ChipSegmented({
+    super.key,
+    required this.values,
+    required this.selected,
+    required this.label,
+    required this.onChanged,
+    this.height = 38,
+    this.fontSize = 14,
+    this.spacing = 8,
+    this.equalWidths = false,
+    this.segmentPadding = 14,
+  });
+
+  final List<T> values;
+  final T selected;
+  final String Function(T) label;
+  final ValueChanged<T> onChanged;
+  final double height, fontSize, spacing, segmentPadding;
+  final bool equalWidths;
+
+  @override
+  Widget build(BuildContext context) => SlidingSegmented<T>(
+    values: values,
+    selected: selected,
+    label: label,
+    onChanged: onChanged,
+    height: height,
+    fontSize: fontSize,
+    fontWeight: FontWeight.w600,
+    trackColor: null,
+    spacing: spacing,
+    outline: AppColors.border,
+    equalWidths: equalWidths,
+    segmentPadding: segmentPadding,
   );
 }
 

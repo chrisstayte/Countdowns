@@ -266,7 +266,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
                       selectedColor: Colors.white,
                       selectedText: AppColors.ink,
                       onChanged: (t) {
-                        feedback(ref, Sound.select);
+                        feedback(ref, Sound.select, false);
                         FocusScope.of(context).unfocus();
                         setState(() => _tab = t);
                       },

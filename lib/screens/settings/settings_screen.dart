@@ -301,7 +301,7 @@ class _Countdowns extends ConsumerWidget {
                     height: 34,
                     fontSize: 13,
                     onChanged: (u) {
-                      feedback(ref, Sound.select);
+                      feedback(ref, Sound.select, false);
                       controller.setDefaultUnit(u);
                     },
                   ),

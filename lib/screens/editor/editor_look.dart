@@ -504,23 +504,17 @@ class _DarkenRow extends ConsumerWidget {
           child: Text('DARKEN', style: AppText.eyebrow),
         ),
         Expanded(
-          child: Row(
-            children: [
-              for (final (i, e) in photoDarkenLevels.entries.indexed) ...[
-                if (i > 0) const SizedBox(width: 6),
-                Expanded(
-                  child: ChoiceChipButton(
-                    height: 36,
-                    label: e.key,
-                    selected: current == e.key,
-                    onTap: () {
-                      feedback(ref, Sound.select);
-                      edit((d) => d.copyWith(photoDarken: e.value));
-                    },
-                  ),
-                ),
-              ],
-            ],
+          child: ChipSegmented<String>(
+            values: photoDarkenLevels.keys.toList(),
+            selected: current,
+            label: (k) => k,
+            height: 36,
+            spacing: 6,
+            equalWidths: true,
+            onChanged: (k) {
+              feedback(ref, Sound.select, false);
+              edit((d) => d.copyWith(photoDarken: photoDarkenLevels[k]));
+            },
           ),
         ),
       ],

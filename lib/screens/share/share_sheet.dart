@@ -170,7 +170,7 @@ class _ShareSheetState extends ConsumerState<ShareSheet> {
               ShareFormat.calendar => 'Calendar',
             },
             onChanged: (f) {
-              feedback(ref, Sound.select);
+              feedback(ref, Sound.select, false);
               setState(() => _format = f);
             },
           ),
@@ -214,21 +214,18 @@ class _ShareSheetState extends ConsumerState<ShareSheet> {
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   alignment: Alignment.centerRight,
-                  child: Row(
-                    children: [
-                      for (final u in CountUnit.values) ...[
-                        const SizedBox(width: 6),
-                        ChoiceChipButton(
-                          height: 32,
-                          label: u.label,
-                          selected: _unit == u,
-                          onTap: () {
-                            feedback(ref, Sound.select);
-                            setState(() => _unit = u);
-                          },
-                        ),
-                      ],
-                    ],
+                  child: ChipSegmented<CountUnit>(
+                    values: CountUnit.values,
+                    selected: _unit,
+                    label: (u) => u.label,
+                    height: 32,
+                    fontSize: 13,
+                    spacing: 6,
+                    segmentPadding: 10,
+                    onChanged: (u) {
+                      feedback(ref, Sound.select, false);
+                      setState(() => _unit = u);
+                    },
                   ),
                 ),
               ),

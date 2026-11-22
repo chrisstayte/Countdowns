@@ -227,34 +227,19 @@ class _Filters extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final filter = ref.watch(homeFilterProvider);
-    void pick(HomeFilter f) {
-      feedback(ref, Sound.select);
-      ref.read(homeFilterProvider.notifier).set(f);
-    }
-
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: [
-        ChoiceChipButton(
-          height: 36,
-          label: 'Upcoming · $upcoming',
-          selected: filter == HomeFilter.upcoming,
-          onTap: () => pick(HomeFilter.upcoming),
-        ),
-        ChoiceChipButton(
-          height: 36,
-          label: 'Done · $done',
-          selected: filter == HomeFilter.done,
-          onTap: () => pick(HomeFilter.done),
-        ),
-        ChoiceChipButton(
-          height: 36,
-          label: 'All',
-          selected: filter == HomeFilter.all,
-          onTap: () => pick(HomeFilter.all),
-        ),
-      ],
+    return ChipSegmented<HomeFilter>(
+      values: HomeFilter.values,
+      selected: filter,
+      height: 36,
+      label: (f) => switch (f) {
+        HomeFilter.upcoming => 'Upcoming · $upcoming',
+        HomeFilter.done => 'Done · $done',
+        HomeFilter.all => 'All',
+      },
+      onChanged: (f) {
+        feedback(ref, Sound.select, false);
+        ref.read(homeFilterProvider.notifier).set(f);
+      },
     );
   }
 }

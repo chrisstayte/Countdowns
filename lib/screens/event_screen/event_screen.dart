@@ -323,7 +323,7 @@ class _CountdownDetailState extends ConsumerState<CountdownDetail> {
       selectedText: ink == Colors.white ? AppColors.ink : Colors.white,
       text: ink,
       onChanged: (u) {
-        feedback(ref, Sound.select);
+        feedback(ref, Sound.select, false);
         setState(() => _unit = u);
       },
     );

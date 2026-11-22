@@ -6,9 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 enum Sound { tap, select, success, error, trash }
 
 /// Plays the haptic and sound the person has turned on.
-void feedback(WidgetRef ref, [Sound sound = Sound.tap]) {
+/// [haptic] is off for segmented controls, which tick their own haptics.
+void feedback(WidgetRef ref, [Sound sound = Sound.tap, bool haptic = true]) {
   final settings = ref.read(localSettingsProvider);
-  if (settings.hapticFeedback) {
+  if (haptic && settings.hapticFeedback) {
     switch (sound) {
       case Sound.select:
         HapticFeedback.selectionClick();

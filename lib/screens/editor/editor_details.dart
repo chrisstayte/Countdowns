@@ -165,7 +165,7 @@ class EditorDetails extends ConsumerWidget {
           height: 34,
           fontSize: 13,
           onChanged: (u) {
-            feedback(ref, Sound.select);
+            feedback(ref, Sound.select, false);
             edit((d) => d.copyWith(unit: u));
           },
         ),

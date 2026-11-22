@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:countdowns/models/countdown.dart';
 import 'package:countdowns/theme/app_theme.dart';
 import 'package:countdowns/widgets/cropped_photo.dart';
+import 'package:countdowns/widgets/sliding_segmented.dart';
 import 'package:countdowns/widgets/ui.dart';
 import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
@@ -217,36 +218,29 @@ class _CropScreenState extends State<CropScreen> {
                       padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
                       child: Column(
                         children: [
-                          Row(
-                            children: [
-                              _ShapeChip(
-                                label: 'All shapes',
-                                color: Colors.white,
-                                glyph: const Size(14, 14),
-                                on: _selected == null,
-                                onTap: () => setState(() => _selected = null),
-                              ),
-                              for (final s in _shapes) ...[
-                                const SizedBox(width: 6),
-                                _ShapeChip(
-                                  label: switch (s) {
-                                    CropShape.full => 'Full screen',
-                                    CropShape.card => 'Card',
-                                    CropShape.wide => 'Wide',
-                                    CropShape.tablet => 'iPad',
-                                  },
-                                  color: _shapeColors[s]!,
-                                  glyph: switch (s) {
-                                    CropShape.full => const Size(10, 20),
-                                    CropShape.card => const Size(16, 16),
-                                    CropShape.wide => const Size(22, 11),
-                                    CropShape.tablet => const Size(20, 14),
-                                  },
-                                  on: _selected == s,
-                                  onTap: () => setState(() => _selected = s),
-                                ),
-                              ],
-                            ],
+                          SlidingSegmented<CropShape?>(
+                            values: [null, ..._shapes],
+                            selected: _selected,
+                            onChanged: (s) => setState(() => _selected = s),
+                            height: 60,
+                            radius: 16,
+                            trackColor: null,
+                            spacing: 6,
+                            segmentColor: Colors.white.withValues(alpha: 0.06),
+                            pillColor: Colors.white.withValues(alpha: 0.14),
+                            pillBorder: (s) => _shapeColor(s),
+                            semanticLabel: _shapeLabel,
+                            builder: (context, s, t) => _ShapeLabel(
+                              label: _shapeLabel(s),
+                              color: _shapeColor(s),
+                              glyph: switch (s) {
+                                null => const Size(14, 14),
+                                CropShape.full => const Size(10, 20),
+                                CropShape.card => const Size(16, 16),
+                                CropShape.wide => const Size(22, 11),
+                                CropShape.tablet => const Size(20, 14),
+                              },
+                            ),
                           ),
                         ],
                       ),
@@ -502,63 +496,50 @@ class _FramePainter extends CustomPainter {
       old.color != color || old.selected != selected;
 }
 
-class _ShapeChip extends StatelessWidget {
-  const _ShapeChip({
+Color _shapeColor(CropShape? s) => s == null ? Colors.white : _shapeColors[s]!;
+
+String _shapeLabel(CropShape? s) => switch (s) {
+  null => 'All shapes',
+  CropShape.full => 'Full screen',
+  CropShape.card => 'Card',
+  CropShape.wide => 'Wide',
+  CropShape.tablet => 'iPad',
+};
+
+class _ShapeLabel extends StatelessWidget {
+  const _ShapeLabel({
     required this.label,
     required this.color,
     required this.glyph,
-    required this.on,
-    required this.onTap,
   });
 
   final String label;
   final Color color;
   final Size glyph;
-  final bool on;
-  final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) => Expanded(
-    child: Semantics(
-      button: true,
-      selected: on,
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          height: 62,
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: on ? 0.14 : 0.06),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: on ? color : Colors.transparent,
-              width: 2,
-            ),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: glyph.width,
-                height: glyph.height,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(3),
-                  border: Border.all(color: color, width: 2),
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                label,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
-          ),
+  Widget build(BuildContext context) => Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Container(
+        width: glyph.width,
+        height: glyph.height,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(3),
+          border: Border.all(color: color, width: 2),
         ),
       ),
-    ),
+      const SizedBox(height: 4),
+      Text(
+        label,
+        maxLines: 1,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 11,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    ],
   );
 }
 
