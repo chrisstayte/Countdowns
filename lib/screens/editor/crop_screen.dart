@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:countdowns/models/countdown.dart';
 import 'package:countdowns/theme/app_theme.dart';
+import 'package:countdowns/widgets/cropped_photo.dart';
 import 'package:countdowns/widgets/ui.dart';
 import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
@@ -39,8 +40,8 @@ class CropScreen extends StatefulWidget {
 
 class _CropScreenState extends State<CropScreen> {
   late bool _same = widget.initial.sameForAll;
-  late final Map<CropShape, Alignment> _points = {
-    for (final s in CropShape.values) s: widget.initial.alignmentFor(s),
+  late final Map<CropShape, CropPoint> _points = {
+    for (final s in CropShape.values) s: widget.initial.pointFor(s),
   };
 
   /// Null means "All shapes".
@@ -81,21 +82,24 @@ class _CropScreenState extends State<CropScreen> {
   void _done() {
     final points = _same
         ? {CropShape.full: _points[CropShape.full]!}
-        : Map<CropShape, Alignment>.of(_points);
+        : Map<CropShape, CropPoint>.of(_points);
     Navigator.pop(context, PhotoCrops(sameForAll: _same, points: points));
   }
 
-  /// Shapes that move together right now.
-  List<CropShape> get _moving =>
-      _same || _selected == null ? CropShape.values : [_selected!];
+  /// The shapes a gesture on [grabbed] changes: all of them only when
+  /// "Same spot for all" is on.
+  List<CropShape> _affected(CropShape grabbed) =>
+      _same ? CropShape.values : [grabbed];
 
-  void _nudge(Offset fraction) => setState(() {
-    for (final s in _moving) {
-      final a = _points[s]!;
-      _points[s] = Alignment(
-        (a.x + fraction.dx).clamp(-1, 1),
-        (a.y + fraction.dy).clamp(-1, 1),
-      );
+  void _move(CropShape grabbed, Offset delta) => setState(() {
+    for (final s in _affected(grabbed)) {
+      _points[s] = _points[s]!.moved(delta.dx, delta.dy);
+    }
+  });
+
+  void _zoom(CropShape grabbed, double zoom) => setState(() {
+    for (final s in _affected(grabbed)) {
+      _points[s] = _points[s]!.zoomed(zoom);
     }
   });
 
@@ -142,8 +146,10 @@ class _CropScreenState extends State<CropScreen> {
       ),
     );
     final hint = _selected == null
-        ? 'Every place this photo shows up'
-        : 'Drag the photo to set the ${_selected!.label.toLowerCase()} crop';
+        ? (_same
+              ? 'Drag or pinch to move every crop together'
+              : 'Drag or pinch a shape to set its crop')
+        : 'Drag or pinch to set the ${_selected!.label.toLowerCase()} crop';
     final canvas = _CropCanvas(
       file: widget.file,
       imageSize: _imageSize,
@@ -151,15 +157,9 @@ class _CropScreenState extends State<CropScreen> {
       points: _points,
       selected: _selected,
       hint: hint,
-      onDrag: (shape, delta) => setState(() {
-        for (final s in _same || _selected == null ? _shapes : [shape]) {
-          final a = _points[s]!;
-          _points[s] = Alignment(
-            (a.x + delta.dx).clamp(-1, 1),
-            (a.y + delta.dy).clamp(-1, 1),
-          );
-        }
-      }),
+      linked: _same,
+      onMove: _move,
+      onZoom: _zoom,
     );
     final link = _LinkToggle(
       on: _same,
@@ -168,7 +168,6 @@ class _CropScreenState extends State<CropScreen> {
           ? 'Moving one moves them all'
           : 'Each shape keeps its own crop',
     );
-    final pad = _Nudge(onNudge: _nudge);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.light,
@@ -229,7 +228,7 @@ class _CropScreenState extends State<CropScreen> {
                                           _Thumbnail(
                                             shape: s,
                                             file: widget.file,
-                                            alignment: _points[s]!,
+                                            point: _points[s]!,
                                             selected: _selected == s,
                                             onTap: () =>
                                                 setState(() => _selected = s),
@@ -237,13 +236,7 @@ class _CropScreenState extends State<CropScreen> {
                                       ],
                                     ),
                                   ),
-                                  Row(
-                                    children: [
-                                      Expanded(child: link),
-                                      const SizedBox(width: 14),
-                                      pad,
-                                    ],
-                                  ),
+                                  link,
                                 ],
                               ),
                             ),
@@ -293,13 +286,7 @@ class _CropScreenState extends State<CropScreen> {
                             ],
                           ),
                           const SizedBox(height: 14),
-                          Row(
-                            children: [
-                              Expanded(child: link),
-                              const SizedBox(width: 12),
-                              pad,
-                            ],
-                          ),
+                          link,
                         ],
                       ),
                     ),
@@ -311,22 +298,12 @@ class _CropScreenState extends State<CropScreen> {
   }
 }
 
-/// The frame for [shape] inside an image drawn in [image], positioned by
-/// [alignment], exactly as BoxFit.cover would show it.
-Rect cropFrame(Rect image, double aspect, Alignment alignment) {
-  final imageAspect = image.width / image.height;
-  final w = aspect > imageAspect ? image.width : image.height * aspect;
-  final h = aspect > imageAspect ? image.width / aspect : image.height;
-  final dx = image.width - w, dy = image.height - h;
-  return Rect.fromLTWH(
-    image.left + dx * (alignment.x + 1) / 2,
-    image.top + dy * (alignment.y + 1) / 2,
-    w,
-    h,
-  );
-}
+/// The frame for a shape inside an image drawn at [image]: exactly the part
+/// of the photo that shape will show.
+Rect cropFrame(Rect image, double aspect, CropPoint point) =>
+    cropRectIn(image.size, aspect, point).shift(image.topLeft);
 
-class _CropCanvas extends StatelessWidget {
+class _CropCanvas extends StatefulWidget {
   const _CropCanvas({
     required this.file,
     required this.imageSize,
@@ -334,21 +311,51 @@ class _CropCanvas extends StatelessWidget {
     required this.points,
     required this.selected,
     required this.hint,
-    required this.onDrag,
+    required this.linked,
+    required this.onMove,
+    required this.onZoom,
   });
 
   final File file;
   final Size? imageSize;
   final List<CropShape> shapes;
-  final Map<CropShape, Alignment> points;
+  final Map<CropShape, CropPoint> points;
   final CropShape? selected;
   final String hint;
-  final void Function(CropShape shape, Offset alignmentDelta) onDrag;
+  final bool linked;
+  final void Function(CropShape grabbed, Offset alignmentDelta) onMove;
+  final void Function(CropShape grabbed, double zoom) onZoom;
+
+  @override
+  State<_CropCanvas> createState() => _CropCanvasState();
+}
+
+class _CropCanvasState extends State<_CropCanvas> {
+  CropShape? _grabbed;
+  double _startZoom = 1;
+
+  /// The shape a gesture starting at [at] works on: the selected shape, or
+  /// in "All shapes" the topmost frame under the finger (any frame when
+  /// linked, since they all move together).
+  CropShape? _grab(Rect image, Offset at) {
+    if (widget.selected != null) return widget.selected;
+    for (final s in _order.reversed) {
+      if (cropFrame(image, s.aspect, widget.points[s]!).contains(at)) {
+        return s;
+      }
+    }
+    return widget.linked ? CropShape.full : null;
+  }
+
+  List<CropShape> get _order => [
+    ...widget.shapes.where((s) => s != widget.selected),
+    ?widget.selected,
+  ];
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, box) {
-      final size = imageSize;
+      final size = widget.imageSize;
       if (size == null) {
         return const Center(child: CircularProgressIndicator(color: _soft));
       }
@@ -357,38 +364,46 @@ class _CropCanvas extends StatelessWidget {
         fitted.destination,
         Offset.zero & box.biggest,
       );
-      final order = [...shapes.where((s) => s != selected), ?selected];
-      void drag(DragUpdateDetails d) {
-        final shape = selected ?? CropShape.full;
-        final frame = cropFrame(image, shape.aspect, points[shape]!);
+
+      void update(ScaleUpdateDetails d) {
+        final shape = _grabbed;
+        if (shape == null) return;
+        if (d.pointerCount > 1) {
+          widget.onZoom(shape, _startZoom * d.scale);
+        }
+        final frame = cropFrame(image, shape.aspect, widget.points[shape]!);
         final dx = image.width - frame.width;
         final dy = image.height - frame.height;
-        // Dragging the photo moves it under the frame, so the crop point
-        // moves the other way.
-        onDrag(
+        // Moving the frame over the photo: drag right, crop moves right.
+        widget.onMove(
           shape,
           Offset(
-            dx > 0 ? -2 * d.delta.dx / dx : 0,
-            dy > 0 ? -2 * d.delta.dy / dy : 0,
+            dx > 0 ? 2 * d.focalPointDelta.dx / dx : 0,
+            dy > 0 ? 2 * d.focalPointDelta.dy / dy : 0,
           ),
         );
       }
 
       return GestureDetector(
-        onPanUpdate: drag,
+        onScaleStart: (d) {
+          _grabbed = _grab(image, d.localFocalPoint);
+          _startZoom = _grabbed == null ? 1 : widget.points[_grabbed]!.zoom;
+        },
+        onScaleUpdate: update,
+        onScaleEnd: (_) => _grabbed = null,
         child: ClipRect(
           child: Stack(
             children: [
               Positioned.fromRect(
                 rect: image,
-                child: Image.file(file, fit: BoxFit.fill),
+                child: Image.file(widget.file, fit: BoxFit.fill),
               ),
-              for (final s in order)
+              for (final s in _order)
                 _Frame(
-                  rect: cropFrame(image, s.aspect, points[s]!),
+                  rect: cropFrame(image, s.aspect, widget.points[s]!),
                   shape: s,
-                  selected: selected == s,
-                  faded: selected != null && selected != s,
+                  selected: widget.selected == s,
+                  faded: widget.selected != null && widget.selected != s,
                 ),
               Positioned(
                 left: 0,
@@ -405,7 +420,7 @@ class _CropCanvas extends StatelessWidget {
                       borderRadius: BorderRadius.circular(14),
                     ),
                     child: Text(
-                      hint,
+                      widget.hint,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 12,
@@ -552,7 +567,7 @@ class _ShapeChip extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: Container(
-          height: 60,
+          height: 62,
           decoration: BoxDecoration(
             color: Colors.white.withValues(alpha: on ? 0.14 : 0.06),
             borderRadius: BorderRadius.circular(16),
@@ -572,7 +587,7 @@ class _ShapeChip extends StatelessWidget {
                   border: Border.all(color: color, width: 2),
                 ),
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 4),
               Text(
                 label,
                 style: const TextStyle(
@@ -661,56 +676,6 @@ class _LinkToggle extends StatelessWidget {
   );
 }
 
-class _Nudge extends StatelessWidget {
-  const _Nudge({required this.onNudge});
-  final ValueChanged<Offset> onNudge;
-
-  static const _step = 0.1;
-
-  @override
-  Widget build(BuildContext context) {
-    Widget key(IconData icon, String label, Offset delta) => Semantics(
-      button: true,
-      label: label,
-      child: GestureDetector(
-        onTap: () => onNudge(delta),
-        child: Container(
-          width: 30,
-          height: 24,
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.14),
-            borderRadius: BorderRadius.circular(7),
-          ),
-          child: Icon(icon, size: 16, color: Colors.white),
-        ),
-      ),
-    );
-    return Column(
-      children: [
-        key(Icons.arrow_drop_up_rounded, 'Move up', const Offset(0, -_step)),
-        const SizedBox(height: 3),
-        Row(
-          children: [
-            key(Icons.arrow_left_rounded, 'Move left', const Offset(-_step, 0)),
-            const SizedBox(width: 3),
-            key(
-              Icons.arrow_drop_down_rounded,
-              'Move down',
-              const Offset(0, _step),
-            ),
-            const SizedBox(width: 3),
-            key(
-              Icons.arrow_right_rounded,
-              'Move right',
-              const Offset(_step, 0),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
 class _ShowAll extends StatelessWidget {
   const _ShowAll({required this.on, required this.onTap});
   final bool on;
@@ -747,14 +712,14 @@ class _Thumbnail extends StatelessWidget {
   const _Thumbnail({
     required this.shape,
     required this.file,
-    required this.alignment,
+    required this.point,
     required this.selected,
     required this.onTap,
   });
 
   final CropShape shape;
   final File file;
-  final Alignment alignment;
+  final CropPoint point;
   final bool selected;
   final VoidCallback onTap;
 
@@ -788,10 +753,9 @@ class _Thumbnail extends StatelessWidget {
                       border: Border.all(color: color, width: 2),
                     ),
                     clipBehavior: Clip.antiAlias,
-                    child: Image.file(
-                      file,
-                      fit: BoxFit.cover,
-                      alignment: alignment,
+                    child: CroppedPhoto(
+                      file: file,
+                      point: point,
                       cacheWidth: 400,
                     ),
                   ),

@@ -27,8 +27,8 @@ String iconFileName(String slug, ui.Color tint) =>
 /// Photo PNG for an event, cropped for [shape]. The name changes whenever
 /// the photo or crop does, so widgets never show a stale copy.
 String photoFileName(Countdown e, CropShape shape) {
-  final a = e.photoCrops?.alignmentFor(shape);
-  final key = Object.hash(e.photoPath, a?.x, a?.y)
+  final a = e.photoCrops?.pointFor(shape);
+  final key = Object.hash(e.photoPath, a?.x, a?.y, a?.zoom)
       .toUnsigned(32)
       .toRadixString(16);
   return 'photos/${e.id}-${shape.name}-$key.png';
@@ -177,21 +177,16 @@ class WidgetSnapshotWriter {
     final codec = await ui.instantiateImageCodec(await source.readAsBytes());
     final src = (await codec.getNextFrame()).image;
     final height = (width / shape.aspect).round();
-    // Same maths as BoxFit.cover with the stored alignment.
-    final imageAspect = src.width / src.height;
-    final cropW = shape.aspect > imageAspect
-        ? src.width.toDouble()
-        : src.height * shape.aspect;
-    final cropH = shape.aspect > imageAspect
-        ? src.width / shape.aspect
-        : src.height.toDouble();
-    final a = e.photoCrops?.alignmentFor(shape);
-    final left = (src.width - cropW) * ((a?.x ?? 0) + 1) / 2;
-    final top = (src.height - cropH) * ((a?.y ?? 0) + 1) / 2;
+    // Same maths as the app: BoxFit.cover at the alignment, then zoom.
+    final crop = cropRectIn(
+      ui.Size(src.width.toDouble(), src.height.toDouble()),
+      shape.aspect,
+      e.photoCrops?.pointFor(shape) ?? CropPoint.center,
+    );
     final recorder = ui.PictureRecorder();
     ui.Canvas(recorder).drawImageRect(
       src,
-      ui.Rect.fromLTWH(left, top, cropW, cropH),
+      crop,
       ui.Rect.fromLTWH(0, 0, width.toDouble(), height.toDouble()),
       ui.Paint()..filterQuality = ui.FilterQuality.high,
     );

@@ -1,6 +1,7 @@
 import 'package:countdowns/models/countdown.dart';
 import 'package:countdowns/storage/photos.dart';
 import 'package:countdowns/theme/app_theme.dart';
+import 'package:countdowns/widgets/cropped_photo.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// Soft shadow under white text on photos.
@@ -90,13 +91,10 @@ class CountdownSurface extends StatelessWidget {
           fit: StackFit.passthrough,
           children: [
             Positioned.fill(
-              child: Image.file(
-                file,
-                fit: BoxFit.cover,
-                alignment:
-                    event.photoCrops?.alignmentFor(shape) ?? Alignment.center,
+              child: CroppedPhoto(
+                file: file,
+                point: event.photoCrops?.pointFor(shape) ?? CropPoint.center,
                 cacheWidth: shape == CropShape.card ? 600 : null,
-                gaplessPlayback: true,
                 errorBuilder: (_, _, _) => DecoratedBox(decoration: decoration),
               ),
             ),

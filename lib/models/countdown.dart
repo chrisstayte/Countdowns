@@ -39,20 +39,58 @@ enum CropShape {
   final double aspect;
 }
 
-/// Where each shape's crop sits within the photo, as an [Alignment]
-/// (-1 to 1 on each axis) used with [BoxFit.cover].
+/// Zoom limits for photo crops. 1 means the photo just covers the shape.
+const minPhotoZoom = 1.0;
+const maxPhotoZoom = 4.0;
+
+/// One shape's crop: where it sits in the photo, as an [Alignment]
+/// (-1 to 1 on each axis, as used with [BoxFit.cover]), and how far it is
+/// zoomed in.
+@immutable
+class CropPoint {
+  const CropPoint(this.x, this.y, [this.zoom = minPhotoZoom]);
+
+  static const center = CropPoint(0, 0);
+
+  final double x, y, zoom;
+
+  Alignment get alignment => Alignment(x, y);
+
+  CropPoint moved(double dx, double dy) => CropPoint(
+    (x + dx).clamp(-1.0, 1.0),
+    (y + dy).clamp(-1.0, 1.0),
+    zoom,
+  );
+
+  CropPoint zoomed(double value) =>
+      CropPoint(x, y, value.clamp(minPhotoZoom, maxPhotoZoom));
+
+  @override
+  bool operator ==(Object other) =>
+      other is CropPoint && other.x == x && other.y == y && other.zoom == zoom;
+
+  @override
+  int get hashCode => Object.hash(x, y, zoom);
+
+  @override
+  String toString() => 'CropPoint($x, $y, zoom: $zoom)';
+}
+
+/// The crop for every shape a photo shows in. Each shape keeps its own
+/// point and zoom unless [sameForAll] is on, in which case the full-screen
+/// crop is used everywhere.
 class PhotoCrops {
-  const PhotoCrops({this.sameForAll = true, this.points = const {}});
+  const PhotoCrops({this.sameForAll = false, this.points = const {}});
 
   final bool sameForAll;
-  final Map<CropShape, Alignment> points;
+  final Map<CropShape, CropPoint> points;
 
-  Alignment alignmentFor(CropShape shape) {
-    if (sameForAll) return points[CropShape.full] ?? Alignment.center;
-    return points[shape] ?? points[CropShape.full] ?? Alignment.center;
+  CropPoint pointFor(CropShape shape) {
+    if (sameForAll) return points[CropShape.full] ?? CropPoint.center;
+    return points[shape] ?? points[CropShape.full] ?? CropPoint.center;
   }
 
-  PhotoCrops copyWith({bool? sameForAll, Map<CropShape, Alignment>? points}) =>
+  PhotoCrops copyWith({bool? sameForAll, Map<CropShape, CropPoint>? points}) =>
       PhotoCrops(
         sameForAll: sameForAll ?? this.sameForAll,
         points: points ?? this.points,
@@ -60,7 +98,8 @@ class PhotoCrops {
 
   String toJson() => jsonEncode({
     'same': sameForAll,
-    for (final e in points.entries) e.key.name: [e.value.x, e.value.y],
+    for (final e in points.entries)
+      e.key.name: [e.value.x, e.value.y, e.value.zoom],
   });
 
   static PhotoCrops? fromJson(String? json) {
@@ -68,11 +107,17 @@ class PhotoCrops {
     try {
       final map = jsonDecode(json) as Map<String, dynamic>;
       return PhotoCrops(
-        sameForAll: map['same'] as bool? ?? true,
+        sameForAll: map['same'] as bool? ?? false,
         points: {
           for (final shape in CropShape.values)
-            if (map[shape.name] case [num x, num y])
-              shape: Alignment(x.toDouble(), y.toDouble()),
+            if (map[shape.name] case [num x, num y, ...final rest])
+              shape: CropPoint(
+                x.toDouble(),
+                y.toDouble(),
+                rest.isNotEmpty && rest.first is num
+                    ? (rest.first as num).toDouble()
+                    : minPhotoZoom,
+              ),
         },
       );
     } on FormatException {
@@ -95,6 +140,25 @@ class PhotoCrops {
     Object.hashAllUnordered(
       points.entries.map((e) => Object.hash(e.key, e.value)),
     ),
+  );
+}
+
+/// The part of an image of [imageSize] that a crop of [aspect] shows:
+/// BoxFit.cover at the point's alignment, shrunk by its zoom.
+Rect cropRectIn(Size imageSize, double aspect, CropPoint point) {
+  final imageAspect = imageSize.width / imageSize.height;
+  final coverW = aspect > imageAspect
+      ? imageSize.width
+      : imageSize.height * aspect;
+  final coverH = aspect > imageAspect
+      ? imageSize.width / aspect
+      : imageSize.height;
+  final w = coverW / point.zoom, h = coverH / point.zoom;
+  return Rect.fromLTWH(
+    (imageSize.width - w) * (point.x + 1) / 2,
+    (imageSize.height - h) * (point.y + 1) / 2,
+    w,
+    h,
   );
 }
 
