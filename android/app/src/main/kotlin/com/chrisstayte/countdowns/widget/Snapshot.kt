@@ -200,11 +200,21 @@ fun modeFor(countIn: String, e: WidgetEvent): CountMode = when (countIn) {
 
 enum class LargeLayout { Empty, Hero, List }
 
-/** No countdowns: the empty state. One: it fills the widget as a hero.
- *  Two or more: a lead card with the rest listed under it. */
-fun largeLayout(active: Int): LargeLayout = when {
+/** The large widget's "Layout" setting. */
+object LayoutChoice {
+    /** Up next as a list; a hero on its own when only one is active. */
+    const val LIST = "list"
+
+    /** Always one big countdown: the pinned one, else the next. */
+    const val SINGLE = "single"
+}
+
+/** No countdowns: the empty state. "One countdown", or only one active:
+ *  it fills the widget as a hero. Otherwise a lead card with the rest
+ *  listed under it. Only the large size reads [choice]. */
+fun largeLayout(active: Int, choice: String = LayoutChoice.LIST): LargeLayout = when {
     active <= 0 -> LargeLayout.Empty
-    active == 1 -> LargeLayout.Hero
+    choice == LayoutChoice.SINGLE || active == 1 -> LargeLayout.Hero
     else -> LargeLayout.List
 }
 

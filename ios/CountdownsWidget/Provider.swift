@@ -6,6 +6,7 @@ struct CountdownEntry: TimelineEntry {
   let events: [WidgetEvent]
   let pinned: Bool
   let countIn: CountIn
+  var layout: LargeLayoutChoice = .list
 
   var lead: WidgetEvent? { events.first }
 
@@ -58,8 +59,15 @@ struct CountdownProvider: AppIntentTimelineProvider {
       pinned = true
     }
     return CountdownEntry(
-      date: date, events: events, pinned: pinned, countIn: configuration.countIn)
+      date: date, events: events, pinned: pinned, countIn: configuration.countIn,
+      layout: configuration.layout)
   }
+}
+
+extension CountdownEntry {
+  /// The large size: a hero when set to One countdown or when only one is
+  /// active, else the list (mirrors largeLayout in the Android widget).
+  var largeShowsHero: Bool { !events.isEmpty && (layout == .single || events.count == 1) }
 }
 
 extension WidgetEvent {

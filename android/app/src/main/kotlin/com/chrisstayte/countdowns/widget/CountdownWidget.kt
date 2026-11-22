@@ -64,6 +64,9 @@ object WidgetKeys {
     /** "event" (as set in the app), "days" or "sleeps". */
     val countIn = stringPreferencesKey("countIn")
 
+    /** The large size's layout: [LayoutChoice.LIST] (default) or SINGLE. */
+    val layout = stringPreferencesKey("layout")
+
     /** Bumped on every refresh so Glance recomposes with fresh numbers. */
     val stamp = longPreferencesKey("stamp")
 }
@@ -130,7 +133,10 @@ class CountdownWidget : GlanceAppWidget() {
 
             // Android cells run taller than iOS ones: a 4×2 is about 210dp, so
             // the large layouts start at three rows, like the iOS large widget.
-            w >= 200 && h >= 280 && largeLayout(arranged.events.size) == LargeLayout.Hero -> Image(
+            w >= 200 && h >= 280 && largeLayout(
+                arranged.events.size,
+                prefs[WidgetKeys.layout] ?: LayoutChoice.LIST,
+            ) == LargeLayout.Hero -> Image(
                 ImageProvider(art.hero(lead, arranged.pinned, w, h, radius)),
                 contentDescription = art.describe(lead),
                 modifier = frame.clickable(openCountdown(context, lead)),

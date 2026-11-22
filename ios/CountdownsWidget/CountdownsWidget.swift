@@ -32,8 +32,9 @@ struct HomeEntryView: View {
     Group {
       if let lead = entry.lead {
         switch family {
-        case .systemLarge where entry.events.count == 1:
-          // One active countdown: a hero that fills the widget.
+        case .systemLarge where entry.largeShowsHero:
+          // One active countdown, or Layout set to One countdown: a hero
+          // that fills the widget.
           HeroView(entry: entry, event: lead)
             .padding(20)
             .containerBackground(for: .widget) { EventBackground(event: lead, full: true) }

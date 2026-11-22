@@ -65,7 +65,11 @@ class ConfigureActivity : Activity() {
             val glanceId = GlanceAppWidgetManager(this@ConfigureActivity).getGlanceIdBy(widgetId)
             val prefs: Preferences =
                 getAppWidgetState(this@ConfigureActivity, PreferencesGlanceStateDefinition, glanceId)
-            build(prefs[WidgetKeys.countdown] ?: UP_NEXT, prefs[WidgetKeys.countIn] ?: "event")
+            build(
+                prefs[WidgetKeys.countdown] ?: UP_NEXT,
+                prefs[WidgetKeys.countIn] ?: "event",
+                prefs[WidgetKeys.layout] ?: LayoutChoice.LIST,
+            )
         }
     }
 
@@ -77,7 +81,7 @@ class ConfigureActivity : Activity() {
     private fun dp(v: Float) =
         TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, v, resources.displayMetrics).toInt()
 
-    private fun build(pinned: Int, countIn: String) {
+    private fun build(pinned: Int, countIn: String, layoutChoice: String) {
         val now = ZonedDateTime.now()
         val counter = Counter()
         val events = counter.arrange(SnapshotStore.load(this), now, null).events
@@ -121,10 +125,27 @@ class ConfigureActivity : Activity() {
         if (count.checkedRadioButtonId == View.NO_ID) count.check(count.getChildAt(0).id)
         column.addView(count)
 
+        // Only the 4×4 size reads this; smaller sizes ignore it.
+        column.addView(label("LAYOUT · LARGE SIZE"))
+        val layoutValues = HashMap<Int, String>()
+        val layouts = RadioGroup(this)
+        for ((value, name, detail) in listOf(
+            Triple(LayoutChoice.LIST, "List", "Up next, or one big countdown when only one is coming up"),
+            Triple(LayoutChoice.SINGLE, "One countdown", "Always one big countdown: the pinned one, or the next"),
+        )) {
+            val id = View.generateViewId()
+            layoutValues[id] = value
+            layouts.addView(option(id, name, detail))
+            if (value == layoutChoice) layouts.check(id)
+        }
+        if (layouts.checkedRadioButtonId == View.NO_ID) layouts.check(layouts.getChildAt(0).id)
+        column.addView(layouts)
+
         column.addView(save {
             val choice = showValues[show.checkedRadioButtonId] ?: UP_NEXT
             val unit = countValues[count.checkedRadioButtonId] ?: "event"
-            scope.launch { apply(if (choice == UP_NEXT) null else choice, unit) }
+            val layout = layoutValues[layouts.checkedRadioButtonId] ?: LayoutChoice.LIST
+            scope.launch { apply(if (choice == UP_NEXT) null else choice, unit, layout) }
         })
 
         val scroll = ScrollView(this).apply {
@@ -149,12 +170,13 @@ class ConfigureActivity : Activity() {
         }
     }
 
-    private suspend fun apply(pinned: Int?, countIn: String) {
+    private suspend fun apply(pinned: Int?, countIn: String, layout: String) {
         val glanceId = GlanceAppWidgetManager(this).getGlanceIdBy(widgetId)
         updateAppWidgetState(this, glanceId) { prefs ->
             if (pinned == null) prefs.remove(WidgetKeys.countdown)
             else prefs[WidgetKeys.countdown] = pinned
             prefs[WidgetKeys.countIn] = countIn
+            prefs[WidgetKeys.layout] = layout
             prefs[WidgetKeys.stamp] = System.currentTimeMillis()
         }
         CountdownWidget().update(this, glanceId)

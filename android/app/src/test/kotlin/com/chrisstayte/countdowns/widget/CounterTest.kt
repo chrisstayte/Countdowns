@@ -147,4 +147,22 @@ class CounterTest {
         assertTrue(short.leadHeight >= MIN_LEAD)
         assertEquals(3, short.rows)
     }
+
+    @Test
+    fun oneCountdownLayoutAlwaysShowsAHero() {
+        // "List" (the default): a hero only when one is active.
+        assertEquals(LargeLayout.List, largeLayout(5, LayoutChoice.LIST))
+        assertEquals(LargeLayout.Hero, largeLayout(1, LayoutChoice.LIST))
+        // "One countdown": a hero whatever the count...
+        assertEquals(LargeLayout.Hero, largeLayout(5, LayoutChoice.SINGLE))
+        assertEquals(LargeLayout.Hero, largeLayout(1, LayoutChoice.SINGLE))
+        // ...but nothing to show is still the empty state.
+        assertEquals(LargeLayout.Empty, largeLayout(0, LayoutChoice.SINGLE))
+        // An unknown stored value behaves like the default.
+        assertEquals(LargeLayout.List, largeLayout(3, "something-else"))
+        // The hero is the pinned countdown if there is one, else the next.
+        val now = at(2026, 11, 21)
+        assertEquals(9, counter.arrange(events, now, null).lead?.id)
+        assertEquals(7, counter.arrange(events, now, 7).lead?.id)
+    }
 }

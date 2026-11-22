@@ -35,6 +35,17 @@ enum CountIn: String, AppEnum {
   ]
 }
 
+/// The large widget's layout.
+enum LargeLayoutChoice: String, AppEnum {
+  case list, single
+
+  static var typeDisplayRepresentation: TypeDisplayRepresentation = "Layout"
+  static var caseDisplayRepresentations: [LargeLayoutChoice: DisplayRepresentation] = [
+    .list: "List",
+    .single: "One countdown",
+  ]
+}
+
 /// Widget settings: follow Up next (no countdown picked) or pin one, and
 /// count in days or sleeps.
 struct CountdownWidgetIntent: WidgetConfigurationIntent {
@@ -46,4 +57,25 @@ struct CountdownWidgetIntent: WidgetConfigurationIntent {
 
   @Parameter(title: "Count in", default: .event)
   var countIn: CountIn
+
+  /// List: Up next, or a hero when only one is active. One countdown:
+  /// always a hero (the pinned one, else the next). Large size only.
+  @Parameter(title: "Layout", default: .list)
+  var layout: LargeLayoutChoice
+
+  // Show Layout only when editing a large widget.
+  static var parameterSummary: some ParameterSummary {
+    When(widgetFamily: .equalTo, .systemLarge) {
+      Summary {
+        \.$countdown
+        \.$countIn
+        \.$layout
+      }
+    } otherwise: {
+      Summary {
+        \.$countdown
+        \.$countIn
+      }
+    }
+  }
 }
