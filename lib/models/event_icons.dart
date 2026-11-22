@@ -85,9 +85,16 @@ final Map<String, EventIconInfo> _bySlug = {
   for (final info in eventIconCatalog) info.slug: info,
 };
 
-final Map<int, String> _byCodePoint = {
-  for (final info in eventIconCatalog) info.legacyCodePoint: info.slug,
-};
+/// Old codepoint to slug. Material's card_giftcard and wallet_giftcard share
+/// one codepoint, so the old app stored them identically and always showed
+/// the first; that one (gift) wins here too.
+final Map<int, String> _byCodePoint = () {
+  final map = <int, String>{};
+  for (final info in eventIconCatalog) {
+    map.putIfAbsent(info.legacyCodePoint, () => info.slug);
+  }
+  return map;
+}();
 
 EventIconInfo? iconInfo(String? slug) => _bySlug[slug];
 
