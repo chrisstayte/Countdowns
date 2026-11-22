@@ -21,6 +21,13 @@ import 'package:url_launcher/url_launcher.dart';
 
 final packageInfoProvider = FutureProvider((ref) => PackageInfo.fromPlatform());
 
+/// The version with its build number, such as "3.0.0 (6)".
+String versionLabel(PackageInfo? info) {
+  if (info == null) return '';
+  if (info.buildNumber.isEmpty) return info.version;
+  return '${info.version} (${info.buildNumber})';
+}
+
 bool get _showAppIcon => !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
 
 class SettingsScreen extends ConsumerWidget {
@@ -550,7 +557,7 @@ class _Support extends ConsumerWidget {
                   scheme: 'mailto',
                   path: 'countdowns@chrisstayte.com',
                   query:
-                      'subject=Since %26 Soon Feedback&body=\n\n\nApp Version ${info?.version ?? 'Unknown'}',
+                      'subject=Since %26 Soon Feedback&body=\n\n\nApp Version ${info == null ? 'Unknown' : versionLabel(info)}',
                 );
                 if (await canLaunchUrl(uri)) await launchUrl(uri);
               },
@@ -581,7 +588,7 @@ class _Support extends ConsumerWidget {
               onTap: () => showAboutDialog(
                 context: context,
                 applicationName: 'Since & Soon',
-                applicationVersion: info?.version,
+                applicationVersion: versionLabel(info),
               ),
             ),
           ],
@@ -649,7 +656,7 @@ class _Danger extends ConsumerWidget {
         ),
         const SizedBox(height: 22),
         Text(
-          'Since & Soon ${info?.version ?? ''} · Made by Chris Stayte',
+          'Since & Soon ${versionLabel(info)}',
           textAlign: TextAlign.center,
           style: const TextStyle(fontSize: 13, color: AppColors.secondaryText),
         ),
@@ -781,7 +788,7 @@ class _TabletSettingsState extends ConsumerState<_TabletSettings> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: Text(
-                        'Since & Soon ${info?.version ?? ''}',
+                        'Since & Soon ${versionLabel(info)}',
                         style: AppText.secondary,
                       ),
                     ),
