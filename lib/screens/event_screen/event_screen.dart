@@ -9,6 +9,7 @@ import 'package:countdowns/utilities/feedback.dart';
 import 'package:countdowns/widgets/countdown_surface.dart';
 import 'package:countdowns/widgets/event_icon.dart';
 import 'package:countdowns/widgets/ui.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -36,22 +37,27 @@ class EventScreen extends ConsumerWidget {
         body: const Center(child: Text('This countdown was deleted.')),
       );
     }
-    return Scaffold(
-      backgroundColor: event.color,
-      body: CountdownDetail(
-        key: ValueKey(event.id),
-        event: event,
-        onClose: () {
-          feedback(ref);
-          context.pop();
-        },
-        onEdit: () {
-          feedback(ref);
-          context.pushNamed(
-            AppRoutes.eventEdit,
-            pathParameters: {'id': '${event.id}'},
-          );
-        },
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: event.textColor == Colors.white
+          ? SystemUiOverlayStyle.light
+          : SystemUiOverlayStyle.dark,
+      child: Scaffold(
+        backgroundColor: event.color,
+        body: CountdownDetail(
+          key: ValueKey(event.id),
+          event: event,
+          onClose: () {
+            feedback(ref);
+            context.pop();
+          },
+          onEdit: () {
+            feedback(ref);
+            context.pushNamed(
+              AppRoutes.eventEdit,
+              pathParameters: {'id': '${event.id}'},
+            );
+          },
+        ),
       ),
     );
   }

@@ -19,9 +19,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-final packageInfoProvider = FutureProvider(
-  (ref) => PackageInfo.fromPlatform(),
-);
+final packageInfoProvider = FutureProvider((ref) => PackageInfo.fromPlatform());
 
 bool get _showAppIcon => !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
 
@@ -29,59 +27,62 @@ class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) => Scaffold(
-    body: SafeArea(
-      bottom: false,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+  Widget build(BuildContext context, WidgetRef ref) =>
+      MediaQuery.sizeOf(context).width >= 900
+      ? const _TabletSettings()
+      : Scaffold(
+          body: SafeArea(
+            bottom: false,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Semantics(
-                  button: true,
-                  label: 'Back to Countdowns',
-                  child: GestureDetector(
-                    onTap: () {
-                      feedback(ref);
-                      context.pop();
-                    },
-                    child: const SizedBox(
-                      height: 44,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.chevron_left_rounded,
-                            color: AppColors.primary,
-                          ),
-                          Text(
-                            'Countdowns',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.primary,
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Semantics(
+                        button: true,
+                        label: 'Back to Countdowns',
+                        child: GestureDetector(
+                          onTap: () {
+                            feedback(ref);
+                            context.pop();
+                          },
+                          child: const SizedBox(
+                            height: 44,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.chevron_left_rounded,
+                                  color: AppColors.primary,
+                                ),
+                                Text(
+                                  'Countdowns',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.primary,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
+                        ),
                       ),
-                    ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 4),
+                        child: Text('Settings', style: AppText.largeTitle),
+                      ),
+                    ],
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 4),
-                  child: Text('Settings', style: AppText.largeTitle),
-                ),
+                const Expanded(child: SettingsList()),
               ],
             ),
           ),
-          const Expanded(child: SettingsList()),
-        ],
-      ),
-    ),
-  );
+        );
 }
 
 /// Every setting, grouped. Shared by the phone screen and the iPad
@@ -94,7 +95,12 @@ class SettingsList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final sections = section == null ? SettingsSection.values : [section!];
+    final sections = section == null
+        ? SettingsSection.values
+        : [
+            section!,
+            if (section == SettingsSection.support) SettingsSection.danger,
+          ];
     return ListView(
       padding: EdgeInsets.fromLTRB(
         16,
@@ -385,7 +391,10 @@ class _Notifications extends ConsumerWidget {
             if (supported) ...[
               _Row(
                 label: 'Notify when one ends',
-                badge: const _Badge(Icons.notifications_none_rounded, bubblegum),
+                badge: const _Badge(
+                  Icons.notifications_none_rounded,
+                  bubblegum,
+                ),
                 trailing: AppSwitch(
                   label: 'Notify when one ends',
                   value: settings.notify,
@@ -671,6 +680,138 @@ class _Danger extends ConsumerWidget {
           ),
         ],
       ],
+    );
+  }
+}
+
+/// iPad: a sidebar of categories with a roomy detail pane.
+class _TabletSettings extends ConsumerStatefulWidget {
+  const _TabletSettings();
+
+  @override
+  ConsumerState<_TabletSettings> createState() => _TabletSettingsState();
+}
+
+class _TabletSettingsState extends ConsumerState<_TabletSettings> {
+  late SettingsSection _section = _showAppIcon
+      ? SettingsSection.appearance
+      : SettingsSection.countdowns;
+
+  static const _colors = {
+    SettingsSection.appearance: lavender,
+    SettingsSection.countdowns: sun,
+    SettingsSection.notifications: bubblegum,
+    SettingsSection.support: sky,
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    final info = ref.watch(packageInfoProvider).asData?.value;
+    final sections = [
+      for (final s in SettingsSection.values)
+        if (s != SettingsSection.danger &&
+            (s != SettingsSection.appearance || _showAppIcon))
+          s,
+    ];
+    return Scaffold(
+      backgroundColor: const Color(0xFFECEAFB),
+      body: SafeArea(
+        child: Row(
+          children: [
+            SizedBox(
+              width: 300,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(18, 12, 18, 18),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: TextAction(
+                        '‹ Countdowns',
+                        onTap: () => context.pop(),
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(10, 4, 10, 16),
+                      child: Text('Settings', style: AppText.largeTitle),
+                    ),
+                    for (final s in sections)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 6),
+                        child: Semantics(
+                          button: true,
+                          selected: s == _section,
+                          child: GestureDetector(
+                            onTap: () {
+                              feedback(ref, Sound.select);
+                              setState(() => _section = s);
+                            },
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 150),
+                              height: 52,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                              ),
+                              decoration: BoxDecoration(
+                                color: s == _section
+                                    ? Colors.white
+                                    : Colors.transparent,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Row(
+                                children: [
+                                  _Badge(s.icon, _colors[s]!),
+                                  const SizedBox(width: 12),
+                                  Text(
+                                    s.label,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    const Spacer(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Text(
+                        'Countdowns ${info?.version ?? ''}',
+                        style: AppText.secondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 8, 16, 16),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.ground,
+                    borderRadius: BorderRadius.circular(32),
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 600),
+                      child: SettingsList(
+                        key: ValueKey(_section),
+                        section: _section,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

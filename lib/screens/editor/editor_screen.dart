@@ -351,6 +351,7 @@ class _TabletEditor extends StatelessWidget {
                               draft: draft,
                               now: now,
                               height: 140,
+                              compact: true,
                             ),
                           ),
                         ],

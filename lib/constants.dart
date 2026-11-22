@@ -6,4 +6,5 @@ class AppRoutes {
   static const String eventEdit = 'edit';
   static const String eventNew = 'new';
   static const String search = 'search';
+  static const String wall = 'wall';
 }

@@ -227,7 +227,6 @@ class PillButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         height: height,
-        alignment: Alignment.center,
         padding: EdgeInsets.symmetric(horizontal: height >= 50 ? 22 : 18),
         decoration: BoxDecoration(
           color: onTap == null ? background.withValues(alpha: 0.5) : background,
@@ -244,6 +243,7 @@ class PillButton extends StatelessWidget {
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (icon != null) ...[
               Icon(icon, size: 18, color: foreground),
@@ -282,6 +282,7 @@ class TextAction extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 6),
           child: Center(
+            widthFactor: 1,
             child: Text(
               label,
               style: TextStyle(

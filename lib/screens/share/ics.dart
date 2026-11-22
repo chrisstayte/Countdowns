@@ -21,7 +21,9 @@ String _fold(String line) {
   if (line.length <= 75) return line;
   final out = StringBuffer(line.substring(0, 75));
   for (var i = 75; i < line.length; i += 74) {
-    out.write('\r\n ${line.substring(i, i + 74 > line.length ? line.length : i + 74)}');
+    out.write(
+      '\r\n ${line.substring(i, i + 74 > line.length ? line.length : i + 74)}',
+    );
   }
   return out.toString();
 }

@@ -61,7 +61,8 @@ class _ShareSheetState extends ConsumerState<ShareSheet> {
   }
 
   Rect? _origin() {
-    final box = _shareButtonKey.currentContext?.findRenderObject() as RenderBox?;
+    final box =
+        _shareButtonKey.currentContext?.findRenderObject() as RenderBox?;
     if (box == null) return null;
     return box.localToGlobal(Offset.zero) & box.size;
   }
@@ -109,9 +110,8 @@ class _ShareSheetState extends ConsumerState<ShareSheet> {
       );
     } catch (error) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Couldn’t share: $error')),
-        );
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Couldn’t share: $error')));
       }
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -122,9 +122,8 @@ class _ShareSheetState extends ConsumerState<ShareSheet> {
     feedback(ref);
     await Clipboard.setData(ClipboardData(text: _summary(DateTime.now())));
     if (mounted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Copied')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Copied')));
     }
   }
 
@@ -324,10 +323,10 @@ class _StoryImage extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Text(
                 count.big,
-                style: AppText.numeral(96, color: ink).copyWith(
-                  height: 0.82,
-                  shadows: s,
-                ),
+                style: AppText.numeral(
+                  96,
+                  color: ink,
+                ).copyWith(height: 0.82, shadows: s),
               ),
             ),
             Text(
@@ -389,9 +388,8 @@ class _SquareImage extends StatelessWidget {
                     children: [
                       Text(event.title, style: _title(event, 26, ink, s)),
                       Text(
-                        DateFormat(
-                          'EEEE, MMMM d',
-                        ).format(event.nextOccurrence(now)),
+                        DateFormat('EEEE, MMMM d')
+                            .format(event.nextOccurrence(now)),
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
@@ -419,10 +417,10 @@ class _SquareImage extends StatelessWidget {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           count.big,
-                          style: AppText.numeral(104, color: ink).copyWith(
-                            height: 0.82,
-                            shadows: s,
-                          ),
+                          style: AppText.numeral(
+                            104,
+                            color: ink,
+                          ).copyWith(height: 0.82, shadows: s),
                         ),
                       ),
                       Text(

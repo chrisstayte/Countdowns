@@ -15,7 +15,11 @@ class EditorPreview extends StatelessWidget {
     this.onCrop,
     this.height = 150,
     this.shape = CropShape.card,
+    this.compact = false,
   });
+
+  /// Small widget size: smaller type and no date.
+  final bool compact;
 
   final Countdown draft;
   final DateTime now;
@@ -63,7 +67,7 @@ class EditorPreview extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontFamily: resolveEventFont(draft.fontFamily),
-                            fontSize: 24,
+                            fontSize: compact ? 17 : 24,
                             fontWeight: FontWeight.w700,
                             height: 1.1,
                             color: draft.title.isEmpty
@@ -100,20 +104,21 @@ class EditorPreview extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          when,
-                          textAlign: TextAlign.right,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: ink,
-                            shadows: shadows,
+                      if (!compact)
+                        Expanded(
+                          child: Text(
+                            when,
+                            textAlign: TextAlign.right,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: ink,
+                              shadows: shadows,
+                            ),
                           ),
                         ),
-                      ),
                     ],
                   ),
                 ],

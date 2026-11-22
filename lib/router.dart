@@ -3,6 +3,7 @@ import 'package:countdowns/screens/editor/editor_screen.dart';
 import 'package:countdowns/screens/event_screen/event_screen.dart';
 import 'package:countdowns/screens/home/home_screen.dart';
 import 'package:countdowns/screens/search/search_screen.dart';
+import 'package:countdowns/screens/tablet/wall_screen.dart';
 import 'package:countdowns/screens/settings/ios_custom_icon_screen.dart';
 import 'package:countdowns/screens/settings/settings_screen.dart';
 import 'package:cupertino_ui/cupertino_ui.dart';
@@ -58,6 +59,11 @@ final routerProvider = Provider<GoRouter>((ref) {
               transitionsBuilder: (_, animation, _, child) =>
                   FadeTransition(opacity: animation, child: child),
             ),
+          ),
+          GoRoute(
+            path: AppRoutes.wall,
+            name: AppRoutes.wall,
+            builder: (_, _) => const WallScreen(),
           ),
           GoRoute(
             path: AppRoutes.settings,

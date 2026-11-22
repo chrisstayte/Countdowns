@@ -66,9 +66,9 @@ class _CropScreenState extends State<CropScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _stream ??= FileImage(widget.file).resolve(
-      createLocalImageConfiguration(context),
-    )..addListener(_listener);
+    _stream ??= FileImage(
+      widget.file,
+    ).resolve(createLocalImageConfiguration(context))..addListener(_listener);
   }
 
   @override
@@ -163,7 +163,9 @@ class _CropScreenState extends State<CropScreen> {
     final link = _LinkToggle(
       on: _same,
       onTap: _toggleSame,
-      sub: _same ? 'Moving one moves them all' : 'Each shape keeps its own crop',
+      sub: _same
+          ? 'Moving one moves them all'
+          : 'Each shape keeps its own crop',
     );
     final pad = _Nudge(onNudge: _nudge);
 
@@ -350,10 +352,7 @@ class _CropCanvas extends StatelessWidget {
         fitted.destination,
         Offset.zero & box.biggest,
       );
-      final order = [
-        ...shapes.where((s) => s != selected),
-        ?selected,
-      ];
+      final order = [...shapes.where((s) => s != selected), ?selected];
       void drag(DragUpdateDetails d) {
         final shape = selected ?? CropShape.full;
         final frame = cropFrame(image, shape.aspect, points[shape]!);
@@ -686,9 +685,17 @@ class _Nudge extends StatelessWidget {
           children: [
             key(Icons.arrow_left_rounded, 'Move left', const Offset(-_step, 0)),
             const SizedBox(width: 3),
-            key(Icons.arrow_drop_down_rounded, 'Move down', const Offset(0, _step)),
+            key(
+              Icons.arrow_drop_down_rounded,
+              'Move down',
+              const Offset(0, _step),
+            ),
             const SizedBox(width: 3),
-            key(Icons.arrow_right_rounded, 'Move right', const Offset(_step, 0)),
+            key(
+              Icons.arrow_right_rounded,
+              'Move right',
+              const Offset(_step, 0),
+            ),
           ],
         ),
       ],
