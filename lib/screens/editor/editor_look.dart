@@ -5,6 +5,7 @@ import 'package:countdowns/models/icon_catalog.dart';
 import 'package:countdowns/models/palette.dart';
 import 'package:countdowns/providers/recents_provider.dart';
 import 'package:countdowns/screens/editor/all_backgrounds_sheet.dart';
+import 'package:countdowns/screens/editor/all_icons_sheet.dart';
 import 'package:countdowns/screens/editor/editor_details.dart';
 import 'package:countdowns/screens/editor/photos_tab.dart';
 import 'package:countdowns/theme/app_theme.dart';
@@ -444,127 +445,6 @@ class _FontTile extends StatelessWidget {
       ),
     ),
   );
-}
-
-/// "All icons": every icon, searchable by label.
-class AllIconsSheet extends StatefulWidget {
-  const AllIconsSheet({super.key, this.selected});
-  final String? selected;
-
-  @override
-  State<AllIconsSheet> createState() => _AllIconsSheetState();
-}
-
-class _AllIconsSheetState extends State<AllIconsSheet> {
-  String _query = '';
-
-  @override
-  Widget build(BuildContext context) {
-    final q = _query.trim().toLowerCase();
-    final icons = eventIconCatalog
-        .where(
-          (i) =>
-              q.isEmpty ||
-              i.label.toLowerCase().contains(q) ||
-              i.slug.contains(q),
-        )
-        .toList();
-    return FractionallySizedBox(
-      heightFactor: 0.9,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const SheetHandle(),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                const Text('All icons', style: AppText.sheetTitle),
-                const Spacer(),
-                PillButton(label: 'Done', onTap: () => Navigator.pop(context)),
-              ],
-            ),
-            const SizedBox(height: 14),
-            TextField(
-              onChanged: (v) => setState(() => _query = v),
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.search_rounded),
-                hintText: 'Search icons',
-                filled: true,
-                fillColor: AppColors.wash,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(22),
-                  borderSide: BorderSide.none,
-                ),
-                contentPadding: EdgeInsets.zero,
-              ),
-            ),
-            const SizedBox(height: 14),
-            Expanded(
-              child: icons.isEmpty
-                  ? const Center(
-                      child: Text('No icons match', style: AppText.secondary),
-                    )
-                  : GridView.builder(
-                      padding: const EdgeInsets.only(bottom: 30),
-                      gridDelegate:
-                          const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 84,
-                            mainAxisSpacing: 10,
-                            crossAxisSpacing: 10,
-                            mainAxisExtent: 108,
-                          ),
-                      itemCount: icons.length,
-                      itemBuilder: (_, i) {
-                        final info = icons[i];
-                        final on = info.slug == widget.selected;
-                        return Semantics(
-                          button: true,
-                          selected: on,
-                          child: GestureDetector(
-                            onTap: () => Navigator.pop(context, info.slug),
-                            child: Column(
-                              children: [
-                                AspectRatio(
-                                  aspectRatio: 1,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: on
-                                          ? AppColors.highlighter
-                                          : AppColors.wash,
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
-                                    alignment: Alignment.center,
-                                    child: EventIcon(
-                                      info.slug,
-                                      size: 26,
-                                      color: AppColors.ink,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  info.label,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }
 
 /// "All fonts": every font previewing the real title, filterable.

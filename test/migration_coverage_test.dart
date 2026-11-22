@@ -175,10 +175,20 @@ void main() {
   });
 
   group('icons', () {
-    test('the catalog covers all 68 old icons in the old order', () {
+    test('the catalog starts with all 68 old icons in the old order', () {
       expect(eventIcons, hasLength(68));
-      expect(eventIconCatalog, hasLength(68));
-      expect(eventIconCatalog.map((i) => i.slug).toSet(), hasLength(68));
+      // Icons added since come after the old ones and have no codepoint.
+      expect(
+        eventIconCatalog.take(68).map((i) => i.legacyCodePoint),
+        isNot(contains(null)),
+      );
+      expect(eventIconCatalog.skip(68).map((i) => i.legacyCodePoint).toSet(), {
+        null,
+      });
+      expect(
+        eventIconCatalog.take(68).map((i) => i.slug).toSet(),
+        hasLength(68),
+      );
       for (final (i, icon) in eventIcons.indexed) {
         expect(
           eventIconCatalog[i].legacyCodePoint,
@@ -200,7 +210,7 @@ void main() {
       await migrate(box);
       final all = await db.allCountdowns();
       expect(all, hasLength(68));
-      for (final (i, info) in eventIconCatalog.indexed) {
+      for (final (i, info) in eventIconCatalog.take(68).indexed) {
         final c = all.singleWhere((c) => c.legacyHiveKey == i);
         // The shared gift codepoint always meant the first, Gift.
         final expected = info.slug == 'giftcard' ? 'gift' : info.slug;

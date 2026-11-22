@@ -91,7 +91,9 @@ final Map<String, EventIconInfo> _bySlug = {
 final Map<int, String> _byCodePoint = () {
   final map = <int, String>{};
   for (final info in eventIconCatalog) {
-    map.putIfAbsent(info.legacyCodePoint, () => info.slug);
+    if (info.legacyCodePoint case final code?) {
+      map.putIfAbsent(code, () => info.slug);
+    }
   }
   return map;
 }();
@@ -122,3 +124,35 @@ const List<String> defaultIconRow = [
   'village',
   'alarm',
 ];
+
+/// "All icons" search: icons where every word of [query] appears in the
+/// label, keywords, section or slug. Best matches come first: label starts
+/// with the query, then a label word does, then a keyword is the query, then
+/// a keyword starts with it, then the rest, each in catalogue order. An
+/// empty query matches everything.
+List<EventIconInfo> iconsMatching(String query, {String? category}) {
+  final q = query.trim().toLowerCase();
+  final words = q.split(RegExp(r'\s+')).where((w) => w.isNotEmpty).toList();
+  final scored = <(int, int, EventIconInfo)>[];
+  for (final (i, info) in eventIconCatalog.indexed) {
+    if (category != null && info.category != category) continue;
+    final label = info.label.toLowerCase();
+    final haystack =
+        '$label, ${info.keywords}, ${info.category.toLowerCase()}, '
+        '${info.slug.replaceAll('-', ' ')}';
+    if (!words.every(haystack.contains)) continue;
+    final keywords = info.keywords.split(', ');
+    final score = q.isEmpty || label.startsWith(q)
+        ? 0
+        : RegExp('\\b${RegExp.escape(q)}').hasMatch(label)
+        ? 1
+        : keywords.contains(q)
+        ? 2
+        : keywords.any((k) => k.startsWith(q))
+        ? 3
+        : 4;
+    scored.add((score, i, info));
+  }
+  scored.sort((a, b) => a.$1 != b.$1 ? a.$1 - b.$1 : a.$2 - b.$2);
+  return [for (final (_, _, info) in scored) info];
+}

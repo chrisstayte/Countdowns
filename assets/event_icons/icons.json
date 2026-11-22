@@ -1,342 +1,270 @@
 [
- {
-  "slug": "calendar",
-  "material": "calendar_today",
-  "label": "Calendar"
- },
- {
-  "slug": "party",
-  "material": "celebration",
-  "label": "Party"
- },
- {
-  "slug": "cake",
-  "material": "cake",
-  "label": "Birthday"
- },
- {
-  "slug": "dining",
-  "material": "local_dining",
-  "label": "Dinner"
- },
- {
-  "slug": "icecream",
-  "material": "icecream",
-  "label": "Ice cream"
- },
- {
-  "slug": "village",
-  "material": "holiday_village",
-  "label": "Holiday"
- },
- {
-  "slug": "hiking",
-  "material": "hiking",
-  "label": "Hiking"
- },
- {
-  "slug": "whistle",
-  "material": "sports",
-  "label": "Sports"
- },
- {
-  "slug": "football",
-  "material": "sports_football",
-  "label": "Football"
- },
- {
-  "slug": "baseball",
-  "material": "sports_baseball",
-  "label": "Baseball"
- },
- {
-  "slug": "basketball",
-  "material": "sports_basketball",
-  "label": "Basketball"
- },
- {
-  "slug": "gaming",
-  "material": "sports_esports",
-  "label": "Gaming"
- },
- {
-  "slug": "alarm",
-  "material": "alarm",
-  "label": "Alarm"
- },
- {
-  "slug": "ticket",
-  "material": "airplane_ticket",
-  "label": "Trip"
- },
- {
-  "slug": "plane",
-  "material": "airplanemode_active",
-  "label": "Flight"
- },
- {
-  "slug": "bed",
-  "material": "airline_seat_flat",
-  "label": "Sleep"
- },
- {
-  "slug": "photo",
-  "material": "photo",
-  "label": "Photo"
- },
- {
-  "slug": "wifi",
-  "material": "wifi",
-  "label": "Online"
- },
- {
-  "slug": "warning",
-  "material": "warning",
-  "label": "Deadline"
- },
- {
-  "slug": "baby",
-  "material": "baby_changing_station",
-  "label": "Baby"
- },
- {
-  "slug": "apartment",
-  "material": "apartment",
-  "label": "Move in"
- },
- {
-  "slug": "gift",
-  "material": "card_giftcard",
-  "label": "Gift"
- },
- {
-  "slug": "computer",
-  "material": "computer",
-  "label": "Computer"
- },
- {
-  "slug": "book",
-  "material": "book",
-  "label": "Book"
- },
- {
-  "slug": "bookmark",
-  "material": "bookmark",
-  "label": "Bookmark"
- },
- {
-  "slug": "piano",
-  "material": "piano",
-  "label": "Recital"
- },
- {
-  "slug": "donut",
-  "material": "donut_large",
-  "label": "Donut"
- },
- {
-  "slug": "camera",
-  "material": "camera",
-  "label": "Camera"
- },
- {
-  "slug": "animation",
-  "material": "animation",
-  "label": "Animation"
- },
- {
-  "slug": "cricket",
-  "material": "sports_cricket",
-  "label": "Cricket"
- },
- {
-  "slug": "tractor",
-  "material": "agriculture",
-  "label": "Farm"
- },
- {
-  "slug": "columns",
-  "material": "horizontal_distribute_sharp",
-  "label": "Plan"
- },
- {
-  "slug": "note",
-  "material": "music_note",
-  "label": "Music"
- },
- {
-  "slug": "concert",
-  "material": "music_video",
-  "label": "Concert"
- },
- {
-  "slug": "snooze",
-  "material": "snooze",
-  "label": "Rest"
- },
- {
-  "slug": "graduation",
-  "material": "school",
-  "label": "Graduation"
- },
- {
-  "slug": "work",
-  "material": "work",
-  "label": "Work"
- },
- {
-  "slug": "office",
-  "material": "business",
-  "label": "Office"
- },
- {
-  "slug": "friends",
-  "material": "group",
-  "label": "Friends"
- },
- {
-  "slug": "save",
-  "material": "add_to_drive",
-  "label": "Save"
- },
- {
-  "slug": "blender",
-  "material": "blender",
-  "label": "Smoothie"
- },
- {
-  "slug": "stop",
-  "material": "block",
-  "label": "Quit"
- },
- {
-  "slug": "cabin",
-  "material": "cabin",
-  "label": "Cabin"
- },
- {
-  "slug": "again",
-  "material": "cached",
-  "label": "Again"
- },
- {
-  "slug": "trash",
-  "material": "delete",
-  "label": "Clear out"
- },
- {
-  "slug": "done",
-  "material": "delete_forever",
-  "label": "Gone for good"
- },
- {
-  "slug": "tram",
-  "material": "tram_sharp",
-  "label": "Tram"
- },
- {
-  "slug": "train",
-  "material": "train",
-  "label": "Train"
- },
- {
-  "slug": "traffic",
-  "material": "traffic",
-  "label": "Commute"
- },
- {
-  "slug": "map",
-  "material": "map",
-  "label": "Road trip"
- },
- {
-  "slug": "bird",
-  "material": "flutter_dash",
-  "label": "Bird"
- },
- {
-  "slug": "golf",
-  "material": "golf_course",
-  "label": "Golf"
- },
- {
-  "slug": "call",
-  "material": "tty_sharp",
-  "label": "Catch up"
- },
- {
-  "slug": "fair",
-  "material": "attractions",
-  "label": "Theme park"
- },
- {
-  "slug": "todo",
-  "material": "assignment_sharp",
-  "label": "To do"
- },
- {
-  "slug": "selfie",
-  "material": "camera_rear",
-  "label": "Selfie"
- },
- {
-  "slug": "cloud",
-  "material": "cloud_sharp",
-  "label": "Cloud"
- },
- {
-  "slug": "virus",
-  "material": "coronavirus",
-  "label": "Get well"
- },
- {
-  "slug": "auto",
-  "material": "motion_photos_auto",
-  "label": "Every year"
- },
- {
-  "slug": "mail",
-  "material": "email",
-  "label": "Letter"
- },
- {
-  "slug": "phone",
-  "material": "phone",
-  "label": "Phone call"
- },
- {
-  "slug": "giftcard",
-  "material": "wallet_giftcard",
-  "label": "Gift card"
- },
- {
-  "slug": "launch",
-  "material": "smart_button",
-  "label": "Launch"
- },
- {
-  "slug": "brunch",
-  "material": "brunch_dining_rounded",
-  "label": "Brunch"
- },
- {
-  "slug": "croissant",
-  "material": "bakery_dining",
-  "label": "Bakery"
- },
- {
-  "slug": "collection",
-  "material": "library_add",
-  "label": "Collection"
- },
- {
-  "slug": "heart",
-  "material": "favorite",
-  "label": "Love"
- },
- {
-  "slug": "tree",
-  "material": "park",
-  "label": "Outdoors"
- }
+ {"slug": "calendar", "material": "calendar_today", "label": "Calendar", "category": "Everyday", "keywords": ["calendar", "date", "day", "event", "appointment", "schedule", "plan", "booked"]},
+ {"slug": "party", "material": "celebration", "label": "Party", "category": "Celebrations", "keywords": ["party", "celebration", "celebrate", "popper", "confetti", "surprise", "new year", "festival"]},
+ {"slug": "cake", "material": "cake", "label": "Birthday", "category": "Celebrations", "keywords": ["birthday", "cake", "bday", "candles", "party", "anniversary", "celebration", "turning"]},
+ {"slug": "dining", "material": "local_dining", "label": "Dinner", "category": "Food & drink", "keywords": ["dinner", "dining", "restaurant", "meal", "date night", "reservation", "eat out", "lunch"]},
+ {"slug": "icecream", "material": "icecream", "label": "Ice cream", "category": "Food & drink", "keywords": ["ice cream", "gelato", "dessert", "summer", "treat", "sundae"]},
+ {"slug": "village", "material": "holiday_village", "label": "Holiday", "category": "Travel", "keywords": ["holiday", "vacation", "village", "getaway", "break", "villa", "trip", "time off"]},
+ {"slug": "hiking", "material": "hiking", "label": "Hiking", "category": "Travel", "keywords": ["hiking", "hike", "mountains", "trek", "walk", "climb", "outdoors", "trail", "camping"]},
+ {"slug": "whistle", "material": "sports", "label": "Sports", "category": "Sports", "keywords": ["sports", "whistle", "match", "game", "referee", "coach", "practice", "sports day", "tryouts"]},
+ {"slug": "football", "material": "sports_football", "label": "Football", "category": "Sports", "keywords": ["football", "american football", "nfl", "super bowl", "game day", "tailgate", "rugby"]},
+ {"slug": "baseball", "material": "sports_baseball", "label": "Baseball", "category": "Sports", "keywords": ["baseball", "softball", "mlb", "game", "opening day", "world series", "ballpark"]},
+ {"slug": "basketball", "material": "sports_basketball", "label": "Basketball", "category": "Sports", "keywords": ["basketball", "nba", "hoops", "game", "march madness", "court", "netball"]},
+ {"slug": "gaming", "material": "sports_esports", "label": "Gaming", "category": "Fun", "keywords": ["gaming", "games", "video game", "release", "launch", "console", "controller", "esports", "lan party"]},
+ {"slug": "alarm", "material": "alarm", "label": "Alarm", "category": "Everyday", "keywords": ["alarm", "wake up", "early start", "clock", "morning", "reminder", "deadline"]},
+ {"slug": "ticket", "material": "airplane_ticket", "label": "Trip", "category": "Travel", "keywords": ["trip", "ticket", "boarding pass", "flight", "travel", "journey", "booking", "getaway"]},
+ {"slug": "plane", "material": "airplanemode_active", "label": "Flight", "category": "Travel", "keywords": ["flight", "plane", "airport", "fly", "travel", "holiday", "vacation", "trip", "airplane", "departure"]},
+ {"slug": "bed", "material": "airline_seat_flat", "label": "Sleep", "category": "Home", "keywords": ["sleep", "bed", "rest", "nap", "lie in", "hotel", "sleepover", "bedtime"]},
+ {"slug": "photo", "material": "photo", "label": "Photo", "category": "Fun", "keywords": ["photo", "picture", "memories", "photoshoot", "album", "gallery", "snapshot"]},
+ {"slug": "wifi", "material": "wifi", "label": "Online", "category": "Everyday", "keywords": ["online", "wifi", "internet", "stream", "livestream", "broadband", "webinar", "launch"]},
+ {"slug": "warning", "material": "warning", "label": "Deadline", "category": "Work & money", "keywords": ["deadline", "warning", "due", "urgent", "important", "cutoff", "last day", "alert"]},
+ {"slug": "baby", "material": "baby_changing_station", "label": "Baby", "category": "Life events", "keywords": ["baby", "newborn", "pram", "stroller", "due date", "nursery", "baby shower", "birth"]},
+ {"slug": "apartment", "material": "apartment", "label": "Move in", "category": "Life events", "keywords": ["move in", "apartment", "flat", "new home", "building", "moving", "lease", "city"]},
+ {"slug": "gift", "material": "card_giftcard", "label": "Gift", "category": "Celebrations", "keywords": ["gift", "present", "birthday", "christmas", "surprise", "wrapped", "secret santa"]},
+ {"slug": "computer", "material": "computer", "label": "Computer", "category": "Work & money", "keywords": ["computer", "laptop", "work", "online", "launch", "coding", "release", "new laptop"]},
+ {"slug": "book", "material": "book", "label": "Book", "category": "School", "keywords": ["book", "reading", "book club", "release", "novel", "library", "study", "author"]},
+ {"slug": "bookmark", "material": "bookmark", "label": "Bookmark", "category": "School", "keywords": ["bookmark", "save", "favourite", "reading", "saved", "remember"]},
+ {"slug": "piano", "material": "piano", "label": "Recital", "category": "Fun", "keywords": ["recital", "piano", "music", "lessons", "concert", "keyboard", "performance", "exam"]},
+ {"slug": "donut", "material": "donut_large", "label": "Donut", "category": "Food & drink", "keywords": ["donut", "doughnut", "treat", "dessert", "bakery", "sweet", "national donut day"]},
+ {"slug": "camera", "material": "camera", "label": "Camera", "category": "Fun", "keywords": ["camera", "photography", "photoshoot", "photos", "pictures", "wedding photos"]},
+ {"slug": "animation", "material": "animation", "label": "Animation", "category": "Fun", "keywords": ["animation", "motion", "cartoon", "film", "video"]},
+ {"slug": "cricket", "material": "sports_cricket", "label": "Cricket", "category": "Sports", "keywords": ["cricket", "match", "test match", "the ashes", "bat", "ball", "innings"]},
+ {"slug": "tractor", "material": "agriculture", "label": "Farm", "category": "Nature", "keywords": ["farm", "tractor", "harvest", "countryside", "farmers market", "agriculture", "county show"]},
+ {"slug": "columns", "material": "horizontal_distribute_sharp", "label": "Plan", "category": "Work & money", "keywords": ["plan", "planning", "project", "schedule", "board", "sprint", "roadmap"]},
+ {"slug": "note", "material": "music_note", "label": "Music", "category": "Fun", "keywords": ["music", "song", "concert", "gig", "playlist", "single", "release", "choir", "band"]},
+ {"slug": "concert", "material": "music_video", "label": "Concert", "category": "Fun", "keywords": ["concert", "gig", "music video", "show", "tour", "live music", "festival", "premiere"]},
+ {"slug": "snooze", "material": "snooze", "label": "Rest", "category": "Everyday", "keywords": ["rest", "snooze", "nap", "sleep", "day off", "lie in", "relax", "zzz"]},
+ {"slug": "graduation", "material": "school", "label": "Graduation", "category": "School", "keywords": ["graduation", "graduate", "cap", "diploma", "degree", "commencement", "prom", "results", "school"]},
+ {"slug": "work", "material": "work", "label": "Work", "category": "Work & money", "keywords": ["work", "job", "briefcase", "office", "business trip", "career", "meeting", "new job"]},
+ {"slug": "office", "material": "business", "label": "Office", "category": "Work & money", "keywords": ["office", "building", "business", "headquarters", "work", "company", "city"]},
+ {"slug": "friends", "material": "group", "label": "Friends", "category": "Fun", "keywords": ["friends", "people", "group", "team", "reunion", "meet up", "hang out", "catch up", "guests"]},
+ {"slug": "save", "material": "add_to_drive", "label": "Save", "category": "Work & money", "keywords": ["save", "backup", "drive", "files", "archive", "deadline", "submit"]},
+ {"slug": "blender", "material": "blender", "label": "Smoothie", "category": "Food & drink", "keywords": ["smoothie", "blender", "juice", "healthy", "shake", "breakfast", "detox"]},
+ {"slug": "stop", "material": "block", "label": "Quit", "category": "Health", "keywords": ["quit", "stop", "sober", "quit smoking", "dry january", "no", "cancel", "block"]},
+ {"slug": "cabin", "material": "cabin", "label": "Cabin", "category": "Travel", "keywords": ["cabin", "cottage", "lodge", "retreat", "weekend away", "getaway", "chalet"]},
+ {"slug": "again", "material": "cached", "label": "Again", "category": "Everyday", "keywords": ["again", "repeat", "recurring", "renew", "refresh", "cycle", "every"]},
+ {"slug": "trash", "material": "delete", "label": "Clear out", "category": "Home", "keywords": ["clear out", "bin", "trash", "bin day", "rubbish", "garbage", "declutter", "cleanup"]},
+ {"slug": "done", "material": "delete_forever", "label": "Gone for good", "category": "Everyday", "keywords": ["gone for good", "delete", "finished", "over", "done", "end", "cancelled"]},
+ {"slug": "tram", "material": "tram_sharp", "label": "Tram", "category": "Travel", "keywords": ["tram", "streetcar", "trolley", "transport", "commute", "city"]},
+ {"slug": "train", "material": "train", "label": "Train", "category": "Travel", "keywords": ["train", "railway", "rail", "journey", "commute", "travel", "station", "subway"]},
+ {"slug": "traffic", "material": "traffic", "label": "Commute", "category": "Travel", "keywords": ["commute", "traffic", "traffic light", "driving", "road", "rush hour"]},
+ {"slug": "map", "material": "map", "label": "Road trip", "category": "Travel", "keywords": ["road trip", "map", "route", "journey", "explore", "adventure", "directions", "trip"]},
+ {"slug": "bird", "material": "flutter_dash", "label": "Bird", "category": "Animals", "keywords": ["bird", "birdwatching", "spring", "tweet", "nature", "wildlife"]},
+ {"slug": "golf", "material": "golf_course", "label": "Golf", "category": "Sports", "keywords": ["golf", "golf course", "tee time", "masters", "round", "putt", "mini golf"]},
+ {"slug": "call", "material": "tty_sharp", "label": "Catch up", "category": "Everyday", "keywords": ["catch up", "call", "phone", "landline", "chat", "video call"]},
+ {"slug": "fair", "material": "attractions", "label": "Theme park", "category": "Fun", "keywords": ["theme park", "fair", "funfair", "ferris wheel", "carnival", "rides", "amusement park", "day out"]},
+ {"slug": "todo", "material": "assignment_sharp", "label": "To do", "category": "Work & money", "keywords": ["to do", "checklist", "tasks", "list", "clipboard", "plan", "errands"]},
+ {"slug": "selfie", "material": "camera_rear", "label": "Selfie", "category": "Fun", "keywords": ["selfie", "photo", "phone", "picture", "memories", "social"]},
+ {"slug": "cloud", "material": "cloud_sharp", "label": "Cloud", "category": "Nature", "keywords": ["cloud", "weather", "cloudy", "sky", "upload", "overcast"]},
+ {"slug": "virus", "material": "coronavirus", "label": "Get well", "category": "Health", "keywords": ["get well", "virus", "sick", "illness", "flu", "covid", "recovery", "quarantine"]},
+ {"slug": "auto", "material": "motion_photos_auto", "label": "Every year", "category": "Everyday", "keywords": ["every year", "annual", "yearly", "recurring", "anniversary", "automatic", "repeat"]},
+ {"slug": "mail", "material": "email", "label": "Letter", "category": "Everyday", "keywords": ["letter", "mail", "email", "post", "envelope", "message", "results day", "invitation"]},
+ {"slug": "phone", "material": "phone", "label": "Phone call", "category": "Everyday", "keywords": ["phone call", "phone", "call", "ring", "talk", "appointment"]},
+ {"slug": "giftcard", "material": "wallet_giftcard", "label": "Gift card", "category": "Celebrations", "keywords": ["gift card", "voucher", "present", "gift", "coupon", "treat"]},
+ {"slug": "launch", "material": "smart_button", "label": "Launch", "category": "Work & money", "keywords": ["launch", "click", "go live", "release", "start", "button", "ship"]},
+ {"slug": "brunch", "material": "brunch_dining_rounded", "label": "Brunch", "category": "Food & drink", "keywords": ["brunch", "lunch", "drinks", "dining", "bottomless brunch", "restaurant", "meal"]},
+ {"slug": "croissant", "material": "bakery_dining", "label": "Bakery", "category": "Food & drink", "keywords": ["bakery", "croissant", "pastry", "breakfast", "bake", "france", "paris"]},
+ {"slug": "collection", "material": "library_add", "label": "Collection", "category": "Fun", "keywords": ["collection", "add", "library", "album", "series", "set"]},
+ {"slug": "heart", "material": "favorite", "label": "Love", "category": "Celebrations", "keywords": ["love", "heart", "valentine", "anniversary", "date", "romance", "crush", "wedding"]},
+ {"slug": "tree", "material": "park", "label": "Outdoors", "category": "Nature", "keywords": ["outdoors", "tree", "park", "forest", "nature", "woods", "camping", "pine"]},
+ {"slug": "balloons", "label": "Balloons", "category": "Celebrations", "keywords": ["balloons", "party", "birthday", "celebration", "surprise", "festival"]},
+ {"slug": "fireworks", "label": "Fireworks", "category": "Celebrations", "keywords": ["fireworks", "new year", "new year's eve", "nye", "july 4th", "independence day", "bonfire night", "diwali", "celebration", "show"]},
+ {"slug": "cheers", "label": "Cheers", "category": "Celebrations", "keywords": ["cheers", "toast", "champagne", "prosecco", "new year", "nye", "engagement", "wedding", "anniversary", "celebration", "drinks", "party"]},
+ {"slug": "crown", "label": "Crown", "category": "Celebrations", "keywords": ["crown", "king", "queen", "princess", "prince", "royal", "birthday", "champion", "prom", "coronation"]},
+ {"slug": "sparkle", "label": "Sparkle", "category": "Celebrations", "keywords": ["sparkle", "special", "magic", "shine", "new", "glitter", "surprise", "wish", "big day"]},
+ {"slug": "star", "label": "Star", "category": "Celebrations", "keywords": ["star", "favourite", "favorite", "special", "gold star", "achievement", "award", "wish", "christmas"]},
+ {"slug": "bunting", "label": "Bunting", "category": "Celebrations", "keywords": ["bunting", "party", "festival", "fete", "fair", "garden party", "jubilee", "street party", "celebration", "flags"]},
+ {"slug": "disco", "label": "Disco", "category": "Celebrations", "keywords": ["disco", "dance", "dancing", "party", "night out", "prom", "club", "70s", "glitter ball", "mirror ball"]},
+ {"slug": "invitation", "label": "Invitation", "category": "Celebrations", "keywords": ["invitation", "invite", "save the date", "rsvp", "card", "wedding", "party", "guest list"]},
+ {"slug": "award", "label": "Award", "category": "Celebrations", "keywords": ["award", "prize", "winner", "ceremony", "achievement", "honour", "honor", "recognition", "rosette", "first place"]},
+ {"slug": "bouquet", "label": "Flowers", "category": "Celebrations", "keywords": ["flowers", "bouquet", "mother's day", "mothers day", "wedding", "anniversary", "valentine's", "thank you", "florist", "date"]},
+ {"slug": "christmas-tree", "label": "Christmas", "category": "Holidays", "keywords": ["christmas", "xmas", "christmas tree", "holidays", "festive", "december", "noel", "advent"]},
+ {"slug": "bauble", "label": "Bauble", "category": "Holidays", "keywords": ["bauble", "ornament", "christmas", "xmas", "decorations", "tree trimming", "festive", "holidays"]},
+ {"slug": "santa", "label": "Santa hat", "category": "Holidays", "keywords": ["santa", "santa hat", "christmas", "xmas", "christmas eve", "father christmas", "secret santa", "festive"]},
+ {"slug": "stocking", "label": "Stocking", "category": "Holidays", "keywords": ["stocking", "christmas", "xmas", "christmas eve", "stocking fillers", "gifts", "santa", "festive"]},
+ {"slug": "candy-cane", "label": "Candy cane", "category": "Holidays", "keywords": ["candy cane", "christmas", "xmas", "sweets", "festive", "holidays", "treats", "december"]},
+ {"slug": "menorah", "label": "Hanukkah", "category": "Holidays", "keywords": ["hanukkah", "chanukah", "menorah", "festival of lights", "jewish", "candles", "holidays"]},
+ {"slug": "pumpkin", "label": "Halloween", "category": "Holidays", "keywords": ["halloween", "pumpkin", "jack o'lantern", "jack-o-lantern", "trick or treat", "spooky", "october", "autumn", "fall", "harvest"]},
+ {"slug": "ghost", "label": "Ghost", "category": "Holidays", "keywords": ["ghost", "halloween", "spooky", "boo", "haunted", "october", "scary", "trick or treat"]},
+ {"slug": "sweets", "label": "Sweets", "category": "Holidays", "keywords": ["sweets", "candy", "trick or treat", "halloween", "treats", "sweet shop", "pick and mix", "lolly"]},
+ {"slug": "easter-egg", "label": "Easter", "category": "Holidays", "keywords": ["easter", "easter egg", "egg hunt", "spring", "april", "chocolate", "bunny"]},
+ {"slug": "shamrock", "label": "St Patrick's", "category": "Holidays", "keywords": ["st patrick's day", "st paddy's", "shamrock", "clover", "irish", "ireland", "luck", "lucky", "march"]},
+ {"slug": "turkey", "label": "Thanksgiving", "category": "Holidays", "keywords": ["thanksgiving", "turkey", "harvest", "november", "friendsgiving", "family dinner", "feast", "holidays"]},
+ {"slug": "valentine", "label": "Valentine's", "category": "Holidays", "keywords": ["valentine's day", "valentines", "love", "romance", "date night", "february", "crush", "cupid", "sweetheart"]},
+ {"slug": "lantern", "label": "Lunar New Year", "category": "Holidays", "keywords": ["lunar new year", "chinese new year", "spring festival", "lantern", "mid-autumn festival", "tet", "seollal", "holidays"]},
+ {"slug": "diya", "label": "Diwali", "category": "Holidays", "keywords": ["diwali", "deepavali", "diya", "festival of lights", "lamp", "oil lamp", "holidays", "hindu"]},
+ {"slug": "eid", "label": "Eid", "category": "Holidays", "keywords": ["eid", "eid al-fitr", "eid al-adha", "ramadan", "iftar", "crescent", "moon", "holidays", "muslim", "suhoor"]},
+ {"slug": "flag", "label": "National day", "category": "Holidays", "keywords": ["national day", "independence day", "july 4th", "fourth of july", "flag", "canada day", "australia day", "bastille day", "holiday", "parade"]},
+ {"slug": "rings", "label": "Wedding", "category": "Life events", "keywords": ["wedding", "wedding rings", "rings", "marriage", "married", "getting married", "big day", "vows", "anniversary", "engagement"]},
+ {"slug": "wedding-bells", "label": "Wedding bells", "category": "Life events", "keywords": ["wedding bells", "wedding", "church", "marriage", "married", "ceremony", "big day", "christmas bells"]},
+ {"slug": "wedding-cake", "label": "Wedding cake", "category": "Life events", "keywords": ["wedding cake", "wedding", "reception", "cake tasting", "anniversary", "celebration", "tiers"]},
+ {"slug": "bride-groom", "label": "Bride & groom", "category": "Life events", "keywords": ["bride and groom", "wedding", "newlyweds", "couple", "married", "marriage", "husband", "wife", "honeymoon"]},
+ {"slug": "engagement", "label": "Engagement", "category": "Life events", "keywords": ["engagement", "engaged", "proposal", "propose", "ring", "diamond", "fiance", "fiancee", "will you marry me"]},
+ {"slug": "church", "label": "Church", "category": "Life events", "keywords": ["church", "chapel", "wedding", "christening", "baptism", "communion", "service", "mass", "ceremony", "sunday"]},
+ {"slug": "baby-bottle", "label": "Baby bottle", "category": "Life events", "keywords": ["baby", "newborn", "bottle", "feeding", "nursery", "baby shower", "due date", "new baby"]},
+ {"slug": "due-date", "label": "Due date", "category": "Life events", "keywords": ["due date", "baby", "pregnant", "pregnancy", "newborn", "baby shower", "footprints", "birth", "maternity", "paternity"]},
+ {"slug": "moving-box", "label": "Moving day", "category": "Life events", "keywords": ["moving", "moving day", "move", "new home", "boxes", "packing", "removals", "relocation", "new house", "delivery"]},
+ {"slug": "retirement", "label": "Retirement", "category": "Life events", "keywords": ["retirement", "retire", "retired", "last day", "pension", "rocking chair", "relax", "farewell", "leaving do"]},
+ {"slug": "family", "label": "Family", "category": "Life events", "keywords": ["family", "reunion", "kids", "parents", "family visit", "family day", "relatives", "home", "children"]},
+ {"slug": "candle", "label": "Candle", "category": "Life events", "keywords": ["candle", "memorial", "remembrance", "anniversary", "vigil", "memory", "in memory", "cozy", "hygge", "light"]},
+ {"slug": "driving-test", "label": "Driving test", "category": "Life events", "keywords": ["driving test", "driving", "driving licence", "driving license", "learner", "car", "lessons", "road test", "permit"]},
+ {"slug": "suitcase", "label": "Suitcase", "category": "Travel", "keywords": ["suitcase", "luggage", "packing", "holiday", "vacation", "trip", "travel", "getaway", "check in", "airport"]},
+ {"slug": "passport", "label": "Passport", "category": "Travel", "keywords": ["passport", "travel", "abroad", "visa", "renewal", "overseas", "international", "citizenship", "border"]},
+ {"slug": "world", "label": "World", "category": "Travel", "keywords": ["world", "globe", "travel", "abroad", "earth", "earth day", "international", "overseas", "gap year", "world tour"]},
+ {"slug": "compass", "label": "Adventure", "category": "Travel", "keywords": ["adventure", "compass", "explore", "expedition", "orienteering", "scouts", "camping", "journey", "navigation"]},
+ {"slug": "beach", "label": "Beach", "category": "Travel", "keywords": ["beach", "seaside", "summer", "holiday", "vacation", "umbrella", "sun", "sand", "coast", "beach day"]},
+ {"slug": "palm", "label": "Island", "category": "Travel", "keywords": ["island", "palm tree", "tropical", "beach", "holiday", "vacation", "paradise", "honeymoon", "summer", "getaway"]},
+ {"slug": "cruise", "label": "Cruise", "category": "Travel", "keywords": ["cruise", "ship", "boat", "ferry", "voyage", "sailing", "holiday", "ocean", "sea", "port"]},
+ {"slug": "sailing", "label": "Sailing", "category": "Travel", "keywords": ["sailing", "sailboat", "yacht", "regatta", "boat", "lake", "sea", "harbour", "marina", "sail"]},
+ {"slug": "car", "label": "Car", "category": "Travel", "keywords": ["car", "new car", "road trip", "drive", "driving", "pick up", "rental car", "mot", "service", "garage"]},
+ {"slug": "camper", "label": "Camper van", "category": "Travel", "keywords": ["camper van", "campervan", "rv", "caravan", "motorhome", "road trip", "camping", "van life", "festival"]},
+ {"slug": "tent", "label": "Camping", "category": "Travel", "keywords": ["camping", "tent", "camp", "festival", "glamping", "outdoors", "scouts", "wild camping", "campsite"]},
+ {"slug": "campfire", "label": "Campfire", "category": "Travel", "keywords": ["campfire", "bonfire", "camping", "s'mores", "bonfire night", "guy fawkes", "fire", "cozy", "scouts"]},
+ {"slug": "hotel", "label": "Hotel", "category": "Travel", "keywords": ["hotel", "check in", "reception", "stay", "booking", "reservation", "staycation", "bnb", "resort", "concierge"]},
+ {"slug": "bus", "label": "Bus", "category": "Travel", "keywords": ["bus", "coach", "school bus", "field trip", "bus tour", "commute", "shuttle", "transport", "excursion"]},
+ {"slug": "bike", "label": "Bike ride", "category": "Travel", "keywords": ["bike", "bike ride", "cycling", "bicycle", "cycle", "sportive", "tour", "commute", "ride"]},
+ {"slug": "hot-air-balloon", "label": "Balloon ride", "category": "Travel", "keywords": ["hot air balloon", "balloon ride", "adventure", "bucket list", "flight", "festival", "sky"]},
+ {"slug": "destination", "label": "Destination", "category": "Travel", "keywords": ["destination", "location", "place", "pin", "arrive", "arrival", "meet up", "venue", "map pin", "there"]},
+ {"slug": "castle", "label": "Castle", "category": "Travel", "keywords": ["castle", "fairytale", "kingdom", "princess", "prince", "theme park", "palace", "history", "day out", "medieval"]},
+ {"slug": "lighthouse", "label": "Lighthouse", "category": "Travel", "keywords": ["lighthouse", "coast", "seaside", "beach", "harbour", "coastal walk", "cornwall", "maine", "sea"]},
+ {"slug": "soccer", "label": "Soccer", "category": "Sports", "keywords": ["soccer", "football", "match", "game", "world cup", "cup final", "kick off", "five a side", "league", "derby"]},
+ {"slug": "tennis", "label": "Tennis", "category": "Sports", "keywords": ["tennis", "wimbledon", "us open", "match", "racket", "racquet", "lesson", "padel", "squash", "tournament"]},
+ {"slug": "volleyball", "label": "Volleyball", "category": "Sports", "keywords": ["volleyball", "beach volleyball", "match", "game", "beach", "team", "netball"]},
+ {"slug": "hockey", "label": "Hockey", "category": "Sports", "keywords": ["hockey", "ice hockey", "field hockey", "game", "match", "stick", "puck", "nhl", "rink"]},
+ {"slug": "swimming", "label": "Swimming", "category": "Sports", "keywords": ["swimming", "swim", "pool", "swim meet", "lessons", "gala", "triathlon", "lido", "open water"]},
+ {"slug": "running", "label": "Running", "category": "Sports", "keywords": ["running", "run", "marathon", "half marathon", "5k", "10k", "race", "jog", "parkrun", "trainers", "sneakers", "fun run"]},
+ {"slug": "race", "label": "Race day", "category": "Sports", "keywords": ["race", "race day", "finish line", "grand prix", "f1", "formula 1", "motor racing", "nascar", "rally", "chequered flag", "checkered flag"]},
+ {"slug": "trophy", "label": "Trophy", "category": "Sports", "keywords": ["trophy", "winner", "champion", "championship", "final", "cup", "tournament", "awards", "prize", "playoffs"]},
+ {"slug": "medal", "label": "Medal", "category": "Sports", "keywords": ["medal", "gold medal", "olympics", "winner", "sports day", "race", "competition", "first place", "podium"]},
+ {"slug": "gym", "label": "Gym", "category": "Sports", "keywords": ["gym", "workout", "fitness", "training", "weights", "lifting", "personal trainer", "exercise", "new year resolution"]},
+ {"slug": "ski", "label": "Ski trip", "category": "Sports", "keywords": ["ski", "skiing", "ski trip", "snowboard", "snowboarding", "slopes", "winter", "alps", "apres ski", "mountains", "cable car", "gondola"]},
+ {"slug": "boxing", "label": "Boxing", "category": "Sports", "keywords": ["boxing", "fight", "fight night", "boxing match", "ufc", "mma", "kickboxing", "gloves", "title fight"]},
+ {"slug": "bowling", "label": "Bowling", "category": "Sports", "keywords": ["bowling", "ten pin", "tenpin", "strike", "bowling night", "league", "alley", "skittles"]},
+ {"slug": "fishing", "label": "Fishing", "category": "Sports", "keywords": ["fishing", "fishing trip", "angling", "lake", "river", "catch", "rod", "fly fishing", "sea fishing"]},
+ {"slug": "ping-pong", "label": "Table tennis", "category": "Sports", "keywords": ["table tennis", "ping pong", "ping-pong", "paddle", "bat", "tournament", "game", "rec room"]},
+ {"slug": "stadium", "label": "Big game", "category": "Sports", "keywords": ["big game", "stadium", "match", "final", "championship", "playoffs", "super bowl", "cup final", "derby", "game day", "arena"]},
+ {"slug": "target", "label": "Target", "category": "Sports", "keywords": ["target", "goal", "aim", "archery", "darts", "focus", "objective", "bullseye", "challenge"]},
+ {"slug": "skating", "label": "Skating", "category": "Sports", "keywords": ["skating", "ice skating", "ice rink", "figure skating", "roller skating", "winter", "skate"]},
+ {"slug": "backpack", "label": "First day", "category": "School", "keywords": ["first day", "back to school", "school", "backpack", "rucksack", "term starts", "new term", "kindergarten", "college"]},
+ {"slug": "pencil", "label": "Homework", "category": "School", "keywords": ["homework", "pencil", "writing", "essay", "assignment", "coursework", "draw", "sketch", "deadline", "notes"]},
+ {"slug": "teacher", "label": "Teacher", "category": "School", "keywords": ["teacher", "apple", "school", "teacher's day", "parents evening", "class", "healthy", "fruit"]},
+ {"slug": "exam", "label": "Exam", "category": "School", "keywords": ["exam", "test", "exams", "finals", "grades", "results", "quiz", "sat", "gcse", "a levels", "midterm", "assessment"]},
+ {"slug": "microscope", "label": "Science", "category": "School", "keywords": ["science", "biology", "lab", "laboratory", "science fair", "experiment", "research", "microscope", "stem"]},
+ {"slug": "flask", "label": "Chemistry", "category": "School", "keywords": ["chemistry", "lab", "science", "experiment", "science fair", "potion", "test tube", "stem", "practical"]},
+ {"slug": "school", "label": "School", "category": "School", "keywords": ["school", "term", "class", "reunion", "open day", "parents evening", "enrolment", "enrollment", "campus", "college"]},
+ {"slug": "abc", "label": "Nursery", "category": "School", "keywords": ["nursery", "kindergarten", "preschool", "daycare", "toddler", "abc", "blocks", "learning", "playgroup", "first steps"]},
+ {"slug": "chalkboard", "label": "Class", "category": "School", "keywords": ["class", "lesson", "lecture", "course", "tutoring", "teacher", "workshop", "seminar", "training", "chalkboard"]},
+ {"slug": "study", "label": "Study", "category": "School", "keywords": ["study", "revision", "exams", "library", "reading", "books", "book club", "coursework", "research", "finals"]},
+ {"slug": "presentation", "label": "Presentation", "category": "Work & money", "keywords": ["presentation", "meeting", "pitch", "conference", "demo", "talk", "keynote", "review", "board meeting", "webinar"]},
+ {"slug": "results", "label": "Results", "category": "Work & money", "keywords": ["results", "earnings", "report", "quarter", "q1", "q2", "q3", "q4", "growth", "sales", "stats", "review", "end of year"]},
+ {"slug": "tie", "label": "Interview", "category": "Work & money", "keywords": ["interview", "job interview", "tie", "suit", "formal", "father's day", "fathers day", "dad", "wedding", "black tie"]},
+ {"slug": "badge", "label": "New job", "category": "Work & money", "keywords": ["new job", "first day", "badge", "id", "start date", "onboarding", "conference", "lanyard", "promotion", "career"]},
+ {"slug": "payday", "label": "Payday", "category": "Work & money", "keywords": ["payday", "pay day", "salary", "money", "cash", "bonus", "paid", "wages", "paycheck", "payslip", "allowance", "pocket money"]},
+ {"slug": "savings", "label": "Savings", "category": "Work & money", "keywords": ["savings", "save", "piggy bank", "savings goal", "budget", "money", "fund", "deposit", "no spend", "allowance"]},
+ {"slug": "bill", "label": "Bill due", "category": "Work & money", "keywords": ["bill", "bill due", "invoice", "receipt", "payment", "rent", "rent due", "utilities", "subscription", "direct debit"]},
+ {"slug": "taxes", "label": "Taxes", "category": "Work & money", "keywords": ["taxes", "tax day", "tax return", "self assessment", "irs", "hmrc", "filing", "deadline", "accountant", "fiscal year"]},
+ {"slug": "megaphone", "label": "Announcement", "category": "Work & money", "keywords": ["announcement", "announce", "launch", "reveal", "news", "big news", "protest", "rally", "march", "campaign"]},
+ {"slug": "shop", "label": "Opening day", "category": "Work & money", "keywords": ["opening day", "grand opening", "shop", "store", "market", "business", "launch", "pop up", "sale", "small business"]},
+ {"slug": "idea", "label": "Idea", "category": "Work & money", "keywords": ["idea", "brainstorm", "hackathon", "invention", "project", "launch", "inspiration", "light bulb", "plan", "startup"]},
+ {"slug": "credit-card", "label": "Card due", "category": "Work & money", "keywords": ["credit card", "card", "payment", "statement", "subscription", "renewal", "free trial", "expires", "bill", "minimum payment"]},
+ {"slug": "tooth", "label": "Dentist", "category": "Health", "keywords": ["dentist", "dental", "teeth", "tooth", "checkup", "hygienist", "orthodontist", "braces", "tooth fairy"]},
+ {"slug": "doctor", "label": "Doctor", "category": "Health", "keywords": ["doctor", "gp", "appointment", "checkup", "physical", "clinic", "stethoscope", "medical", "consultation", "nurse"]},
+ {"slug": "medicine", "label": "Medicine", "category": "Health", "keywords": ["medicine", "pills", "prescription", "pharmacy", "refill", "tablets", "vitamins", "course", "antibiotics", "dose"]},
+ {"slug": "vaccine", "label": "Vaccine", "category": "Health", "keywords": ["vaccine", "vaccination", "jab", "shot", "injection", "booster", "flu jab", "immunisation", "travel jabs"]},
+ {"slug": "hospital", "label": "Hospital", "category": "Health", "keywords": ["hospital", "surgery", "operation", "appointment", "scan", "procedure", "birth", "maternity", "discharge", "er"]},
+ {"slug": "checkup", "label": "Checkup", "category": "Health", "keywords": ["checkup", "check up", "health check", "heart", "cardiology", "physical", "blood pressure", "results", "ecg", "heartbeat"]},
+ {"slug": "optician", "label": "Optician", "category": "Health", "keywords": ["optician", "eye test", "glasses", "eyes", "contacts", "contact lenses", "optometrist", "eye doctor", "reading glasses"]},
+ {"slug": "recovery", "label": "Recovery", "category": "Health", "keywords": ["recovery", "get well", "injury", "surgery", "heal", "healing", "cast off", "physio", "physiotherapy", "plaster"]},
+ {"slug": "bath", "label": "Spa day", "category": "Health", "keywords": ["spa day", "spa", "bath", "pamper", "relax", "self care", "bubble bath", "hot tub", "treat yourself"]},
+ {"slug": "meditation", "label": "Wellness", "category": "Health", "keywords": ["wellness", "meditation", "yoga", "pilates", "mindfulness", "spa", "retreat", "calm", "self care", "lotus", "relax", "breathe"]},
+ {"slug": "haircut", "label": "Haircut", "category": "Health", "keywords": ["haircut", "hair", "salon", "barber", "trim", "hairdresser", "appointment", "scissors", "styling", "crafts"]},
+ {"slug": "therapy", "label": "Therapy", "category": "Health", "keywords": ["therapy", "therapist", "counselling", "counseling", "mental health", "session", "psychologist", "brain", "mind"]},
+ {"slug": "blood-test", "label": "Blood test", "category": "Health", "keywords": ["blood test", "blood donation", "give blood", "donate", "lab", "results", "bloods", "fasting", "blood drive"]},
+ {"slug": "sick-day", "label": "Sick day", "category": "Health", "keywords": ["sick day", "sick", "fever", "flu", "cold", "temperature", "ill", "thermometer", "heatwave", "hot"]},
+ {"slug": "home", "label": "Home", "category": "Home", "keywords": ["home", "house", "new home", "homecoming", "back home", "mortgage", "house hunting", "open house", "completion", "housewarming"]},
+ {"slug": "keys", "label": "Keys", "category": "Home", "keywords": ["keys", "new home", "key handover", "moving", "house", "car", "possession day", "completion", "new flat", "landlord"]},
+ {"slug": "decorate", "label": "Decorate", "category": "Home", "keywords": ["decorate", "decorating", "paint", "painting", "renovate", "renovation", "diy", "makeover", "redecorate", "refurb"]},
+ {"slug": "sofa", "label": "New sofa", "category": "Home", "keywords": ["sofa", "couch", "furniture", "delivery", "living room", "lounge", "movie night", "sofa day", "relax"]},
+ {"slug": "plant", "label": "Plant", "category": "Home", "keywords": ["plant", "houseplant", "garden", "grow", "repot", "plant shop", "green", "water the plants", "nursery"]},
+ {"slug": "garden", "label": "Gardening", "category": "Home", "keywords": ["garden", "gardening", "planting", "spring", "allotment", "watering", "flowers", "vegetables", "landscaping"]},
+ {"slug": "toolbox", "label": "Repairs", "category": "Home", "keywords": ["repairs", "repair", "fix", "diy", "tools", "maintenance", "service", "handyman", "plumber", "electrician", "builder"]},
+ {"slug": "laundry", "label": "Laundry", "category": "Home", "keywords": ["laundry", "washing", "wash day", "chores", "washing machine", "clothes", "launderette", "ironing"]},
+ {"slug": "cleaning", "label": "Cleaning", "category": "Home", "keywords": ["cleaning", "clean", "spring clean", "chores", "tidy", "cleaner", "sweep", "deep clean", "inspection", "guests"]},
+ {"slug": "shopping", "label": "Shopping", "category": "Home", "keywords": ["shopping", "sale", "sales", "black friday", "boxing day", "cyber monday", "mall", "haul", "retail therapy", "prime day"]},
+ {"slug": "groceries", "label": "Groceries", "category": "Home", "keywords": ["groceries", "shopping", "supermarket", "food shop", "order", "delivery slot", "big shop", "market", "cart"]},
+ {"slug": "dog", "label": "Dog", "category": "Animals", "keywords": ["dog", "puppy", "new puppy", "gotcha day", "vet", "walkies", "dog show", "groomer", "pet", "adoption"]},
+ {"slug": "cat", "label": "Cat", "category": "Animals", "keywords": ["cat", "kitten", "new kitten", "gotcha day", "vet", "pet", "adoption", "cattery", "international cat day"]},
+ {"slug": "paw", "label": "Pets", "category": "Animals", "keywords": ["pets", "pet", "vet", "paw", "gotcha day", "adoption", "dog", "cat", "animal shelter", "pet sitter", "kennels"]},
+ {"slug": "fish", "label": "Fish", "category": "Animals", "keywords": ["fish", "aquarium", "fishing", "pet fish", "goldfish", "sea life", "ocean", "pisces"]},
+ {"slug": "rabbit", "label": "Bunny", "category": "Animals", "keywords": ["bunny", "rabbit", "easter", "easter bunny", "spring", "pet", "hare", "petting zoo"]},
+ {"slug": "butterfly", "label": "Butterfly", "category": "Animals", "keywords": ["butterfly", "spring", "garden", "summer", "change", "transformation", "new beginnings", "butterfly house"]},
+ {"slug": "bee", "label": "Bee", "category": "Animals", "keywords": ["bee", "spelling bee", "honey", "summer", "garden", "spring", "bees", "beekeeping", "world bee day"]},
+ {"slug": "whale", "label": "Whale", "category": "Animals", "keywords": ["whale", "whale watching", "ocean", "sea", "boat trip", "aquarium", "marine", "dolphin", "orca"]},
+ {"slug": "lion", "label": "Zoo", "category": "Animals", "keywords": ["zoo", "safari", "lion", "wildlife", "animals", "day out", "leo", "big cats", "wildlife park"]},
+ {"slug": "penguin", "label": "Penguin", "category": "Animals", "keywords": ["penguin", "winter", "zoo", "aquarium", "polar", "antarctica", "cold", "snow", "christmas"]},
+ {"slug": "owl", "label": "Owl", "category": "Animals", "keywords": ["owl", "night owl", "wisdom", "school", "exam", "study", "graduation", "woods", "nocturnal", "halloween"]},
+ {"slug": "chick", "label": "Chick", "category": "Animals", "keywords": ["chick", "easter", "hatch", "hatching", "spring", "new", "baby", "farm", "egg", "due date"]},
+ {"slug": "dinosaur", "label": "Dinosaur", "category": "Animals", "keywords": ["dinosaur", "dino", "kids", "museum", "birthday", "jurassic", "t-rex", "natural history", "fossils", "roar"]},
+ {"slug": "fox", "label": "Fox", "category": "Animals", "keywords": ["fox", "forest", "woodland", "autumn", "fall", "animals", "nature", "cunning", "wildlife"]},
+ {"slug": "sun", "label": "Summer", "category": "Nature", "keywords": ["summer", "sun", "sunny", "heatwave", "solstice", "beach", "holiday", "summer holidays", "june", "july", "august"]},
+ {"slug": "snowflake", "label": "Winter", "category": "Nature", "keywords": ["winter", "snow", "snow day", "snowflake", "cold", "december", "january", "christmas", "frozen", "ski season"]},
+ {"slug": "leaf", "label": "Autumn", "category": "Nature", "keywords": ["autumn", "fall", "leaves", "october", "november", "thanksgiving", "harvest", "season", "september"]},
+ {"slug": "tulip", "label": "Spring", "category": "Nature", "keywords": ["spring", "flowers", "tulip", "mother's day", "mothers day", "garden", "bloom", "easter", "april", "may"]},
+ {"slug": "sunflower", "label": "Sunflower", "category": "Nature", "keywords": ["sunflower", "summer", "garden", "flowers", "august", "sunshine", "field", "bloom"]},
+ {"slug": "rainbow", "label": "Rainbow", "category": "Nature", "keywords": ["rainbow", "pride", "weather", "hope", "spring", "colours", "colors", "after the rain"]},
+ {"slug": "umbrella", "label": "Rainy day", "category": "Nature", "keywords": ["rainy day", "rain", "umbrella", "weather", "april showers", "monsoon", "wet", "autumn", "storm"]},
+ {"slug": "moon", "label": "Full moon", "category": "Nature", "keywords": ["full moon", "moon", "lunar", "night", "moonrise", "harvest moon", "supermoon", "blue moon", "werewolf"]},
+ {"slug": "eclipse", "label": "Eclipse", "category": "Nature", "keywords": ["eclipse", "solar eclipse", "lunar eclipse", "totality", "astronomy", "sky", "sun", "moon", "path of totality"]},
+ {"slug": "comet", "label": "Shooting star", "category": "Nature", "keywords": ["shooting star", "meteor shower", "comet", "perseids", "geminids", "stargazing", "wish", "night sky", "astronomy"]},
+ {"slug": "planet", "label": "Space", "category": "Nature", "keywords": ["space", "planet", "saturn", "astronomy", "stargazing", "science", "universe", "planetarium", "sci-fi"]},
+ {"slug": "ocean", "label": "Ocean", "category": "Nature", "keywords": ["ocean", "sea", "waves", "surf", "surfing", "beach", "coast", "seaside", "swim", "world oceans day"]},
+ {"slug": "snowman", "label": "Snowman", "category": "Nature", "keywords": ["snowman", "snow", "snow day", "winter", "christmas", "cold", "frosty", "holidays"]},
+ {"slug": "sunrise", "label": "Sunrise", "category": "Nature", "keywords": ["sunrise", "sunset", "dawn", "morning", "golden hour", "first light", "early start", "summer solstice", "dusk"]},
+ {"slug": "rocket", "label": "Rocket", "category": "Nature", "keywords": ["rocket", "launch", "space", "blast off", "rocket launch", "start", "kickoff", "astronaut", "mission"]},
+ {"slug": "telescope", "label": "Stargazing", "category": "Nature", "keywords": ["stargazing", "telescope", "astronomy", "night sky", "stars", "observatory", "meteor shower", "eclipse"]},
+ {"slug": "blossom", "label": "Blossom", "category": "Nature", "keywords": ["blossom", "cherry blossom", "sakura", "hanami", "spring", "bloom", "flowers", "april", "japan"]},
+ {"slug": "coffee", "label": "Coffee", "category": "Food & drink", "keywords": ["coffee", "coffee date", "cafe", "latte", "catch up", "morning", "brunch", "coffee morning", "flat white"]},
+ {"slug": "tea", "label": "Tea", "category": "Food & drink", "keywords": ["tea", "afternoon tea", "tea party", "high tea", "teapot", "cuppa", "brew", "tea time"]},
+ {"slug": "pizza", "label": "Pizza", "category": "Food & drink", "keywords": ["pizza", "pizza night", "takeaway", "takeout", "party", "friday night", "italian", "slice"]},
+ {"slug": "burger", "label": "Burger", "category": "Food & drink", "keywords": ["burger", "hamburger", "cookout", "bbq", "food", "takeaway", "fast food", "diner", "lunch"]},
+ {"slug": "taco", "label": "Taco", "category": "Food & drink", "keywords": ["taco", "taco tuesday", "mexican", "cinco de mayo", "fiesta", "burrito", "food truck", "nachos"]},
+ {"slug": "sushi", "label": "Sushi", "category": "Food & drink", "keywords": ["sushi", "japanese", "dinner", "date night", "restaurant", "maki", "sashimi", "ramen"]},
+ {"slug": "ramen", "label": "Noodles", "category": "Food & drink", "keywords": ["noodles", "ramen", "pho", "takeaway", "chinese", "japanese", "thai", "dinner", "noodle bar"]},
+ {"slug": "wine", "label": "Wine", "category": "Food & drink", "keywords": ["wine", "wine tasting", "date night", "dinner", "vineyard", "wine bar", "red wine", "anniversary", "cheers"]},
+ {"slug": "beer", "label": "Beer", "category": "Food & drink", "keywords": ["beer", "pub", "oktoberfest", "drinks", "bar", "happy hour", "pint", "brewery", "stag do", "game day"]},
+ {"slug": "cocktail", "label": "Cocktails", "category": "Food & drink", "keywords": ["cocktails", "drinks", "bar", "party", "happy hour", "night out", "hen do", "bachelorette", "martini", "mocktail"]},
+ {"slug": "cupcake", "label": "Cupcake", "category": "Food & drink", "keywords": ["cupcake", "baking", "bake sale", "birthday", "treat", "dessert", "bake off", "party", "cake"]},
+ {"slug": "pie", "label": "Pie", "category": "Food & drink", "keywords": ["pie", "thanksgiving", "pi day", "bake off", "dessert", "baking", "apple pie", "pumpkin pie", "holidays"]},
+ {"slug": "bbq", "label": "BBQ", "category": "Food & drink", "keywords": ["bbq", "barbecue", "cookout", "grill", "summer", "july 4th", "memorial day", "labor day", "garden party", "braai"]},
+ {"slug": "popcorn", "label": "Movie night", "category": "Food & drink", "keywords": ["movie night", "popcorn", "cinema", "movies", "film", "netflix", "sleepover", "date night", "film club"]},
+ {"slug": "strawberry", "label": "Strawberries", "category": "Food & drink", "keywords": ["strawberries", "strawberry", "fruit picking", "summer", "wimbledon", "farm", "berries", "pick your own"]},
+ {"slug": "watermelon", "label": "Watermelon", "category": "Food & drink", "keywords": ["watermelon", "summer", "picnic", "fruit", "bbq", "beach", "refreshing", "melon"]},
+ {"slug": "chef", "label": "Cooking", "category": "Food & drink", "keywords": ["cooking", "chef", "cooking class", "bake off", "dinner party", "recipe", "masterchef", "kitchen", "potluck"]},
+ {"slug": "picnic", "label": "Picnic", "category": "Food & drink", "keywords": ["picnic", "park", "summer", "outing", "day out", "lunch", "basket", "garden", "festival"]},
+ {"slug": "salad", "label": "Healthy eating", "category": "Food & drink", "keywords": ["healthy eating", "salad", "diet", "vegan", "veganuary", "lunch", "new year resolution", "detox", "meal prep"]},
+ {"slug": "movie", "label": "Movie", "category": "Fun", "keywords": ["movie", "film", "premiere", "cinema", "release", "opening night", "oscars", "film festival", "trailer", "sequel"]},
+ {"slug": "theatre", "label": "Theatre", "category": "Fun", "keywords": ["theatre", "theater", "play", "musical", "broadway", "west end", "show", "comedy", "opera", "panto", "drama"]},
+ {"slug": "karaoke", "label": "Karaoke", "category": "Fun", "keywords": ["karaoke", "singing", "open mic", "podcast", "stand up", "comedy", "gig", "speech", "toast", "talent show", "microphone"]},
+ {"slug": "guitar", "label": "Guitar", "category": "Fun", "keywords": ["guitar", "gig", "concert", "band", "music", "lessons", "festival", "open mic", "rock", "acoustic"]},
+ {"slug": "headphones", "label": "New album", "category": "Fun", "keywords": ["new album", "album", "music", "release", "listen", "podcast", "playlist", "headphones", "spotify wrapped", "drop"]},
+ {"slug": "drums", "label": "Drums", "category": "Fun", "keywords": ["drums", "band", "gig", "music", "parade", "marching band", "drum lessons", "rehearsal", "concert"]},
+ {"slug": "art", "label": "Art", "category": "Fun", "keywords": ["art", "painting", "art class", "gallery", "exhibition", "craft", "crafts", "sip and paint", "drawing", "museum"]},
+ {"slug": "puzzle", "label": "Puzzle", "category": "Fun", "keywords": ["puzzle", "jigsaw", "games night", "escape room", "crossword", "brain teaser", "hobby", "rainy day"]},
+ {"slug": "dice", "label": "Game night", "category": "Fun", "keywords": ["game night", "board games", "dice", "dnd", "d&d", "games", "luck", "vegas", "casino", "monopoly"]},
+ {"slug": "cards", "label": "Cards", "category": "Fun", "keywords": ["cards", "card games", "poker", "poker night", "bridge", "casino", "magic", "blackjack", "solitaire", "game night"]},
+ {"slug": "chess", "label": "Chess", "category": "Fun", "keywords": ["chess", "tournament", "strategy", "game", "chess club", "match", "checkmate", "board game"]},
+ {"slug": "knitting", "label": "Crafts", "category": "Fun", "keywords": ["crafts", "knitting", "crochet", "sewing", "yarn", "hobby", "craft fair", "stitch", "quilting", "wool"]},
+ {"slug": "museum", "label": "Museum", "category": "Fun", "keywords": ["museum", "gallery", "exhibition", "day out", "history", "bank", "library", "courthouse", "field trip", "landmark"]},
+ {"slug": "teddy", "label": "Teddy bear", "category": "Fun", "keywords": ["teddy bear", "toys", "kids", "baby", "sleepover", "birthday", "toy shop", "nursery", "cuddle"]},
+ {"slug": "tv", "label": "TV night", "category": "Fun", "keywords": ["tv night", "tv", "finale", "premiere", "series", "season", "binge", "show", "episode", "streaming", "box set"]},
+ {"slug": "quiz", "label": "Quiz night", "category": "Fun", "keywords": ["quiz night", "trivia", "pub quiz", "question", "game show", "quiz", "test", "mystery", "riddle"]},
+ {"slug": "clock", "label": "Clock", "category": "Everyday", "keywords": ["clock", "time", "appointment", "hour", "o'clock", "schedule", "timer", "meeting", "reminder"]},
+ {"slug": "hourglass", "label": "Hourglass", "category": "Everyday", "keywords": ["hourglass", "waiting", "countdown", "time", "patience", "soon", "sand timer", "almost there", "final countdown"]},
+ {"slug": "reminder", "label": "Reminder", "category": "Everyday", "keywords": ["reminder", "notification", "alert", "bell", "ring", "heads up", "nudge", "appointment", "renewal"]},
+ {"slug": "delivery", "label": "Delivery", "category": "Everyday", "keywords": ["delivery", "parcel", "package", "order", "shipping", "arrives", "moving", "removals", "courier", "tracking", "van"]},
+ {"slug": "election", "label": "Election", "category": "Everyday", "keywords": ["election", "vote", "voting", "ballot", "polls", "polling day", "referendum", "election day", "midterms", "democracy"]},
+ {"slug": "paper-plane", "label": "Paper plane", "category": "Everyday", "keywords": ["paper plane", "send", "message", "launch", "ship it", "submit", "application", "farewell", "sent"]},
+ {"slug": "smartphone", "label": "New phone", "category": "Everyday", "keywords": ["new phone", "phone", "upgrade", "launch", "release", "mobile", "tech", "contract", "iphone", "android", "gadget"]},
+ {"slug": "goal", "label": "Goal", "category": "Everyday", "keywords": ["goal", "done", "achievement", "complete", "milestone", "verified", "accomplished", "target hit", "success", "finished"]},
+ {"slug": "streak", "label": "Streak", "category": "Everyday", "keywords": ["streak", "hot", "fire", "lit", "exciting", "heat", "flame", "on fire", "hype", "big day"]}
 ]
