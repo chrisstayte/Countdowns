@@ -1,6 +1,8 @@
-# Since & Soon
+# Soon & Since
 
-Since & Soon (formerly Countdowns) counts down to the days ahead and up from the days behind.
+Soon & Since (formerly Countdowns) counts down to the days ahead and up from the days behind.
+
+The App Store, Google Play, and website use **Soon and Since**. The installed app, widgets, in-app titles, and shared images use **Soon & Since**.
 
 Created: December 22, 2021 9:38 PM
 Tier: Beginner
@@ -8,7 +10,7 @@ Tier: Beginner
 
 ## Application stack
 
-Since & Soon runs on Flutter 3.50.1 and Dart 3.14.0. The previous app declared Dart 3.7, Provider 6 and GoRouter 14.
+Soon & Since runs on Flutter 3.50.1 and Dart 3.14.0. The previous app declared Dart 3.7, Provider 6 and GoRouter 14.
 
 | Area | Implementation |
 | --- | --- |

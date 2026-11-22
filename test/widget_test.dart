@@ -49,7 +49,7 @@ void main() {
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
     PackageInfo.setMockInitialValues(
-      appName: 'Since & Soon',
+      appName: 'Soon & Since',
       packageName: 'countdowns',
       version: '2.0.0',
       buildNumber: '5',
@@ -154,7 +154,7 @@ void main() {
     await tap(find.text('Delete event'));
     await tap(find.text('Delete'));
     expect(await rows(), isEmpty);
-    expect(find.text('Since & Soon'), findsWidgets);
+    expect(find.text('Soon & Since'), findsWidgets);
 
     // A Since event counts up from its start, which defaults to now.
     await tap(find.text('New event'));

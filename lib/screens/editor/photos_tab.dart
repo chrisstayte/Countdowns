@@ -39,7 +39,7 @@ class ImportedPhoto {
 }
 
 /// The name stored with a downloaded photo's credit.
-const stockSourceName = 'Countdowns catalogue';
+const stockSourceName = 'Soon & Since catalogue';
 
 /// Imports a downloaded stock photo into the app's photo store with its
 /// credit, and removes the temporary download. Returns the stored path.

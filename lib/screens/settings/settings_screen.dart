@@ -50,7 +50,7 @@ class SettingsScreen extends ConsumerWidget {
                     children: [
                       Semantics(
                         button: true,
-                        label: 'Back to Since & Soon',
+                        label: 'Back to Soon & Since',
                         child: GestureDetector(
                           onTap: () {
                             feedback(ref);
@@ -66,7 +66,7 @@ class SettingsScreen extends ConsumerWidget {
                                   color: AppColors.primary,
                                 ),
                                 Text(
-                                  'Since & Soon',
+                                  'Soon & Since',
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
@@ -366,7 +366,7 @@ class _Notifications extends ConsumerWidget {
       builder: (context) => AlertDialog(
         title: const Text('Notifications are off'),
         content: const Text(
-          'Turn on notifications for Since & Soon in Settings to get reminders.',
+          'Turn on notifications for Soon & Since in Settings to get reminders.',
         ),
         actions: [
           TextButton(
@@ -543,7 +543,7 @@ class _Support extends ConsumerWidget {
         GroupCard(
           children: [
             _Row(
-              label: 'Rate Since & Soon',
+              label: 'Rate Soon & Since',
               onTap: () => InAppReview.instance.openStoreListing(
                 appStoreId: '1603744166',
               ),
@@ -557,7 +557,7 @@ class _Support extends ConsumerWidget {
                   scheme: 'mailto',
                   path: 'countdowns@chrisstayte.com',
                   query:
-                      'subject=Since %26 Soon Feedback&body=\n\n\nApp Version ${info == null ? 'Unknown' : versionLabel(info)}',
+                      'subject=Soon %26 Since Feedback&body=\n\n\nApp Version ${info == null ? 'Unknown' : versionLabel(info)}',
                 );
                 if (await canLaunchUrl(uri)) await launchUrl(uri);
               },
@@ -587,7 +587,7 @@ class _Support extends ConsumerWidget {
               label: 'About',
               onTap: () => showAboutDialog(
                 context: context,
-                applicationName: 'Since & Soon',
+                applicationName: 'Soon & Since',
                 applicationVersion: versionLabel(info),
               ),
             ),
@@ -656,7 +656,7 @@ class _Danger extends ConsumerWidget {
         ),
         const SizedBox(height: 22),
         Text(
-          'Since & Soon ${versionLabel(info)}',
+          'Soon & Since ${versionLabel(info)}',
           textAlign: TextAlign.center,
           style: const TextStyle(fontSize: 13, color: AppColors.secondaryText),
         ),
@@ -730,7 +730,7 @@ class _TabletSettingsState extends ConsumerState<_TabletSettings> {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: TextAction(
-                        '‹ Since & Soon',
+                        '‹ Soon & Since',
                         onTap: () => context.pop(),
                       ),
                     ),
@@ -788,7 +788,7 @@ class _TabletSettingsState extends ConsumerState<_TabletSettings> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: Text(
-                        'Since & Soon ${versionLabel(info)}',
+                        'Soon & Since ${versionLabel(info)}',
                         style: AppText.secondary,
                       ),
                     ),

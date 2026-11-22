@@ -396,7 +396,7 @@ void paper(Canvas c, Size size, Color color) {
 
 void brand(Canvas c, double x, double y, {double size = 27}) {
   mark(c, Rect.fromLTWH(x - 6, y - 12, size * 1.6, size * 1.6));
-  textAt(c, 'Since & Soon', x + size * 1.7, y, size, width: 650);
+  textAt(c, 'Soon & Since', x + size * 1.7, y, size, width: 650);
 }
 
 Future<void> writeImage(ui.Image image, String path) async {
@@ -695,7 +695,7 @@ Future<void> exports() async {
     }
     textAt(
       c,
-      'Since & Soon  /  Store identity  /  3.0',
+      'Soon & Since  /  Store identity  /  3.0',
       84,
       911,
       21,

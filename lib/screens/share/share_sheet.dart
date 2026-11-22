@@ -89,7 +89,7 @@ class _ShareSheetState extends ConsumerState<ShareSheet> {
         buildIcs(
           e,
           now: now,
-          note: '${_phrase(e, c)}. Made with Since & Soon.',
+          note: '${_phrase(e, c)}. Made with Soon & Since.',
         ),
       );
       return file;
@@ -351,7 +351,7 @@ class _StoryImage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'MADE WITH SINCE & SOON',
+              'MADE WITH SOON & SINCE',
               style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w700,
@@ -446,7 +446,7 @@ class _SquareImage extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'SINCE & SOON',
+                  'SOON & SINCE',
                   style: TextStyle(
                     fontSize: 9,
                     fontWeight: FontWeight.w700,

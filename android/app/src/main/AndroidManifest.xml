@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="Since &amp; Soon"
+        android:label="Soon &amp; Since"
         android:name="${applicationName}"
         android:icon="@mipmap/countdowns">
         <!-- Reminders: the plugin's alarm receiver, and its boot receiver,

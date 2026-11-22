@@ -248,7 +248,7 @@ class _Sidebar extends ConsumerWidget {
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: MarkedTitle(
-                            'Since & Soon',
+                            'Soon & Since',
                             style: TextStyle(
                               fontFamily: AppFonts.numerals,
                               fontSize: 26,
