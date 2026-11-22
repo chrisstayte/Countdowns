@@ -10,6 +10,7 @@ import 'package:countdowns/providers/event_provider.dart';
 import 'package:countdowns/providers/local_settings_provider.dart';
 
 import 'package:countdowns/screens/settings/widget/settings_container.dart';
+import 'package:countdowns/utilities/sample_data.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
@@ -72,10 +73,18 @@ class SettingsScreen extends ConsumerWidget {
           bottom: 85.0,
         ),
         children: [
-          if (kDebugMode && notifications.supported)
+          if (kDebugMode)
             SettingsContainer(
               title: 'Debug',
               children: [
+                ListTile(
+                  title: const Text('Load sample countdowns'),
+                  onTap: () async {
+                    for (final c in sampleCountdowns(DateTime.now())) {
+                      await ref.read(eventsControllerProvider).save(c);
+                    }
+                  },
+                ),
                 ListTile(
                   title: const Text('Send Notification'),
                   trailing: const Icon(Icons.notification_add),

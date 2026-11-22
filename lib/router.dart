@@ -3,6 +3,7 @@ import 'package:countdowns/screens/event_form/event_form_screen.dart';
 import 'package:countdowns/screens/event_form/options/name_and_date/date_picker_screen.dart';
 import 'package:countdowns/screens/event_screen/event_screen.dart';
 import 'package:countdowns/screens/home/home_screen.dart';
+import 'package:countdowns/screens/search/search_screen.dart';
 import 'package:countdowns/screens/settings/ios_custom_icon_screen.dart';
 import 'package:countdowns/screens/settings/settings_screen.dart';
 import 'package:cupertino_ui/cupertino_ui.dart';
@@ -47,6 +48,16 @@ final routerProvider = Provider<GoRouter>((ref) {
             name: AppRoutes.eventNew,
             builder: (_, _) => const EventFormScreen(),
             routes: [_dateRoute(AppRoutes.newDate)],
+          ),
+          GoRoute(
+            path: AppRoutes.search,
+            name: AppRoutes.search,
+            pageBuilder: (_, state) => CustomTransitionPage<void>(
+              key: state.pageKey,
+              child: const SearchScreen(),
+              transitionsBuilder: (_, animation, _, child) =>
+                  FadeTransition(opacity: animation, child: child),
+            ),
           ),
           GoRoute(
             path: AppRoutes.settings,
