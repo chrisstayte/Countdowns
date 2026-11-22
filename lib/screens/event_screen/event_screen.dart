@@ -117,193 +117,206 @@ class _CountdownDetailState extends ConsumerState<CountdownDetail> {
 
     TextStyle on(TextStyle s) => s.copyWith(color: ink, shadows: shadows);
 
-    return CountdownSurface(
-      event: event,
-      shape: CropShape.full,
-      scrim: ScrimStyle.fullBleed,
-      child: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final bigText = event.isToday(now) ? '0' : count.big;
-            var bigStyle = on(
-              AppText.numeral(bigSize).copyWith(
-                height: 0.82,
-                fontFeatures: const [FontFeature.tabularFigures()],
-              ),
-            );
-            // Shrink the giant number to fit the width. Measured here rather
-            // than with FittedBox, which breaks the intrinsic height below.
-            final painter = TextPainter(
-              text: TextSpan(text: bigText, style: bigStyle),
-              textDirection: Directionality.of(context),
-              textScaler: MediaQuery.textScalerOf(context),
-              maxLines: 1,
-            )..layout();
-            final room = constraints.maxWidth - 40;
-            if (painter.width > room) {
-              bigStyle = bigStyle.copyWith(
-                fontSize: bigSize * room / painter.width,
-              );
-            }
-            painter.dispose();
-            return SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: constraints.maxHeight - 28,
+    // On a tablet, a detail wider than it is tall uses the landscape crop.
+    final tablet = MediaQuery.sizeOf(context).shortestSide >= 600;
+
+    return LayoutBuilder(
+      builder: (context, box) => CountdownSurface(
+        event: event,
+        shape: tablet && box.maxWidth > box.maxHeight
+            ? CropShape.tablet
+            : CropShape.full,
+        scrim: ScrimStyle.fullBleed,
+        child: SafeArea(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final bigText = event.isToday(now) ? '0' : count.big;
+              var bigStyle = on(
+                AppText.numeral(bigSize).copyWith(
+                  height: 0.82,
+                  fontFeatures: const [FontFeature.tabularFigures()],
                 ),
-                child: IntrinsicHeight(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          if (widget.onClose != null)
-                            RoundButton(
-                              icon: widget.closeIcon,
-                              label: 'Close',
-                              background: soft,
-                              foreground: ink,
-                              onTap: widget.onClose!,
-                            ),
-                          const Spacer(),
-                          if (openShareSheet != null) ...[
-                            RoundButton(
-                              icon: Icons.ios_share_rounded,
-                              label: 'Share',
-                              background: soft,
-                              foreground: ink,
-                              onTap: () {
-                                feedback(ref);
-                                openShareSheet!(context, event, _unit);
-                              },
-                            ),
-                            const SizedBox(width: 8),
-                          ],
-                          PillButton(
-                            label: 'Edit',
-                            height: 44,
-                            background: photo
-                                ? Colors.white.withValues(alpha: 0.2)
-                                : AppColors.ink,
-                            onTap: widget.onEdit,
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: photo ? 22 : 36),
-                      if (event.iconSlug != null && !photo) ...[
-                        Container(
-                          width: 56,
-                          height: 56,
-                          decoration: BoxDecoration(
-                            color: soft,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          alignment: Alignment.center,
-                          child: EventIcon(
-                            event.iconSlug,
-                            size: 28,
-                            color: ink,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                      ],
-                      Semantics(
-                        header: true,
-                        child: Text(
-                          event.title,
-                          style: on(
-                            TextStyle(
-                              fontFamily: resolveEventFont(event.fontFamily),
-                              fontFamilyFallback: eventFontFallback,
-                              fontSize: widget.compact ? 32 : 40,
-                              fontWeight: FontWeight.w700,
-                              height: 1.1,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        longDate(event, now),
-                        style: on(
-                          const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      if (photo) const Spacer() else const SizedBox(height: 34),
-                      Semantics(
-                        liveRegion: false,
-                        label: '${count.big} $label',
-                        excludeSemantics: true,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+              );
+              // Shrink the giant number to fit the width. Measured here rather
+              // than with FittedBox, which breaks the intrinsic height below.
+              final painter = TextPainter(
+                text: TextSpan(text: bigText, style: bigStyle),
+                textDirection: Directionality.of(context),
+                textScaler: MediaQuery.textScalerOf(context),
+                maxLines: 1,
+              )..layout();
+              final room = constraints.maxWidth - 40;
+              if (painter.width > room) {
+                bigStyle = bigStyle.copyWith(
+                  fontSize: bigSize * room / painter.width,
+                );
+              }
+              painter.dispose();
+              return SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: constraints.maxHeight - 28,
+                  ),
+                  child: IntrinsicHeight(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
                           children: [
-                            Text(
-                              bigText,
-                              maxLines: 1,
-                              softWrap: false,
-                              style: bigStyle,
+                            if (widget.onClose != null)
+                              RoundButton(
+                                icon: widget.closeIcon,
+                                label: 'Close',
+                                background: soft,
+                                foreground: ink,
+                                onTap: widget.onClose!,
+                              ),
+                            const Spacer(),
+                            if (openShareSheet != null) ...[
+                              RoundButton(
+                                icon: Icons.ios_share_rounded,
+                                label: 'Share',
+                                background: soft,
+                                foreground: ink,
+                                onTap: () {
+                                  feedback(ref);
+                                  openShareSheet!(context, event, _unit);
+                                },
+                              ),
+                              const SizedBox(width: 8),
+                            ],
+                            PillButton(
+                              label: 'Edit',
+                              height: 44,
+                              background: photo
+                                  ? Colors.white.withValues(alpha: 0.2)
+                                  : AppColors.ink,
+                              onTap: widget.onEdit,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 6),
-                              child: Text(
-                                label,
-                                style: on(
-                                  TextStyle(
-                                    fontFamily: AppFonts.numerals,
-                                    fontSize: widget.compact ? 24 : 30,
-                                    fontWeight: FontWeight.w700,
+                          ],
+                        ),
+                        SizedBox(height: photo ? 22 : 36),
+                        if (event.iconSlug != null && !photo) ...[
+                          Container(
+                            width: 56,
+                            height: 56,
+                            decoration: BoxDecoration(
+                              color: soft,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            alignment: Alignment.center,
+                            child: EventIcon(
+                              event.iconSlug,
+                              size: 28,
+                              color: ink,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                        ],
+                        Semantics(
+                          header: true,
+                          child: Text(
+                            event.title,
+                            style: on(
+                              TextStyle(
+                                fontFamily: resolveEventFont(event.fontFamily),
+                                fontFamilyFallback: eventFontFallback,
+                                fontSize: widget.compact ? 32 : 40,
+                                fontWeight: FontWeight.w700,
+                                height: 1.1,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          longDate(event, now),
+                          style: on(
+                            const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        if (photo)
+                          const Spacer()
+                        else
+                          const SizedBox(height: 34),
+                        Semantics(
+                          liveRegion: false,
+                          label: '${count.big} $label',
+                          excludeSemantics: true,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                bigText,
+                                maxLines: 1,
+                                softWrap: false,
+                                style: bigStyle,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 6),
+                                child: Text(
+                                  label,
+                                  style: on(
+                                    TextStyle(
+                                      fontFamily: AppFonts.numerals,
+                                      fontSize: widget.compact ? 24 : 30,
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            if (years != null)
-                              Padding(
-                                padding: const EdgeInsets.only(left: 6, top: 4),
-                                child: Text(
-                                  years,
-                                  style:
-                                      on(
-                                        const TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600,
+                              if (years != null)
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 6,
+                                    top: 4,
+                                  ),
+                                  child: Text(
+                                    years,
+                                    style:
+                                        on(
+                                          const TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ).copyWith(
+                                          color: ink.withValues(alpha: 0.75),
                                         ),
-                                      ).copyWith(
-                                        color: ink.withValues(alpha: 0.75),
-                                      ),
+                                  ),
                                 ),
-                              ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      if (!done) ...[
-                        const SizedBox(height: 22),
-                        if (!photo) _switcher(ink, soft),
-                        SizedBox(height: photo ? 0 : 16),
-                        _tiles(event, now, photo),
-                        if (photo) ...[
-                          const SizedBox(height: 16),
-                          _switcher(ink, soft),
+                        if (!done) ...[
+                          const SizedBox(height: 22),
+                          if (!photo) _switcher(ink, soft),
+                          SizedBox(height: photo ? 0 : 16),
+                          _tiles(event, now, photo),
+                          if (photo) ...[
+                            const SizedBox(height: 16),
+                            _switcher(ink, soft),
+                          ],
+                        ],
+                        if (!photo) const Spacer(),
+                        if (!photo && !done) ...[
+                          const SizedBox(height: 24),
+                          _progress(event, now, ink),
+                        ],
+                        if (!photo) ...[
+                          const SizedBox(height: 18),
+                          _reminders(event, ink),
                         ],
                       ],
-                      if (!photo) const Spacer(),
-                      if (!photo && !done) ...[
-                        const SizedBox(height: 24),
-                        _progress(event, now, ink),
-                      ],
-                      if (!photo) ...[
-                        const SizedBox(height: 18),
-                        _reminders(event, ink),
-                      ],
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );

@@ -133,15 +133,18 @@ void main() {
     Future<PhotoCrops?> open(
       WidgetTester tester,
       PhotoCrops initial,
-      Future<void> Function() act,
-    ) async {
-      tester.view.physicalSize = const Size(402, 874);
+      Future<void> Function() act, {
+      Size size = const Size(402, 874),
+      TargetPlatform platform = TargetPlatform.iOS,
+    }) async {
+      tester.view.physicalSize = size;
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
       PhotoCrops? result;
       await tester.pumpWidget(
         MaterialApp(
+          theme: ThemeData(platform: platform),
           home: Builder(
             builder: (context) => TextButton(
               onPressed: () async => result = await Navigator.push<PhotoCrops>(
@@ -232,31 +235,66 @@ void main() {
       expect(result.pointFor(CropShape.card).zoom, 1);
     });
 
-    testWidgets('in All shapes, dragging moves only the frame touched', (
+    testWidgets('one shape at a time, starting with full screen', (
       tester,
     ) async {
-      final initial = PhotoCrops(
-        points: {
-          CropShape.full: const CropPoint(-1, 0),
-          CropShape.card: const CropPoint(1, 0, 2),
-          CropShape.wide: const CropPoint(0, 1),
-          CropShape.tablet: const CropPoint(0, 0),
-        },
-      );
-      final result = await open(tester, initial, () async {
-        // In the 600×400 photo the zoomed card is x 400–600, y 100–300
-        // and the wide frame starts at y 120, so (500, 110) is card only.
-        final image = tester.getRect(find.byType(Image).first);
-        final start =
-            image.topLeft +
-            Offset(image.width * 500 / 600, image.height * 110 / 400);
-        await tester.dragFrom(start, const Offset(-60, 0));
+      final result = await open(tester, const PhotoCrops(), () async {
+        expect(find.text('All shapes'), findsNothing);
+        expect(find.text('Show all outlines'), findsNothing);
+        expect(
+          find.text('Drag or pinch to set the full screen crop'),
+          findsOne,
+        );
+        await tester.dragFrom(canvasCenter(tester), const Offset(-40, 0));
         await tester.pump();
       });
-      expect(result!.pointFor(CropShape.card).x, lessThan(1));
-      expect(result.pointFor(CropShape.card).zoom, 2);
-      expect(result.pointFor(CropShape.full), const CropPoint(-1, 0));
-      expect(result.pointFor(CropShape.wide), const CropPoint(0, 1));
+      expect(result!.pointFor(CropShape.full).x, lessThan(0));
+      expect(result.pointFor(CropShape.card), CropPoint.center);
+    });
+
+    testWidgets('phones only offer the shapes they show', (tester) async {
+      await open(tester, const PhotoCrops(), () async {
+        expect(find.text('iPad'), findsNothing);
+        expect(find.text('Tablet'), findsNothing);
+        expect(find.text('Wide'), findsOne);
+      });
+    });
+
+    for (final (name, size) in [
+      ('iPad portrait', const Size(834, 1194)),
+      ('iPad landscape', const Size(1194, 834)),
+      ('large iPad portrait', const Size(1032, 1376)),
+      ('split view', const Size(900, 1032)),
+      ('narrow split view', const Size(694, 834)),
+    ]) {
+      testWidgets('$name: the photo fills the space and labels fit', (
+        tester,
+      ) async {
+        await open(tester, const PhotoCrops(), () async {
+          final image = tester.getRect(find.byType(Image).first);
+          // The 3:2 test photo gets most of the width, not a small box.
+          expect(image.width, greaterThan(size.width * 0.5));
+          expect(find.text('iPad'), findsOne);
+          await tester.tap(find.text('iPad'));
+          await tester.pump();
+          expect(find.text('iPad landscape'), findsWidgets);
+        }, size: size);
+      });
+    }
+
+    testWidgets('Android tablets call the landscape crop Tablet', (
+      tester,
+    ) async {
+      await open(
+        tester,
+        const PhotoCrops(),
+        () async {
+          expect(find.text('iPad'), findsNothing);
+          expect(find.text('Tablet'), findsOne);
+        },
+        size: const Size(834, 1194),
+        platform: TargetPlatform.android,
+      );
     });
 
     testWidgets('existing crops come back as they were saved', (tester) async {
