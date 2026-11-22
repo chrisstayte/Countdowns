@@ -52,6 +52,16 @@ class EventsController {
     await rescheduleNotifications();
   }
 
+  /// The notifications the database calls for right now.
+  Future<List<NotificationRequest>> plannedNotifications() async {
+    final events = await _db.allCountdowns();
+    final slots = [
+      for (final r in await _db.allReminders())
+        (id: r.id, eventId: r.eventId, offsetMinutes: r.offsetMinutes),
+    ];
+    return planNotifications(events, slots, DateTime.now());
+  }
+
   Future<void> _rescheduling = Future.value();
 
   /// Rebuilds every pending notification from the database. Runs one at a
@@ -69,14 +79,7 @@ class EventsController {
         await notifications.cancelAll();
         return;
       }
-      final events = await _db.allCountdowns();
-      final slots = [
-        for (final r in await _db.allReminders())
-          (id: r.id, eventId: r.eventId, offsetMinutes: r.offsetMinutes),
-      ];
-      await notifications.replaceAll(
-        planNotifications(events, slots, DateTime.now()),
-      );
+      await notifications.replaceAll(await plannedNotifications());
     } catch (error, stack) {
       FlutterError.reportError(
         FlutterErrorDetails(

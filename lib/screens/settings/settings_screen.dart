@@ -5,12 +5,12 @@ import 'package:countdowns/models/palette.dart';
 import 'package:countdowns/providers/event_provider.dart';
 import 'package:countdowns/providers/local_settings_provider.dart';
 import 'package:countdowns/providers/notification_provider.dart';
+import 'package:countdowns/screens/settings/scheduled_reminders_sheet.dart';
 import 'package:countdowns/theme/app_theme.dart';
 import 'package:countdowns/utilities/feedback.dart';
 import 'package:countdowns/utilities/sample_data.dart';
 import 'package:countdowns/widgets/ui.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:in_app_review/in_app_review.dart';
@@ -668,16 +668,8 @@ class _Danger extends ConsumerWidget {
               ),
               const _Line(),
               _Row(
-                label: 'Print pending notifications',
-                onTap: () async {
-                  final List<PendingNotificationRequest> pending = await ref
-                      .read(notificationsProvider)
-                      .plugin
-                      .pendingNotificationRequests();
-                  for (final p in pending) {
-                    debugPrint('${p.id} ${p.title} ${p.body}');
-                  }
-                },
+                label: 'Scheduled reminders',
+                onTap: () => showScheduledReminders(context),
               ),
             ],
           ),

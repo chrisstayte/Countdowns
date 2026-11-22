@@ -212,7 +212,7 @@ class EventNotifications {
     if (!supported) return;
     await plugin.cancelAllPendingNotifications();
     if (requests.isEmpty) return;
-    final zone = await _localZone();
+    final zone = await localZone();
     final mode = await _scheduleMode();
     for (final request in requests) {
       // One failure (say, a reminder that passed while planning) mustn't
@@ -261,16 +261,26 @@ class EventNotifications {
     matchDateTimeComponents: request.match,
   );
 
+  /// Ids of the notifications waiting to go off.
+  Future<Set<int>> pendingIds() async => {
+    if (supported)
+      for (final p in await plugin.pendingNotificationRequests()) p.id,
+  };
+
+  /// Whether Android lets reminders go off on the minute; null elsewhere.
+  Future<bool?> exactAlarmsAllowed() async =>
+      _android?.canScheduleExactNotifications();
+
   /// Exact alarms when Android allows them (they need a permission from
   /// Android 12, off by default from 14), inexact ones otherwise (Android
   /// gives those up to an hour's leeway). Both still fire in Doze.
   Future<AndroidScheduleMode> _scheduleMode() async =>
-      await _android?.canScheduleExactNotifications() == false
+      await exactAlarmsAllowed() == false
       ? AndroidScheduleMode.inexactAllowWhileIdle
       : AndroidScheduleMode.exactAllowWhileIdle;
 
   /// The device's zone, so yearly repeats keep their local time.
-  Future<tz.Location> _localZone() async {
+  Future<tz.Location> localZone() async {
     try {
       return tz.getLocation(
         (await FlutterTimezone.getLocalTimezone()).identifier,
