@@ -84,7 +84,10 @@ jobs:
           test "$(git -C "$RUNNER_TEMP/flutter" rev-parse 'FETCH_HEAD^{commit}')" = "$FLUTTER_COMMIT"
           git -C "$RUNNER_TEMP/flutter" checkout --quiet --detach "$FLUTTER_COMMIT"
           echo "$RUNNER_TEMP/flutter/bin" >> "$GITHUB_PATH"
-      - run: flutter config --jdk-dir "$JAVA_HOME_21_X64"
+      - run: |
+          flutter config --jdk-dir "$JAVA_HOME_21_X64"
+          echo "JAVA_HOME=$JAVA_HOME_21_X64" >> "$GITHUB_ENV"
+          echo "$JAVA_HOME_21_X64/bin" >> "$GITHUB_PATH"
       - name: Set up Android SDK
         run: bash scripts/release/setup-android.sh
       - name: Build Android App Bundle
@@ -163,7 +166,10 @@ jobs:
           test "$(git -C "$RUNNER_TEMP/flutter" rev-parse 'FETCH_HEAD^{commit}')" = "$FLUTTER_COMMIT"
           git -C "$RUNNER_TEMP/flutter" checkout --quiet --detach "$FLUTTER_COMMIT"
           echo "$RUNNER_TEMP/flutter/bin" >> "$GITHUB_PATH"
-      - run: flutter config --jdk-dir "$JAVA_HOME_21_X64"
+      - run: |
+          flutter config --jdk-dir "$JAVA_HOME_21_X64"
+          echo "JAVA_HOME=$JAVA_HOME_21_X64" >> "$GITHUB_ENV"
+          echo "$JAVA_HOME_21_X64/bin" >> "$GITHUB_PATH"
       - name: Set up Android SDK
         run: bash scripts/release/setup-android.sh
       - name: Build signed Android App Bundle
