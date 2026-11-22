@@ -1,0 +1,239 @@
+name: Mobile release
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Select a store upload or validate without uploading
+        type: choice
+        options: [validate, testflight, play-internal, both]
+        default: validate
+
+permissions:
+  contents: read
+
+concurrency:
+  group: countdowns-mobile-${{ github.event_name == 'pull_request' && github.ref || 'release' }}
+  cancel-in-progress: false
+
+env:
+  FLUTTER_VERSION: 3.50.1
+  FLUTTER_COMMIT: ae9b586f34a8443573f82ef57c3bf914a908cbf7
+  DEVELOPER_DIR: /Applications/Xcode_27.2.app/Contents/Developer
+  BUNDLE_ID: com.chrisstayte.countdowns
+  WIDGET_BUNDLE_ID: com.chrisstayte.countdowns.CountdownsWidget
+  APP_GROUP: group.com.chrisstayte.countdowns
+
+jobs:
+  checks:
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main'
+    uses: ./.github/workflows/dev-checks.yml
+
+  version:
+    needs: checks
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.build.outputs.version }}
+      number: ${{ steps.build.outputs.number }}
+      tag: ${{ steps.build.outputs.tag }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - id: build
+        env:
+          BUILD_NUMBER_SEED: ${{ vars.MOBILE_BUILD_NUMBER_SEED }}
+          MODE: ${{ github.event_name == 'push' && 'both' || inputs.mode || 'validate' }}
+        run: python3 scripts/release/build-number.py
+
+  unsigned:
+    needs: version
+    runs-on: xcode-27
+    timeout-minutes: 45
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+      BUILD_NUMBER: ${{ needs.version.outputs.number }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - run: bash scripts/release/setup-ios.sh
+      - run: |
+          flutter build ios --release --no-codesign --build-name "$VERSION" --build-number "$BUILD_NUMBER"
+          python3 scripts/release/check-app.py build/ios/iphoneos/Runner.app/Info.plist
+
+  android-validation:
+    if: github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'validate')
+    needs: version
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - name: Install pinned Flutter
+        run: |
+          git init -q "$RUNNER_TEMP/flutter"
+          tag="refs/tags/$FLUTTER_VERSION"
+          git -C "$RUNNER_TEMP/flutter" remote add origin https://github.com/flutter/flutter.git
+          git -C "$RUNNER_TEMP/flutter" fetch --depth=1 --no-tags origin "$tag:$tag"
+          test "$(git -C "$RUNNER_TEMP/flutter" rev-parse 'FETCH_HEAD^{commit}')" = "$FLUTTER_COMMIT"
+          git -C "$RUNNER_TEMP/flutter" checkout --quiet --detach "$FLUTTER_COMMIT"
+          echo "$RUNNER_TEMP/flutter/bin" >> "$GITHUB_PATH"
+      - run: flutter config --jdk-dir "$JAVA_HOME_21_X64"
+      - name: Set up Android SDK
+        run: bash scripts/release/setup-android.sh
+      - name: Build Android App Bundle
+        env:
+          VERSION: ${{ needs.version.outputs.version }}
+          BUILD_NUMBER: ${{ needs.version.outputs.number }}
+        run: |
+          flutter build appbundle --release --build-name "$VERSION" --build-number "$BUILD_NUMBER"
+          (cd android && ./gradlew :app:testDebugUnitTest)
+
+  reserve:
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.mode != 'validate'))
+    needs: [version, unsigned]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Reserve the build number on the reviewed commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.version.outputs.tag }}
+        run: gh api "repos/$GITHUB_REPOSITORY/git/refs" -f ref="refs/tags/$TAG" -f sha="$GITHUB_SHA"
+
+  build-ios:
+    needs: [version, reserve]
+    environment: testflight
+    runs-on: xcode-27
+    timeout-minutes: 60
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+      BUILD_NUMBER: ${{ needs.version.outputs.number }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - run: bash scripts/release/setup-ios.sh
+      - name: Install signing assets
+        env:
+          CERTIFICATE: ${{ secrets.APPLE_DISTRIBUTION_P12_BASE64 }}
+          CERTIFICATE_PASSWORD: ${{ secrets.APPLE_DISTRIBUTION_P12_PASSWORD }}
+          PROFILE: ${{ secrets.COUNTDOWNS_APPSTORE_PROFILE_BASE64 }}
+          WIDGET_PROFILE: ${{ secrets.COUNTDOWNS_WIDGET_APPSTORE_PROFILE_BASE64 }}
+        run: bash scripts/release/install-signing.sh
+      - run: flutter build ipa --release --build-name "$VERSION" --build-number "$BUILD_NUMBER" --export-options-plist "$RUNNER_TEMP/ios-signing/export.plist"
+      - name: Validate signed IPA
+        env:
+          ASC_KEY: ${{ secrets.ASC_API_KEY_P8 }}
+          ASC_KEY_ID: ${{ secrets.ASC_API_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_API_ISSUER_ID }}
+        run: bash scripts/release/upload.sh validate
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: signed-ios
+          path: build/ios/ipa/*.ipa
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 2
+      - if: always()
+        run: bash scripts/release/install-signing.sh cleanup
+
+  build-android:
+    needs: [version, reserve]
+    environment: play-internal
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - name: Install pinned Flutter
+        run: |
+          git init -q "$RUNNER_TEMP/flutter"
+          tag="refs/tags/$FLUTTER_VERSION"
+          git -C "$RUNNER_TEMP/flutter" remote add origin https://github.com/flutter/flutter.git
+          git -C "$RUNNER_TEMP/flutter" fetch --depth=1 --no-tags origin "$tag:$tag"
+          test "$(git -C "$RUNNER_TEMP/flutter" rev-parse 'FETCH_HEAD^{commit}')" = "$FLUTTER_COMMIT"
+          git -C "$RUNNER_TEMP/flutter" checkout --quiet --detach "$FLUTTER_COMMIT"
+          echo "$RUNNER_TEMP/flutter/bin" >> "$GITHUB_PATH"
+      - run: flutter config --jdk-dir "$JAVA_HOME_21_X64"
+      - name: Set up Android SDK
+        run: bash scripts/release/setup-android.sh
+      - name: Build signed Android App Bundle
+        env:
+          VERSION: ${{ needs.version.outputs.version }}
+          BUILD_NUMBER: ${{ needs.version.outputs.number }}
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_STORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          umask 077
+          export ANDROID_UPLOAD_KEYSTORE="$RUNNER_TEMP/upload.jks"
+          trap 'rm -f "$ANDROID_UPLOAD_KEYSTORE"' EXIT
+          printf '%s' "${ANDROID_KEYSTORE_BASE64:?Missing upload keystore}" | base64 --decode > "$ANDROID_UPLOAD_KEYSTORE"
+          flutter build appbundle --release --build-name "$VERSION" --build-number "$BUILD_NUMBER"
+          (cd android && ./gradlew :app:testDebugUnitTest)
+          bundle=build/app/outputs/bundle/release/app-release.aab
+          unzip -tq "$bundle"
+          keytool -exportcert -alias "$ANDROID_KEY_ALIAS" -keystore "$ANDROID_UPLOAD_KEYSTORE" -storepass:env ANDROID_STORE_PASSWORD -file "$RUNNER_TEMP/upload.cer"
+          keytool -importcert -noprompt -alias upload -file "$RUNNER_TEMP/upload.cer" -keystore "$RUNNER_TEMP/trusted.p12" -storepass changeit
+          jarsigner -verify -strict -keystore "$RUNNER_TEMP/trusted.p12" -storepass changeit "$bundle" upload
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: signed-android
+          path: build/app/outputs/bundle/release/app-release.aab
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 2
+
+  testflight:
+    if: github.event_name == 'push' || inputs.mode == 'testflight' || inputs.mode == 'both'
+    needs: [version, build-ios, build-android]
+    environment: testflight
+    runs-on: xcode-27
+    timeout-minutes: 60
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+      BUILD_NUMBER: ${{ needs.version.outputs.number }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: signed-ios
+          path: build/ios/ipa
+      - name: Upload verified IPA
+        env:
+          ASC_KEY: ${{ secrets.ASC_API_KEY_P8 }}
+          ASC_KEY_ID: ${{ secrets.ASC_API_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_API_ISSUER_ID }}
+        run: bash scripts/release/upload.sh upload
+
+  android:
+    if: github.event_name == 'push' || inputs.mode == 'play-internal' || inputs.mode == 'both'
+    needs: [build-ios, build-android]
+    environment: play-internal
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: signed-android
+          path: build/app/outputs/bundle/release
+      - name: Install Play uploader
+        run: sudo gem install fastlane --version 2.237.0 --no-document
+      - name: Upload to internal testing
+        env:
+          SUPPLY_JSON_KEY_DATA: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+        run: |
+          : "${SUPPLY_JSON_KEY_DATA:?Missing Play service account}"
+          fastlane supply --package_name "$BUNDLE_ID" --track internal --aab build/app/outputs/bundle/release/app-release.aab --skip_upload_metadata --skip_upload_images --skip_upload_screenshots --skip_upload_changelogs

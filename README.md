@@ -23,6 +23,10 @@ Countdowns runs on Flutter 3.50.1 and Dart 3.14.0. The previous app declared Dar
 
 Use `flutter pub get` to install the locked dependencies, `flutter test` for the regression suite and `flutter run` to open the app on a selected device.
 
+## Releases
+
+Development checks run on `dev`. Promote to `main` to build and validate both signed mobile apps and upload to TestFlight and Google Play internal testing. Production promotion is a separate manual action. See [RELEASING.md](RELEASING.md) for build numbers, app and widget signing, environment secrets, validation, and recovery.
+
 ## Original project brief
 
 The objective of Countdown Timer is to provide a continuously decrementing display of the he months, days, hours, minutes, and seconds to a user entered event.

@@ -29,6 +29,8 @@ def keystoreProperties = new Properties()
        keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
    }
 
+def uploadKeystore = System.getenv('ANDROID_UPLOAD_KEYSTORE')
+
 android {
     namespace "com.chrisstayte.countdowns"
     compileSdkVersion 37
@@ -66,10 +68,10 @@ android {
 
     signingConfigs {
        release {
-           keyAlias keystoreProperties['keyAlias']
-           keyPassword keystoreProperties['keyPassword']
-           storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-           storePassword keystoreProperties['storePassword']
+           keyAlias uploadKeystore ? System.getenv('ANDROID_KEY_ALIAS') : keystoreProperties['keyAlias']
+           keyPassword uploadKeystore ? System.getenv('ANDROID_KEY_PASSWORD') : keystoreProperties['keyPassword']
+           storeFile uploadKeystore ? file(uploadKeystore) : (keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null)
+           storePassword uploadKeystore ? System.getenv('ANDROID_STORE_PASSWORD') : keystoreProperties['storePassword']
        }
    }
 
@@ -78,7 +80,7 @@ android {
         release {
             // Signed when key.properties is present; otherwise an unsigned
             // release build (for checking R8 and the release config locally).
-            signingConfig keystorePropertiesFile.exists() ? signingConfigs.release : null
+            signingConfig = (uploadKeystore || keystorePropertiesFile.exists()) ? signingConfigs.release : null
             shrinkResources true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
