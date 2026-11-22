@@ -61,12 +61,18 @@ class BackgroundChoice {
 }
 
 /// "All backgrounds": every colour, gradient and photo, in collections.
-/// Picks apply to the preview at the top; Done returns the chosen key
-/// (see background_catalog.dart) and direction as a [BackgroundChoice]
-/// (or [addPhotoResult], or an [ImportedPhoto] for a downloaded stock photo); swiping away keeps what was there.
+/// Picks show in the preview at the top and are applied as they happen
+/// through [AllBackgroundsSheet.onChanged], so closing the sheet any way
+/// keeps them. The sheet returns only [addPhotoResult] or an
+/// [ImportedPhoto] (a stock photo that still needs cropping).
 class AllBackgroundsSheet extends ConsumerStatefulWidget {
-  const AllBackgroundsSheet({super.key, required this.draft});
+  const AllBackgroundsSheet({super.key, required this.draft, this.onChanged});
   final Countdown draft;
+
+  /// Every pick applies straight away: a colour, gradient, direction or
+  /// photo is passed here the moment it's tapped, so swiping the sheet away
+  /// keeps it. Done just closes.
+  final ValueChanged<BackgroundChoice>? onChanged;
 
   @override
   ConsumerState<AllBackgroundsSheet> createState() =>
@@ -109,12 +115,14 @@ class _AllBackgroundsSheetState extends ConsumerState<AllBackgroundsSheet> {
     if (key == _key) return;
     feedback(ref, Sound.select);
     setState(() => _key = key);
+    widget.onChanged?.call(BackgroundChoice(_key, _direction));
   }
 
   void _pickDirection(GradientDirection d) {
     if (d == _direction) return;
     feedback(ref, Sound.select);
     setState(() => _direction = d);
+    widget.onChanged?.call(BackgroundChoice(_key, _direction));
   }
 
   /// Colours for the direction chips: the chosen gradient, or the first
@@ -153,10 +161,8 @@ class _AllBackgroundsSheetState extends ConsumerState<AllBackgroundsSheet> {
                 const SizedBox(width: 12),
                 PillButton(
                   label: 'Done',
-                  onTap: () => Navigator.pop(
-                    context,
-                    BackgroundChoice(_key, _direction),
-                  ),
+                  // Picks already applied; Done just closes.
+                  onTap: () => Navigator.pop(context),
                 ),
               ],
             ),

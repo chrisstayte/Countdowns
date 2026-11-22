@@ -135,14 +135,15 @@ class EditorLook extends ConsumerWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
       ),
-      builder: (_) => AllBackgroundsSheet(draft: draft),
+      // Picks apply as they're made, so closing the sheet any way
+      // (Done, swipe, tapping outside, back) keeps them.
+      builder: (_) =>
+          AllBackgroundsSheet(draft: draft, onChanged: (c) => edit(c.applyTo)),
     );
     if (picked == addPhotoResult) {
       onAddPhoto();
     } else if (picked is ImportedPhoto) {
       onImportedPhoto?.call(picked);
-    } else if (picked is BackgroundChoice) {
-      edit(picked.applyTo);
     }
   }
 

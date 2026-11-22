@@ -13,9 +13,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// Opens the sheet from a button and records what it returns.
 class _Host {
+  /// What the sheet returned when it closed (only add-photo / imported).
   Object? result = 'not closed';
 
-  String? get key => (result as BackgroundChoice?)?.key;
+  /// Every pick, as the sheet applies it.
+  final picks = <BackgroundChoice>[];
+  BackgroundChoice? get last => picks.lastOrNull;
+  String? get key => last?.key;
 
   Future<void> pump(WidgetTester tester, Countdown draft) async {
     tester.view.physicalSize = const Size(402, 874);
@@ -38,7 +42,10 @@ class _Host {
                     result = await showModalBottomSheet<Object>(
                       context: context,
                       isScrollControlled: true,
-                      builder: (_) => AllBackgroundsSheet(draft: draft),
+                      builder: (_) => AllBackgroundsSheet(
+                        draft: draft,
+                        onChanged: picks.add,
+                      ),
                     );
                   },
                   child: const Text('open'),
@@ -140,14 +147,45 @@ void main() {
     handle.dispose();
   });
 
-  testWidgets('swiping the sheet away changes nothing', (tester) async {
+  testWidgets('a pick applies at once; tapping outside keeps it', (
+    tester,
+  ) async {
     final host = _Host();
     await host.pump(tester, draft);
     await tester.tap(find.bySemanticsLabel('Teal'));
     await tester.pumpAndSettle();
+    // Applied before the sheet closes.
+    expect(host.key, 'colour:FF2BB3A3');
     // Tap the barrier above the sheet.
     await tester.tapAt(const Offset(200, 20));
     await tester.pumpAndSettle();
+    expect(find.text('All backgrounds'), findsNothing);
+    expect(host.key, 'colour:FF2BB3A3');
+    expect(host.picks, hasLength(1));
+  });
+
+  testWidgets('swiping the sheet down keeps the pick', (tester) async {
+    final host = _Host();
+    await host.pump(tester, draft);
+    await tester.tap(find.bySemanticsLabel('Teal'));
+    await tester.pumpAndSettle();
+    await tester.fling(
+      find.text('All backgrounds'),
+      const Offset(0, 600),
+      2000,
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('All backgrounds'), findsNothing);
+    expect(host.key, 'colour:FF2BB3A3');
+  });
+
+  testWidgets('Done just closes; it applies nothing more', (tester) async {
+    final host = _Host();
+    await host.pump(tester, draft);
+    await tester.tap(find.text('Done'));
+    await tester.pumpAndSettle();
+    expect(find.text('All backgrounds'), findsNothing);
+    expect(host.picks, isEmpty);
     expect(host.result, isNull);
   });
 
@@ -263,7 +301,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text('Done'));
       await tester.pumpAndSettle();
-      final choice = host.result! as BackgroundChoice;
+      final choice = host.last!;
       expect(choice.key, 'gradient:lagoon');
       expect(choice.direction, GradientDirection.radial);
       final applied = choice.applyTo(draft);
@@ -272,7 +310,9 @@ void main() {
       handle.dispose();
     });
 
-    testWidgets('swiping away discards a direction change', (tester) async {
+    testWidgets('a direction change survives closing without Done', (
+      tester,
+    ) async {
       final handle = tester.ensureSemantics();
       final host = _Host();
       await host.pump(
@@ -284,7 +324,8 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tapAt(const Offset(200, 20));
       await tester.pumpAndSettle();
-      expect(host.result, isNull);
+      expect(host.last!.key, 'gradient:sunset');
+      expect(host.last!.direction, GradientDirection.sweep);
       handle.dispose();
     });
   });
