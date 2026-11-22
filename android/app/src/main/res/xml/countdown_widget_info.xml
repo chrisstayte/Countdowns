@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- One resizable widget: 2x2 shows one countdown, 4x2 adds progress,
+     4x4 shows the Up next list. Counts are redrawn at midnight by
+     WorkManager; updatePeriodMillis is only a daily safety net. -->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/widget_description"
+    android:initialLayout="@layout/glance_default_loading_layout"
+    android:configure="com.chrisstayte.countdowns.widget.ConfigureActivity"
+    android:widgetFeatures="reconfigurable|configuration_optional"
+    android:minWidth="110dp"
+    android:minHeight="110dp"
+    android:minResizeWidth="100dp"
+    android:minResizeHeight="100dp"
+    android:targetCellWidth="2"
+    android:targetCellHeight="2"
+    android:resizeMode="horizontal|vertical"
+    android:previewImage="@drawable/widget_preview"
+    android:updatePeriodMillis="86400000"
+    android:widgetCategory="home_screen" />

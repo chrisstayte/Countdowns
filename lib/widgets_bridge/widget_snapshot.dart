@@ -37,7 +37,8 @@ String photoFileName(Countdown e, CropShape shape) {
   return 'photos/${e.id}-${shape.name}-$key.png';
 }
 
-/// The JSON the WidgetKit extension reads. Widgets compute the count from
+/// The JSON the home screen widgets read (WidgetKit on iOS, Glance on
+/// Android). Widgets compute the count from
 /// `target` themselves, so the snapshot only changes when events do.
 Map<String, Object?> buildWidgetSnapshot(List<Countdown> events, DateTime now) {
   final upcoming = splitEvents(events, now).upcoming.take(widgetEventLimit);
@@ -72,10 +73,23 @@ Map<String, Object?> buildWidgetSnapshot(List<Countdown> events, DateTime now) {
   };
 }
 
-/// Writes the snapshot, icon and photo copies into the App Group container
-/// and asks WidgetKit to reload. iOS only; quietly does nothing elsewhere.
+/// Writes the snapshot, icon and photo copies where the widgets can read
+/// them, then asks them to redraw. One writer for both platforms: the
+/// native side of the `countdowns/widgets` channel says where to write
+/// (the App Group container on iOS, the app's files dir on Android).
+/// Quietly does nothing on other platforms.
 class WidgetSnapshotWriter {
-  bool get _supported => !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
+  WidgetSnapshotWriter({DateTime Function()? clock})
+    : _clock = clock ?? DateTime.now;
+
+  final DateTime Function() _clock;
+
+  static bool get supported =>
+      !kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.iOS ||
+          defaultTargetPlatform == TargetPlatform.android);
+
+  bool get _supported => supported;
 
   Future<void>? _running;
   bool _again = false;
@@ -108,7 +122,7 @@ class WidgetSnapshotWriter {
       final dir = Directory(p.join(root, 'widget'));
       await Directory(p.join(dir.path, 'icons')).create(recursive: true);
       await Directory(p.join(dir.path, 'photos')).create(recursive: true);
-      final snapshot = buildWidgetSnapshot(events, DateTime.now());
+      final snapshot = buildWidgetSnapshot(events, _clock());
       final byId = {for (final e in events) e.id: e};
       final keep = <String>{};
       for (final entry in snapshot['events']! as List) {

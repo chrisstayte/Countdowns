@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Widget picker preview: an orange 2x2 countdown card. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="160dp" android:height="160dp"
+    android:viewportWidth="160" android:viewportHeight="160">
+    <path android:fillColor="#FE7228"
+        android:pathData="M24,0h112a24,24 0,0 1,24 24v112a24,24 0,0 1,-24 24h-112a24,24 0,0 1,-24 -24v-112a24,24 0,0 1,24 -24z" />
+    <path android:fillColor="#2E2A3A"
+        android:pathData="M18,22h80v12h-80z M18,90h28v44h-28z M52,120h30v14h-30z" />
+</vector>

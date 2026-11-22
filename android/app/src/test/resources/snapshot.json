@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "updatedAt": "2026-11-21T12:00:00.000Z",
+  "events": [
+    {
+      "id": 3,
+      "title": "Thanksgiving",
+      "target": 1795651200,
+      "allDay": true,
+      "yearly": false,
+      "unit": "days",
+      "font": "Default",
+      "text": "#1C1633",
+      "colors": ["#FE7228"],
+      "direction": "diagonalDown",
+      "icon": "icons/fork-1C1633.png",
+      "photo": null,
+      "photoWide": null,
+      "darken": 0.35,
+      "createdAt": 1795219200
+    },
+    {
+      "id": 7,
+      "title": "Mia's birthday",
+      "target": 1801612800,
+      "allDay": true,
+      "yearly": true,
+      "unit": "sleeps",
+      "font": "DiarioDeAndy",
+      "text": "#1C1633",
+      "colors": ["#FF5C7A", "#FFB86B"],
+      "direction": "radial",
+      "icon": null,
+      "photo": "photos/7-card-abc.png",
+      "photoWide": "photos/7-wide-abc.png",
+      "darken": 0.4,
+      "createdAt": 1795219200
+    },
+    {
+      "id": 9,
+      "title": "Flight",
+      "target": 1795284000,
+      "allDay": false,
+      "yearly": false,
+      "unit": "days",
+      "font": "Roboto",
+      "text": "#FFFFFF",
+      "colors": ["#2E2A3A"],
+      "direction": "down",
+      "icon": null,
+      "photo": null,
+      "photoWide": null,
+      "darken": 0.35,
+      "createdAt": 1795219200
+    }
+  ]
+}
