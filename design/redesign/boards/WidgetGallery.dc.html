@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Widget sizes and settings</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Inter:wght@400;500;600;700&amp;family=Libre+Baskerville:wght@400;700&amp;family=Comic+Neue:wght@400;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#4A0D67}a:hover{color:#1C1633}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 1240px; height: 844px; box-sizing: border-box; overflow: hidden; background: #ECEAFB; color: #1C1633; font-family: Inter, system-ui, sans-serif; display: flex">
+  <section aria-label="Widget sizes" style="flex: 1; padding: 36px 40px; box-sizing: border-box; display: flex; flex-direction: column; gap: 26px; min-width: 0">
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800">Widget family</h1>
+
+    <div style="display: flex; gap: 20px; align-items: flex-start">
+      <figure style="margin: 0; display: flex; flex-direction: column; gap: 8px">
+        <div style="width: 170px; height: 170px; border-radius: 26px; background: {{w.bg}}; color: {{w.fg}}; padding: 16px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 6px"><span style="font-family: {{w.font}}; font-size: 17px; font-weight: 700; line-height: 1.15">{{w.title}}</span><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="{{w.icon}}"></path></svg></div>
+          <div><div style="display: flex; align-items: baseline; gap: 4px"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 50px; font-weight: 800; line-height: 0.9; letter-spacing: -0.03em">{{w.num}}</span><span style="font-size: 14px; font-weight: 700">{{w.unit}}</span></div><span style="font-size: 12px; font-weight: 600">{{w.date}}</span></div>
+        </div>
+        <figcaption style="font-size: 13px; font-weight: 600; color: #5E5878">Small</figcaption>
+      </figure>
+      <figure style="margin: 0; display: flex; flex-direction: column; gap: 8px">
+        <div style="width: 170px; height: 170px; border-radius: 26px; background: {{w.bg}}; color: {{w.fg}}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px">
+          <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 76px; font-weight: 800; line-height: 0.9; letter-spacing: -0.04em">{{w.num}}</span>
+          <span style="font-family: {{w.font}}; font-size: 14px; font-weight: 700">{{w.unit}} to {{w.title}}</span>
+        </div>
+        <figcaption style="font-size: 13px; font-weight: 600; color: #5E5878">Small · number only</figcaption>
+      </figure>
+      <figure style="margin: 0; display: flex; flex-direction: column; gap: 8px">
+        <div style="width: 360px; height: 170px; border-radius: 26px; background: {{w.bg}}; color: {{w.fg}}; padding: 16px 18px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start"><div style="display: flex; flex-direction: column"><span style="font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase">{{w.kicker}}</span><span style="font-family: {{w.font}}; font-size: 22px; font-weight: 700">{{w.title}}</span></div><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{w.icon}}"></path></svg></div>
+          <div style="display: flex; align-items: flex-end; justify-content: space-between">
+            <div style="display: flex; align-items: baseline; gap: 6px"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 60px; font-weight: 800; line-height: 0.85; letter-spacing: -0.04em">{{w.num}}</span><span style="font-size: 16px; font-weight: 700">{{w.unit}}</span></div>
+            <div style="width: 140px; display: flex; flex-direction: column; gap: 6px; align-items: flex-end"><span style="font-size: 12px; font-weight: 600">{{w.date}}</span><div style="width: 140px; height: 8px; border-radius: 4px; background: {{w.track}}"><div style="width: {{w.pct}}%; height: 8px; border-radius: 4px; background: {{w.fg}}"></div></div></div>
+          </div>
+        </div>
+        <figcaption style="font-size: 13px; font-weight: 600; color: #5E5878">Medium</figcaption>
+      </figure>
+    </div>
+
+    <div style="display: flex; gap: 20px; align-items: flex-start">
+      <figure style="margin: 0; display: flex; flex-direction: column; gap: 8px">
+        <div style="width: 360px; height: 360px; border-radius: 26px; background: #FFFFFF; padding: 18px; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px">
+          <div style="border-radius: 18px; background: {{lead.color}}; padding: 14px 16px; display: flex; justify-content: space-between; align-items: flex-end">
+            <div style="display: flex; flex-direction: column"><span style="font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase">Up next</span><span style="font-family: {{lead.font}}; font-size: 20px; font-weight: 700">{{lead.title}}</span></div>
+            <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 48px; font-weight: 800; line-height: 0.85">{{lead.days}}<span style="font-size: 14px"> days</span></span>
+          </div>
+          <sc-for list="{{rest}}" as="r" hint-placeholder-count="4">
+            <div style="display: flex; align-items: center; gap: 10px; height: 38px">
+              <span style="width: 34px; height: 34px; border-radius: 11px; background: {{r.color}}; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1C1633" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{r.icon}}"></path></svg></span>
+              <span style="flex: 1; display: flex; flex-direction: column"><span style="font-family: {{r.font}}; font-size: 15px; font-weight: 700">{{r.title}}</span><span style="font-size: 11px; font-weight: 600; color: #5E5878">{{r.date}}</span></span>
+              <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 800">{{r.days}}<span style="font-size: 12px; font-weight: 700; color: #5E5878"> d</span></span>
+            </div>
+          </sc-for>
+        </div>
+        <figcaption style="font-size: 13px; font-weight: 600; color: #5E5878">Large · up next list</figcaption>
+      </figure>
+      <figure style="margin: 0; display: flex; flex-direction: column; gap: 8px">
+        <div style="width: 360px; height: 360px; border-radius: 26px; background: #1E1A38; color: #FFFFFF; padding: 26px 22px; box-sizing: border-box; display: flex; flex-direction: column; gap: 22px">
+          <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #B9B5D6">Lock screen</span>
+          <div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 12px; font-weight: 600; color: #B9B5D6">Inline</span><span style="font-size: 16px; font-weight: 600">{{w.title}} in {{w.num}} {{w.unit}}</span></div>
+          <div style="display: flex; gap: 14px; align-items: flex-end">
+            <div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 12px; font-weight: 600; color: #B9B5D6">Circular</span><div style="width: 72px; height: 72px; border-radius: 36px; border: 5px solid #FFFFFF; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; font-weight: 800; line-height: 1">{{w.num}}</span><span style="font-size: 9px; font-weight: 700; text-transform: uppercase">{{w.unit}}</span></div></div>
+            <div style="flex: 1; display: flex; flex-direction: column; gap: 6px"><span style="font-size: 12px; font-weight: 600; color: #B9B5D6">Rectangular</span><div style="height: 72px; border-radius: 18px; background: rgba(255,255,255,0.14); padding: 10px 12px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between"><span style="font-size: 13px; font-weight: 700">{{w.title}}</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 800; line-height: 1">{{w.num}} <span style="font-size: 12px">{{w.unit}}</span></span></div></div>
+          </div>
+          <span style="margin-top: auto; font-size: 13px; color: #B9B5D6; line-height: 1.4">Lock screen widgets render in one tint, so the event's colour drops out and the big numeral carries it.</span>
+        </div>
+        <figcaption style="font-size: 13px; font-weight: 600; color: #5E5878">Lock screen accessories</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <aside aria-label="Edit widget" style="width: 360px; flex-shrink: 0; background: #FFFFFF; border-radius: 32px 0 0 32px; padding: 36px 28px; box-sizing: border-box; display: flex; flex-direction: column; gap: 24px">
+    <div style="display: flex; flex-direction: column; gap: 4px"><h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; font-weight: 800">Edit widget</h2><span style="font-size: 14px; color: #5E5878">Shown when someone long-presses a widget. Try the options.</span></div>
+    <section style="display: flex; flex-direction: column; gap: 8px">
+      <h3 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5E5878">Countdown</h3>
+      <div style="display: flex; flex-direction: column; background: #F5F4FF; border-radius: 16px; padding: 4px">
+        <sc-for list="{{evOpts}}" as="o" hint-placeholder-count="4">
+          <button onClick="{{o.pick}}" aria-pressed="{{o.on}}" style="height: 46px; border: none; border-radius: 12px; background: {{o.bg}}; color: {{o.fg}}; display: flex; align-items: center; gap: 10px; padding: 0 12px; font-size: 15px; font-weight: 600; text-align: left"><span style="width: 14px; height: 14px; border-radius: 7px; background: {{o.dot}}; flex-shrink: 0"></span><span style="flex: 1">{{o.label}}</span></button>
+        </sc-for>
+      </div>
+    </section>
+    <section style="display: flex; flex-direction: column; gap: 8px">
+      <h3 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5E5878">Count in</h3>
+      <div style="display: flex; gap: 6px; background: #F5F4FF; border-radius: 22px; padding: 4px">
+        <sc-for list="{{unitOpts}}" as="u" hint-placeholder-count="3">
+          <button onClick="{{u.pick}}" aria-pressed="{{u.on}}" style="flex: 1; height: 38px; border: none; border-radius: 19px; background: {{u.bg}}; color: {{u.fg}}; font-size: 14px; font-weight: 700">{{u.label}}</button>
+        </sc-for>
+      </div>
+    </section>
+    <section style="display: flex; flex-direction: column; gap: 8px">
+      <h3 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5E5878">Background</h3>
+      <div style="display: flex; gap: 6px; background: #F5F4FF; border-radius: 22px; padding: 4px">
+        <sc-for list="{{styleOpts}}" as="u" hint-placeholder-count="2">
+          <button onClick="{{u.pick}}" aria-pressed="{{u.on}}" style="flex: 1; height: 38px; border: none; border-radius: 19px; background: {{u.bg}}; color: {{u.fg}}; font-size: 14px; font-weight: 700">{{u.label}}</button>
+        </sc-for>
+      </div>
+    </section>
+  </aside>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1240,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { ev: 0, unit: 'Days', style: 'Event colour' }; }
+  renderVals() {
+    const I = {
+      dining: 'M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7',
+      gift: 'M4 8h16v4H4zM12 8v13M19 12v9H5v-9M7.5 8a2.5 2.5 0 0 1 0-5C10 3 12 8 12 8s2-5 4.5-5a2.5 2.5 0 0 1 0 5',
+      spark: 'M12 3l1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2z',
+      cake: 'M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1M2 21h20M7 8v3M12 8v3M17 8v3',
+      plane: 'M2 16l20-7-3-3-8 3-5-3-2 1 4 4-4 2-2-1-1 1 3 3z'
+    };
+    const now = Date.now();
+    const EV = [
+      { title: 'Thanksgiving', d: new Date(2026, 10, 26), color: '#FE7228', icon: I.dining, font: "'Bricolage Grotesque', sans-serif", added: new Date(2026, 9, 26) },
+      { title: 'Christmas', d: new Date(2026, 11, 25), color: '#FF564A', icon: I.gift, font: "'Libre Baskerville', serif", added: new Date(2026, 9, 1) },
+      { title: 'New Year’s Eve', d: new Date(2026, 11, 31, 20), color: '#F7BC33', icon: I.spark, font: "'Bricolage Grotesque', sans-serif", added: new Date(2026, 10, 1) },
+      { title: 'Mia’s birthday', d: new Date(2027, 1, 3), color: '#FE607C', icon: I.cake, font: "'Comic Neue', cursive", added: new Date(2026, 8, 1) },
+      { title: 'Japan trip', d: new Date(2027, 2, 14, 9, 30), color: '#66B6FE', icon: I.plane, font: "'Bricolage Grotesque', sans-serif", added: new Date(2026, 6, 1) }
+    ];
+    const days = (d) => Math.max(Math.floor((d.getTime() - now) / 864e5), 0);
+    const fmt = (d) => d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    const s = this.state;
+    const choices = [{ label: 'Up next (automatic)', i: 0 }, { label: 'Christmas', i: 1 }, { label: 'Mia’s birthday', i: 3 }, { label: 'Japan trip', i: 4 }];
+    const e = EV[choices[s.ev].i];
+    const dd = days(e.d);
+    const num = s.unit === 'Days' ? dd : s.unit === 'Sleeps' ? dd + 1 : (dd / 7).toFixed(1);
+    const dark = s.style === 'Dark';
+    const pct = Math.round(Math.min(Math.max((now - e.added.getTime()) / (e.d.getTime() - e.added.getTime()), 0), 1) * 100);
+    const w = {
+      title: e.title, icon: e.icon, font: e.font, num, unit: s.unit.toLowerCase(), date: fmt(e.d), pct,
+      kicker: s.ev === 0 ? 'Up next' : 'Countdown',
+      bg: dark ? '#1C1633' : e.color, fg: dark ? '#FFFFFF' : '#1C1633', track: dark ? 'rgba(255,255,255,0.2)' : 'rgba(28,22,51,0.18)'
+    };
+    const seg = (opts, key) => opts.map((label) => ({ label, on: s[key] === label ? 'true' : 'false', bg: s[key] === label ? '#1C1633' : 'transparent', fg: s[key] === label ? '#FFFFFF' : '#1C1633', pick: () => this.setState({ [key]: label }) }));
+    return {
+      w,
+      lead: { ...EV[0], days: days(EV[0].d) },
+      rest: EV.slice(1).map((x) => ({ ...x, days: days(x.d), date: fmt(x.d) })),
+      evOpts: choices.map((c, k) => ({ label: c.label, dot: EV[c.i].color, on: s.ev === k ? 'true' : 'false', bg: s.ev === k ? '#1C1633' : 'transparent', fg: s.ev === k ? '#FFFFFF' : '#1C1633', pick: () => this.setState({ ev: k }) })),
+      unitOpts: seg(['Days', 'Sleeps', 'Weeks'], 'unit'),
+      styleOpts: seg(['Event colour', 'Dark'], 'style')
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Home screen widgets</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Inter:wght@400;500;600;700&amp;family=Libre+Baskerville:wght@400;700&amp;family=Comic+Neue:wght@400;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#FFFFFF}a:hover{color:#DEE2FF}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #2B2550; color: #1C1633; font-family: Inter, system-ui, sans-serif; padding: 70px 26px 0">
+  <div aria-hidden="true" style="position: absolute; width: 420px; height: 420px; border-radius: 210px; background: #3A3270; left: -160px; top: 380px"></div>
+  <div aria-hidden="true" style="position: absolute; width: 300px; height: 300px; border-radius: 150px; background: #352D63; right: -120px; top: -60px"></div>
+
+  <div style="position: relative; display: flex; flex-direction: column; gap: 22px">
+    <div style="display: flex; flex-direction: column; gap: 6px; align-items: center">
+      <a href="PhoneDetail.dc.html" style="width: 338px; height: 158px; border-radius: 24px; background: {{hero.color}}; color: #1C1633; text-decoration: none; padding: 16px 18px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start">
+          <div style="display: flex; flex-direction: column"><span style="font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase">Up next</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 700">{{hero.title}}</span></div>
+          <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"></path></svg>
+        </div>
+        <div style="display: flex; align-items: flex-end; justify-content: space-between">
+          <div style="display: flex; align-items: baseline; gap: 6px"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 58px; font-weight: 800; line-height: 0.85; letter-spacing: -0.04em">{{hero.days}}</span><span style="font-size: 16px; font-weight: 700">days</span></div>
+          <div style="width: 130px; display: flex; flex-direction: column; gap: 6px; align-items: flex-end"><span style="font-size: 12px; font-weight: 600">{{hero.date}}</span><div style="width: 130px; height: 8px; border-radius: 4px; background: rgba(28,22,51,0.18)"><div style="width: 86%; height: 8px; border-radius: 4px; background: #1C1633"></div></div></div>
+        </div>
+      </a>
+      <span style="font-size: 12px; font-weight: 600; color: #FFFFFF">Countdowns</span>
+    </div>
+
+    <div style="display: flex; gap: 22px">
+      <div style="display: flex; flex-direction: column; gap: 6px; align-items: center">
+        <div style="width: 158px; height: 158px; border-radius: 24px; background: #FF564A; padding: 14px 16px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start"><span style="font-family: 'Libre Baskerville', serif; font-size: 16px; font-weight: 700">Christmas</span><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h16v4H4zM12 8v13M19 12v9H5v-9M7.5 8a2.5 2.5 0 0 1 0-5C10 3 12 8 12 8s2-5 4.5-5a2.5 2.5 0 0 1 0 5"></path></svg></div>
+          <div><div style="display: flex; align-items: baseline; gap: 4px"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 48px; font-weight: 800; line-height: 0.9; letter-spacing: -0.03em">{{xmas}}</span><span style="font-size: 14px; font-weight: 700">sleeps</span></div><span style="font-size: 11px; font-weight: 600">Fri, Dec 25</span></div>
+        </div>
+        <span style="font-size: 12px; font-weight: 600; color: #FFFFFF">Countdowns</span>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 20px">
+        <sc-for list="{{apps1}}" as="a" hint-placeholder-count="4">
+          <div style="display: flex; flex-direction: column; gap: 6px; align-items: center"><div aria-hidden="true" style="width: 62px; height: 62px; border-radius: 16px; background: {{a.c}}"></div><span style="font-size: 12px; font-weight: 500; color: #FFFFFF">App</span></div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 6px; align-items: center">
+      <div style="width: 338px; height: 158px; border-radius: 24px; background: #FFFFFF; padding: 14px 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 8px">
+        <sc-for list="{{rows}}" as="r" hint-placeholder-count="3">
+          <div style="display: flex; align-items: center; gap: 10px; height: 36px">
+            <span style="width: 34px; height: 34px; border-radius: 11px; background: {{r.color}}; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1C1633" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{r.icon}}"></path></svg></span>
+            <span style="flex: 1; font-family: {{r.font}}; font-size: 15px; font-weight: 700">{{r.title}}</span>
+            <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 800">{{r.days}}<span style="font-size: 12px; font-weight: 700; color: #5E5878"> d</span></span>
+          </div>
+        </sc-for>
+      </div>
+      <span style="font-size: 12px; font-weight: 600; color: #FFFFFF">Countdowns</span>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 16px; right: 16px; bottom: 20px; height: 88px; border-radius: 32px; background: rgba(255,255,255,0.16); display: flex; align-items: center; justify-content: space-around">
+    <sc-for list="{{dock}}" as="a" hint-placeholder-count="4">
+      <div aria-hidden="true" style="width: 62px; height: 62px; border-radius: 16px; background: {{a.c}}"></div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const now = Date.now();
+    const days = (d) => Math.max(Math.floor((d.getTime() - now) / 864e5), 0);
+    const I = {
+      spark: 'M12 3l1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2z',
+      cake: 'M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1M2 21h20M7 8v3M12 8v3M17 8v3',
+      plane: 'M2 16l20-7-3-3-8 3-5-3-2 1 4 4-4 2-2-1-1 1 3 3z'
+    };
+    const tone = ['#5A5390', '#6B64A3', '#4D4682', '#7A73B0'];
+    return {
+      hero: { title: 'Thanksgiving', color: '#FE7228', days: days(new Date(2026, 10, 26)), date: 'Thu, Nov 26' },
+      xmas: days(new Date(2026, 11, 25)) + 1,
+      rows: [
+        { title: 'New Year’s Eve', color: '#F7BC33', icon: I.spark, font: "'Bricolage Grotesque', sans-serif", days: days(new Date(2026, 11, 31, 20)) },
+        { title: 'Mia’s birthday', color: '#FE607C', icon: I.cake, font: "'Comic Neue', cursive", days: days(new Date(2027, 1, 3)) },
+        { title: 'Japan trip', color: '#66B6FE', icon: I.plane, font: "'Bricolage Grotesque', sans-serif", days: days(new Date(2027, 2, 14, 9, 30)) }
+      ],
+      apps1: tone.map((c) => ({ c })),
+      dock: tone.slice().reverse().map((c) => ({ c }))
+    };
+  }
+}
+</script>
+</body>
+</html>

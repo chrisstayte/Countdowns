@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Crop photo, phone</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Inter:wght@400;500;600;700&amp;family=Libre+Baskerville:wght@400;700&amp;family=Comic+Neue:wght@400;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#4A0D67}a:hover{color:#1C1633}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #120F22; color: #FFFFFF; font-family: Inter, system-ui, sans-serif">
+  <header style="height: 108px; padding: 54px 16px 0; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between">
+    <a href="PhotoStyle.dc.html" style="height: 44px; padding: 0 6px; display: flex; align-items: center; font-weight: 600; font-size: 16px; color: #B3B2F7; text-decoration: none">Cancel</a>
+    <span style="font-weight: 700; font-size: 17px">Crop photo</span>
+    <a href="PhotoStyle.dc.html" style="height: 40px; padding: 0 18px; border-radius: 20px; background: #F7BC33; color: #1C1633; text-decoration: none; display: flex; align-items: center; font-weight: 700; font-size: 15px">Done</a>
+  </header>
+
+  <div style="position: absolute; left: 0; top: 108px; width: 390px; height: 520px; overflow: hidden; background: url(/_blob/936f0c7563d452e48e8a01312dd864ba) center/cover">
+    <sc-for list="{{frames}}" as="f" hint-placeholder-count="3">
+      <div style="position: absolute; left: {{f.x}}px; top: {{f.y}}px; width: {{f.w}}px; height: {{f.h}}px; box-sizing: border-box; border: {{f.border}}; border-radius: {{f.radius}}; box-shadow: {{f.mask}}; opacity: {{f.op}}">
+        <span style="position: absolute; left: 8px; top: 8px; height: 24px; padding: 0 9px; border-radius: 12px; background: {{f.tagBg}}; color: #1C1633; font-size: 12px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{f.label}}</span>
+        <sc-if value="{{f.sel}}" hint-placeholder-val="{{false}}">
+          <span aria-hidden="true" style="position: absolute; left: 33.3%; top: 0; bottom: 0; width: 1px; background: rgba(255,255,255,0.35)"></span>
+          <span aria-hidden="true" style="position: absolute; left: 66.6%; top: 0; bottom: 0; width: 1px; background: rgba(255,255,255,0.35)"></span>
+          <span aria-hidden="true" style="position: absolute; top: 33.3%; left: 0; right: 0; height: 1px; background: rgba(255,255,255,0.35)"></span>
+          <span aria-hidden="true" style="position: absolute; top: 66.6%; left: 0; right: 0; height: 1px; background: rgba(255,255,255,0.35)"></span>
+        </sc-if>
+      </div>
+    </sc-for>
+    <span style="position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); height: 28px; padding: 0 12px; border-radius: 14px; background: rgba(18,15,34,0.7); font-size: 12px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">{{hint}}</span>
+  </div>
+
+  <div style="position: absolute; left: 0; right: 0; top: 628px; bottom: 0; padding: 14px 16px 28px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px">
+    <div role="group" aria-label="Shape" style="display: flex; gap: 6px">
+      <sc-for list="{{chips}}" as="c" hint-placeholder-count="4">
+        <button onClick="{{c.pick}}" aria-pressed="{{c.on}}" style="flex: 1; height: 60px; border-radius: 16px; border: 2px solid {{c.ring}}; background: {{c.bg}}; color: #FFFFFF; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; padding: 0; font-size: 11px; font-weight: 700"><span style="width: {{c.gw}}px; height: {{c.gh}}px; border-radius: 3px; border: 2px solid {{c.color}}"></span>{{c.label}}</button>
+      </sc-for>
+    </div>
+    <div style="display: flex; align-items: center; gap: 12px">
+      <button onClick="{{toggleLink}}" aria-pressed="{{linkedOn}}" style="flex: 1; height: 52px; border-radius: 16px; border: none; background: rgba(255,255,255,0.08); color: #FFFFFF; padding: 0 12px; display: flex; align-items: center; gap: 10px; text-align: left"><span style="width: 44px; height: 26px; border-radius: 13px; background: {{linkTrack}}; position: relative; flex-shrink: 0"><span style="position: absolute; left: {{linkKnob}}px; top: 3px; width: 20px; height: 20px; border-radius: 10px; background: #FFFFFF"></span></span><span style="display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 700">Same spot for all</span><span style="font-size: 11px; color: #B9B5D6">{{linkSub}}</span></span></button>
+      <div style="display: grid; grid-template-columns: repeat(3, 26px); grid-template-rows: repeat(2, 24px); gap: 3px">
+        <span></span><button onClick="{{up}}" aria-label="Move up" style="border: none; border-radius: 7px; background: rgba(255,255,255,0.14); color: #FFFFFF; padding: 0; font-size: 12px">▲</button><span></span>
+        <button onClick="{{left}}" aria-label="Move left" style="border: none; border-radius: 7px; background: rgba(255,255,255,0.14); color: #FFFFFF; padding: 0; font-size: 12px">◀</button><button onClick="{{down}}" aria-label="Move down" style="border: none; border-radius: 7px; background: rgba(255,255,255,0.14); color: #FFFFFF; padding: 0; font-size: 12px">▼</button><button onClick="{{right}}" aria-label="Move right" style="border: none; border-radius: 7px; background: rgba(255,255,255,0.14); color: #FFFFFF; padding: 0; font-size: 12px">▶</button>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"mode":{"editor":"enum","options":["all","full","square","wide"],"default":"all"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { sel: p.mode || 'all', linked: false, c: { full: [195, 260], square: [190, 175], wide: [195, 215] } }; }
+  renderVals() {
+    const S = { full: ['Full screen', 240, 520, '30px', '#FFFFFF', 10, 20], square: ['Card · small widget', 196, 196, '24px', '#F7BC33', 16, 16], wide: ['Wide widget', 360, 168, '22px', '#66B6FE', 22, 11] };
+    const s = this.state;
+    const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+    const box = (k) => { const [, w, h] = S[k]; const [cx, cy] = s.c[k]; return { x: clamp(cx - w / 2, 0, 390 - w), y: clamp(cy - h / 2, 0, 520 - h), w, h }; };
+    const order = ['full', 'wide', 'square'].filter((k) => k !== s.sel).concat(s.sel === 'all' ? [] : [s.sel]);
+    const frames = order.map((k) => {
+      const b = box(k), sel = s.sel === k, all = s.sel === 'all';
+      return { ...b, label: S[k][0], radius: S[k][3], tagBg: S[k][4], sel,
+        border: sel ? '3px solid ' + S[k][4] : '2px dashed ' + S[k][4],
+        mask: sel ? '0 0 0 999px rgba(18,15,34,0.6)' : 'none',
+        op: all || sel ? '1' : '0.35' };
+    });
+    const move = (dx, dy) => () => {
+      const keys = s.linked || s.sel === 'all' ? Object.keys(S) : [s.sel];
+      const c = { ...s.c };
+      keys.forEach((k) => { const [, w, h] = S[k]; c[k] = [clamp(c[k][0] + dx, w / 2, 390 - w / 2), clamp(c[k][1] + dy, h / 2, 520 - h / 2)]; });
+      this.setState({ c });
+    };
+    const chips = [['all', 'All shapes', '#FFFFFF', 14, 14]].concat(Object.keys(S).map((k) => [k, k === 'square' ? 'Card' : S[k][0].split(' ')[0] === 'Full' ? 'Full screen' : 'Wide', S[k][4], S[k][5], S[k][6]]))
+      .map(([k, label, color, gw, gh]) => ({ label, color, gw, gh, on: s.sel === k ? 'true' : 'false', ring: s.sel === k ? color : 'transparent', bg: s.sel === k ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.06)', pick: () => this.setState({ sel: k }) }));
+    return {
+      frames, chips,
+      hint: s.sel === 'all' ? 'Every place this photo shows up' : 'Drag the photo to set the ' + S[s.sel][0].toLowerCase() + ' crop',
+      linkedOn: s.linked ? 'true' : 'false', linkTrack: s.linked ? '#1B998B' : 'rgba(255,255,255,0.25)', linkKnob: s.linked ? 21 : 3,
+      linkSub: s.linked ? 'Moving one moves them all' : 'Each shape keeps its own crop',
+      toggleLink: () => this.setState({ linked: !s.linked, c: !s.linked ? { full: [s.c.full[0], 260], square: [s.c.full[0], 260], wide: [s.c.full[0], 260] } : s.c }),
+      up: move(0, -16), down: move(0, 16), left: move(-16, 0), right: move(16, 0)
+    };
+  }
+}
+</script>
+</body>
+</html>

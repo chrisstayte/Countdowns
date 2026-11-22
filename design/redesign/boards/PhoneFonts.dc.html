@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Font picker, phone</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Inter:wght@400;500;600;700&amp;family=Libre+Baskerville:wght@400;700&amp;family=Comic+Neue:wght@400;700&amp;family=Roboto:wght@400;700&amp;family=Luxurious+Roman&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#4A0D67}a:hover{color:#1C1633}
+button{font:inherit;cursor:pointer}
+@font-face{font-family:'CarnivaleeFreakshow';src:url(/_blob/b5692f0f7701c2b3c3a3b87689f0eb8b)}
+@font-face{font-family:'DiarioDeAndy';src:url(/_blob/a0f4bcd96836b633ffd19744c8d1170b)}
+@font-face{font-family:'GoodTimes';src:url(/_blob/892158b16779b47856d11b66141f02ad)}
+@font-face{font-family:'NewWaltDisney';src:url(/_blob/cb2417967e8d87c41d188f7075ea6ab5)}
+@font-face{font-family:'Starjedi';src:url(/_blob/016d6673ab73ace54286b8565f4c1b4b)}
+@font-face{font-family:'Sunnyspells';src:url(/_blob/d4374ef08c1bff95db3ad13f895887b6)}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #66B6FE; color: #1C1633; font-family: Inter, system-ui, sans-serif">
+  <div aria-hidden="true" style="position: absolute; inset: 0; background: rgba(18,15,34,0.4)"></div>
+  <section aria-label="Choose a font" style="position: absolute; left: 0; right: 0; bottom: 0; top: 54px; background: #FFFFFF; border-radius: 32px 32px 0 0; padding: 10px 20px 0; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px">
+    <div aria-hidden="true" style="width: 40px; height: 5px; border-radius: 3px; background: #D6D3F0; align-self: center"></div>
+    <div style="display: flex; justify-content: space-between; align-items: center">
+      <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; font-weight: 800">Font</h1>
+      <a href="PhoneEditor.dc.html" style="height: 40px; padding: 0 18px; border-radius: 20px; background: #1C1633; color: #FFFFFF; text-decoration: none; display: flex; align-items: center; font-weight: 700; font-size: 15px">Done</a>
+    </div>
+
+    <div style="background: #66B6FE; border-radius: 22px; height: 112px; padding: 14px 16px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between">
+      <span style="font-family: {{family}}; font-size: 26px; line-height: 1.1">Japan trip</span>
+      <div style="display: flex; align-items: baseline; gap: 6px"><span style="font-family: {{family}}; font-size: 40px; font-weight: 700; line-height: 0.9">113</span><span style="font-family: {{family}}; font-size: 16px">days</span></div>
+    </div>
+
+    <div role="group" aria-label="Filter fonts" style="display: flex; gap: 6px; background: #F5F4FF; border-radius: 22px; padding: 4px">
+      <sc-for list="{{tabs}}" as="t" hint-placeholder-count="4">
+        <button onClick="{{t.pick}}" aria-pressed="{{t.on}}" style="flex: 1; height: 36px; border: none; border-radius: 18px; background: {{t.bg}}; color: {{t.fg}}; font-size: 14px; font-weight: 700">{{t.label}}</button>
+      </sc-for>
+    </div>
+
+    <div style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-bottom: 30px; min-height: 0">
+      <sc-for list="{{rows}}" as="f" hint-placeholder-count="11">
+        <button onClick="{{f.pick}}" aria-pressed="{{f.on}}" style="flex-shrink: 0; height: 64px; border-radius: 18px; border: 2px solid {{f.border}}; background: #F5F4FF; color: #1C1633; padding: 0 16px; display: flex; align-items: center; gap: 12px; text-align: left">
+          <span style="flex: 1; font-family: {{f.family}}; font-size: 24px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">Japan trip</span>
+          <span style="font-size: 12px; font-weight: 600; color: #5E5878">{{f.name}}</span>
+          <span style="width: 24px; height: 24px; border-radius: 12px; background: {{f.check}}; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg></span>
+        </button>
+      </sc-for>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { font: 'Not Disney', tab: 'All' }; }
+  renderVals() {
+    const F = [
+      ['Default', "'Bricolage Grotesque', sans-serif", 'Clean'],
+      ['Roboto', 'Roboto, sans-serif', 'Clean'],
+      ['Good Times', "'GoodTimes', sans-serif", 'Clean'],
+      ['Baskerville', "'Libre Baskerville', serif", 'Classic'],
+      ['Luxurious Roman', "'Luxurious Roman', serif", 'Classic'],
+      ['Comic Neue', "'Comic Neue', cursive", 'Fun'],
+      ['Diario De Andy', "'DiarioDeAndy', cursive", 'Fun'],
+      ['Sunnyspells', "'Sunnyspells', cursive", 'Fun'],
+      ['Carnivalee Freakshow', "'CarnivaleeFreakshow', fantasy", 'Fun'],
+      ['Not Starwars', "'Starjedi', fantasy", 'Fun'],
+      ['Not Disney', "'NewWaltDisney', fantasy", 'Fun']
+    ];
+    const s = this.state;
+    const cur = F.find((f) => f[0] === s.font) || F[0];
+    return {
+      family: cur[1],
+      tabs: ['All', 'Clean', 'Classic', 'Fun'].map((label) => ({ label, on: s.tab === label ? 'true' : 'false', bg: s.tab === label ? '#1C1633' : 'transparent', fg: s.tab === label ? '#FFFFFF' : '#1C1633', pick: () => this.setState({ tab: label }) })),
+      rows: F.filter((f) => s.tab === 'All' || f[2] === s.tab).map(([name, family]) => ({
+        name, family, on: s.font === name ? 'true' : 'false',
+        border: s.font === name ? '#1C1633' : 'transparent',
+        check: s.font === name ? '#1B998B' : 'transparent',
+        pick: () => this.setState({ font: name })
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

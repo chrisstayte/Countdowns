@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lock screen widgets</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#FFFFFF}a:hover{color:#DEE2FF}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #1E1A38; color: #FFFFFF; font-family: Inter, system-ui, sans-serif; padding: 70px 24px 0; display: flex; flex-direction: column; align-items: center">
+  <div aria-hidden="true" style="position: absolute; width: 520px; height: 520px; border-radius: 260px; background: #2E2858; left: -60px; top: 420px"></div>
+
+  <span style="position: relative; font-size: 17px; font-weight: 600; display: flex; align-items: center; gap: 6px"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l2 2M9 2h6"></path></svg>Thanksgiving in {{tg}} days</span>
+  <span style="position: relative; font-family: 'Bricolage Grotesque', sans-serif; font-size: 96px; font-weight: 700; line-height: 1.05; letter-spacing: -0.02em">{{clock}}</span>
+  <span style="position: relative; font-size: 17px; font-weight: 600; color: #D9D6F0">{{today}}</span>
+
+  <div style="position: relative; margin-top: 18px; display: flex; gap: 12px; align-items: center">
+    <div role="img" aria-label="Thanksgiving, {{tg}} days" style="width: 72px; height: 72px; border-radius: 36px; background: rgba(255,255,255,0.14); position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center">
+      <svg aria-hidden="true" width="72" height="72" viewBox="0 0 72 72" style="position: absolute; left: 0; top: 0"><circle cx="36" cy="36" r="31" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="5"></circle><circle cx="36" cy="36" r="31" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" stroke-dasharray="{{ring}}" transform="rotate(-90 36 36)"></circle></svg>
+      <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 26px; font-weight: 800; line-height: 1">{{tg}}</span><span style="font-size: 10px; font-weight: 700">DAYS</span>
+    </div>
+    <div style="width: 160px; height: 72px; border-radius: 18px; background: rgba(255,255,255,0.14); padding: 10px 12px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between">
+      <span style="font-size: 13px; font-weight: 700">Christmas</span>
+      <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; font-weight: 800; line-height: 1">{{xmas}} <span style="font-size: 13px; font-weight: 700">days</span></span>
+      <div style="height: 5px; border-radius: 3px; background: rgba(255,255,255,0.25)"><div style="width: 62%; height: 5px; border-radius: 3px; background: #FFFFFF"></div></div>
+    </div>
+    <div role="img" aria-label="Japan trip, {{jp}} days" style="width: 72px; height: 72px; border-radius: 36px; background: rgba(255,255,255,0.14); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px">
+      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 16l20-7-3-3-8 3-5-3-2 1 4 4-4 2-2-1-1 1 3 3z"></path></svg>
+      <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px; font-weight: 800; line-height: 1">{{jp}}</span>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 14px; right: 14px; bottom: 110px; border-radius: 26px; background: #FE607C; color: #1C1633; padding: 16px 18px; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px">
+    <div style="display: flex; justify-content: space-between; align-items: center">
+      <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase">Today · Countdowns</span>
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"></path></svg>
+    </div>
+    <div style="display: flex; justify-content: space-between; align-items: flex-end">
+      <div style="display: flex; flex-direction: column"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 700">Concert</span><span style="font-size: 13px; font-weight: 600">Doors at 8:00 PM</span></div>
+      <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 40px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums">{{live}}</span>
+    </div>
+    <div style="height: 8px; border-radius: 4px; background: rgba(28,22,51,0.18)"><div style="width: {{livePct}}%; height: 8px; border-radius: 4px; background: #1C1633"></div></div>
+  </div>
+  <span style="position: absolute; bottom: 72px; left: 0; right: 0; text-align: center; font-size: 12px; font-weight: 600; color: #B9B5D6">Live Activity, shown on the day of an event</span>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  componentDidMount() { this.t = setInterval(() => this.forceUpdate(), 1000); }
+  componentWillUnmount() { clearInterval(this.t); }
+  renderVals() {
+    const now = new Date();
+    const days = (d) => Math.max(Math.floor((d.getTime() - now.getTime()) / 864e5), 0);
+    const tg = days(new Date(2026, 10, 26));
+    const circ = 2 * Math.PI * 31;
+    const start = new Date(2026, 9, 26).getTime(), end = new Date(2026, 10, 26).getTime();
+    const frac = Math.min(Math.max((now.getTime() - start) / (end - start), 0), 1);
+    const doors = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 20, 0);
+    let ms = doors.getTime() - now.getTime();
+    if (ms < 0) ms += 864e5;
+    const pad = (n) => String(n).padStart(2, '0');
+    return {
+      tg, xmas: days(new Date(2026, 11, 25)), jp: days(new Date(2027, 2, 14, 9, 30)),
+      ring: (circ * frac).toFixed(1) + ' ' + circ.toFixed(1),
+      clock: now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }).replace(/\s?[AP]M$/, ''),
+      today: now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }),
+      live: Math.floor(ms / 36e5) + ':' + pad(Math.floor(ms / 6e4) % 60) + ':' + pad(Math.floor(ms / 1e3) % 60),
+      livePct: Math.round((1 - ms / 864e5) * 100)
+    };
+  }
+}
+</script>
+</body>
+</html>
