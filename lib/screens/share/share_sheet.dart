@@ -495,7 +495,7 @@ class _CalendarPreview extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
               boxShadow: const [
                 BoxShadow(
-                  color: Color(0x261C1633),
+                  color: Color(0x262E2A3A),
                   blurRadius: 24,
                   offset: Offset(0, 10),
                 ),
@@ -607,7 +607,7 @@ class _Rounded extends StatelessWidget {
       borderRadius: BorderRadius.circular(18),
       boxShadow: const [
         BoxShadow(
-          color: Color(0x331C1633),
+          color: Color(0x332E2A3A),
           blurRadius: 28,
           offset: Offset(0, 12),
         ),

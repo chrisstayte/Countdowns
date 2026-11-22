@@ -554,21 +554,13 @@ class _IconGrid extends StatelessWidget {
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 150),
             decoration: BoxDecoration(
-              color: on ? AppColors.ink : AppColors.ground,
+              color: on ? AppColors.highlighter : AppColors.wash,
               borderRadius: BorderRadius.circular(12),
             ),
             alignment: Alignment.center,
             child: slug == null
-                ? Icon(
-                    Icons.block_rounded,
-                    size: 20,
-                    color: on ? Colors.white : AppColors.muted,
-                  )
-                : EventIcon(
-                    slug,
-                    size: 22,
-                    color: on ? Colors.white : AppColors.ink,
-                  ),
+                ? Icon(Icons.block_rounded, size: 20, color: AppColors.muted)
+                : EventIcon(slug, size: 22, color: AppColors.ink),
           ),
         ),
       );
@@ -641,7 +633,7 @@ class _FontTile extends StatelessWidget {
         duration: const Duration(milliseconds: 150),
         padding: const EdgeInsets.symmetric(horizontal: 12),
         decoration: BoxDecoration(
-          color: AppColors.ground,
+          color: AppColors.wash,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
             color: selected ? AppColors.ink : Colors.transparent,
@@ -724,7 +716,7 @@ class _AllIconsSheetState extends State<AllIconsSheet> {
                 prefixIcon: const Icon(Icons.search_rounded),
                 hintText: 'Search icons',
                 filled: true,
-                fillColor: AppColors.ground,
+                fillColor: AppColors.wash,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(22),
                   borderSide: BorderSide.none,
@@ -763,15 +755,15 @@ class _AllIconsSheetState extends State<AllIconsSheet> {
                                   child: Container(
                                     decoration: BoxDecoration(
                                       color: on
-                                          ? AppColors.ink
-                                          : AppColors.ground,
+                                          ? AppColors.highlighter
+                                          : AppColors.wash,
                                       borderRadius: BorderRadius.circular(16),
                                     ),
                                     alignment: Alignment.center,
                                     child: EventIcon(
                                       info.slug,
                                       size: 26,
-                                      color: on ? Colors.white : AppColors.ink,
+                                      color: AppColors.ink,
                                     ),
                                   ),
                                 ),
@@ -866,7 +858,7 @@ class _AllFontsSheetState extends State<AllFontsSheet> {
                         height: 60,
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         decoration: BoxDecoration(
-                          color: AppColors.ground,
+                          color: AppColors.wash,
                           borderRadius: BorderRadius.circular(18),
                           border: Border.all(
                             color: on ? AppColors.ink : Colors.transparent,
@@ -895,7 +887,7 @@ class _AllFontsSheetState extends State<AllFontsSheet> {
                               width: 24,
                               height: 24,
                               decoration: BoxDecoration(
-                                color: on ? AppColors.save : Colors.transparent,
+                                color: on ? AppColors.ink : Colors.transparent,
                                 shape: BoxShape.circle,
                               ),
                               child: on

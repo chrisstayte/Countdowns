@@ -46,7 +46,7 @@ class EditorDetails extends ConsumerWidget {
             hintText: 'Birthday, trip, big day…',
             hintStyle: const TextStyle(color: AppColors.muted),
             filled: true,
-            fillColor: AppColors.ground,
+            fillColor: AppColors.surface,
             errorText: nameError ? 'Give your countdown a name' : null,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 14,
@@ -75,7 +75,7 @@ class EditorDetails extends ConsumerWidget {
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
-            color: AppColors.ground,
+            color: AppColors.wash,
             borderRadius: BorderRadius.circular(14),
           ),
           child: Column(
@@ -221,7 +221,7 @@ class EditorDetails extends ConsumerWidget {
                     contentPadding: EdgeInsets.zero,
                     title: Text(e.value),
                     trailing: draft.reminders.contains(e.key)
-                        ? const Icon(Icons.check_rounded, color: AppColors.save)
+                        ? const Icon(Icons.check_rounded, color: AppColors.ink)
                         : null,
                     onTap: () => Navigator.pop(context, e.key),
                   ),
@@ -315,7 +315,7 @@ class EditorDetails extends ConsumerWidget {
                       ? const Text('Birthdays, anniversaries, holidays')
                       : null,
                   trailing: draft.repeat == r
-                      ? const Icon(Icons.check_rounded, color: AppColors.save)
+                      ? const Icon(Icons.check_rounded, color: AppColors.ink)
                       : null,
                   onTap: () => Navigator.pop(context, r),
                 ),

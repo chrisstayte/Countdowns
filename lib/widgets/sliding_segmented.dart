@@ -35,12 +35,12 @@ class SlidingSegmented<T> extends ConsumerStatefulWidget {
     this.semanticLabel,
     this.height = 36,
     this.fontSize = 14,
-    this.trackColor = AppColors.ground,
+    this.trackColor = AppColors.wash,
     this.trackPadding = 4,
     this.spacing = 4,
-    this.pillColor = AppColors.ink,
+    this.pillColor = AppColors.highlighter,
     this.pillBorder,
-    this.selectedText = Colors.white,
+    this.selectedText = AppColors.ink,
     this.text = AppColors.ink,
     this.outline,
     this.segmentColor,
@@ -344,7 +344,7 @@ class _SlidingSegmentedState<T> extends ConsumerState<SlidingSegmented<T>>
                             boxShadow: widget.raised
                                 ? const [
                                     BoxShadow(
-                                      color: Color(0x1F1C1633),
+                                      color: Color(0x1F2E2A3A),
                                       blurRadius: 8,
                                       offset: Offset(0, 2),
                                     ),

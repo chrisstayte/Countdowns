@@ -8,9 +8,9 @@ import 'package:countdowns/widgets/ui.dart';
 import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 
-const _dark = AppColors.scrim;
-const _soft = Color(0xFFB3B2F7);
-const _sub = Color(0xFFB9B5D6);
+const _dark = AppColors.night;
+const _soft = AppColors.nightText;
+const _sub = AppColors.nightSubtle;
 
 /// Outline colour per shape, as on the canvas.
 const _shapeColors = {

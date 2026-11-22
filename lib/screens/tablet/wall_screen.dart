@@ -26,7 +26,7 @@ class WallScreen extends ConsumerWidget {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.light,
       child: Scaffold(
-        backgroundColor: AppColors.scrim,
+        backgroundColor: AppColors.night,
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(32, 20, 32, 28),
@@ -51,7 +51,7 @@ class WallScreen extends ConsumerWidget {
                       style: const TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFFB9B5D6),
+                        color: AppColors.nightSubtle,
                       ),
                     ),
                     const Spacer(),

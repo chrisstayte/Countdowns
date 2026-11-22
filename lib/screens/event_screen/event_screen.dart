@@ -319,8 +319,10 @@ class _CountdownDetailState extends ConsumerState<CountdownDetail> {
       label: (u) => u.label,
       height: photo ? 38 : 36,
       trackColor: photo ? AppColors.scrim.withValues(alpha: 0.45) : soft,
-      selectedColor: ink == Colors.white ? Colors.white : AppColors.ink,
-      selectedText: ink == Colors.white ? AppColors.ink : Colors.white,
+      // On event colours and photos the pill stays Ink with white text,
+      // readable on any colour.
+      selectedColor: AppColors.ink,
+      selectedText: Colors.white,
       text: ink,
       onChanged: (u) {
         feedback(ref, Sound.select, false);
@@ -373,7 +375,7 @@ class _CountdownDetailState extends ConsumerState<CountdownDetail> {
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: photo ? Colors.white : const Color(0xFFCFCBE6),
+                      color: photo ? Colors.white : const Color(0xFFD9D5CA),
                     ),
                   ),
                 ],

@@ -202,7 +202,9 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
           ),
           PillButton(
             label: 'Save',
-            background: AppColors.save,
+            background: AppColors.highlighter,
+            foreground: AppColors.ink,
+            border: AppColors.ink,
             onTap: _saving ? null : _save,
           ),
         ],
@@ -261,10 +263,6 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
                       label: (t) => t == EditorTab.details ? 'Details' : 'Look',
                       height: 38,
                       fontSize: 15,
-                      raised: true,
-                      trackColor: AppColors.track,
-                      selectedColor: Colors.white,
-                      selectedText: AppColors.ink,
                       onChanged: (t) {
                         feedback(ref, Sound.select, false);
                         FocusScope.of(context).unfocus();

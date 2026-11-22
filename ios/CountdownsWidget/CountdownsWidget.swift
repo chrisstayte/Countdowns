@@ -35,7 +35,7 @@ struct HomeEntryView: View {
         case .systemLarge:
           LargeView(entry: entry)
             .padding(18)
-            .containerBackground(for: .widget) { Color.white }
+            .containerBackground(for: .widget) { Color.ground }
         case .systemMedium:
           MediumView(entry: entry, event: lead)
             .padding(.horizontal, 18).padding(.vertical, 16)

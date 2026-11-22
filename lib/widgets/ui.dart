@@ -33,9 +33,9 @@ class PillSegmented<T> extends StatelessWidget {
     required this.label,
     required this.onChanged,
     this.height = 36,
-    this.trackColor = AppColors.ground,
-    this.selectedColor = AppColors.ink,
-    this.selectedText = Colors.white,
+    this.trackColor = AppColors.wash,
+    this.selectedColor = AppColors.highlighter,
+    this.selectedText = AppColors.ink,
     this.text = AppColors.ink,
     this.fontSize = 14,
     this.raised = false,
@@ -138,10 +138,10 @@ class ChoiceChipButton extends StatelessWidget {
         height: height,
         padding: const EdgeInsets.symmetric(horizontal: 14),
         decoration: BoxDecoration(
-          color: selected ? AppColors.ink : background,
+          color: selected ? AppColors.highlighter : background,
           borderRadius: BorderRadius.circular(height / 2),
           border: Border.all(
-            color: selected ? AppColors.ink : AppColors.border,
+            color: selected ? AppColors.highlighter : AppColors.border,
             width: 1.5,
           ),
         ),
@@ -153,7 +153,7 @@ class ChoiceChipButton extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: selected ? Colors.white : AppColors.ink,
+                color: AppColors.ink,
               ),
             ),
             if (trailing != null) ...[const SizedBox(width: 6), trailing!],
@@ -213,6 +213,7 @@ class PillButton extends StatelessWidget {
     this.icon,
     this.shadow = false,
     this.fontSize = 15,
+    this.border,
   });
 
   final String label;
@@ -222,6 +223,9 @@ class PillButton extends StatelessWidget {
   final IconData? icon;
   final bool shadow;
   final double fontSize;
+
+  /// An outline (Save).
+  final Color? border;
 
   @override
   Widget build(BuildContext context) => Semantics(
@@ -235,10 +239,13 @@ class PillButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: onTap == null ? background.withValues(alpha: 0.5) : background,
           borderRadius: BorderRadius.circular(height / 2),
+          border: border == null
+              ? null
+              : Border.all(color: border!, width: 1.5),
           boxShadow: shadow
               ? const [
                   BoxShadow(
-                    color: Color(0x2E1C1633),
+                    color: Color(0x2E2E2A3A),
                     blurRadius: 16,
                     offset: Offset(0, 6),
                   ),
@@ -329,7 +336,7 @@ class AppSwitch extends StatelessWidget {
         padding: const EdgeInsets.all(3),
         alignment: value ? Alignment.centerRight : Alignment.centerLeft,
         decoration: BoxDecoration(
-          color: value ? AppColors.save : offTrack,
+          color: value ? AppColors.ink : offTrack,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Container(
@@ -418,4 +425,51 @@ class BleedScroller extends StatelessWidget {
       ),
     ),
   );
+}
+
+/// A screen title with a slightly tilted highlighter band behind its
+/// lower half, like the app icon. For app screen titles only ("Countdowns",
+/// "Settings"), never for countdown names.
+class MarkedTitle extends StatelessWidget {
+  const MarkedTitle(this.text, {super.key, required this.style});
+
+  final String text;
+  final TextStyle style;
+
+  @override
+  Widget build(BuildContext context) {
+    final size =
+        (style.fontSize ?? 34) * MediaQuery.textScalerOf(context).scale(1);
+    return Semantics(
+      header: true,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Positioned(
+            left: -size * 0.12,
+            right: -size * 0.18,
+            bottom: size * 0.06,
+            height: size * 0.5,
+            child: IgnorePointer(
+              child: Transform.rotate(
+                angle: -0.025,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: AppColors.highlighter,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(size * 0.08),
+                      bottomLeft: Radius.circular(size * 0.2),
+                      topRight: Radius.circular(size * 0.22),
+                      bottomRight: Radius.circular(size * 0.1),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Text(text, style: style),
+        ],
+      ),
+    );
+  }
 }

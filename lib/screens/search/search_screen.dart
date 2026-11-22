@@ -196,7 +196,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             radius: 18,
             children: [
               for (final (i, r) in recents.indexed) ...[
-                if (i > 0) const Divider(height: 1, color: Color(0xFFEEECF8)),
+                if (i > 0) const Divider(height: 1, color: AppColors.rule),
                 InkWell(
                   onTap: () => _set(r),
                   child: SizedBox(

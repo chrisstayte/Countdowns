@@ -46,7 +46,7 @@ class EditorPreview extends StatelessWidget {
           borderRadius: BorderRadius.circular(24),
           boxShadow: const [
             BoxShadow(
-              color: Color(0x2E1C1633),
+              color: Color(0x2E2E2A3A),
               blurRadius: 30,
               offset: Offset(0, 14),
             ),

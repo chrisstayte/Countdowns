@@ -191,10 +191,7 @@ class _HomeHeader extends ConsumerWidget {
                 style: AppText.secondary.copyWith(letterSpacing: 0.26),
               ),
               const SizedBox(height: 2),
-              Semantics(
-                header: true,
-                child: const Text('Countdowns', style: AppText.largeTitle),
-              ),
+              const MarkedTitle('Countdowns', style: AppText.largeTitle),
             ],
           ),
         ),

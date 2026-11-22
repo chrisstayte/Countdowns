@@ -13,7 +13,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
-const _sidebar = Color(0xFFECEAFB);
+const _sidebar = AppColors.wash;
 
 /// iPad: sidebar filters, a card list and a live detail pane side by side,
 /// so tapping a card never leaves the list.
@@ -229,13 +229,16 @@ class _Sidebar extends ConsumerWidget {
             children: [
               const Padding(
                 padding: EdgeInsets.fromLTRB(10, 0, 10, 18),
-                child: Text(
-                  'Countdowns',
-                  style: TextStyle(
-                    fontFamily: AppFonts.numerals,
-                    fontSize: 26,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.ink,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: MarkedTitle(
+                    'Countdowns',
+                    style: TextStyle(
+                      fontFamily: AppFonts.numerals,
+                      fontSize: 26,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.ink,
+                    ),
                   ),
                 ),
               ),

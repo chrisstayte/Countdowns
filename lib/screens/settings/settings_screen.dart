@@ -73,7 +73,10 @@ class SettingsScreen extends ConsumerWidget {
                       ),
                       const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 4),
-                        child: Text('Settings', style: AppText.largeTitle),
+                        child: MarkedTitle(
+                          'Settings',
+                          style: AppText.largeTitle,
+                        ),
                       ),
                     ],
                   ),
@@ -698,7 +701,7 @@ class _TabletSettingsState extends ConsumerState<_TabletSettings> {
       : SettingsSection.countdowns;
 
   static const _colors = {
-    SettingsSection.appearance: lavender,
+    SettingsSection.appearance: mint,
     SettingsSection.countdowns: sun,
     SettingsSection.notifications: bubblegum,
     SettingsSection.support: sky,
@@ -714,7 +717,7 @@ class _TabletSettingsState extends ConsumerState<_TabletSettings> {
           s,
     ];
     return Scaffold(
-      backgroundColor: const Color(0xFFECEAFB),
+      backgroundColor: AppColors.wash,
       body: SafeArea(
         child: Row(
           children: [
@@ -734,7 +737,13 @@ class _TabletSettingsState extends ConsumerState<_TabletSettings> {
                     ),
                     const Padding(
                       padding: EdgeInsets.fromLTRB(10, 4, 10, 16),
-                      child: Text('Settings', style: AppText.largeTitle),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: MarkedTitle(
+                          'Settings',
+                          style: AppText.largeTitle,
+                        ),
+                      ),
                     ),
                     for (final s in sections)
                       Padding(

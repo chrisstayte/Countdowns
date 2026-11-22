@@ -1,22 +1,54 @@
 import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:material_ui/material_ui.dart';
 
-/// Colours from the redesign canvas.
+/// The "Highlighter" palette, taken from the default app icon.
+///
+/// Event colours, gradients, photos and the automatic ink/white text on
+/// events are separate (see palette.dart) and don't change with this.
 abstract final class AppColors {
-  static const ground = Color(0xFFF5F4FF);
-  static const ink = Color(0xFF1C1633);
-  static const primary = Color(0xFF4A0D67);
-  static const save = Color(0xFF1B998B);
-  static const secondaryText = Color(0xFF5E5878);
-  static const border = Color(0xFFD6D3F0);
-  static const muted = Color(0xFF8A8796);
-  static const track = Color(0xFFE4E1F5);
-  static const divider = Color(0xFFECEAFB);
+  /// App background.
+  static const paper = Color(0xFFFBF9F3);
+
+  /// Text, links, outlines, icons and primary dark buttons.
+  static const ink = Color(0xFF2E2A3A);
+
+  /// Secondary text. 5.3:1 on paper, 4.7:1 on wash.
+  static const pencil = Color(0xFF6B6677);
+
+  /// The selected state: segmented pills, selected chips, Save.
+  static const highlighter = Color(0xFFFFE36E);
+
+  /// Borders and dividers.
+  static const rule = Color(0xFFE6E1D3);
+
+  /// Segmented tracks, grouped rows and tiles.
+  static const wash = Color(0xFFF1EDE2);
+
   static const surface = Colors.white;
   static const danger = Color(0xFFB3261E);
-  static const highlight = Color(0xFFF7BC33);
+
+  /// Dark ground for the crop screen and wall mode.
+  static const night = Color(0xFF24212D);
+
+  /// Light text on [night].
+  static const nightText = Color(0xFFE6E1D3);
+  static const nightSubtle = Color(0xFFB8B3A6);
+
+  /// The scrim over photos (unchanged: photos look the same).
   static const scrim = Color(0xFF120F22);
-  static const softInk = Color(0x1F1C1633); // ink at 12%
+
+  /// Ink at 12%, for soft fills on event colours.
+  static const softInk = Color(0x1F1C1633);
+
+  // Older names, kept so every screen picks up the new palette.
+  static const ground = paper;
+  static const primary = ink;
+  static const secondaryText = pencil;
+  static const muted = pencil;
+  static const border = rule;
+  static const divider = rule;
+  static const track = wash;
+  static const highlight = highlighter;
 }
 
 /// Font families. Event fonts use [eventFontFamily].
@@ -118,8 +150,13 @@ ThemeData buildAppTheme() {
         seedColor: AppColors.primary,
         brightness: Brightness.light,
       ).copyWith(
-        primary: AppColors.primary,
+        primary: AppColors.ink,
+        onPrimary: Colors.white,
+        secondary: AppColors.highlighter,
+        onSecondary: AppColors.ink,
+        outline: AppColors.rule,
         onSurface: AppColors.ink,
+        onSurfaceVariant: AppColors.pencil,
         surface: AppColors.ground,
       );
   return ThemeData(

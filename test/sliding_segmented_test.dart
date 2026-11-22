@@ -21,6 +21,7 @@ class Harness {
     WidgetTester tester, {
     String initial = 'Days',
     bool haptics = true,
+    bool inkPill = false,
   }) async {
     selected = initial;
     SharedPreferences.setMockInitialValues({
@@ -53,6 +54,13 @@ class Harness {
                     values: options,
                     selected: selected,
                     label: (v) => v,
+                    // The detail screen's style: Ink pill, white label.
+                    pillColor: inkPill
+                        ? const Color(0xFF2E2A3A)
+                        : const Color(0xFFFFE36E),
+                    selectedText: inkPill
+                        ? Colors.white
+                        : const Color(0xFF2E2A3A),
                     onChanged: (v) {
                       changes.add(v);
                       setState(() => selected = v);
@@ -174,7 +182,7 @@ void main() {
 
   testWidgets('labels cross-fade with the pill', (tester) async {
     final h = Harness();
-    await h.pump(tester);
+    await h.pump(tester, inkPill: true);
     int colorOf(String label) =>
         tester.widget<Text>(find.text(label)).style!.color!.toARGB32();
     final white = Colors.white.toARGB32();

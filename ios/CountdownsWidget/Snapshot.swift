@@ -147,8 +147,9 @@ extension Color {
       blue: Double(value & 0xFF) / 255)
   }
 
-  static let ink = Color(hex: "#1C1633")
-  static let ground = Color(hex: "#F5F4FF")
-  static let secondaryText = Color(hex: "#5E5878")
+  // The app's "Highlighter" palette.
+  static let ink = Color(hex: "#2E2A3A")
+  static let ground = Color(hex: "#FBF9F3")  // Paper
+  static let secondaryText = Color(hex: "#6B6677")  // Pencil
   static let scrim = Color(hex: "#120F22")
 }
