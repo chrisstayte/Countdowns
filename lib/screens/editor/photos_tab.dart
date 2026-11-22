@@ -62,6 +62,15 @@ Future<String> importStockPhoto(File download, StockPhoto photo) async {
   return path;
 }
 
+/// A recently used stock photo whose downloaded copy is still on the
+/// device, so it can be used again offline.
+bool isDownloaded(StockPhoto p) {
+  final local = p.localPath;
+  return local != null &&
+      PhotoStore.ready &&
+      PhotoStore.instance.fileFor(local).existsSync();
+}
+
 /// Which placeholder a tile shows while its thumbnail loads.
 enum PlaceholderKind { blurHash, colour, wash }
 
@@ -91,7 +100,10 @@ bool isValidBlurHash(String h) {
 /// The All backgrounds sheet's Photos tab, top to bottom: your own photos;
 /// then from the stock catalogue a search field, Recently used, and one
 /// swipeable row per category (seasonal and title-matched first). When
-/// the catalogue can't be reached the stock part steps aside quietly.
+/// the catalogue is loading, switched off or can't be reached, the stock
+/// part isn't there at all: no message, no search, no headings. Only stock
+/// photos already downloaded stay, under Recently used, because they work
+/// without the network.
 class PhotosTab extends ConsumerStatefulWidget {
   const PhotosTab({
     super.key,
@@ -118,7 +130,7 @@ class PhotosTab extends ConsumerStatefulWidget {
   ConsumerState<PhotosTab> createState() => _PhotosTabState();
 }
 
-enum _Status { loading, ready, unavailable, off }
+enum _Status { loading, ready, hidden }
 
 class _PhotosTabState extends ConsumerState<PhotosTab> {
   _Status _status = _Status.loading;
@@ -158,13 +170,13 @@ class _PhotosTabState extends ConsumerState<PhotosTab> {
   Future<void> _load() async {
     final source = _source;
     if (source == null) {
-      setState(() => _status = _Status.off);
+      setState(() => _status = _Status.hidden);
       return;
     }
     try {
       final cats = await source.categories();
       if (cats.isEmpty) {
-        if (mounted) setState(() => _status = _Status.off);
+        if (mounted) setState(() => _status = _Status.hidden);
         return;
       }
       final ordered = orderCategories(
@@ -190,7 +202,7 @@ class _PhotosTabState extends ConsumerState<PhotosTab> {
       });
     } catch (e) {
       debugPrint('Stock catalogue unavailable: $e');
-      if (mounted) setState(() => _status = _Status.unavailable);
+      if (mounted) setState(() => _status = _Status.hidden);
     }
   }
 
@@ -244,8 +256,17 @@ class _PhotosTabState extends ConsumerState<PhotosTab> {
   }
 
   Future<void> _download(StockPhoto photo) async {
+    if (_downloadingId != null) return;
+    // Picked before and still on the device: use that copy, no network.
+    final local = photo.localPath;
+    if (local != null && isDownloaded(photo)) {
+      feedback(ref, Sound.select);
+      await ref.read(stockRecentsProvider.notifier).use(photo);
+      if (mounted) widget.onImported(ImportedPhoto(local, focal: photo.focal));
+      return;
+    }
     final source = _source;
-    if (source == null || _downloadingId != null) return;
+    if (source == null) return;
     feedback(ref, Sound.select);
     setState(() {
       _downloadingId = photo.id;
@@ -260,7 +281,9 @@ class _PhotosTabState extends ConsumerState<PhotosTab> {
         },
       );
       final path = await importStockPhoto(file, photo);
-      await ref.read(stockRecentsProvider.notifier).use(photo);
+      await ref
+          .read(stockRecentsProvider.notifier)
+          .use(photo.withLocalPath(path));
       if (!mounted) return;
       widget.onImported(ImportedPhoto(path, focal: photo.focal));
     } catch (e) {
@@ -318,42 +341,26 @@ class _PhotosTabState extends ConsumerState<PhotosTab> {
     );
   }
 
+  List<Widget> _recentRow(List<StockPhoto> recents) => [
+    if (recents.isNotEmpty) ...[
+      const _Heading('RECENTLY USED'),
+      SliverToBoxAdapter(
+        child: _Row(
+          key: const ValueKey('stock-recents'),
+          photos: recents,
+          tile: _tile,
+        ),
+      ),
+    ],
+  ];
+
   List<Widget> _stock(BuildContext context) {
-    switch (_status) {
-      case _Status.off:
-        return const [];
-      case _Status.unavailable:
-        return const [
-          SliverPadding(
-            padding: EdgeInsets.only(top: 22),
-            sliver: SliverToBoxAdapter(
-              child: Text(
-                'More photos are unavailable right now.',
-                key: ValueKey('stock-unavailable'),
-                style: AppText.secondary,
-              ),
-            ),
-          ),
-        ];
-      case _Status.loading:
-        return const [
-          SliverPadding(
-            padding: EdgeInsets.all(24),
-            sliver: SliverToBoxAdapter(
-              child: Center(
-                child: SizedBox(
-                  width: 22,
-                  height: 22,
-                  child: CircularProgressIndicator(strokeWidth: 2.5),
-                ),
-              ),
-            ),
-          ),
-        ];
-      case _Status.ready:
-        break;
-    }
     final recents = ref.watch(stockRecentsProvider);
+    // Loading, switched off or unreachable: as if there were no catalogue,
+    // apart from photos already on the device.
+    if (_status != _Status.ready) {
+      return _recentRow(recents.where(isDownloaded).toList());
+    }
     final seeAll = _seeAll;
     return [
       SliverPadding(
@@ -423,16 +430,7 @@ class _PhotosTabState extends ConsumerState<PhotosTab> {
         ),
         _gridOf(_grid, onNearEnd: _moreGrid),
       ] else ...[
-        if (recents.isNotEmpty) ...[
-          const _Heading('RECENTLY USED'),
-          SliverToBoxAdapter(
-            child: _Row(
-              key: const ValueKey('stock-recents'),
-              photos: recents,
-              tile: _tile,
-            ),
-          ),
-        ],
+        ..._recentRow(recents),
         for (final c in _categories) ...[
           _Heading(
             c.label.toUpperCase(),
@@ -607,14 +605,17 @@ class StockTile extends StatelessWidget {
   };
 
   Widget _image() {
-    final url = photo.thumbnailUrl;
-    if (url.startsWith('asset:')) {
-      return Image.asset(
-        url.replaceFirst(RegExp(r'^asset:/*'), ''),
+    if (isDownloaded(photo)) {
+      return Image(
+        image: ResizeImage(
+          FileImage(PhotoStore.instance.fileFor(photo.localPath!)),
+          width: 400,
+        ),
         fit: BoxFit.cover,
         errorBuilder: (_, _, _) => const SizedBox.shrink(),
       );
     }
+    final url = photo.thumbnailUrl;
     if (!url.startsWith('http')) return const SizedBox.shrink();
     return CachedNetworkImage(
       imageUrl: url,

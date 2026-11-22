@@ -27,13 +27,9 @@ Use `flutter pub get` to install the locked dependencies, `flutter test` for the
 
 ## Stock photos
 
-The All backgrounds sheet offers free background photos from our own catalogue on Cloudflare R2, served from `https://media.countdowns.stayte.app` as a public JSON manifest plus pre-optimised images. There is no API key. The app caches the manifest on the device and hides the stock sections quietly when it can't be reached. See `lib/stock/` (the app side only knows the `StockPhotoSource` interface).
+The All backgrounds sheet offers free background photos from our own catalogue on Cloudflare R2, served from `https://media.countdowns.stayte.app` as a public JSON manifest plus pre-optimised images. There is no API key. The app caches the manifest on the device and hides the stock sections entirely when it can't be reached. See `lib/stock/` (the app side only knows the `StockPhotoSource` interface).
 
-To see the layout before the catalogue is live, run a debug build with the bundled sample catalogue:
-
-```bash
-flutter run --dart-define=STOCK_FIXTURE=true
-```
+Debug and release builds both read the live catalogue. When the catalogue is empty, switched off or unreachable, the Photos tab shows only your own photos and the stock photos you already downloaded.
 
 Privacy: the app only downloads public files from that host. No user data or analytics are sent.
 

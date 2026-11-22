@@ -109,8 +109,7 @@ class StockManifest {
     );
   }
 
-  static String _join(String base, String path) =>
-      path.startsWith('http') || path.startsWith('asset:')
+  static String _join(String base, String path) => path.startsWith('http')
       ? path
       : '$base${path.startsWith('/') ? path.substring(1) : path}';
 

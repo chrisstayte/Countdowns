@@ -21,6 +21,7 @@ class StockPhoto {
     this.pageUrl = '',
     this.license = '',
     this.focal,
+    this.localPath,
   });
 
   final String id;
@@ -50,7 +51,29 @@ class StockPhoto {
   /// Where the subject is, 0–1 across and down; the crop screen starts there.
   final Offset? focal;
 
+  /// Recently used photos only: where the downloaded copy is in the app's
+  /// photo store, so it can be used again without the network.
+  final String? localPath;
+
   double get aspect => height == 0 ? 1 : width / height;
+
+  StockPhoto withLocalPath(String? path) => StockPhoto(
+    id: id,
+    thumbnailUrl: thumbnailUrl,
+    fullUrl: fullUrl,
+    width: width,
+    height: height,
+    averageColor: averageColor,
+    blurHash: blurHash,
+    categories: categories,
+    tags: tags,
+    photographer: photographer,
+    photographerUrl: photographerUrl,
+    pageUrl: pageUrl,
+    license: license,
+    focal: focal,
+    localPath: path,
+  );
 
   Map<String, Object?> toJson() => {
     'id': id,
@@ -67,6 +90,7 @@ class StockPhoto {
     'pageUrl': pageUrl,
     'license': license,
     if (focal != null) 'focal': [focal!.dx, focal!.dy],
+    if (localPath != null) 'localPath': localPath,
   };
 
   /// Tolerant: missing optional fields are fine, unknown ones are ignored.
@@ -99,6 +123,7 @@ class StockPhoto {
       focal: f is List && f.length == 2 && f[0] is num && f[1] is num
           ? Offset((f[0] as num).toDouble(), (f[1] as num).toDouble())
           : null,
+      localPath: j['localPath'] is String ? j['localPath'] as String : null,
     );
   }
 }

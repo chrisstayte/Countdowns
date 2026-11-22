@@ -59,8 +59,6 @@ flutter:
     - assets/sounds/
     - assets/images/icons/
     - assets/event_icons/
-    # Debug sample stock catalogue (--dart-define=STOCK_FIXTURE=true).
-    - assets/dev/stock/
 
   fonts:
     - family: Inter

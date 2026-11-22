@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:countdowns/stock/stock_categories.dart';
 import 'package:countdowns/stock/stock_manifest.dart';
@@ -16,7 +15,6 @@ class CloudflarePhotoSource extends StockPhotoSource {
     required this.manifest,
     required this.downloads,
     http.Client? client,
-    this.readAsset,
     this.categoryList = stockCategories,
   }) : _client = client ?? http.Client();
 
@@ -24,13 +22,10 @@ class CloudflarePhotoSource extends StockPhotoSource {
     'https://media.countdowns.stayte.app/catalog/v1/manifest.json',
   );
 
-  /// Loads the manifest (the network store, or the debug sample).
+  /// Loads the manifest (the network store in the app, a stub in tests).
   final Future<StockManifest> Function() manifest;
   final Directory downloads;
   final http.Client _client;
-
-  /// Reads `asset:` URLs (the debug sample catalogue).
-  final Future<Uint8List> Function(String url)? readAsset;
   final List<StockCategory> categoryList;
 
   static const pageSize = 30;
@@ -95,14 +90,6 @@ class CloudflarePhotoSource extends StockPhotoSource {
   }) async {
     await downloads.create(recursive: true);
     final out = File(p.join(downloads.path, '${photo.id}.jpg'));
-    if (photo.fullUrl.startsWith('asset:')) {
-      final read = readAsset;
-      if (read == null) throw const StockUnavailable('No asset reader');
-      onProgress?.call(null);
-      await out.writeAsBytes(await read(photo.fullUrl));
-      onProgress?.call(1);
-      return out;
-    }
     final http.StreamedResponse res;
     try {
       res = await _client

@@ -161,25 +161,19 @@ void main() {
       );
     });
 
-    test('the bundled sample catalogue parses', () {
-      final j = jsonDecode(
-        File('assets/dev/stock/manifest.json').readAsStringSync(),
-      );
-      final m = StockManifest.parse((j as Map).cast<String, Object?>());
-      expect(m.photos, hasLength(24));
-      expect(
-        m.photos.every((p) => p.thumbnailUrl.startsWith('asset:')),
-        isTrue,
-      );
-      for (final p in m.photos) {
-        if (p.blurHash != null) {
-          expect(isValidBlurHash(p.blurHash!), isTrue, reason: p.id);
-        }
-        expect(
-          File(p.thumbnailUrl.replaceFirst('asset:///', '')).existsSync(),
-          isTrue,
-        );
-      }
+    test('the live empty catalogue reads as switched off', () {
+      // catalog/v1/manifest.json as first published.
+      final m = StockManifest.parse({
+        'schema': 1,
+        'version': 1,
+        'generatedAt': '2026-11-22T15:21:20.087Z',
+        'baseUrl': 'https://media.countdowns.stayte.app/',
+        'enabled': false,
+        'categories': <String, Object?>{},
+        'photos': <Object?>[],
+      });
+      expect(m.enabled, isFalse);
+      expect(m.photos, isEmpty);
     });
   });
 
@@ -368,6 +362,14 @@ void main() {
       expect(back.fullUrl, p.fullUrl);
       expect(back.focal, p.focal);
       expect(back.blurHash, p.blurHash);
+      expect(back.localPath, isNull);
+      final saved = StockPhoto.fromJson(
+        (jsonDecode(
+          jsonEncode(p.withLocalPath('photos/1.jpg').toJson()),
+        ) as Map).cast<String, Object?>(),
+      )!;
+      expect(saved.localPath, 'photos/1.jpg');
+      expect(saved.focal, p.focal);
       expect(StockPhoto.fromJson({'id': 1}), isNull);
     });
   });
@@ -525,7 +527,16 @@ void main() {
       expect(find.byKey(const ValueKey('stock-search')), findsOneWidget);
     });
 
-    testWidgets('unreachable and nothing cached: one quiet line', (
+    /// Nothing but Your photos: no message, search, heading or spinner.
+    void expectNoStock() {
+      expect(find.text('YOUR PHOTOS'), findsOneWidget);
+      expect(find.byType(CircularProgressIndicator), findsNothing);
+      expect(find.byKey(const ValueKey('stock-search')), findsNothing);
+      expect(find.byKey(const ValueKey('stock-recents')), findsNothing);
+      expect(find.textContaining('unavailable'), findsNothing);
+    }
+
+    testWidgets('unreachable and nothing cached: as if it never existed', (
       tester,
     ) async {
       await pump(
@@ -534,11 +545,17 @@ void main() {
           manifest: () async => throw const SocketException('offline'),
           downloads: root,
         ),
+        // Picked before but its copy is gone: needs the network, so hidden.
+        prefsValues: {
+          'recentStockPhotos': jsonEncode([
+            manifest().photos.first.withLocalPath('photos/gone.jpg').toJson(),
+          ]),
+        },
       );
-      expect(find.text('YOUR PHOTOS'), findsOneWidget);
-      expect(find.byKey(const ValueKey('stock-unavailable')), findsOneWidget);
-      expect(find.byType(CircularProgressIndicator), findsNothing);
-      expect(find.byKey(const ValueKey('stock-search')), findsNothing);
+      expectNoStock();
+      expect(tester.widgetList<Text>(find.byType(Text)).map((t) => t.data), [
+        'YOUR PHOTOS',
+      ]);
     });
 
     testWidgets('switched off: no stock at all', (tester) async {
@@ -549,8 +566,37 @@ void main() {
           downloads: root,
         ),
       );
-      expect(find.byKey(const ValueKey('stock-unavailable')), findsNothing);
+      expectNoStock();
+    });
+
+    testWidgets('offline, downloaded recents stay and work', (tester) async {
+      final stored = File('${root.path}/photos/kept.jpg')
+        ..createSync(recursive: true)
+        ..writeAsBytesSync([1, 2, 3]);
+      expect(stored.existsSync(), isTrue);
+      final container = await pump(
+        tester,
+        CloudflarePhotoSource(
+          manifest: () async => throw const SocketException('offline'),
+          downloads: root,
+          client: MockClient((_) async => throw const SocketException('x')),
+        ),
+        prefsValues: {
+          'recentStockPhotos': jsonEncode([
+            manifest().photos.first.withLocalPath('photos/kept.jpg').toJson(),
+            manifest().photos.last.toJson(),
+          ]),
+        },
+      );
+      expect(find.text('RECENTLY USED'), findsOneWidget);
       expect(find.byKey(const ValueKey('stock-search')), findsNothing);
+      // Only the one on the device.
+      expect(find.bySemanticsLabel(RegExp('^Photo')), findsOneWidget);
+      await tester.tap(find.bySemanticsLabel('Photo by Ana'));
+      await tester.pumpAndSettle();
+      expect(imported?.path, 'photos/kept.jpg');
+      expect(imported?.focal, const Offset(0.5, 0.35));
+      expect(container.read(stockRecentsProvider).first.id, 'p_1');
     });
 
     testWidgets('search filters on the device', (tester) async {
@@ -580,6 +626,10 @@ void main() {
       expect(imported!.focal, const Offset(0.5, 0.35));
       expect(PhotoCredit.read(imported!.path)!.id, 'p_1');
       expect(container.read(stockRecentsProvider).first.id, 'p_1');
+      expect(
+        container.read(stockRecentsProvider).first.localPath,
+        imported!.path,
+      );
       // The prefs carry it to the next launch.
       final saved = container
           .read(preferencesProvider)
