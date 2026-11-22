@@ -473,3 +473,70 @@ class MarkedTitle extends StatelessWidget {
     );
   }
 }
+
+/// The full-width secondary button under a section that opens its whole
+/// catalogue: "All backgrounds", "All 68 icons", "All 11 fonts".
+/// White with a Rule border, Ink label and a chevron; Wash while pressed.
+class SeeAllButton extends StatefulWidget {
+  const SeeAllButton({super.key, required this.label, required this.onTap});
+
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  State<SeeAllButton> createState() => _SeeAllButtonState();
+}
+
+class _SeeAllButtonState extends State<SeeAllButton> {
+  bool _pressed = false;
+
+  void _press(bool down) {
+    if (_pressed != down) setState(() => _pressed = down);
+  }
+
+  @override
+  Widget build(BuildContext context) => Semantics(
+    button: true,
+    label: widget.label,
+    excludeSemantics: true,
+    onTap: widget.onTap,
+    child: GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTapDown: (_) => _press(true),
+      onTapUp: (_) => _press(false),
+      onTapCancel: () => _press(false),
+      onTap: widget.onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 90),
+        height: 44,
+        padding: const EdgeInsets.only(left: 16, right: 10),
+        decoration: BoxDecoration(
+          color: _pressed ? AppColors.wash : AppColors.surface,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: AppColors.rule, width: 1.5),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                widget.label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.ink,
+                ),
+              ),
+            ),
+            const Icon(
+              Icons.chevron_right_rounded,
+              size: 22,
+              color: AppColors.ink,
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}

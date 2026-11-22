@@ -1,4 +1,5 @@
 import 'package:countdowns/constants.dart';
+import 'package:countdowns/models/background_catalog.dart';
 import 'package:countdowns/models/countdown.dart';
 import 'package:countdowns/providers/event_draft_provider.dart';
 import 'package:countdowns/providers/event_provider.dart';
@@ -107,6 +108,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
     if (draft.iconSlug != null) await recents.useIcon(draft.iconSlug!);
     await recents.useFont(draft.fontFamily);
     if (draft.photoPath != null) await recents.usePhoto(draft.photoPath!);
+    if (!draft.hasPhoto) await recents.useBackground(backgroundKeyOf(draft));
     feedback(ref, Sound.success);
     if (reminderNote) {
       messenger.showSnackBar(
@@ -242,7 +244,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
                     edit: _edit,
                     onAddPhoto: _addPhoto,
                     originalColor: _originalColor,
-                    backgroundColumns: 7,
+                    backgroundColumns: 6,
                     iconColumns: 8,
                   ),
                   onCrop: _crop,

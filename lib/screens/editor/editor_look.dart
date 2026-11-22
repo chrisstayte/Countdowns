@@ -1,10 +1,11 @@
+import 'package:countdowns/models/background_catalog.dart';
 import 'package:countdowns/models/countdown.dart';
 import 'package:countdowns/models/event_icons.dart';
 import 'package:countdowns/models/icon_catalog.dart';
 import 'package:countdowns/models/palette.dart';
 import 'package:countdowns/providers/recents_provider.dart';
+import 'package:countdowns/screens/editor/all_backgrounds_sheet.dart';
 import 'package:countdowns/screens/editor/editor_details.dart';
-import 'package:countdowns/storage/photos.dart';
 import 'package:countdowns/theme/app_theme.dart';
 import 'package:countdowns/utilities/feedback.dart';
 import 'package:countdowns/widgets/event_icon.dart';
@@ -51,7 +52,13 @@ class EditorLook extends ConsumerWidget {
           columns: backgroundColumns,
           originalColor: originalColor,
           recentPhotos: recents.photos,
+          recentBackgrounds: recents.backgrounds,
           onAddPhoto: onAddPhoto,
+        ),
+        const SizedBox(height: 10),
+        SeeAllButton(
+          label: 'All backgrounds',
+          onTap: () => _allBackgrounds(context, ref),
         ),
         if (draft.gradientId != null && !draft.hasPhoto) ...[
           const SizedBox(height: 14),
@@ -62,10 +69,7 @@ class EditorLook extends ConsumerWidget {
           _DarkenRow(draft: draft, edit: edit),
         ],
         const SizedBox(height: 20),
-        SectionLabel(
-          'Icon',
-          trailing: _Link('All icons', onTap: () => _allIcons(context, ref)),
-        ),
+        const SectionLabel('Icon'),
         const SizedBox(height: 10),
         _IconGrid(
           slugs: iconRow(recents.icons),
@@ -74,19 +78,23 @@ class EditorLook extends ConsumerWidget {
           onPick: (slug) => _pickIcon(ref, slug),
           showNone: true,
         ),
-        const SizedBox(height: 20),
-        SectionLabel(
-          'Font',
-          trailing: _Link(
-            'All ${eventFonts.length} fonts',
-            onTap: () => _allFonts(context, ref),
-          ),
+        const SizedBox(height: 10),
+        SeeAllButton(
+          label: 'All ${eventIconCatalog.length} icons',
+          onTap: () => _allIcons(context, ref),
         ),
+        const SizedBox(height: 20),
+        const SectionLabel('Font'),
         const SizedBox(height: 10),
         _FontGrid(
           families: _fontRow(recents.fonts),
           draft: draft,
           onPick: (f) => _pickFont(ref, f),
+        ),
+        const SizedBox(height: 10),
+        SeeAllButton(
+          label: 'All ${eventFonts.length} fonts',
+          onTap: () => _allFonts(context, ref),
         ),
       ],
     );
@@ -109,6 +117,24 @@ class EditorLook extends ConsumerWidget {
   void _pickFont(WidgetRef ref, String family) {
     feedback(ref, Sound.select);
     edit((d) => d.copyWith(fontFamily: family));
+  }
+
+  Future<void> _allBackgrounds(BuildContext context, WidgetRef ref) async {
+    feedback(ref);
+    final picked = await showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+      ),
+      builder: (_) => AllBackgroundsSheet(draft: draft),
+    );
+    if (picked == addPhotoResult) {
+      onAddPhoto();
+    } else if (picked != null && picked != backgroundKeyOf(draft)) {
+      edit((d) => applyBackground(d, picked));
+    }
   }
 
   Future<void> _allIcons(BuildContext context, WidgetRef ref) async {
@@ -146,28 +172,9 @@ const _hint = TextStyle(
   color: AppColors.secondaryText,
 );
 
-class _Link extends StatelessWidget {
-  const _Link(this.text, {required this.onTap});
-  final String text;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) => Semantics(
-    button: true,
-    child: GestureDetector(
-      onTap: onTap,
-      child: Text(
-        text,
-        style: const TextStyle(
-          fontSize: 13,
-          fontWeight: FontWeight.w700,
-          color: AppColors.primary,
-        ),
-      ),
-    ),
-  );
-}
-
+/// The Look tab's short row: Add photo, photos, the current background,
+/// recently used ones and featured picks (see lookRowKeys). Everything else
+/// is in the All backgrounds sheet.
 class _BackgroundGrid extends ConsumerWidget {
   const _BackgroundGrid({
     required this.draft,
@@ -175,6 +182,7 @@ class _BackgroundGrid extends ConsumerWidget {
     required this.columns,
     required this.originalColor,
     required this.recentPhotos,
+    required this.recentBackgrounds,
     required this.onAddPhoto,
   });
 
@@ -183,129 +191,21 @@ class _BackgroundGrid extends ConsumerWidget {
   final int columns;
   final int? originalColor;
   final List<String> recentPhotos;
+  final List<String> recentBackgrounds;
   final VoidCallback onAddPhoto;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final current = backgroundKeyOf(draft);
     final custom = originalColor != null && !isPaletteColor(originalColor!)
-        ? Color(originalColor!)
+        ? colourKey(Color(originalColor!))
         : null;
-    final photos =
-        [?draft.photoPath, ...recentPhotos.where((p) => p != draft.photoPath)]
-            .where(
-              (p) =>
-                  PhotoStore.ready &&
-                  PhotoStore.instance.fileFor(p).existsSync(),
-            )
-            .take(4);
-    final plain = !draft.hasPhoto && draft.gradientId == null;
-
-    void pickColor(Color c) {
-      feedback(ref, Sound.select);
-      edit(
-        (d) => d.copyWith(
-          colorArgb: c.toARGB32(),
-          gradientId: null,
-          gradientDirection: null,
-          photoPath: null,
-        ),
-      );
-    }
-
-    void pickGradient(GradientPreset g) {
-      feedback(ref, Sound.select);
-      edit(
-        (d) => d.copyWith(
-          colorArgb: g.colors.first.toARGB32(),
-          gradientId: g.id,
-          gradientDirection:
-              d.gradientDirection ?? GradientDirection.diagonalDown,
-          photoPath: null,
-        ),
-      );
-    }
-
-    void pickPhoto(String path) {
-      feedback(ref, Sound.select);
-      edit(
-        (d) => d.copyWith(
-          photoPath: path,
-          photoCrops: d.photoPath == path ? d.photoCrops : const PhotoCrops(),
-        ),
-      );
-    }
-
-    final tiles = <Widget>[
-      if (custom != null)
-        _Swatch(
-          label: 'Current colour',
-          fill: BoxDecoration(color: custom),
-          selected: plain && draft.colorArgb == custom.toARGB32(),
-          onTap: () => pickColor(custom),
-          badge: 'Current',
-        ),
-      Semantics(
-        button: true,
-        label: 'Add a photo',
-        child: GestureDetector(
-          onTap: onAddPhoto,
-          child: CustomPaint(
-            painter: _DashedRRect(),
-            child: const Center(
-              child: Icon(
-                Icons.add_photo_alternate_outlined,
-                color: AppColors.primary,
-                size: 20,
-              ),
-            ),
-          ),
-        ),
-      ),
-      for (final p in photos)
-        _Swatch(
-          label: 'Photo',
-          radius: 12,
-          fill: BoxDecoration(
-            image: DecorationImage(
-              image: ResizeImage(
-                FileImage(PhotoStore.instance.fileFor(p)),
-                width: 120,
-              ),
-              fit: BoxFit.cover,
-            ),
-          ),
-          selected: draft.photoPath == p,
-          onTap: () => pickPhoto(p),
-        ),
-      if (draft.gradientId == legacyGradientId && !draft.hasPhoto)
-        _Swatch(
-          label: 'Current gradient',
-          fill: BoxDecoration(
-            gradient: buildGradient(
-              legacyGradientColors(draft.color),
-              GradientDirection.diagonalDown,
-            ),
-          ),
-          selected: true,
-          onTap: () {},
-        ),
-      for (final g in gradientLibrary)
-        _Swatch(
-          label: '${g.name} gradient',
-          fill: BoxDecoration(
-            gradient: buildGradient(g.colors, GradientDirection.diagonalDown),
-          ),
-          selected: !draft.hasPhoto && draft.gradientId == g.id,
-          onTap: () => pickGradient(g),
-        ),
-      for (final c in palette)
-        _Swatch(
-          label: c.name,
-          fill: BoxDecoration(color: c.color),
-          selected: plain && draft.colorArgb == c.color.toARGB32(),
-          onTap: () => pickColor(c.color),
-        ),
-    ];
+    final keys = lookRowKeys(
+      draft: draft,
+      recentPhotos: availablePhotos(recent: recentPhotos),
+      recentBackgrounds: recentBackgrounds,
+      originalColor: originalColor,
+    );
     return GridView.count(
       padding: EdgeInsets.zero,
       crossAxisCount: columns,
@@ -314,107 +214,23 @@ class _BackgroundGrid extends ConsumerWidget {
       mainAxisSpacing: 8,
       crossAxisSpacing: 8,
       childAspectRatio: 1.1,
-      children: tiles,
-    );
-  }
-}
-
-class _Swatch extends StatelessWidget {
-  const _Swatch({
-    required this.label,
-    required this.fill,
-    required this.selected,
-    required this.onTap,
-    this.radius = 21,
-    this.badge,
-  });
-
-  final String label;
-  final BoxDecoration fill;
-  final bool selected;
-  final VoidCallback onTap;
-  final double radius;
-  final String? badge;
-
-  @override
-  Widget build(BuildContext context) => Semantics(
-    button: true,
-    selected: selected,
-    label: label,
-    child: GestureDetector(
-      onTap: onTap,
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Positioned.fill(
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 150),
-              padding: const EdgeInsets.all(3),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(radius),
-                border: Border.all(
-                  color: selected ? AppColors.ink : Colors.transparent,
-                  width: 3,
-                ),
-              ),
-              child: Container(
-                decoration: fill.copyWith(
-                  borderRadius: BorderRadius.circular(radius - 4),
-                ),
-              ),
-            ),
+      children: [
+        AddPhotoTile(onTap: onAddPhoto),
+        for (final k in keys)
+          BackgroundTile(
+            backgroundKey: k,
+            selected: k == current,
+            legacyBase: draft.color,
+            badge: k == custom ? 'Current' : null,
+            onTap: () {
+              if (k == current) return;
+              feedback(ref, Sound.select);
+              edit((d) => applyBackground(d, k));
+            },
           ),
-          if (badge != null)
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: -6,
-              child: Center(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  decoration: BoxDecoration(
-                    color: AppColors.ink,
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Text(
-                    badge!,
-                    style: const TextStyle(
-                      fontSize: 8,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-        ],
-      ),
-    ),
-  );
-}
-
-class _DashedRRect extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final rrect = RRect.fromRectAndRadius(
-      Offset.zero & size,
-      const Radius.circular(12),
+      ],
     );
-    canvas.drawRRect(rrect, Paint()..color = AppColors.ground);
-    final paint = Paint()
-      ..color = AppColors.primary
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.5;
-    final path = Path()..addRRect(rrect.deflate(0.75));
-    for (final metric in path.computeMetrics()) {
-      for (double d = 0; d < metric.length; d += 7) {
-        canvas.drawPath(metric.extractPath(d, d + 4), paint);
-      }
-    }
   }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class _DirectionRow extends ConsumerWidget {

@@ -1,9 +1,11 @@
 import 'dart:math' as math;
 
+import 'package:countdowns/models/background_catalog.dart';
 import 'package:material_ui/material_ui.dart';
 
-/// The 12 colours the editor offers. Existing events may hold other colours;
-/// those are kept as they are and shown as a "Current" swatch.
+/// A named catalogue colour. The catalogue itself (collections, featured
+/// picks) is in background_catalog.dart. Existing events may hold other
+/// colours; those are kept as they are and shown as a "Current" swatch.
 class PaletteColor {
   const PaletteColor(this.name, this.color);
   final String name;
@@ -23,19 +25,9 @@ const bubblegum = Color(0xFFFE607C);
 const mint = Color(0xFF5FD3B5);
 const lilac = Color(0xFFC9A7F5);
 
-const List<PaletteColor> palette = [
-  PaletteColor('Lavender', lavender),
-  PaletteColor('Charcoal', charcoal),
-  PaletteColor('Sun', sun),
-  PaletteColor('Tomato', tomato),
-  PaletteColor('Peach', peach),
-  PaletteColor('Tangerine', tangerine),
-  PaletteColor('Lime', lime),
-  PaletteColor('Cobalt', cobalt),
-  PaletteColor('Sky', sky),
-  PaletteColor('Bubblegum', bubblegum),
-  PaletteColor('Mint', mint),
-  PaletteColor('Lilac', lilac),
+/// Every catalogue colour, in collection order (see background_catalog.dart).
+final List<PaletteColor> palette = [
+  for (final c in colourCollections) ...c.colours,
 ];
 
 bool isPaletteColor(int argb) => palette.any((c) => c.color.toARGB32() == argb);
@@ -66,19 +58,10 @@ class GradientPreset {
 /// The id stored for events that used the old automatic gradient.
 const legacyGradientId = 'legacy';
 
-const List<GradientPreset> gradientLibrary = [
-  GradientPreset('sunset', 'Sunset', [tangerine, bubblegum]),
-  GradientPreset('lagoon', 'Lagoon', [sky, mint]),
-  GradientPreset('grape', 'Grape', [lavender, lilac]),
-  GradientPreset('peachy', 'Peachy', [peach, sun]),
-  GradientPreset('berry', 'Berry', [bubblegum, lavender]),
-  GradientPreset('ocean', 'Ocean', [cobalt, sky]),
-  GradientPreset('citrus', 'Citrus', [sun, lime]),
-  GradientPreset('ember', 'Ember', [tomato, tangerine]),
-  GradientPreset('mojito', 'Mojito', [lime, mint]),
-  GradientPreset('dusk', 'Dusk', [cobalt, lilac, peach]),
-  GradientPreset('candy', 'Candy', [lilac, bubblegum]),
-  GradientPreset('aurora', 'Aurora', [mint, cobalt, lavender]),
+/// Every catalogue gradient, in collection order (see
+/// background_catalog.dart).
+final List<GradientPreset> gradientLibrary = [
+  for (final c in gradientCollections) ...c.gradients,
 ];
 
 GradientPreset? gradientById(String? id) =>
