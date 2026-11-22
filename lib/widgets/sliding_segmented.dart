@@ -49,7 +49,9 @@ class SlidingSegmented<T> extends ConsumerStatefulWidget {
     this.equalWidths = true,
     this.segmentPadding = 16,
     this.fontWeight = FontWeight.w700,
-  }) : assert(label != null || builder != null);
+    this.scrollable = false,
+  }) : assert(label != null || builder != null),
+       assert(!scrollable || label != null);
 
   final List<T> values;
   final T selected;
@@ -86,6 +88,13 @@ class SlidingSegmented<T> extends ConsumerStatefulWidget {
   final bool equalWidths;
   final double segmentPadding;
 
+  /// For any number of options: each is as wide as its label. When they
+  /// fit, they stretch to fill the width (so 3 options look balanced);
+  /// when they don't, the row scrolls with the platform's physics, fades
+  /// at the edges, and keeps the selected option centred in view. The pill
+  /// still slides and can still be dragged (starting on the pill).
+  final bool scrollable;
+
   @override
   ConsumerState<SlidingSegmented<T>> createState() =>
       _SlidingSegmentedState<T>();
@@ -98,6 +107,12 @@ class _SlidingSegmentedState<T> extends ConsumerState<SlidingSegmented<T>>
     vsync: this,
     value: _indexOf(widget.selected).toDouble(),
   );
+
+  final ScrollController _scroll = ScrollController();
+
+  /// Layout from the last build, for keeping the selection in view.
+  List<Rect> _lastRects = const [];
+  double _lastPad = 0;
 
   bool _dragging = false;
   double _dragStart = 0;
@@ -115,6 +130,7 @@ class _SlidingSegmentedState<T> extends ConsumerState<SlidingSegmented<T>>
   void didUpdateWidget(covariant SlidingSegmented<T> old) {
     super.didUpdateWidget(old);
     final target = _indexOf(widget.selected).toDouble();
+    if (old.selected != widget.selected) _revealSelected();
     if (!_dragging && _pos.value != target && !_pos.isAnimating) {
       _animateTo(target);
     } else if (!_dragging && _pos.isAnimating) {
@@ -124,9 +140,41 @@ class _SlidingSegmentedState<T> extends ConsumerState<SlidingSegmented<T>>
   }
 
   @override
+  void initState() {
+    super.initState();
+    _revealSelected(animate: false);
+  }
+
+  @override
   void dispose() {
     _pos.dispose();
+    _scroll.dispose();
     super.dispose();
+  }
+
+  /// Scrolls so the selected option sits in the middle (as far as the
+  /// ends allow), after the next layout.
+  void _revealSelected({bool animate = true}) {
+    if (!widget.scrollable) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !_scroll.hasClients || _lastRects.isEmpty) return;
+      final pos = _scroll.position;
+      final r = _lastRects[_indexOf(widget.selected)];
+      final target = (r.center.dx + _lastPad - pos.viewportDimension / 2).clamp(
+        pos.minScrollExtent,
+        pos.maxScrollExtent,
+      );
+      if ((target - pos.pixels).abs() < 0.5) return;
+      if (animate) {
+        _scroll.animateTo(
+          target,
+          duration: const Duration(milliseconds: 320),
+          curve: Curves.easeOutCubic,
+        );
+      } else {
+        _scroll.jumpTo(target);
+      }
+    });
   }
 
   void _animateTo(double target, [double velocity = 0]) =>
@@ -175,6 +223,24 @@ class _SlidingSegmentedState<T> extends ConsumerState<SlidingSegmented<T>>
   List<Rect> _rects(BuildContext context, double maxWidth) {
     final n = widget.values.length;
     final h = widget.height;
+    if (widget.scrollable) {
+      final widths = [for (final v in widget.values) _labelWidth(context, v)];
+      final natural =
+          widths.fold(0.0, (a, b) => a + b) + widget.spacing * (n - 1);
+      // Fits: share the spare width out so the row fills the track.
+      final extra = maxWidth.isFinite && natural < maxWidth
+          ? (maxWidth - natural) / n
+          : 0.0;
+      var x = 0.0;
+      return [
+        for (final w in widths)
+          () {
+            final r = Rect.fromLTWH(x, 0, w + extra, h);
+            x += w + extra + widget.spacing;
+            return r;
+          }(),
+      ];
+    }
     if (widget.equalWidths) {
       final w = (maxWidth - widget.spacing * (n - 1)) / n;
       return [
@@ -225,11 +291,15 @@ class _SlidingSegmentedState<T> extends ConsumerState<SlidingSegmented<T>>
       height: widget.height + pad * 2,
       child: LayoutBuilder(
         builder: (context, box) {
-          final inner = widget.equalWidths
+          final inner = widget.equalWidths || widget.scrollable
               ? box.maxWidth - pad * 2
               : double.infinity;
           final rects = _rects(context, inner);
           final contentWidth = rects.last.right;
+          _lastRects = rects;
+          _lastPad = pad;
+          final overflows =
+              widget.scrollable && contentWidth > box.maxWidth - pad * 2 + 0.5;
 
           void dragStart(DragStartDetails d) {
             final pill = _pillRect(rects, _pos.value);
@@ -277,21 +347,52 @@ class _SlidingSegmentedState<T> extends ConsumerState<SlidingSegmented<T>>
             _dragStart = 0;
           }
 
-          final control = GestureDetector(
+          void dragCancel() {
+            if (_dragging) {
+              _dragging = false;
+              _animateTo(_dragStart.roundToDouble());
+            }
+          }
+
+          // When the row scrolls, a drag that starts off the pill belongs
+          // to the scroll view; only a drag that starts on the pill moves
+          // it. This recognizer only joins the gesture in that case.
+          bool onPill(Offset local) => _pillRect(
+            rects,
+            _pos.value,
+          ).inflate(4).contains(local - Offset(pad, pad));
+          final bool Function(Offset) accepts = overflows
+              ? onPill
+              : (_) => true;
+
+          void setUpDrag(_PillDragRecognizer r) {
+            r
+              ..accepts = accepts
+              // Count movement from touch-down, so the pill tracks the
+              // finger exactly instead of lagging by the drag slop.
+              ..dragStartBehavior = DragStartBehavior.down
+              ..onStart = dragStart
+              ..onUpdate = dragUpdate
+              ..onEnd = dragEnd
+              ..onCancel = dragCancel;
+          }
+
+          final Widget control = RawGestureDetector(
             behavior: HitTestBehavior.opaque,
-            // Count movement from touch-down, so the pill tracks the
-            // finger exactly instead of lagging by the drag slop.
-            dragStartBehavior: DragStartBehavior.down,
-            onHorizontalDragStart: dragStart,
-            onHorizontalDragUpdate: dragUpdate,
-            onHorizontalDragEnd: dragEnd,
-            onHorizontalDragCancel: () {
-              if (_dragging) {
-                _dragging = false;
-                _animateTo(_dragStart.roundToDouble());
-              }
+            gestures: {
+              _PillDragRecognizer:
+                  GestureRecognizerFactoryWithHandlers<_PillDragRecognizer>(
+                    () => _PillDragRecognizer(accepts: accepts),
+                    setUpDrag,
+                  ),
+              TapGestureRecognizer:
+                  GestureRecognizerFactoryWithHandlers<TapGestureRecognizer>(
+                    TapGestureRecognizer.new,
+                    (r) =>
+                        r.onTapUp = (d) =>
+                            _select(_hit(rects, d.localPosition.dx - pad)),
+                  ),
             },
-            onTapUp: (d) => _select(_hit(rects, d.localPosition.dx - pad)),
             child: Container(
               width: contentWidth + pad * 2,
               height: widget.height + pad * 2,
@@ -379,7 +480,17 @@ class _SlidingSegmentedState<T> extends ConsumerState<SlidingSegmented<T>>
               ),
             ),
           );
-          return widget.equalWidths
+          if (overflows) {
+            return _EdgeFade(
+              controller: _scroll,
+              child: SingleChildScrollView(
+                controller: _scroll,
+                scrollDirection: Axis.horizontal,
+                child: control,
+              ),
+            );
+          }
+          return widget.equalWidths || widget.scrollable
               ? control
               : Align(alignment: Alignment.centerLeft, child: control);
         },
@@ -401,4 +512,58 @@ class _SlidingSegmentedState<T> extends ConsumerState<SlidingSegmented<T>>
       ),
     );
   }
+}
+
+/// A horizontal drag recognizer that only joins the gesture when the touch
+/// starts where [accepts] says (on the pill), leaving other drags to an
+/// enclosing scroll view.
+class _PillDragRecognizer extends HorizontalDragGestureRecognizer {
+  _PillDragRecognizer({required this.accepts});
+  bool Function(Offset local) accepts;
+
+  @override
+  bool isPointerAllowed(PointerEvent event) =>
+      accepts(event.localPosition) && super.isPointerAllowed(event);
+}
+
+/// Fades the ends of a horizontal scroll view where more content is hidden.
+class _EdgeFade extends StatelessWidget {
+  const _EdgeFade({required this.controller, required this.child});
+  final ScrollController controller;
+  final Widget child;
+
+  static const _fade = 28.0;
+
+  @override
+  Widget build(BuildContext context) => AnimatedBuilder(
+    animation: controller,
+    child: child,
+    builder: (context, child) {
+      var left = false, right = false;
+      if (controller.hasClients && controller.position.hasContentDimensions) {
+        final p = controller.position;
+        left = p.pixels > p.minScrollExtent + 1;
+        right = p.pixels < p.maxScrollExtent - 1;
+      } else {
+        right = true;
+      }
+      return ShaderMask(
+        key: const ValueKey('sliding-segmented-fade'),
+        blendMode: BlendMode.dstIn,
+        shaderCallback: (rect) {
+          final f = (_fade / rect.width).clamp(0.0, 0.5);
+          return LinearGradient(
+            colors: [
+              left ? Colors.transparent : Colors.black,
+              Colors.black,
+              Colors.black,
+              right ? Colors.transparent : Colors.black,
+            ],
+            stops: [0, f, 1 - f, 1],
+          ).createShader(rect);
+        },
+        child: child,
+      );
+    },
+  );
 }

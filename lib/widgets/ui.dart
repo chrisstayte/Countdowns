@@ -39,6 +39,7 @@ class PillSegmented<T> extends StatelessWidget {
     this.text = AppColors.ink,
     this.fontSize = 14,
     this.raised = false,
+    this.scrollable = false,
   });
 
   final List<T> values;
@@ -51,6 +52,10 @@ class PillSegmented<T> extends StatelessWidget {
 
   /// White selected pill with a shadow (editor tabs).
   final bool raised;
+
+  /// Label-sized options that scroll when they don't fit (see
+  /// [SlidingSegmented.scrollable]).
+  final bool scrollable;
 
   @override
   Widget build(BuildContext context) => SlidingSegmented<T>(
@@ -65,6 +70,7 @@ class PillSegmented<T> extends StatelessWidget {
     selectedText: selectedText,
     text: text,
     raised: raised,
+    scrollable: scrollable,
   );
 }
 

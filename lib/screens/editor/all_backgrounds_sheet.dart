@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:countdowns/models/background_catalog.dart';
 import 'package:countdowns/models/countdown.dart';
 import 'package:countdowns/models/palette.dart';
@@ -36,6 +37,13 @@ List<String> availablePhotos({
   ];
 }
 
+/// Extra tabs shown in debug builds with `--dart-define=DEMO_TABS=true`, to
+/// try the tab bar with more kinds than fit (it scrolls).
+const _demoTabsOn = bool.fromEnvironment('DEMO_TABS');
+List<String> get demoBackgroundTabs => kDebugMode && _demoTabsOn
+    ? const ['Patterns', 'Textures', 'Illustrations', 'Emoji']
+    : const [];
+
 /// What Done returns: the chosen background and the gradient direction.
 class BackgroundChoice {
   const BackgroundChoice(this.key, this.direction);
@@ -67,6 +75,10 @@ class AllBackgroundsSheet extends ConsumerStatefulWidget {
 
 class _AllBackgroundsSheetState extends ConsumerState<AllBackgroundsSheet> {
   late String _key = backgroundKeyOf(widget.draft);
+
+  /// A debug-only demo tab, when one is picked (see [demoBackgroundTabs]).
+  String? _demo;
+
   late BackgroundKind _tab =
       parseBackgroundKey(_key)?.kind ?? BackgroundKind.colour;
   late GradientDirection _direction = widget.draft.direction;
@@ -151,20 +163,39 @@ class _AllBackgroundsSheetState extends ConsumerState<AllBackgroundsSheet> {
             const SizedBox(height: 12),
             BackgroundPreviewStrip(event: preview),
             const SizedBox(height: 12),
-            PillSegmented<BackgroundKind>(
-              values: BackgroundKind.values,
-              selected: _tab,
+            // Scrolls once there are more kinds than fit; with three it
+            // fills the width like before.
+            PillSegmented<Object>(
+              key: const ValueKey('background-kind-tabs'),
+              scrollable: true,
+              values: [...BackgroundKind.values, ...demoBackgroundTabs],
+              selected: _demo ?? _tab,
               label: (k) => switch (k) {
                 BackgroundKind.colour => 'Colours',
                 BackgroundKind.gradient => 'Gradients',
                 BackgroundKind.photo => 'Photos',
+                _ => '$k',
               },
               onChanged: (k) => setState(() {
-                _tab = k;
+                if (k is BackgroundKind) {
+                  _tab = k;
+                  _demo = null;
+                } else {
+                  _demo = k as String;
+                }
                 _scrolled = false;
               }),
             ),
-            if (_tab == BackgroundKind.gradient) ...[
+            if (_demo != null)
+              Expanded(
+                child: Center(
+                  child: Text(
+                    '$_demo: debug placeholder tab',
+                    style: AppText.secondary,
+                  ),
+                ),
+              ),
+            if (_demo == null && _tab == BackgroundKind.gradient) ...[
               const SizedBox(height: 14),
               DirectionPicker(
                 key: const ValueKey('pinned-direction-row'),
@@ -181,61 +212,62 @@ class _AllBackgroundsSheetState extends ConsumerState<AllBackgroundsSheet> {
                 child: Container(height: 1, color: AppColors.rule),
               ),
             ],
-            Expanded(
-              // Fade the grid out under the tabs as it scrolls.
-              child: NotificationListener<ScrollUpdateNotification>(
-                onNotification: (n) {
-                  final under = n.metrics.pixels > 4;
-                  if (under != _scrolled) setState(() => _scrolled = under);
-                  return false;
-                },
-                child: ClipRect(
-                  child: switch (_tab) {
-                    BackgroundKind.colour => _Collections(
-                      sections: [
-                        for (final c in colourCollections)
-                          (
-                            title: c.name,
-                            keys: [
-                              for (final p in c.colours) colourKey(p.color),
-                            ],
-                          ),
-                      ],
-                      selected: _key,
-                      legacyBase: widget.draft.color,
-                      onPick: _pick,
-                    ),
-                    BackgroundKind.gradient => _Collections(
-                      sections: [
-                        for (final c in gradientCollections)
-                          (
-                            title: c.name,
-                            keys: [
-                              for (final g in c.gradients) gradientKey(g.id),
-                            ],
-                          ),
-                      ],
-                      selected: _key,
-                      legacyBase: widget.draft.color,
-                      direction: _direction,
-                      onPick: _pick,
-                    ),
-                    BackgroundKind.photo => PhotosTab(
-                      draft: widget.draft,
-                      onImported: (photo) => Navigator.pop(context, photo),
-                      photos: availablePhotos(
-                        current: widget.draft.photoPath,
-                        recent: ref.watch(recentsProvider).photos,
-                        others: [for (final e in _all) ?e.photoPath],
-                      ),
-                      selected: _key,
-                      onPick: _pick,
-                      onAdd: () => Navigator.pop(context, addPhotoResult),
-                    ),
+            if (_demo == null)
+              Expanded(
+                // Fade the grid out under the tabs as it scrolls.
+                child: NotificationListener<ScrollUpdateNotification>(
+                  onNotification: (n) {
+                    final under = n.metrics.pixels > 4;
+                    if (under != _scrolled) setState(() => _scrolled = under);
+                    return false;
                   },
+                  child: ClipRect(
+                    child: switch (_tab) {
+                      BackgroundKind.colour => _Collections(
+                        sections: [
+                          for (final c in colourCollections)
+                            (
+                              title: c.name,
+                              keys: [
+                                for (final p in c.colours) colourKey(p.color),
+                              ],
+                            ),
+                        ],
+                        selected: _key,
+                        legacyBase: widget.draft.color,
+                        onPick: _pick,
+                      ),
+                      BackgroundKind.gradient => _Collections(
+                        sections: [
+                          for (final c in gradientCollections)
+                            (
+                              title: c.name,
+                              keys: [
+                                for (final g in c.gradients) gradientKey(g.id),
+                              ],
+                            ),
+                        ],
+                        selected: _key,
+                        legacyBase: widget.draft.color,
+                        direction: _direction,
+                        onPick: _pick,
+                      ),
+                      BackgroundKind.photo => PhotosTab(
+                        draft: widget.draft,
+                        onImported: (photo) => Navigator.pop(context, photo),
+                        photos: availablePhotos(
+                          current: widget.draft.photoPath,
+                          recent: ref.watch(recentsProvider).photos,
+                          others: [for (final e in _all) ?e.photoPath],
+                        ),
+                        selected: _key,
+                        onPick: _pick,
+                        onAdd: () => Navigator.pop(context, addPhotoResult),
+                      ),
+                    },
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ),

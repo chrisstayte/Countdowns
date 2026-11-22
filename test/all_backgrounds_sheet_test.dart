@@ -156,6 +156,9 @@ void main() {
   ) async {
     final host = _Host();
     await host.pump(tester, draft);
+    // The test font is wide, so the tab row scrolls here.
+    await tester.ensureVisible(find.text('Photos'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Photos'));
     await tester.pumpAndSettle();
     await tester.tap(find.bySemanticsLabel('Add a photo'));

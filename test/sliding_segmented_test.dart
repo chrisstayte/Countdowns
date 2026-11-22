@@ -84,6 +84,8 @@ Rect option(WidgetTester tester, String label) => tester.getRect(
 );
 
 void main() {
+  group('scrollable', scrollableTests);
+
   testWidgets('tapping an option selects it and the pill springs there', (
     tester,
   ) async {
@@ -223,5 +225,184 @@ void main() {
       ),
     );
     handle.dispose();
+  });
+}
+
+/// The scrollable mode: label-sized options that fill the width when they
+/// fit and scroll (with edge fades, keeping the selection in view) when
+/// they don't.
+class ScrollHarness {
+  final changes = <String>[];
+  late String selected;
+
+  Future<void> pump(
+    WidgetTester tester,
+    List<String> values, {
+    String? initial,
+    double width = 360,
+  }) async {
+    selected = initial ?? values.first;
+    SharedPreferences.setMockInitialValues({
+      'localSettings': jsonEncode({'hapticFeedback': false}),
+    });
+    final prefs = await SharedPreferences.getInstance();
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [preferencesProvider.overrideWithValue(prefs)],
+        child: MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: SizedBox(
+                width: width,
+                child: StatefulBuilder(
+                  builder: (context, setState) => SlidingSegmented<String>(
+                    values: values,
+                    selected: selected,
+                    label: (v) => v,
+                    scrollable: true,
+                    onChanged: (v) {
+                      changes.add(v);
+                      setState(() => selected = v);
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+  }
+}
+
+const seven = [
+  'Colours',
+  'Gradients',
+  'Photos',
+  'Patterns',
+  'Textures',
+  'Illustrations',
+  'Emoji',
+];
+
+void scrollableTests() {
+  testWidgets('three that fit fill the width, with no scrolling', (
+    tester,
+  ) async {
+    // The test font is wide (every glyph is a square), so give it room.
+    await ScrollHarness().pump(tester, [
+      'Colours',
+      'Gradients',
+      'Photos',
+    ], width: 600);
+    expect(find.byType(SingleChildScrollView), findsNothing);
+    final left = tester.getRect(find.text('Colours'));
+    final right = tester.getRect(find.text('Photos'));
+    // Options span the 360 track (inside its 4pt padding).
+    final track = tester.getRect(find.byType(SlidingSegmented<String>));
+    expect(track.width, 600);
+    expect(left.left - track.left, lessThan(60));
+    expect(track.right - right.right, lessThan(60));
+  });
+
+  testWidgets('seven scroll, sized to their labels, with an end fade', (
+    tester,
+  ) async {
+    await ScrollHarness().pump(tester, seven);
+    expect(find.byType(SingleChildScrollView), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('sliding-segmented-fade')),
+      findsOneWidget,
+    );
+    final short = tester.getRect(
+      find.ancestor(of: find.text('Emoji'), matching: find.byType(Positioned)),
+    );
+    final long = tester.getRect(
+      find.ancestor(
+        of: find.text('Illustrations'),
+        matching: find.byType(Positioned),
+      ),
+    );
+    expect(long.width, greaterThan(short.width + 30));
+  });
+
+  testWidgets('picking a far option scrolls it to the middle', (tester) async {
+    final h = ScrollHarness();
+    await h.pump(tester, seven);
+    final scroll = tester.widget<SingleChildScrollView>(
+      find.byType(SingleChildScrollView),
+    );
+    expect(scroll.controller!.offset, 0);
+    // Scroll by hand from the right-hand side (off the pill), then tap.
+    final track0 = tester.getRect(find.byType(SlidingSegmented<String>));
+    await tester.dragFrom(
+      track0.centerRight - const Offset(20, 0),
+      const Offset(-600, 0),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Illustrations'));
+    await tester.pumpAndSettle();
+    expect(h.changes, ['Illustrations']);
+    final centre = tester.getCenter(find.text('Illustrations')).dx;
+    final track = tester.getCenter(find.byType(SlidingSegmented<String>)).dx;
+    // Centred, or as near as the end of the row allows.
+    final pos = scroll.controller!.position;
+    expect(
+      (centre - track).abs() < 2 || pos.pixels == pos.maxScrollExtent,
+      isTrue,
+    );
+    expect(pill(tester).center.dx, closeTo(centre, 2));
+  });
+
+  testWidgets('a drag off the pill scrolls the row, not the pill', (
+    tester,
+  ) async {
+    final h = ScrollHarness();
+    await h.pump(tester, seven);
+    final scroll = tester.widget<SingleChildScrollView>(
+      find.byType(SingleChildScrollView),
+    );
+    final pillBefore = pill(tester);
+    final track = tester.getRect(find.byType(SlidingSegmented<String>));
+    await tester.dragFrom(
+      track.centerRight - const Offset(20, 0),
+      const Offset(-150, 0),
+    );
+    await tester.pumpAndSettle();
+    expect(scroll.controller!.offset, greaterThan(100));
+    expect(h.changes, isEmpty);
+    // The pill moved with the content, not along it.
+    expect(
+      pill(tester).left,
+      closeTo(pillBefore.left - scroll.controller!.offset, 1),
+    );
+  });
+
+  testWidgets('a drag that starts on the pill still slides it', (tester) async {
+    final h = ScrollHarness();
+    await h.pump(tester, seven);
+    final start = tester.getCenter(find.text('Colours'));
+    final g = await tester.startGesture(start);
+    for (var i = 0; i < 12; i++) {
+      await g.moveBy(const Offset(10, 0));
+      await tester.pump();
+    }
+    await g.up();
+    await tester.pumpAndSettle();
+    expect(h.changes, ['Gradients']);
+  });
+
+  testWidgets('a selection made elsewhere is scrolled into view', (
+    tester,
+  ) async {
+    final h = ScrollHarness();
+    await h.pump(tester, seven, initial: 'Emoji');
+    final scroll = tester.widget<SingleChildScrollView>(
+      find.byType(SingleChildScrollView),
+    );
+    final pos = scroll.controller!.position;
+    expect(pos.pixels, pos.maxScrollExtent);
+    expect(h.changes, isEmpty);
   });
 }
