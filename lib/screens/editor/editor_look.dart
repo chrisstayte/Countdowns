@@ -430,55 +430,51 @@ class _DirectionRow extends ConsumerWidget {
       children: [
         const SectionLabel('Direction'),
         const SizedBox(height: 8),
-        SizedBox(
+        BleedScroller(
           height: 44,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemCount: GradientDirection.values.length,
-            separatorBuilder: (_, _) => const SizedBox(width: 8),
-            itemBuilder: (_, i) {
-              final dir = GradientDirection.values[i];
-              final selected = draft.direction == dir;
-              return Semantics(
-                button: true,
-                selected: selected,
-                label: dir.label,
-                child: GestureDetector(
-                  onTap: () {
-                    feedback(ref, Sound.select);
-                    edit((d) => d.copyWith(gradientDirection: dir));
-                  },
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 150),
-                    width: 56,
-                    padding: const EdgeInsets.all(3),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(
-                        color: selected ? AppColors.ink : AppColors.border,
-                        width: selected ? 3 : 1.5,
-                      ),
+          itemCount: GradientDirection.values.length,
+          itemBuilder: (_, i) {
+            final dir = GradientDirection.values[i];
+            final selected = draft.direction == dir;
+            return Semantics(
+              button: true,
+              selected: selected,
+              label: dir.label,
+              child: GestureDetector(
+                onTap: () {
+                  feedback(ref, Sound.select);
+                  edit((d) => d.copyWith(gradientDirection: dir));
+                },
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 150),
+                  width: 56,
+                  padding: const EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(
+                      color: selected ? AppColors.ink : AppColors.border,
+                      width: selected ? 3 : 1.5,
                     ),
-                    child: Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        gradient: buildGradient(colors, dir),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        dir.arrow,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: autoTextColorFor(colors),
-                        ),
+                  ),
+                  child: Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      gradient: buildGradient(colors, dir),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      dir.arrow,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: autoTextColorFor(colors),
                       ),
                     ),
                   ),
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       ],
     );

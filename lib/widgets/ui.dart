@@ -375,3 +375,43 @@ class SheetHandle extends StatelessWidget {
     ),
   );
 }
+
+/// A horizontal scroller that runs edge to edge past its parent's side
+/// padding of [inset], with that inset moved inside the scroll content: at
+/// rest the first item lines up with the page margin, and items scroll
+/// under the screen edge instead of being cut off at the margin.
+class BleedScroller extends StatelessWidget {
+  const BleedScroller({
+    super.key,
+    required this.height,
+    required this.itemCount,
+    required this.itemBuilder,
+    this.inset = 20,
+    this.spacing = 8,
+  });
+
+  final double height;
+  final int itemCount;
+  final IndexedWidgetBuilder itemBuilder;
+  final double inset;
+  final double spacing;
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, box) => SizedBox(
+      height: height,
+      child: OverflowBox(
+        minWidth: box.maxWidth + inset * 2,
+        maxWidth: box.maxWidth + inset * 2,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          padding: EdgeInsets.symmetric(horizontal: inset),
+          clipBehavior: Clip.none,
+          itemCount: itemCount,
+          separatorBuilder: (_, _) => SizedBox(width: spacing),
+          itemBuilder: itemBuilder,
+        ),
+      ),
+    ),
+  );
+}

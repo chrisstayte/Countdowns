@@ -44,7 +44,6 @@ class EditorPreview extends StatelessWidget {
           event: draft,
           shape: shape,
           borderRadius: BorderRadius.circular(24),
-          padding: const EdgeInsets.all(18),
           boxShadow: const [
             BoxShadow(
               color: Color(0x2E1C1633),
@@ -54,122 +53,131 @@ class EditorPreview extends StatelessWidget {
           ],
           child: Stack(
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          title,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontFamily: resolveEventFont(draft.fontFamily),
-                            fontSize: compact ? 17 : 24,
-                            fontWeight: FontWeight.w700,
-                            height: 1.1,
-                            color: draft.title.isEmpty
-                                ? ink.withValues(alpha: 0.55)
-                                : ink,
-                            shadows: shadows,
+              Padding(
+                padding: const EdgeInsets.all(18),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            title,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontFamily: resolveEventFont(draft.fontFamily),
+                              fontSize: compact ? 17 : 24,
+                              fontWeight: FontWeight.w700,
+                              height: 1.1,
+                              color: draft.title.isEmpty
+                                  ? ink.withValues(alpha: 0.55)
+                                  : ink,
+                              shadows: shadows,
+                            ),
                           ),
                         ),
-                      ),
-                      if (draft.iconSlug != null)
-                        EventIcon(draft.iconSlug, size: 26, color: ink),
-                    ],
-                  ),
-                  const Spacer(),
-                  if (compact)
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.bottomLeft,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
+                        if (draft.iconSlug != null)
+                          EventIcon(draft.iconSlug, size: 26, color: ink),
+                      ],
+                    ),
+                    const Spacer(),
+                    if (compact)
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.bottomLeft,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.baseline,
+                          textBaseline: TextBaseline.alphabetic,
+                          children: [
+                            Text(
+                              count.big,
+                              style: AppText.numeral(
+                                40,
+                                color: ink,
+                              ).copyWith(shadows: shadows),
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              count.unit,
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                color: ink,
+                                shadows: shadows,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    else
+                      Row(
                         crossAxisAlignment: CrossAxisAlignment.baseline,
                         textBaseline: TextBaseline.alphabetic,
                         children: [
                           Text(
                             count.big,
                             style: AppText.numeral(
-                              40,
+                              54,
                               color: ink,
                             ).copyWith(shadows: shadows),
                           ),
-                          const SizedBox(width: 6),
+                          const SizedBox(width: 8),
                           Text(
                             count.unit,
                             style: TextStyle(
-                              fontSize: 15,
+                              fontSize: 17,
                               fontWeight: FontWeight.w700,
                               color: ink,
                               shadows: shadows,
                             ),
                           ),
-                        ],
-                      ),
-                    )
-                  else
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.baseline,
-                      textBaseline: TextBaseline.alphabetic,
-                      children: [
-                        Text(
-                          count.big,
-                          style: AppText.numeral(
-                            54,
-                            color: ink,
-                          ).copyWith(shadows: shadows),
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          count.unit,
-                          style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w700,
-                            color: ink,
-                            shadows: shadows,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        if (!compact)
-                          Expanded(
-                            child: Text(
-                              when,
-                              textAlign: TextAlign.right,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                color: ink,
-                                shadows: shadows,
+                          const SizedBox(width: 8),
+                          if (!compact)
+                            Expanded(
+                              child: Text(
+                                when,
+                                textAlign: TextAlign.right,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: ink,
+                                  shadows: shadows,
+                                ),
                               ),
                             ),
-                          ),
-                      ],
-                    ),
-                ],
+                        ],
+                      ),
+                  ],
+                ),
               ),
+              // Inset from the card's own edge (not the content padding),
+              // below the icon, so the whole pill is always visible.
               if (draft.hasPhoto && onCrop != null)
                 Positioned(
-                  right: -4,
-                  top: 34,
+                  right: 12,
+                  top: 50,
                   child: Semantics(
                     button: true,
                     label: 'Crop photo',
                     child: GestureDetector(
                       onTap: onCrop,
                       child: Container(
-                        height: 30,
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        constraints: const BoxConstraints(minHeight: 30),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 5,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.white.withValues(alpha: 0.9),
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: const Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(
                               Icons.crop_rounded,
