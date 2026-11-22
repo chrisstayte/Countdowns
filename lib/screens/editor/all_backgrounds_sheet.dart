@@ -35,9 +35,26 @@ List<String> availablePhotos({
   ];
 }
 
+/// What Done returns: the chosen background and the gradient direction.
+class BackgroundChoice {
+  const BackgroundChoice(this.key, this.direction);
+  final String key;
+  final GradientDirection direction;
+
+  /// [d] with this choice applied (the direction only matters for a
+  /// gradient).
+  Countdown applyTo(Countdown d) {
+    final next = applyBackground(d, key);
+    return next.gradientId == null || next.hasPhoto
+        ? next
+        : next.copyWith(gradientDirection: direction);
+  }
+}
+
 /// "All backgrounds": every colour, gradient and photo, in collections.
 /// Picks apply to the preview at the top; Done returns the chosen key
-/// (see background_catalog.dart), swiping away keeps what was there.
+/// (see background_catalog.dart) and direction as a [BackgroundChoice]
+/// (or [addPhotoResult]); swiping away keeps what was there.
 class AllBackgroundsSheet extends ConsumerStatefulWidget {
   const AllBackgroundsSheet({super.key, required this.draft});
   final Countdown draft;
@@ -51,6 +68,10 @@ class _AllBackgroundsSheetState extends ConsumerState<AllBackgroundsSheet> {
   late String _key = backgroundKeyOf(widget.draft);
   late BackgroundKind _tab =
       parseBackgroundKey(_key)?.kind ?? BackgroundKind.colour;
+  late GradientDirection _direction = widget.draft.direction;
+
+  /// Whether the gradient grid has scrolled under the pinned Direction row.
+  bool _scrolled = false;
 
   /// Every countdown, for "photos on your other countdowns". Read once from
   /// the database: the events stream may have no listener under a sheet.
@@ -77,9 +98,26 @@ class _AllBackgroundsSheetState extends ConsumerState<AllBackgroundsSheet> {
     setState(() => _key = key);
   }
 
+  void _pickDirection(GradientDirection d) {
+    if (d == _direction) return;
+    feedback(ref, Sound.select);
+    setState(() => _direction = d);
+  }
+
+  /// Colours for the direction chips: the chosen gradient, or the first
+  /// in the catalogue while a colour or photo is chosen.
+  List<Color> get _chipColors {
+    final ref = parseBackgroundKey(_key);
+    if (ref?.kind == BackgroundKind.gradient) {
+      final c = gradientColors(ref!.value, widget.draft.color);
+      if (c != null) return c;
+    }
+    return gradientLibrary.first.colors;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final preview = applyBackground(widget.draft, _key);
+    final preview = BackgroundChoice(_key, _direction).applyTo(widget.draft);
     return FractionallySizedBox(
       heightFactor: 0.92,
       child: Padding(
@@ -102,7 +140,10 @@ class _AllBackgroundsSheetState extends ConsumerState<AllBackgroundsSheet> {
                 const SizedBox(width: 12),
                 PillButton(
                   label: 'Done',
-                  onTap: () => Navigator.pop(context, _key),
+                  onTap: () => Navigator.pop(
+                    context,
+                    BackgroundChoice(_key, _direction),
+                  ),
                 ),
               ],
             ),
@@ -117,49 +158,82 @@ class _AllBackgroundsSheetState extends ConsumerState<AllBackgroundsSheet> {
                 BackgroundKind.gradient => 'Gradients',
                 BackgroundKind.photo => 'Photos',
               },
-              onChanged: (k) => setState(() => _tab = k),
+              onChanged: (k) => setState(() {
+                _tab = k;
+                _scrolled = false;
+              }),
             ),
+            if (_tab == BackgroundKind.gradient) ...[
+              const SizedBox(height: 14),
+              DirectionPicker(
+                key: const ValueKey('pinned-direction-row'),
+                colors: _chipColors,
+                selected: _direction,
+                onPick: _pickDirection,
+              ),
+              const SizedBox(height: 8),
+              // A hairline once the families scroll under the row.
+              AnimatedOpacity(
+                key: const ValueKey('direction-divider'),
+                duration: const Duration(milliseconds: 120),
+                opacity: _scrolled ? 1 : 0,
+                child: Container(
+                  height: 1,
+                  color: AppColors.rule,
+                ),
+              ),
+            ],
             Expanded(
               // Fade the grid out under the tabs as it scrolls.
-              child: ClipRect(
-                child: switch (_tab) {
-                  BackgroundKind.colour => _Collections(
-                    sections: [
-                      for (final c in colourCollections)
-                        (
-                          title: c.name,
-                          keys: [for (final p in c.colours) colourKey(p.color)],
-                        ),
-                    ],
-                    selected: _key,
-                    legacyBase: widget.draft.color,
-                    onPick: _pick,
-                  ),
-                  BackgroundKind.gradient => _Collections(
-                    sections: [
-                      for (final c in gradientCollections)
-                        (
-                          title: c.name,
-                          keys: [
-                            for (final g in c.gradients) gradientKey(g.id),
-                          ],
-                        ),
-                    ],
-                    selected: _key,
-                    legacyBase: widget.draft.color,
-                    onPick: _pick,
-                  ),
-                  BackgroundKind.photo => _Photos(
-                    photos: availablePhotos(
-                      current: widget.draft.photoPath,
-                      recent: ref.watch(recentsProvider).photos,
-                      others: [for (final e in _all) ?e.photoPath],
-                    ),
-                    selected: _key,
-                    onPick: _pick,
-                    onAdd: () => Navigator.pop(context, addPhotoResult),
-                  ),
+              child: NotificationListener<ScrollUpdateNotification>(
+                onNotification: (n) {
+                  final under = n.metrics.pixels > 4;
+                  if (under != _scrolled) setState(() => _scrolled = under);
+                  return false;
                 },
+                child: ClipRect(
+                  child: switch (_tab) {
+                    BackgroundKind.colour => _Collections(
+                      sections: [
+                        for (final c in colourCollections)
+                          (
+                            title: c.name,
+                            keys: [
+                              for (final p in c.colours) colourKey(p.color),
+                            ],
+                          ),
+                      ],
+                      selected: _key,
+                      legacyBase: widget.draft.color,
+                      onPick: _pick,
+                    ),
+                    BackgroundKind.gradient => _Collections(
+                      sections: [
+                        for (final c in gradientCollections)
+                          (
+                            title: c.name,
+                            keys: [
+                              for (final g in c.gradients) gradientKey(g.id),
+                            ],
+                          ),
+                      ],
+                      selected: _key,
+                      legacyBase: widget.draft.color,
+                      direction: _direction,
+                      onPick: _pick,
+                    ),
+                    BackgroundKind.photo => _Photos(
+                      photos: availablePhotos(
+                        current: widget.draft.photoPath,
+                        recent: ref.watch(recentsProvider).photos,
+                        others: [for (final e in _all) ?e.photoPath],
+                      ),
+                      selected: _key,
+                      onPick: _pick,
+                      onAdd: () => Navigator.pop(context, addPhotoResult),
+                    ),
+                  },
+                ),
               ),
             ),
           ],
@@ -177,12 +251,16 @@ class _Collections extends StatelessWidget {
     required this.selected,
     required this.legacyBase,
     required this.onPick,
+    this.direction = GradientDirection.diagonalDown,
   });
 
   final List<_Section> sections;
   final String selected;
   final Color legacyBase;
   final ValueChanged<String> onPick;
+
+  /// How gradient swatches are drawn.
+  final GradientDirection direction;
 
   @override
   Widget build(BuildContext context) => CustomScrollView(
@@ -201,6 +279,7 @@ class _Collections extends StatelessWidget {
             backgroundKey: s.keys[i],
             selected: s.keys[i] == selected,
             legacyBase: legacyBase,
+            direction: direction,
             onTap: () => onPick(s.keys[i]),
           ),
         ),
@@ -224,12 +303,14 @@ class _NamedTile extends StatelessWidget {
     required this.selected,
     required this.legacyBase,
     required this.onTap,
+    this.direction = GradientDirection.diagonalDown,
   });
 
   final String backgroundKey;
   final bool selected;
   final Color legacyBase;
   final VoidCallback onTap;
+  final GradientDirection direction;
 
   @override
   Widget build(BuildContext context) => Column(
@@ -242,6 +323,7 @@ class _NamedTile extends StatelessWidget {
               backgroundKey: backgroundKey,
               selected: selected,
               legacyBase: legacyBase,
+              direction: direction,
               onTap: onTap,
             ),
           ),
@@ -354,6 +436,7 @@ class BackgroundTile extends StatelessWidget {
     required this.onTap,
     this.legacyBase = AppColors.ink,
     this.badge,
+    this.direction = GradientDirection.diagonalDown,
   });
 
   final String backgroundKey;
@@ -364,6 +447,9 @@ class BackgroundTile extends StatelessWidget {
   final Color legacyBase;
   final String? badge;
 
+  /// How a gradient swatch is drawn.
+  final GradientDirection direction;
+
   BoxDecoration? _fill() {
     final ref = parseBackgroundKey(backgroundKey);
     if (ref == null) return null;
@@ -373,9 +459,7 @@ class BackgroundTile extends StatelessWidget {
       case BackgroundKind.gradient:
         final colors = gradientColors(ref.value, legacyBase);
         if (colors == null) return null;
-        return BoxDecoration(
-          gradient: buildGradient(colors, GradientDirection.diagonalDown),
-        );
+        return BoxDecoration(gradient: buildGradient(colors, direction));
       case BackgroundKind.photo:
         if (!PhotoStore.ready) return null;
         return BoxDecoration(
@@ -591,4 +675,73 @@ class BackgroundPreviewStrip extends ConsumerWidget {
       ),
     );
   }
+}
+
+/// The 8 gradient directions as chips, each previewing [colors] that way.
+/// Scrolls sideways edge to edge. Used on the Look tab and pinned at the
+/// top of the sheet's Gradients tab.
+class DirectionPicker extends StatelessWidget {
+  const DirectionPicker({
+    super.key,
+    required this.colors,
+    required this.selected,
+    required this.onPick,
+  });
+
+  final List<Color> colors;
+  final GradientDirection selected;
+  final ValueChanged<GradientDirection> onPick;
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      const SectionLabel('Direction'),
+      const SizedBox(height: 8),
+      BleedScroller(
+        height: 44,
+        itemCount: GradientDirection.values.length,
+        itemBuilder: (_, i) {
+          final dir = GradientDirection.values[i];
+          final on = selected == dir;
+          return Semantics(
+            button: true,
+            selected: on,
+            label: dir.label,
+            excludeSemantics: true,
+            child: GestureDetector(
+              onTap: () => onPick(dir),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 150),
+                width: 56,
+                padding: const EdgeInsets.all(3),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(
+                    color: on ? AppColors.ink : AppColors.border,
+                    width: on ? 3 : 1.5,
+                  ),
+                ),
+                child: Container(
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    gradient: buildGradient(colors, dir),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    dir.arrow,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: autoTextColorFor(colors),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    ],
+  );
 }

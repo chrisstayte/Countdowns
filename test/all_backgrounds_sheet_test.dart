@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ui' show Tristate;
 
 import 'package:countdowns/models/countdown.dart';
+import 'package:countdowns/models/palette.dart';
 import 'package:countdowns/providers/local_settings_provider.dart';
 import 'package:countdowns/screens/editor/all_backgrounds_sheet.dart';
 import 'package:flutter/semantics.dart';
@@ -12,7 +13,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// Opens the sheet from a button and records what it returns.
 class _Host {
-  String? result = 'not closed';
+  Object? result = 'not closed';
+
+  String? get key => (result as BackgroundChoice?)?.key;
 
   Future<void> pump(WidgetTester tester, Countdown draft) async {
     tester.view.physicalSize = const Size(402, 874);
@@ -32,7 +35,7 @@ class _Host {
               body: Center(
                 child: TextButton(
                   onPressed: () async {
-                    result = await showModalBottomSheet<String>(
+                    result = await showModalBottomSheet<Object>(
                       context: context,
                       isScrollControlled: true,
                       builder: (_) => AllBackgroundsSheet(draft: draft),
@@ -93,7 +96,7 @@ void main() {
     expect(find.bySemanticsLabel('Preview: Teal'), findsOneWidget);
     await tester.tap(find.text('Done'));
     await tester.pumpAndSettle();
-    expect(host.result, 'colour:FF2BB3A3');
+    expect(host.key, 'colour:FF2BB3A3');
     handle.dispose();
   });
 
@@ -106,17 +109,15 @@ void main() {
     await tester.tap(find.text('Gradients'));
     await tester.pumpAndSettle();
     expect(find.text('SUNSET'), findsOneWidget);
-    await tester.scrollUntilVisible(
-      find.bySemanticsLabel('Nebula gradient'),
-      200,
-      scrollable: find.byType(Scrollable).last,
-    );
+    // Night is the last family; scroll to the end of the grid.
+    await tester.drag(find.byType(CustomScrollView), const Offset(0, -2000));
+    await tester.pumpAndSettle();
     await tester.tap(find.bySemanticsLabel('Nebula gradient'));
     await tester.pumpAndSettle();
     expect(find.bySemanticsLabel('Preview: Nebula'), findsOneWidget);
     await tester.tap(find.text('Done'));
     await tester.pumpAndSettle();
-    expect(host.result, 'gradient:nebula');
+    expect(host.key, 'gradient:nebula');
     handle.dispose();
   });
 
@@ -155,5 +156,128 @@ void main() {
     await tester.tap(find.bySemanticsLabel('Add a photo'));
     await tester.pumpAndSettle();
     expect(host.result, addPhotoResult);
+  });
+
+  group('direction', () {
+    Gradient? swatchGradient(WidgetTester tester, String label) {
+      final tile = find.ancestor(
+        of: find.byType(Container),
+        matching: find.bySemanticsLabel(label),
+      );
+      for (final c in tester.widgetList<Container>(
+        find.descendant(
+          of: find.bySemanticsLabel(label).first,
+          matching: find.byType(Container),
+        ),
+      )) {
+        final d = c.decoration;
+        if (d is BoxDecoration && d.gradient != null) return d.gradient;
+      }
+      expect(tile, findsWidgets);
+      return null;
+    }
+
+    /// The chip row is wider than the phone; slide it to the end first.
+    Future<void> showAllChips(WidgetTester tester) async {
+      await tester.drag(
+        find.byKey(const ValueKey('pinned-direction-row')),
+        const Offset(-300, 0),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('only the Gradients tab has the Direction row', (tester) async {
+      final host = _Host();
+      await host.pump(tester, draft);
+      expect(find.byKey(const ValueKey('pinned-direction-row')), findsNothing);
+      await tester.tap(find.text('Gradients'));
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey('pinned-direction-row')),
+        findsOneWidget,
+      );
+      await tester.tap(find.text('Photos'));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('pinned-direction-row')), findsNothing);
+    });
+
+    testWidgets('the row stays put while families scroll under it', (
+      tester,
+    ) async {
+      final host = _Host();
+      await host.pump(
+        tester,
+        draft.copyWith(gradientId: 'sunset', colorArgb: 0xFFFE7228),
+      );
+      final row = find.byKey(const ValueKey('pinned-direction-row'));
+      final before = tester.getTopLeft(row);
+      final header = tester.getTopLeft(find.text('SUNSET'));
+      double divider() => tester
+          .widget<AnimatedOpacity>(
+            find.byKey(const ValueKey('direction-divider')),
+          )
+          .opacity;
+      expect(divider(), 0);
+      await tester.drag(find.byType(CustomScrollView), const Offset(0, -300));
+      await tester.pumpAndSettle();
+      expect(tester.getTopLeft(row), before);
+      expect(
+        find.text('SUNSET'),
+        findsNothing,
+        reason: 'scrolled under, not moved with: was at $header',
+      );
+      expect(divider(), 1);
+    });
+
+    testWidgets('a direction redraws every gradient swatch and the preview; '
+        'Done returns it', (tester) async {
+      final handle = tester.ensureSemantics();
+      final host = _Host();
+      await host.pump(
+        tester,
+        draft.copyWith(
+          gradientId: 'sunset',
+          colorArgb: 0xFFFE7228,
+          gradientDirection: GradientDirection.diagonalDown,
+        ),
+      );
+      expect(
+        (swatchGradient(tester, 'Lagoon gradient') as LinearGradient).begin,
+        Alignment.topLeft,
+      );
+      await showAllChips(tester);
+      await tester.tap(find.bySemanticsLabel('From the centre'));
+      await tester.pumpAndSettle();
+      expect(swatchGradient(tester, 'Lagoon gradient'), isA<RadialGradient>());
+      expect(swatchGradient(tester, 'Sunset gradient'), isA<RadialGradient>());
+      // Picking another gradient keeps the direction.
+      await tester.tap(find.bySemanticsLabel('Lagoon gradient'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Done'));
+      await tester.pumpAndSettle();
+      final choice = host.result! as BackgroundChoice;
+      expect(choice.key, 'gradient:lagoon');
+      expect(choice.direction, GradientDirection.radial);
+      final applied = choice.applyTo(draft);
+      expect(applied.gradientId, 'lagoon');
+      expect(applied.direction, GradientDirection.radial);
+      handle.dispose();
+    });
+
+    testWidgets('swiping away discards a direction change', (tester) async {
+      final handle = tester.ensureSemantics();
+      final host = _Host();
+      await host.pump(
+        tester,
+        draft.copyWith(gradientId: 'sunset', colorArgb: 0xFFFE7228),
+      );
+      await showAllChips(tester);
+      await tester.tap(find.bySemanticsLabel('Round'));
+      await tester.pumpAndSettle();
+      await tester.tapAt(const Offset(200, 20));
+      await tester.pumpAndSettle();
+      expect(host.result, isNull);
+      handle.dispose();
+    });
   });
 }
