@@ -42,7 +42,7 @@ class HomeScreen extends ConsumerWidget {
             bottom: 30 + MediaQuery.paddingOf(context).bottom * 0.4,
             child: Center(
               child: PillButton(
-                label: 'New countdown',
+                label: 'New event',
                 icon: Icons.add_rounded,
                 height: 52,
                 shadow: true,

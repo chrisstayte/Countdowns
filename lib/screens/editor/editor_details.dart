@@ -67,7 +67,7 @@ class EditorDetails extends ConsumerWidget {
             hintStyle: const TextStyle(color: AppColors.muted),
             filled: true,
             fillColor: AppColors.surface,
-            errorText: nameError ? 'Give your countdown a name' : null,
+            errorText: nameError ? 'Give it a name' : null,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 14,
               vertical: 14,
@@ -201,7 +201,7 @@ class EditorDetails extends ConsumerWidget {
               minimumSize: const Size.fromHeight(48),
             ),
             child: const Text(
-              'Delete countdown',
+              'Delete event',
               style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
             ),
           ),

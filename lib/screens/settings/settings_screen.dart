@@ -490,7 +490,7 @@ class _Notifications extends ConsumerWidget {
                   ),
                   const SizedBox(height: 6),
                   const Text(
-                    'New countdowns start with these.',
+                    'New events start with these.',
                     style: AppText.secondary,
                   ),
                   const SizedBox(height: 16),

@@ -35,7 +35,7 @@ class EventScreen extends ConsumerWidget {
     if (event == null) {
       return Scaffold(
         appBar: AppBar(),
-        body: const Center(child: Text('This countdown was deleted.')),
+        body: const Center(child: Text('This was deleted.')),
       );
     }
     return AnnotatedRegion<SystemUiOverlayStyle>(

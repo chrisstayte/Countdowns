@@ -36,7 +36,7 @@ class EditorPreview extends StatelessWidget {
         ? DateFormat('EEE, MMM d').format(draft.dateTime)
         : DateFormat('EEE, MMM d · h:mm a').format(draft.dateTime);
     final when = draft.isSince ? 'Since $date' : date;
-    final title = draft.title.isEmpty ? 'Name your countdown' : draft.title;
+    final title = draft.title.isEmpty ? 'Name it' : draft.title;
     return Semantics(
       label: 'Preview: $title, ${count.big} ${count.unit}',
       child: SizedBox(

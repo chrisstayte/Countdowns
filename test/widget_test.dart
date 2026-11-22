@@ -98,9 +98,9 @@ void main() {
     expect(find.text('Nothing to count yet'), findsOneWidget);
 
     // Saving without a name asks for one.
-    await tap(find.text('New countdown'));
+    await tap(find.text('New event'));
     await tap(find.text('Save'));
-    expect(find.text('Give your countdown a name'), findsOneWidget);
+    expect(find.text('Give it a name'), findsOneWidget);
     expect(await rows(), isEmpty);
 
     await tester.enterText(find.byType(TextField), 'Birthday');
@@ -148,16 +148,16 @@ void main() {
       const Offset(0, -600),
     );
     await settle();
-    await tap(find.text('Delete countdown'));
+    await tap(find.text('Delete event'));
     await tap(find.text('Keep it'));
     expect(await rows(), hasLength(1));
-    await tap(find.text('Delete countdown'));
+    await tap(find.text('Delete event'));
     await tap(find.text('Delete'));
     expect(await rows(), isEmpty);
     expect(find.text('Since & Soon'), findsWidgets);
 
     // A Since event counts up from its start, which defaults to now.
-    await tap(find.text('New countdown'));
+    await tap(find.text('New event'));
     await tap(find.text('Since'));
     expect(find.text('STARTED'), findsOneWidget);
     expect(find.text('Repeats'), findsNothing);

@@ -386,7 +386,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             ),
             const SizedBox(height: 12),
             PillButton(
-              label: 'New countdown “$q”',
+              label: 'New event “$q”',
               background: AppColors.primary,
               height: 48,
               onTap: () => _create(title: q),

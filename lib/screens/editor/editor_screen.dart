@@ -101,7 +101,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
       if (!mounted) return;
       setState(() => _saving = false);
       messenger.showSnackBar(
-        SnackBar(content: Text('Couldn’t save this countdown: $error')),
+        SnackBar(content: Text('Couldn’t save this: $error')),
       );
       return;
     }
@@ -210,7 +210,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
     if (!_isNew && ref.watch(eventByIdProvider(widget.eventKey)) == null) {
       return Scaffold(
         appBar: AppBar(),
-        body: const Center(child: Text('This countdown was deleted.')),
+        body: const Center(child: Text('This was deleted.')),
       );
     }
     final header = Padding(
@@ -220,7 +220,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
           TextAction('Cancel', onTap: () => context.pop()),
           Expanded(
             child: Text(
-              _isNew ? 'New countdown' : 'Edit countdown',
+              _isNew ? 'New event' : 'Edit event',
               textAlign: TextAlign.center,
               style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 17),
             ),

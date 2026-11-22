@@ -70,7 +70,7 @@ class _TabletHomeState extends ConsumerState<TabletHome> {
                         ),
                         RoundButton(
                           icon: Icons.add_rounded,
-                          label: 'New countdown',
+                          label: 'New event',
                           background: AppColors.primary,
                           foreground: Colors.white,
                           onTap: () {
