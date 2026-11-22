@@ -116,6 +116,21 @@ class CounterTest {
     }
 
     @Test
+    fun drawnArtHasNoScrimOrShadow() {
+        assertTrue(birthday.scrim)
+        assertTrue(birthday.shadowed)
+        assertFalse(thanksgiving.shadowed)
+        val art = SnapshotStore.parse(
+            """{"version": 1, "events": [{"id": 1, "title": "Party",
+            "target": 1795651200, "text": "#1C1633", "colors": ["#EEE8FF"],
+            "photo": "photos/art-party-photo-v1.png", "scrim": false}]}""",
+        ).single()
+        assertFalse(art.scrim)
+        assertFalse(art.shadowed)
+        assertEquals("photos/art-party-photo-v1.png", art.photo)
+    }
+
+    @Test
     fun largeLayoutFollowsTheActiveCount() {
         assertEquals(LargeLayout.Empty, largeLayout(0))
         assertEquals(LargeLayout.Hero, largeLayout(1))

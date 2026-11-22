@@ -2,11 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
 
+import 'package:countdowns/models/art_catalog.dart';
 import 'package:countdowns/models/countdown.dart';
 import 'package:countdowns/models/event_icons.dart';
 import 'package:countdowns/providers/home_provider.dart';
 import 'package:countdowns/storage/photos.dart';
 import 'package:countdowns/theme/app_theme.dart';
+import 'package:countdowns/widgets/art_painter.dart';
 import 'package:countdowns/widgets_bridge/widget_links.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -38,6 +40,23 @@ String photoFileName(Countdown e, CropShape shape) {
   return 'photos/${e.id}-${shape.name}-$key.png';
 }
 
+/// Bump when the art painter changes, so widgets redraw their copies.
+const artRenderVersion = 1;
+
+/// Widget images for drawn art, by snapshot key: the logical size it is
+/// drawn at (about the widget's size in points, so motifs match the app)
+/// and the pixel ratio of the PNG.
+const artShapes = {
+  'photo': (ui.Size(170, 170), 3.0),
+  'photoWide': (ui.Size(360, 168), 2.5),
+  'photoFull': (ui.Size(360, 376), 2.5),
+};
+
+/// PNG for drawn art in one widget shape. Shared by every countdown that
+/// uses the same art.
+String artFileName(Art art, String shapeKey) =>
+    'photos/art-${art.id}-$shapeKey-v$artRenderVersion.png';
+
 /// The JSON the home screen widgets read (WidgetKit on iOS, Glance on
 /// Android). Widgets compute the count from
 /// `target` themselves, so the snapshot only changes when events do.
@@ -61,17 +80,33 @@ Map<String, Object?> buildWidgetSnapshot(List<Countdown> events, DateTime now) {
           'font': eventFontFor(e.fontFamily).family,
           'text': _hex(e.textColor),
           'colors': [
-            for (final c in e.gradient ?? [e.color]) _hex(c),
+            for (final c in e.art != null ? [e.color] : e.gradient ?? [e.color])
+              _hex(c),
           ],
           'direction': e.direction.name,
           'icon': e.iconSlug == null
               ? null
               : iconFileName(e.iconSlug!, e.textColor),
-          'photo': e.hasPhoto ? photoFileName(e, CropShape.card) : null,
-          'photoWide': e.hasPhoto ? photoFileName(e, CropShape.wide) : null,
+          // Drawn art travels as images too, without the photo scrim.
+          'photo': e.art != null
+              ? artFileName(e.art!, 'photo')
+              : e.hasPhoto
+              ? photoFileName(e, CropShape.card)
+              : null,
+          'photoWide': e.art != null
+              ? artFileName(e.art!, 'photoWide')
+              : e.hasPhoto
+              ? photoFileName(e, CropShape.wide)
+              : null,
           // The large widget's single-countdown hero uses the full crop.
-          'photoFull': e.hasPhoto ? photoFileName(e, CropShape.full) : null,
+          'photoFull': e.art != null
+              ? artFileName(e.art!, 'photoFull')
+              : e.hasPhoto
+              ? photoFileName(e, CropShape.full)
+              : null,
           'darken': e.photoDarken,
+          // False for drawn art: no darkening and no text shadow.
+          'scrim': e.art == null,
           'createdAt': (e.createdAt ?? now).millisecondsSinceEpoch ~/ 1000,
         },
     ],
@@ -144,7 +179,13 @@ class WidgetSnapshotWriter {
         ]) {
           if (m[key] case final String photo) {
             keep.add(photo);
-            await _renderPhoto(File(p.join(dir.path, photo)), e, shape, width);
+            final out = File(p.join(dir.path, photo));
+            if (e.art case final art?) {
+              final (size, ratio) = artShapes[key]!;
+              await _renderArt(out, art, size, ratio);
+            } else {
+              await _renderPhoto(out, e, shape, width);
+            }
           }
         }
       }
@@ -217,6 +258,18 @@ class WidgetSnapshotWriter {
     );
     final image = await recorder.endRecording().toImage(width, height);
     src.dispose();
+    await _writePng(out, image);
+  }
+
+  Future<void> _renderArt(File out, Art art, ui.Size size, double ratio) async {
+    if (await out.exists()) return;
+    final recorder = ui.PictureRecorder();
+    final canvas = ui.Canvas(recorder)..scale(ratio);
+    paintArt(canvas, size, art);
+    final image = await recorder.endRecording().toImage(
+      (size.width * ratio).round(),
+      (size.height * ratio).round(),
+    );
     await _writePng(out, image);
   }
 

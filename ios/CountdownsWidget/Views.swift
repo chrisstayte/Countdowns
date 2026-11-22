@@ -17,12 +17,14 @@ struct EventBackground: View {
     if let image = SnapshotStore.image(photo) {
       ZStack {
         Image(uiImage: image).resizable().scaledToFill()
-        LinearGradient(
-          colors: [
-            Color.scrim.opacity(event.darken),
-            Color.scrim.opacity(min(1, event.darken + 0.15)),
-          ],
-          startPoint: .top, endPoint: .bottom)
+        if event.scrim != false {
+          LinearGradient(
+            colors: [
+              Color.scrim.opacity(event.darken),
+              Color.scrim.opacity(min(1, event.darken + 0.15)),
+            ],
+            startPoint: .top, endPoint: .bottom)
+        }
       }
     } else {
       fill
@@ -72,7 +74,7 @@ struct EventIcon: View {
 
 private extension View {
   func onPhoto(_ event: WidgetEvent) -> some View {
-    shadow(color: event.hasPhoto ? .black.opacity(0.35) : .clear, radius: 4, y: 1)
+    shadow(color: event.shadowed ? .black.opacity(0.35) : .clear, radius: 4, y: 1)
   }
 }
 

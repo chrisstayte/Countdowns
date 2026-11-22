@@ -34,8 +34,13 @@ data class WidgetEvent(
     val photoFull: String?,
     val darken: Double,
     val createdAt: Long,
+    /** False for drawn art (patterns, textures, illustrations): no scrim. */
+    val scrim: Boolean = true,
 ) {
     val hasPhoto get() = photo != null
+
+    /** White text on a darkened photo gets a soft shadow; art doesn't. */
+    val shadowed get() = hasPhoto && scrim
 }
 
 /** Reads the snapshot the Flutter app writes into the app's files dir. */
@@ -83,6 +88,7 @@ object SnapshotStore {
                 photoFull = e.optStringOrNull("photoFull"),
                 darken = e.optDouble("darken", 0.35),
                 createdAt = e.optLong("createdAt", e.getLong("target")),
+                scrim = e.optBoolean("scrim", true),
             )
         }
     }

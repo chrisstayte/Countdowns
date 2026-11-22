@@ -25,6 +25,9 @@ struct WidgetEvent: Codable, Identifiable, Hashable {
   let photoFull: String?
   let darken: Double
   let createdAt: TimeInterval
+  /// False for drawn art (patterns, textures, illustrations): no scrim and
+  /// no text shadow. Missing in older snapshots, which only had photos.
+  var scrim: Bool? = nil
 }
 
 struct WidgetSnapshot: Codable {
@@ -140,6 +143,8 @@ extension WidgetEvent {
 
   var ink: Color { Color(hex: text) }
   var hasPhoto: Bool { photo != nil }
+  /// White text on a darkened photo gets a soft shadow; drawn art doesn't.
+  var shadowed: Bool { hasPhoto && scrim != false }
 
   var gradientColors: [Color] { colors.map(Color.init(hex:)) }
 }

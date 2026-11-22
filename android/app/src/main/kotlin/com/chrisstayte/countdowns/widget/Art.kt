@@ -106,7 +106,7 @@ class Art(
 
     // MARK: Backgrounds
 
-    /** Colour, gradient (direction honoured) or darkened photo, clipped. */
+    /** Colour, gradient (direction honoured), darkened photo or drawn art, clipped. */
     fun background(canvas: Canvas, e: WidgetEvent, rect: RectF, radius: Float, photoPath: String?) {
         canvas.save()
         val clip = Path().apply { addRoundRect(rect, radius, radius, Path.Direction.CW) }
@@ -125,13 +125,16 @@ class Art(
             }
             canvas.drawBitmap(photo, m, Paint(Paint.FILTER_BITMAP_FLAG))
             photo.recycle()
-            val top = alpha(Palette.SCRIM, e.darken)
-            val bottom = alpha(Palette.SCRIM, min(1.0, e.darken + 0.15))
-            canvas.drawRect(rect, Paint().apply {
-                shader = LinearGradient(
-                    0f, rect.top, 0f, rect.bottom, top, bottom, Shader.TileMode.CLAMP,
-                )
-            })
+            // Drawn art comes as an image too, but with no scrim.
+            if (e.scrim) {
+                val top = alpha(Palette.SCRIM, e.darken)
+                val bottom = alpha(Palette.SCRIM, min(1.0, e.darken + 0.15))
+                canvas.drawRect(rect, Paint().apply {
+                    shader = LinearGradient(
+                        0f, rect.top, 0f, rect.bottom, top, bottom, Shader.TileMode.CLAMP,
+                    )
+                })
+            }
         } else {
             canvas.drawRect(rect, Paint(Paint.ANTI_ALIAS_FLAG).apply { fill(e, rect) })
         }
@@ -223,7 +226,7 @@ class Art(
         val (bitmap, canvas) = canvasFor(w, h)
         background(canvas, e, RectF(0f, 0f, w, h), radius, e.photo)
         val pad = 16f
-        val shadow = e.hasPhoto
+        val shadow = e.shadowed
         val count = counter.count(e, now, modeFor(countIn, e))
 
         drawIcon(canvas, e, w - pad - 20f, pad, 20f)
@@ -249,7 +252,7 @@ class Art(
         background(canvas, e, RectF(0f, 0f, w, h), radius, e.photoWide)
         val padX = 18f
         val padY = 16f
-        val shadow = e.hasPhoto
+        val shadow = e.shadowed
         val count = counter.count(e, now, modeFor(countIn, e))
 
         drawIcon(canvas, e, w - padX - 22f, padY, 22f)
@@ -287,7 +290,7 @@ class Art(
         val (bitmap, canvas) = canvasFor(w, h)
         background(canvas, e, RectF(0f, 0f, w, h), 18f, e.photoWide)
         val pad = 16f
-        val shadow = e.hasPhoto
+        val shadow = e.shadowed
         val count = counter.count(e, now, modeFor(countIn, e))
 
         // Measure the count first so the title knows how much room it has.
@@ -322,7 +325,7 @@ class Art(
         val (bitmap, canvas) = canvasFor(w, h)
         background(canvas, e, RectF(0f, 0f, w, h), radius, e.photoFull ?: e.photo)
         val pad = 20f
-        val shadow = e.hasPhoto
+        val shadow = e.shadowed
         val count = counter.count(e, now, modeFor(countIn, e))
 
         drawIcon(canvas, e, w - pad - 26f, pad, 26f)

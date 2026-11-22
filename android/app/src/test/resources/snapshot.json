@@ -21,7 +21,8 @@
       "photoWide": null,
       "photoFull": null,
       "darken": 0.35,
-      "createdAt": 1795219200
+      "createdAt": 1795219200,
+      "scrim": true
     },
     {
       "id": 7,
@@ -43,7 +44,8 @@
       "photoWide": "photos/7-wide-abc.png",
       "photoFull": "photos/7-full-abc.png",
       "darken": 0.4,
-      "createdAt": 1795219200
+      "createdAt": 1795219200,
+      "scrim": true
     },
     {
       "id": 9,
@@ -64,7 +66,8 @@
       "photoWide": null,
       "photoFull": null,
       "darken": 0.35,
-      "createdAt": 1795219200
+      "createdAt": 1795219200,
+      "scrim": true
     }
   ]
 }
