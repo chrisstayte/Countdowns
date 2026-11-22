@@ -22,7 +22,8 @@
       "photoFull": null,
       "darken": 0.35,
       "createdAt": 1795219200,
-      "scrim": true
+      "scrim": true,
+      "fontFile": null
     },
     {
       "id": 7,
@@ -45,7 +46,8 @@
       "photoFull": "photos/7-full-abc.png",
       "darken": 0.4,
       "createdAt": 1795219200,
-      "scrim": true
+      "scrim": true,
+      "fontFile": null
     },
     {
       "id": 9,
@@ -67,7 +69,8 @@
       "photoFull": null,
       "darken": 0.35,
       "createdAt": 1795219200,
-      "scrim": true
+      "scrim": true,
+      "fontFile": "fonts/Roboto.ttf"
     }
   ]
 }

@@ -17,17 +17,14 @@
 		0B80C628EFB7030306DC2601 /* BricolageGrotesque-700.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B068CE6375575D14200765A0 /* BricolageGrotesque-700.ttf */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		1548C3AC3A0FECB38446051B /* CountdownsWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D7D19C0773A69EEFA46D21 /* CountdownsWidget.swift */; };
-		1DA2D305BC154356E21D756F /* ComicNeue-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDFE4DCB0EF51C562B897681 /* ComicNeue-Bold.ttf */; };
 		2B85E09AD4C41D0A847397DB /* Inter-700.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 42C0D84B37811DD4044CB834 /* Inter-700.ttf */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		489A82596D9DD6C71BF36ABE /* DiarioDeAndy.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4BDE84F96DF51BD76F996E50 /* DiarioDeAndy.otf */; };
 		4C577BA9CBEDEC22F8A8955E /* Fonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2421EF5976B8ABE3633069EA /* Fonts.swift */; };
-		5E6014B3DBE0052FBA106684 /* LibreBaskerville-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9975E25495633B396D3CA9FA /* LibreBaskerville-Bold.ttf */; };
 		645E1C61FEC67A81219193DD /* BricolageDisplay-800.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A0ED9DAC1539BB93A929D3F4 /* BricolageDisplay-800.ttf */; };
 		655E1223C5B9693BC94BE3C4 /* BricolageGrotesque-800.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4EFA607E81B77C4F92BEFD43 /* BricolageGrotesque-800.ttf */; };
 		656E30FCAE5EFAE79DC6BDB1 /* Provider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCA078D6597EF9C253AA361 /* Provider.swift */; };
 		6850A7EBC3BD4CBEA38158B3 /* NewWaltDisney.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 531C66868F4F59346D672F02 /* NewWaltDisney.ttf */; };
-		71A46E38776EECA0EB1C3FCB /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B6E361826909A2AA20273461 /* Roboto-Bold.ttf */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */; };
 		86D5495BC86BF1E8B7A8F897 /* CountdownsWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B9E8659EC860EEF3893C7B63 /* CountdownsWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -42,7 +39,6 @@
 		B49D470768C34EC29FB18B40 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9143109E42B1D6693D3FDBD /* Configuration.swift */; };
 		C78D50D52900553FE0950592 /* Sunnyspells.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02E247141D0B5D24234EA724 /* Sunnyspells.otf */; };
 		D4386A9489ED663F1B32E368 /* Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC5915502EF3452A38371F51 /* Snapshot.swift */; };
-		DB65CE76121F61B8C3532B6F /* LuxuriousRoman-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8B72FAF9C22F342B1462AB18 /* LuxuriousRoman-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -104,7 +100,6 @@
 		78E0A7A72DC9AD7400C4905E /* FlutterGeneratedPluginSwiftPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = FlutterGeneratedPluginSwiftPackage; path = Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
 		84FED4AD605EF7EC01D939C4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		8B72FAF9C22F342B1462AB18 /* LuxuriousRoman-Regular.ttf */ = {isa = PBXFileReference; includeInIndex = 1; path = "LuxuriousRoman-Regular.ttf"; sourceTree = "<group>"; };
 		92812E65511874B325D82853 /* Views.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Views.swift; sourceTree = "<group>"; };
 		92EAEC8F125C6651E4BE781D /* CountdownsWidget.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = CountdownsWidget.entitlements; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
@@ -114,15 +109,12 @@
 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9975E25495633B396D3CA9FA /* LibreBaskerville-Bold.ttf */ = {isa = PBXFileReference; includeInIndex = 1; path = "LibreBaskerville-Bold.ttf"; sourceTree = "<group>"; };
 		A0ED9DAC1539BB93A929D3F4 /* BricolageDisplay-800.ttf */ = {isa = PBXFileReference; includeInIndex = 1; path = "BricolageDisplay-800.ttf"; sourceTree = "<group>"; };
 		A3D7D19C0773A69EEFA46D21 /* CountdownsWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CountdownsWidget.swift; sourceTree = "<group>"; };
 		B068CE6375575D14200765A0 /* BricolageGrotesque-700.ttf */ = {isa = PBXFileReference; includeInIndex = 1; path = "BricolageGrotesque-700.ttf"; sourceTree = "<group>"; };
-		B6E361826909A2AA20273461 /* Roboto-Bold.ttf */ = {isa = PBXFileReference; includeInIndex = 1; path = "Roboto-Bold.ttf"; sourceTree = "<group>"; };
 		B9E8659EC860EEF3893C7B63 /* CountdownsWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CountdownsWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB6E46C2BCA2A797F9B6D298 /* Starjedi.ttf */ = {isa = PBXFileReference; includeInIndex = 1; path = Starjedi.ttf; sourceTree = "<group>"; };
 		BC5915502EF3452A38371F51 /* Snapshot.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Snapshot.swift; sourceTree = "<group>"; };
-		CDFE4DCB0EF51C562B897681 /* ComicNeue-Bold.ttf */ = {isa = PBXFileReference; includeInIndex = 1; path = "ComicNeue-Bold.ttf"; sourceTree = "<group>"; };
 		D35CA0954E5CEB924FEA74B8 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D9143109E42B1D6693D3FDBD /* Configuration.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		DFCA078D6597EF9C253AA361 /* Provider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Provider.swift; sourceTree = "<group>"; };
@@ -169,11 +161,7 @@
 				4EFA607E81B77C4F92BEFD43 /* BricolageGrotesque-800.ttf */,
 				0D30FC21EF09190EA84C9C52 /* Inter-600.ttf */,
 				42C0D84B37811DD4044CB834 /* Inter-700.ttf */,
-				B6E361826909A2AA20273461 /* Roboto-Bold.ttf */,
 				1EBBB525DBE0D785D4648A05 /* GoodTimes-Regular.otf */,
-				9975E25495633B396D3CA9FA /* LibreBaskerville-Bold.ttf */,
-				8B72FAF9C22F342B1462AB18 /* LuxuriousRoman-Regular.ttf */,
-				CDFE4DCB0EF51C562B897681 /* ComicNeue-Bold.ttf */,
 				4BDE84F96DF51BD76F996E50 /* DiarioDeAndy.otf */,
 				02E247141D0B5D24234EA724 /* Sunnyspells.otf */,
 				712973C9AB6385F01D496F1E /* CarnivaleeFreakshow-Regular.ttf */,
@@ -375,11 +363,7 @@
 				655E1223C5B9693BC94BE3C4 /* BricolageGrotesque-800.ttf in Resources */,
 				AB4B2267B601F45EF5163227 /* Inter-600.ttf in Resources */,
 				2B85E09AD4C41D0A847397DB /* Inter-700.ttf in Resources */,
-				71A46E38776EECA0EB1C3FCB /* Roboto-Bold.ttf in Resources */,
 				9E3295EBA2DFF521C70C27B9 /* GoodTimes-Regular.otf in Resources */,
-				5E6014B3DBE0052FBA106684 /* LibreBaskerville-Bold.ttf in Resources */,
-				DB65CE76121F61B8C3532B6F /* LuxuriousRoman-Regular.ttf in Resources */,
-				1DA2D305BC154356E21D756F /* ComicNeue-Bold.ttf in Resources */,
 				489A82596D9DD6C71BF36ABE /* DiarioDeAndy.otf in Resources */,
 				C78D50D52900553FE0950592 /* Sunnyspells.otf in Resources */,
 				B25FAE1883C63DC6BB40C7E3 /* CarnivaleeFreakshow-Regular.ttf in Resources */,

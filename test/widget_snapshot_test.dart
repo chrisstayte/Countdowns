@@ -31,6 +31,7 @@ void main() {
         title: 'Birthday',
         dateTime: DateTime(1990, 2, 3),
         repeat: RepeatRule.yearly,
+        // Bundled before Google Fonts: reads as the Google family now.
         fontFamily: 'ComicNeue',
       ),
     ], now);
@@ -42,7 +43,8 @@ void main() {
       DateTime(2027, 2, 3).millisecondsSinceEpoch ~/ 1000,
     );
     expect(birthday['yearly'], true);
-    expect(birthday['font'], 'ComicNeue');
+    expect(birthday['font'], 'Comic Neue');
+    expect(birthday['fontFile'], 'fonts/Comic_Neue.ttf');
     expect(birthday['icon'], isNull);
     final trip = events.last as Map;
     expect(trip['colors'], ['#66B6FE', '#5FD3B5']);
@@ -51,6 +53,8 @@ void main() {
     expect(trip['text'], '#1C1633');
     expect(trip['icon'], 'icons/plane-1C1633.png');
     expect(trip['photo'], isNull);
+    expect(trip['font'], 'Default');
+    expect(trip['fontFile'], isNull);
   });
 
   test('the snapshot carries only active countdowns, which picks the large '

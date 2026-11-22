@@ -675,6 +675,7 @@ class BackgroundPreviewStrip extends ConsumerWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontFamily: resolveEventFont(event.fontFamily),
+                    fontFamilyFallback: eventFontFallback,
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
                     color: ink,

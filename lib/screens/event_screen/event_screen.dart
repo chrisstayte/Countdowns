@@ -218,6 +218,7 @@ class _CountdownDetailState extends ConsumerState<CountdownDetail> {
                           style: on(
                             TextStyle(
                               fontFamily: resolveEventFont(event.fontFamily),
+                              fontFamilyFallback: eventFontFallback,
                               fontSize: widget.compact ? 32 : 40,
                               fontWeight: FontWeight.w700,
                               height: 1.1,

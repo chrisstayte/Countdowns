@@ -74,6 +74,7 @@ class CountdownCard extends StatelessWidget {
                           event,
                           TextStyle(
                             fontFamily: resolveEventFont(event.fontFamily),
+                            fontFamilyFallback: eventFontFallback,
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
                             height: 1.15,
@@ -206,6 +207,7 @@ class UpNextCard extends StatelessWidget {
                               event,
                               TextStyle(
                                 fontFamily: resolveEventFont(event.fontFamily),
+                                fontFamilyFallback: eventFontFallback,
                                 fontSize: 26,
                                 fontWeight: FontWeight.w700,
                                 height: 1.1,

@@ -1,5 +1,6 @@
 import 'package:countdowns/models/event_icons.dart';
 import 'package:countdowns/providers/local_settings_provider.dart';
+import 'package:countdowns/theme/app_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Recently used things, newest first, kept in SharedPreferences under their
@@ -48,7 +49,11 @@ class RecentsController extends Notifier<Recents> {
     final prefs = ref.watch(preferencesProvider);
     return Recents(
       icons: prefs.getStringList(_iconsKey) ?? const [],
-      fonts: prefs.getStringList(_fontsKey) ?? const [],
+      // Older versions stored bundled names that are Google fonts now.
+      fonts: (prefs.getStringList(_fontsKey) ?? const [])
+          .map(canonicalEventFont)
+          .toSet()
+          .toList(),
       photos: prefs.getStringList(_photosKey) ?? const [],
       searches: prefs.getStringList(_searchesKey) ?? const [],
       backgrounds: prefs.getStringList(_backgroundsKey) ?? const [],
@@ -64,7 +69,8 @@ class RecentsController extends Notifier<Recents> {
   }
 
   Future<void> useFont(String family) async {
-    state = state.copyWith(fonts: _push(state.fonts, family, 4));
+    final key = canonicalEventFont(family);
+    state = state.copyWith(fonts: _push(state.fonts, key, 4));
     await ref.read(preferencesProvider).setStringList(_fontsKey, state.fonts);
   }
 
@@ -109,8 +115,8 @@ List<String> fontRow(List<String> recent) => [
   ...recent,
   ...[
     'Default',
-    'LibreBaskerville',
-    'ComicNeue',
+    'Libre Baskerville',
+    'Comic Neue',
     'NewWaltDisney',
   ].where((f) => !recent.contains(f)),
 ].take(4).toList();

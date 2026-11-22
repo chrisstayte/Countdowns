@@ -68,6 +68,7 @@ class EditorPreview extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontFamily: resolveEventFont(draft.fontFamily),
+                              fontFamilyFallback: eventFontFallback,
                               fontSize: compact ? 17 : 24,
                               fontWeight: FontWeight.w700,
                               height: 1.1,

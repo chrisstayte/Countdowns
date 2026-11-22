@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:countdowns/data/database.dart';
+import 'package:countdowns/fonts/font_library.dart';
 import 'package:countdowns/theme/app_theme.dart';
 import 'package:countdowns/widgets_bridge/widget_snapshot.dart';
 import 'package:countdowns/providers/event_provider.dart';
@@ -17,6 +19,7 @@ import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:path/path.dart' as p;
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
@@ -33,9 +36,21 @@ Future<void> main() async {
   final documents = mobile ? await getApplicationDocumentsDirectory() : null;
   PhotoStore.setUp(documents ?? await getApplicationSupportDirectory());
   // Stock photo pages and downloads are disposable: keep them in caches.
+  Directory? caches;
   try {
-    stockCacheRoot = await getApplicationCacheDirectory();
+    caches = await getApplicationCacheDirectory();
+    stockCacheRoot = caches;
   } catch (_) {}
+  // Google fonts countdowns use live where the widgets can read them;
+  // fonts only previewed in the picker are disposable.
+  final support = await getApplicationSupportDirectory();
+  final widgetFolder = await widgetContainerPath();
+  FontLibrary.instance.setUp(
+    installed: Directory(
+      p.join(widgetFolder ?? p.join(support.path, 'widget'), 'fonts'),
+    ),
+    cache: Directory(p.join((caches ?? support).path, 'font_previews')),
+  );
 
   Future<void> start() async {
     final result = await prepareStorage(
@@ -58,6 +73,7 @@ Future<void> main() async {
     );
     // Keep the home and lock screen widgets' snapshot current.
     final widgets = WidgetSnapshotWriter();
+    FontLibrary.instance.onInstalled = () => unawaited(widgets.refresh());
     container.listen(eventsStreamProvider, (_, next) {
       final events = next.value;
       if (events != null) unawaited(widgets.write(events));

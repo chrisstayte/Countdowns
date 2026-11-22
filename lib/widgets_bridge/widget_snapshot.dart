@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
 
+import 'package:countdowns/fonts/font_library.dart';
 import 'package:countdowns/models/art_catalog.dart';
 import 'package:countdowns/models/countdown.dart';
 import 'package:countdowns/models/event_icons.dart';
@@ -19,6 +20,18 @@ import 'package:path/path.dart' as p;
 const widgetEventLimit = 12;
 
 const _channel = MethodChannel('countdowns/widgets');
+
+/// The folder the widgets read from (the App Group container on iOS, the
+/// app's files dir on Android), or null where there are no widgets.
+Future<String?> widgetContainerPath() async {
+  if (!WidgetSnapshotWriter.supported) return null;
+  try {
+    final root = await _channel.invokeMethod<String>('containerPath');
+    return root == null ? null : p.join(root, 'widget');
+  } catch (_) {
+    return null;
+  }
+}
 
 String _hex(ui.Color c) =>
     '#${(c.toARGB32() & 0xFFFFFF).toRadixString(16).padLeft(6, '0').toUpperCase()}';
@@ -77,7 +90,13 @@ Map<String, Object?> buildWidgetSnapshot(List<Countdown> events, DateTime now) {
           'allDay': e.allDay,
           'yearly': e.repeat == RepeatRule.yearly,
           'unit': e.unit.name,
-          'font': eventFontFor(e.fontFamily).family,
+          'font': canonicalEventFont(e.fontFamily),
+          // A Google font travels as its file, installed by the writer
+          // (see FontLibrary). Missing until it has downloaded: the widget
+          // shows Default.
+          'fontFile': isGoogleEventFont(e.fontFamily)
+              ? FontLibrary.widgetPath(canonicalEventFont(e.fontFamily))
+              : null,
           'text': _hex(e.textColor),
           'colors': [
             for (final c in e.art != null ? [e.color] : e.gradient ?? [e.color])
@@ -135,6 +154,10 @@ class WidgetSnapshotWriter {
   bool _again = false;
   List<Countdown> _latest = const [];
 
+  /// Writes the last events again, for when something they show (a font
+  /// that finished downloading) has changed.
+  Future<void> refresh() => write(_latest);
+
   /// Coalesces bursts of changes into one write at a time.
   Future<void> write(List<Countdown> events) async {
     if (!_supported) return;
@@ -165,9 +188,19 @@ class WidgetSnapshotWriter {
       final snapshot = buildWidgetSnapshot(events, _clock());
       final byId = {for (final e in events) e.id: e};
       final keep = <String>{};
+      final fonts = FontLibrary.instance;
       for (final entry in snapshot['events']! as List) {
         final m = entry as Map<String, Object?>;
         final e = byId[m['id']]!;
+        if (m['fontFile'] != null) {
+          final family = m['font']! as String;
+          // Offline is fine: the widget uses Default, and the library
+          // asks for another write once the file arrives.
+          try {
+            await fonts.use(family).timeout(const Duration(seconds: 20));
+          } catch (_) {}
+          if (await fonts.installedFile(family) == null) m['fontFile'] = null;
+        }
         if (m['icon'] case final String icon) {
           keep.add(icon);
           await _renderIcon(File(p.join(dir.path, icon)), e);
@@ -191,6 +224,12 @@ class WidgetSnapshotWriter {
       }
       await _prune(Directory(p.join(dir.path, 'icons')), dir.path, keep);
       await _prune(Directory(p.join(dir.path, 'photos')), dir.path, keep);
+      // Fonts stay installed for every countdown, not just the ones the
+      // widgets can see, so opening any countdown never downloads.
+      await fonts.prune({
+        for (final e in events)
+          if (isGoogleEventFont(e.fontFamily)) canonicalEventFont(e.fontFamily),
+      });
       final tmp = File(p.join(dir.path, 'snapshot.json.tmp'));
       await tmp.writeAsString(jsonEncode(snapshot));
       await tmp.rename(p.join(dir.path, 'snapshot.json'));

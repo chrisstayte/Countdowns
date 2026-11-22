@@ -34,6 +34,9 @@ class CounterTest {
         assertEquals("photos/7-wide-abc.png", birthday.photoWide)
         assertEquals(null, thanksgiving.photo)
         assertEquals(0xFF1C1633.toInt(), thanksgiving.text)
+        // Google fonts arrive as a file; bundled ones don't have one.
+        assertEquals("fonts/Roboto.ttf", flight.fontFile)
+        assertEquals(null, birthday.fontFile)
     }
 
     @Test

@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:countdowns/fonts/font_library.dart';
 import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -51,7 +54,7 @@ abstract final class AppColors {
   static const highlight = highlighter;
 }
 
-/// Font families. Event fonts use [eventFontFamily].
+/// Font families. Event fonts use [resolveEventFont].
 abstract final class AppFonts {
   static const ui = 'Inter';
   static const numerals = 'BricolageGrotesque';
@@ -60,40 +63,71 @@ abstract final class AppFonts {
   static const display = 'BricolageDisplay';
 }
 
+/// A font bundled with the app. Every other event font is a Google font,
+/// stored by its family name and downloaded when used (see FontLibrary).
 class EventFont {
-  const EventFont(this.family, this.label, this.group);
+  const EventFont(this.family, this.label);
 
   /// The value stored on the event.
   final String family;
   final String label;
-  final String group;
 
   String get fontFamily => resolveEventFont(family);
 }
 
-/// The 11 event fonts, grouped as on the canvas.
-const eventFonts = [
-  EventFont('Default', 'Default', 'Clean'),
-  EventFont('Roboto', 'Roboto', 'Clean'),
-  EventFont('GoodTimes', 'Good Times', 'Clean'),
-  EventFont('LibreBaskerville', 'Baskerville', 'Classic'),
-  EventFont('LuxuriousRoman', 'Luxurious Roman', 'Classic'),
-  EventFont('ComicNeue', 'Comic Neue', 'Fun'),
-  EventFont('DiarioDeAndy', 'Diario De Andy', 'Fun'),
-  EventFont('Sunnyspells', 'Sunnyspells', 'Fun'),
-  EventFont('CarnivaleeFreakshow', 'Carnivalee Freakshow', 'Fun'),
-  EventFont('Starjedi', 'Not Starwars', 'Fun'),
-  EventFont('NewWaltDisney', 'Not Disney', 'Fun'),
+/// The event fonts that ship with the app: Default (Bricolage) and the
+/// originals that aren't on Google Fonts.
+const bundledEventFonts = [
+  EventFont('Default', 'Default'),
+  EventFont('GoodTimes', 'Good Times'),
+  EventFont('DiarioDeAndy', 'Diario De Andy'),
+  EventFont('Sunnyspells', 'Sunnyspells'),
+  EventFont('CarnivaleeFreakshow', 'Carnivalee Freakshow'),
+  EventFont('Starjedi', 'Not Starwars'),
+  EventFont('NewWaltDisney', 'Not Disney'),
 ];
 
-EventFont eventFontFor(String family) => eventFonts.firstWhere(
-  (f) => f.family == family,
-  orElse: () => eventFonts.first,
-);
+/// Fonts the app used to bundle that now come from Google Fonts. Countdowns
+/// keep the old value; it reads as the Google family.
+const legacyEventFonts = {
+  'LibreBaskerville': 'Libre Baskerville',
+  'ComicNeue': 'Comic Neue',
+  'LuxuriousRoman': 'Luxurious Roman',
+  // 'Roboto' is the same name on Google Fonts.
+};
 
-/// "Default" is Bricolage Grotesque in the redesign.
-String resolveEventFont(String family) =>
-    family == 'Default' ? AppFonts.numerals : family;
+/// The font a stored value means today.
+String canonicalEventFont(String family) =>
+    family.isEmpty ? 'Default' : legacyEventFonts[family] ?? family;
+
+EventFont? bundledEventFont(String family) {
+  final key = canonicalEventFont(family);
+  for (final f in bundledEventFonts) {
+    if (f.family == key) return f;
+  }
+  return null;
+}
+
+bool isGoogleEventFont(String family) => bundledEventFont(family) == null;
+
+/// What the picker calls a font.
+String eventFontLabel(String family) =>
+    bundledEventFont(family)?.label ?? canonicalEventFont(family);
+
+/// The Flutter family for an event font. "Default" is Bricolage Grotesque
+/// in the redesign. A Google font starts loading here (from the device, or
+/// downloaded once); pair this with [eventFontFallback] so the title shows
+/// in Default until it's ready, offline included.
+String resolveEventFont(String family) {
+  final key = canonicalEventFont(family);
+  if (key == 'Default') return AppFonts.numerals;
+  if (bundledEventFont(key) != null) return key;
+  unawaited(FontLibrary.instance.use(key));
+  return FontLibrary.flutterFamily(key);
+}
+
+/// Fallback for event titles while a Google font loads or if it can't.
+const eventFontFallback = [AppFonts.numerals];
 
 /// Text styles used across screens.
 abstract final class AppText {

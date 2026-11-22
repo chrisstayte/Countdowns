@@ -428,6 +428,7 @@ class _ResultRow extends StatelessWidget {
     final title = e.title;
     final style = TextStyle(
       fontFamily: resolveEventFont(e.fontFamily),
+      fontFamilyFallback: eventFontFallback,
       fontSize: 17,
       fontWeight: FontWeight.w600,
       color: AppColors.ink,

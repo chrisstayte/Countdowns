@@ -355,6 +355,7 @@ class _ListRow extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontFamily: resolveEventFont(event.fontFamily),
+                          fontFamilyFallback: eventFontFallback,
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
                           color: ink,

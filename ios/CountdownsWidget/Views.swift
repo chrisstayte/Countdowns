@@ -89,7 +89,7 @@ struct SmallView: View {
     VStack(alignment: .leading, spacing: 0) {
       HStack(alignment: .top, spacing: 6) {
         Text(event.title)
-          .font(WidgetFont.event(event.font, 17))
+          .font(WidgetFont.event(event, 17))
           .lineLimit(2)
           .minimumScaleFactor(0.8)
         Spacer(minLength: 0)
@@ -121,7 +121,7 @@ struct MediumView: View {
           Text(entry.pinned ? "COUNTDOWN" : "UP NEXT")
             .font(WidgetFont.ui(11, bold: true)).kerning(0.9)
           Text(event.title)
-            .font(WidgetFont.event(event.font, 22))
+            .font(WidgetFont.event(event, 22))
             .lineLimit(1)
             .minimumScaleFactor(0.7)
         }
@@ -214,7 +214,7 @@ struct LeadCard: View {
       VStack(alignment: .leading, spacing: 2) {
         Text(entry.pinned ? "COUNTDOWN" : "UP NEXT")
           .font(WidgetFont.ui(11, bold: true)).kerning(0.9)
-        Text(event.title).font(WidgetFont.event(event.font, 20)).lineLimit(1)
+        Text(event.title).font(WidgetFont.event(event, 20)).lineLimit(1)
       }
       Spacer(minLength: 8)
       HStack(alignment: .firstTextBaseline, spacing: 3) {
@@ -243,7 +243,7 @@ struct HeroView: View {
           Text(entry.pinned ? "COUNTDOWN" : "UP NEXT")
             .font(WidgetFont.ui(12, bold: true)).kerning(1)
           Text(event.title)
-            .font(WidgetFont.event(event.font, 30))
+            .font(WidgetFont.event(event, 30))
             .lineLimit(2)
             .minimumScaleFactor(0.7)
         }
@@ -280,7 +280,7 @@ struct ListRow: View {
       .frame(width: 34, height: 34)
       .clipShape(RoundedRectangle(cornerRadius: 11, style: .continuous))
       VStack(alignment: .leading, spacing: 0) {
-        Text(event.title).font(WidgetFont.event(event.font, 15)).lineLimit(1)
+        Text(event.title).font(WidgetFont.event(event, 15)).lineLimit(1)
         Text(event.shortDate(at: entry.date)).font(WidgetFont.ui(11))
           .foregroundStyle(Color.secondaryText)
       }

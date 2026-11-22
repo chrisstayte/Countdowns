@@ -28,6 +28,9 @@ struct WidgetEvent: Codable, Identifiable, Hashable {
   /// False for drawn art (patterns, textures, illustrations): no scrim and
   /// no text shadow. Missing in older snapshots, which only had photos.
   var scrim: Bool? = nil
+  /// A Google font's file, relative to the widget folder, for `font`.
+  /// Nil for bundled fonts, and until the app has downloaded it.
+  var fontFile: String? = nil
 }
 
 struct WidgetSnapshot: Codable {

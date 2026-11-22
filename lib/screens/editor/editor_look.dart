@@ -5,6 +5,7 @@ import 'package:countdowns/models/icon_catalog.dart';
 import 'package:countdowns/models/palette.dart';
 import 'package:countdowns/providers/recents_provider.dart';
 import 'package:countdowns/screens/editor/all_backgrounds_sheet.dart';
+import 'package:countdowns/screens/editor/all_fonts_sheet.dart';
 import 'package:countdowns/screens/editor/all_icons_sheet.dart';
 import 'package:countdowns/screens/editor/editor_details.dart';
 import 'package:countdowns/screens/editor/photos_tab.dart';
@@ -110,7 +111,7 @@ class EditorLook extends ConsumerWidget {
         ),
         const SizedBox(height: 10),
         SeeAllButton(
-          label: 'All ${eventFonts.length} fonts',
+          label: allFontsLabel(ref.watch(fontCatalogProvider).value),
           onTap: () => _allFonts(context, ref),
         ),
       ],
@@ -120,9 +121,8 @@ class EditorLook extends ConsumerWidget {
   List<String> _fontRow(List<String> recent) {
     final row = fontRow(recent);
     // Keep the current font visible.
-    if (!row.contains(draft.fontFamily)) {
-      return [draft.fontFamily, ...row.take(3)];
-    }
+    final current = canonicalEventFont(draft.fontFamily);
+    if (!row.contains(current)) return [current, ...row.take(3)];
     return row;
   }
 
@@ -389,9 +389,9 @@ class _FontGrid extends StatelessWidget {
     children: [
       for (final family in families)
         _FontTile(
-          font: eventFontFor(family),
+          family: family,
           sample: draft.title.isEmpty ? 'Countdown' : draft.title,
-          selected: draft.fontFamily == family,
+          selected: canonicalEventFont(draft.fontFamily) == family,
           onTap: () => onPick(family),
         ),
     ],
@@ -400,12 +400,12 @@ class _FontGrid extends StatelessWidget {
 
 class _FontTile extends StatelessWidget {
   const _FontTile({
-    required this.font,
+    required this.family,
     required this.sample,
     required this.selected,
     required this.onTap,
   });
-  final EventFont font;
+  final String family;
   final String sample;
   final bool selected;
   final VoidCallback onTap;
@@ -414,7 +414,7 @@ class _FontTile extends StatelessWidget {
   Widget build(BuildContext context) => Semantics(
     button: true,
     selected: selected,
-    label: '${font.label} font',
+    label: '${eventFontLabel(family)} font',
     child: GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
@@ -432,19 +432,19 @@ class _FontTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              sample,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontFamily: font.fontFamily,
+            FontSample(
+              family: family,
+              text: sample,
+              style: const TextStyle(
                 fontSize: 18,
                 height: 1.1,
                 color: AppColors.ink,
               ),
             ),
             Text(
-              font.label,
+              eventFontLabel(family),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w600,
@@ -456,126 +456,4 @@ class _FontTile extends StatelessWidget {
       ),
     ),
   );
-}
-
-/// "All fonts": every font previewing the real title, filterable.
-class AllFontsSheet extends StatefulWidget {
-  const AllFontsSheet({super.key, required this.draft});
-  final Countdown draft;
-
-  @override
-  State<AllFontsSheet> createState() => _AllFontsSheetState();
-}
-
-class _AllFontsSheetState extends State<AllFontsSheet> {
-  String _group = 'All';
-  late String _selected = widget.draft.fontFamily;
-
-  @override
-  Widget build(BuildContext context) {
-    final sample = widget.draft.title.isEmpty
-        ? 'Countdown'
-        : widget.draft.title;
-    final rows = eventFonts
-        .where((f) => _group == 'All' || f.group == _group)
-        .toList();
-    return FractionallySizedBox(
-      heightFactor: 0.92,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const SheetHandle(),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                const Text('All fonts', style: AppText.sheetTitle),
-                const Spacer(),
-                PillButton(
-                  label: 'Done',
-                  onTap: () => Navigator.pop(context, _selected),
-                ),
-              ],
-            ),
-            const SizedBox(height: 14),
-            PillSegmented<String>(
-              values: const ['All', 'Clean', 'Classic', 'Fun'],
-              selected: _group,
-              label: (g) => g,
-              onChanged: (g) => setState(() => _group = g),
-            ),
-            const SizedBox(height: 14),
-            Expanded(
-              child: ListView.separated(
-                padding: const EdgeInsets.only(bottom: 30),
-                itemCount: rows.length,
-                separatorBuilder: (_, _) => const SizedBox(height: 8),
-                itemBuilder: (_, i) {
-                  final f = rows[i];
-                  final on = f.family == _selected;
-                  return Semantics(
-                    button: true,
-                    selected: on,
-                    label: '${f.label} font',
-                    child: GestureDetector(
-                      onTap: () => setState(() => _selected = f.family),
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 150),
-                        height: 60,
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        decoration: BoxDecoration(
-                          color: AppColors.wash,
-                          borderRadius: BorderRadius.circular(18),
-                          border: Border.all(
-                            color: on ? AppColors.ink : Colors.transparent,
-                            width: 2,
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                sample,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontFamily: f.fontFamily,
-                                  fontSize: 22,
-                                  color: AppColors.ink,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Text(f.label, style: _hint),
-                            const SizedBox(width: 12),
-                            AnimatedContainer(
-                              duration: const Duration(milliseconds: 150),
-                              width: 24,
-                              height: 24,
-                              decoration: BoxDecoration(
-                                color: on ? AppColors.ink : Colors.transparent,
-                                shape: BoxShape.circle,
-                              ),
-                              child: on
-                                  ? const Icon(
-                                      Icons.check_rounded,
-                                      size: 16,
-                                      color: Colors.white,
-                                    )
-                                  : null,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

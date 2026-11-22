@@ -159,6 +159,7 @@ class _Hero extends StatelessWidget {
             style: on(
               TextStyle(
                 fontFamily: resolveEventFont(event.fontFamily),
+                fontFamilyFallback: eventFontFallback,
                 fontSize: 44,
                 fontWeight: FontWeight.w700,
                 height: 1.1,
@@ -244,6 +245,7 @@ class _Tile extends StatelessWidget {
                   style: on(
                     TextStyle(
                       fontFamily: resolveEventFont(event.fontFamily),
+                      fontFamilyFallback: eventFontFallback,
                       fontSize: 22,
                       fontWeight: FontWeight.w700,
                       height: 1.15,

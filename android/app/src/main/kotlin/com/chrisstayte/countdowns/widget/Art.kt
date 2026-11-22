@@ -18,6 +18,7 @@ import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
 import android.text.TextUtils
+import java.io.File
 import java.time.ZonedDateTime
 import kotlin.math.min
 
@@ -61,24 +62,41 @@ object Fonts {
         Typeface.create(Typeface.SANS_SERIF, if (bold) Typeface.BOLD else Typeface.NORMAL),
     )
 
-    /** The countdown's own font, for titles. */
-    fun event(context: Context, family: String): Typeface = load(
-        context,
-        when (family) {
-            "Roboto" -> "Roboto-Bold.ttf"
-            "GoodTimes" -> "GoodTimes-Regular.otf"
-            "LibreBaskerville" -> "LibreBaskerville-Bold.ttf"
-            "LuxuriousRoman" -> "LuxuriousRoman-Regular.ttf"
-            "ComicNeue" -> "ComicNeue-Bold.ttf"
-            "DiarioDeAndy" -> "DiarioDeAndy.otf"
-            "Sunnyspells" -> "Sunnyspells.otf"
-            "CarnivaleeFreakshow" -> "CarnivaleeFreakshow-Regular.ttf"
-            "Starjedi" -> "Starjedi.ttf"
-            "NewWaltDisney" -> "NewWaltDisney.ttf"
-            else -> "BricolageGrotesque-700.ttf"
-        },
-        Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD),
-    )
+    /**
+     * The countdown's own font, for titles. A Google font is a file the app
+     * downloaded into the widget folder ([file], relative to it); until it
+     * arrives, and for Default, titles use Bricolage.
+     */
+    fun event(context: Context, family: String, file: String?): Typeface {
+        if (file != null) fromFile(context, file)?.let { return it }
+        return load(
+            context,
+            when (family) {
+                "GoodTimes" -> "GoodTimes-Regular.otf"
+                "DiarioDeAndy" -> "DiarioDeAndy.otf"
+                "Sunnyspells" -> "Sunnyspells.otf"
+                "CarnivaleeFreakshow" -> "CarnivaleeFreakshow-Regular.ttf"
+                "Starjedi" -> "Starjedi.ttf"
+                "NewWaltDisney" -> "NewWaltDisney.ttf"
+                else -> "BricolageGrotesque-700.ttf"
+            },
+            Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD),
+        )
+    }
+
+    private fun fromFile(context: Context, relative: String): Typeface? {
+        val f = File(SnapshotStore.folder(context), relative)
+        val key = "file:" + f.path
+        synchronized(cache) {
+            cache[key]?.let { return it }
+            if (!f.isFile) return null
+            return try {
+                Typeface.createFromFile(f).also { cache[key] = it }
+            } catch (_: Exception) {
+                null
+            }
+        }
+    }
 }
 
 /**
@@ -230,7 +248,7 @@ class Art(
         val count = counter.count(e, now, modeFor(countIn, e))
 
         drawIcon(canvas, e, w - pad - 20f, pad, 20f)
-        val title = paint(Fonts.event(context, e.font), 17f, e.text, shadow)
+        val title = paint(Fonts.event(context, e.font, e.fontFile), 17f, e.text, shadow)
         canvas.save()
         canvas.translate(pad, pad)
         layout(e.title, title, w - pad * 2 - 26f, 2).draw(canvas)
@@ -259,7 +277,7 @@ class Art(
         val label = paint(Fonts.ui(context, bold = true), 11f, e.text, shadow)
             .apply { letterSpacing = 0.08f }
         canvas.drawText(eyebrow(pinned), padX, padY + 11f, label)
-        val title = paint(Fonts.event(context, e.font), 22f, e.text, shadow)
+        val title = paint(Fonts.event(context, e.font, e.fontFile), 22f, e.text, shadow)
         fit(e.title, title, w - padX * 2 - 30f, 0.7f)
         canvas.save()
         canvas.translate(padX, padY + 15f)
@@ -307,7 +325,7 @@ class Art(
         )
         val label = paint(Fonts.ui(context, bold = true), 11f, e.text, shadow)
             .apply { letterSpacing = 0.08f }
-        val title = paint(Fonts.event(context, e.font), 20f, e.text, shadow)
+        val title = paint(Fonts.event(context, e.font, e.fontFile), 20f, e.text, shadow)
         val titleW = w - pad * 2 - countW - 8f
         canvas.save()
         canvas.translate(pad, baseline - 24f)
@@ -332,7 +350,7 @@ class Art(
         val label = paint(Fonts.ui(context, bold = true), 12f, e.text, shadow)
             .apply { letterSpacing = 0.08f }
         canvas.drawText(eyebrow(pinned), pad, pad + 12f, label)
-        val title = paint(Fonts.event(context, e.font), 28f, e.text, shadow)
+        val title = paint(Fonts.event(context, e.font, e.fontFile), 28f, e.text, shadow)
         canvas.save()
         canvas.translate(pad, pad + 18f)
         layout(e.title, title, w - pad * 2 - 34f, 2).draw(canvas)
@@ -381,7 +399,7 @@ class Art(
 
         val textX = 44f
         val textW = w - textX - bigW - suffixW - 6f
-        val title = paint(Fonts.event(context, e.font), 15f, Palette.INK, false)
+        val title = paint(Fonts.event(context, e.font, e.fontFile), 15f, Palette.INK, false)
         canvas.save()
         canvas.translate(textX, 2f)
         layout(e.title, title, textW, 1).draw(canvas)

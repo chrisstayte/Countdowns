@@ -36,6 +36,8 @@ data class WidgetEvent(
     val createdAt: Long,
     /** False for drawn art (patterns, textures, illustrations): no scrim. */
     val scrim: Boolean = true,
+    /** A Google font's file, relative to the widget folder; null until downloaded. */
+    val fontFile: String? = null,
 ) {
     val hasPhoto get() = photo != null
 
@@ -89,6 +91,7 @@ object SnapshotStore {
                 darken = e.optDouble("darken", 0.35),
                 createdAt = e.optLong("createdAt", e.getLong("target")),
                 scrim = e.optBoolean("scrim", true),
+                fontFile = e.optStringOrNull("fontFile"),
             )
         }
     }

@@ -269,6 +269,7 @@ class _ShareSheetState extends ConsumerState<ShareSheet> {
 TextStyle _title(Countdown e, double size, Color ink, List<Shadow>? s) =>
     TextStyle(
       fontFamily: resolveEventFont(e.fontFamily),
+      fontFamilyFallback: eventFontFallback,
       fontSize: size,
       fontWeight: FontWeight.w700,
       color: ink,
