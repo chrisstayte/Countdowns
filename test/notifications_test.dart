@@ -93,8 +93,9 @@ void main() {
         .setMockMethodCallHandler(
           const MethodChannel('dexterous.com/flutter/local_notifications'),
           (call) async {
-            if (call.method == 'zonedSchedule')
+            if (call.method == 'zonedSchedule') {
               calls.add(call.arguments as Map);
+            }
             return null;
           },
         );
