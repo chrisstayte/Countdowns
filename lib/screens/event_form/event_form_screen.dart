@@ -1,5 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:countdowns/global/global.dart';
+import 'package:countdowns/models/event_icons.dart';
+import 'package:countdowns/models/palette.dart';
 import 'package:countdowns/providers/event_draft_provider.dart';
 import 'package:countdowns/providers/event_provider.dart';
 import 'package:countdowns/providers/local_settings_provider.dart';
@@ -58,7 +60,7 @@ class _EventFormScreenState extends ConsumerState<EventFormScreen> {
     _titleController.addListener(() {
       ref
           .read(eventDraftProvider(_session).notifier)
-          .change((draft) => draft.title = _titleController.text);
+          .change((d) => d.copyWith(title: _titleController.text));
     });
   }
 
@@ -117,11 +119,8 @@ class _EventFormScreenState extends ConsumerState<EventFormScreen> {
                         setState(() => _saving = true);
                         try {
                           await ref
-                              .read(eventsProvider.notifier)
-                              .save(
-                                ref.read(eventDraftProvider(_session)),
-                                key: int.tryParse(widget.eventKey ?? ''),
-                              );
+                              .read(eventsControllerProvider)
+                              .save(ref.read(eventDraftProvider(_session)));
                         } catch (error) {
                           if (!context.mounted) return;
                           setState(() => _saving = false);
@@ -352,34 +351,49 @@ class _EventFormScreenState extends ConsumerState<EventFormScreen> {
                   NameAndDateContainer(
                     eventKey: widget.eventKey,
                     controller: _titleController,
-                    eventDateTime: draft.eventDateTime,
+                    eventDateTime: draft.dateTime,
                     onDateTimeChanged: (value) =>
-                        editor.change((draft) => draft.eventDateTime = value),
-                    allDay: draft.allDayEvent,
+                        editor.change((d) => d.copyWith(dateTime: value)),
+                    allDay: draft.allDay,
                     onAllDayChanged: (value) =>
-                        editor.change((draft) => draft.allDayEvent = value),
+                        editor.change((d) => d.copyWith(allDay: value)),
                     shouldShakeName: _shouldShakeName,
                   ),
                   BackgroundContainer(
-                    selectedColor: draft.backgroundColor,
+                    selectedColor: draft.color,
                     onColorChanged: (color) =>
-                        editor.change((draft) => draft.backgroundColor = color),
-                    gradient: draft.backgroundGradient,
+                        editor.change((d) => d.copyWith(colorArgb: color.toARGB32())),
+                    gradient: draft.gradientId != null,
                     onGradientChanged: (shouldBeGradient) => editor.change(
-                      (draft) => draft.backgroundGradient = shouldBeGradient,
+                      (d) => d.copyWith(
+                        gradientId: shouldBeGradient ? 'legacy' : null,
+                        gradientDirection: shouldBeGradient
+                            ? GradientDirection.diagonalDown
+                            : null,
+                      ),
                     ),
                   ),
                   IconContainer(
-                    selectedIcon: draft.icon,
+                    selectedIcon: eventIcons
+                        .where(
+                          (i) =>
+                              i.codePoint ==
+                              iconInfo(draft.iconSlug)?.legacyCodePoint,
+                        )
+                        .firstOrNull,
                     onIconChanged: (value) => editor.change(
-                      (draft) =>
-                          draft.icon = value == draft.icon ? null : value,
+                      (d) => d.copyWith(
+                        iconSlug: slugForCodePoint(value?.codePoint) ==
+                                d.iconSlug
+                            ? null
+                            : slugForCodePoint(value?.codePoint),
+                      ),
                     ),
                   ),
                   FontContainer(
                     fontFamily: draft.fontFamily,
                     onFontSelected: (fontFamily) =>
-                        editor.change((draft) => draft.fontFamily = fontFamily),
+                        editor.change((d) => d.copyWith(fontFamily: fontFamily)),
                   ),
                 ],
               ),

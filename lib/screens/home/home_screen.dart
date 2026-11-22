@@ -43,7 +43,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final events = ref.watch(sortedEventsProvider);
+    final events = ref.watch(eventsProvider);
     final squareView = ref.watch(
       localSettingsProvider.select((s) => s.squareView),
     );
@@ -199,7 +199,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     }
                     context.pushNamed(
                       AppRoutes.event,
-                      pathParameters: {'id': event.key.toString()},
+                      pathParameters: {'id': event.id.toString()},
                     );
                   },
                   child: EventContainer(event: event),

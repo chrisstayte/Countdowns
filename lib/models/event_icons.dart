@@ -1,5 +1,8 @@
+import 'package:countdowns/models/icon_catalog.dart';
 import 'package:material_ui/material_ui.dart';
 
+/// Material icons the old app offered, kept so the Hive adapter and v1 JSON
+/// import can read stored codepoints.
 const eventIcons = <IconData>[
   Icons.calendar_today,
   Icons.celebration,
@@ -71,7 +74,44 @@ const eventIcons = <IconData>[
   Icons.park,
 ];
 
+/// Reads a stored codepoint. Unknown codepoints become [Icons.event], as the
+/// old app did.
 IconData? eventIcon(int? codePoint) => codePoint == null
     ? null
     : eventIcons.where((icon) => icon.codePoint == codePoint).firstOrNull ??
           Icons.event;
+
+final Map<String, EventIconInfo> _bySlug = {
+  for (final info in eventIconCatalog) info.slug: info,
+};
+
+final Map<int, String> _byCodePoint = {
+  for (final info in eventIconCatalog) info.legacyCodePoint: info.slug,
+};
+
+EventIconInfo? iconInfo(String? slug) => _bySlug[slug];
+
+/// Maps an old Material codepoint to a redrawn icon. Unknown icons become
+/// `calendar`; no icon stays no icon.
+String? slugForCodePoint(int? codePoint) =>
+    codePoint == null ? null : _byCodePoint[codePoint] ?? 'calendar';
+
+/// Shown in the editor's main icon row until the person has used 15 icons.
+/// "holiday" in the spec is the `village` icon, labelled Holiday.
+const List<String> defaultIconRow = [
+  'calendar',
+  'cake',
+  'party',
+  'plane',
+  'gift',
+  'heart',
+  'graduation',
+  'dining',
+  'note',
+  'tree',
+  'work',
+  'friends',
+  'baby',
+  'village',
+  'alarm',
+];

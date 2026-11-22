@@ -1,0 +1,342 @@
+[
+ {
+  "slug": "calendar",
+  "material": "calendar_today",
+  "label": "Calendar"
+ },
+ {
+  "slug": "party",
+  "material": "celebration",
+  "label": "Party"
+ },
+ {
+  "slug": "cake",
+  "material": "cake",
+  "label": "Birthday"
+ },
+ {
+  "slug": "dining",
+  "material": "local_dining",
+  "label": "Dinner"
+ },
+ {
+  "slug": "icecream",
+  "material": "icecream",
+  "label": "Ice cream"
+ },
+ {
+  "slug": "village",
+  "material": "holiday_village",
+  "label": "Holiday"
+ },
+ {
+  "slug": "hiking",
+  "material": "hiking",
+  "label": "Hiking"
+ },
+ {
+  "slug": "whistle",
+  "material": "sports",
+  "label": "Sports"
+ },
+ {
+  "slug": "football",
+  "material": "sports_football",
+  "label": "Football"
+ },
+ {
+  "slug": "baseball",
+  "material": "sports_baseball",
+  "label": "Baseball"
+ },
+ {
+  "slug": "basketball",
+  "material": "sports_basketball",
+  "label": "Basketball"
+ },
+ {
+  "slug": "gaming",
+  "material": "sports_esports",
+  "label": "Gaming"
+ },
+ {
+  "slug": "alarm",
+  "material": "alarm",
+  "label": "Alarm"
+ },
+ {
+  "slug": "ticket",
+  "material": "airplane_ticket",
+  "label": "Trip"
+ },
+ {
+  "slug": "plane",
+  "material": "airplanemode_active",
+  "label": "Flight"
+ },
+ {
+  "slug": "bed",
+  "material": "airline_seat_flat",
+  "label": "Sleep"
+ },
+ {
+  "slug": "photo",
+  "material": "photo",
+  "label": "Photo"
+ },
+ {
+  "slug": "wifi",
+  "material": "wifi",
+  "label": "Online"
+ },
+ {
+  "slug": "warning",
+  "material": "warning",
+  "label": "Deadline"
+ },
+ {
+  "slug": "baby",
+  "material": "baby_changing_station",
+  "label": "Baby"
+ },
+ {
+  "slug": "apartment",
+  "material": "apartment",
+  "label": "Move in"
+ },
+ {
+  "slug": "gift",
+  "material": "card_giftcard",
+  "label": "Gift"
+ },
+ {
+  "slug": "computer",
+  "material": "computer",
+  "label": "Computer"
+ },
+ {
+  "slug": "book",
+  "material": "book",
+  "label": "Book"
+ },
+ {
+  "slug": "bookmark",
+  "material": "bookmark",
+  "label": "Bookmark"
+ },
+ {
+  "slug": "piano",
+  "material": "piano",
+  "label": "Recital"
+ },
+ {
+  "slug": "donut",
+  "material": "donut_large",
+  "label": "Donut"
+ },
+ {
+  "slug": "camera",
+  "material": "camera",
+  "label": "Camera"
+ },
+ {
+  "slug": "animation",
+  "material": "animation",
+  "label": "Animation"
+ },
+ {
+  "slug": "cricket",
+  "material": "sports_cricket",
+  "label": "Cricket"
+ },
+ {
+  "slug": "tractor",
+  "material": "agriculture",
+  "label": "Farm"
+ },
+ {
+  "slug": "columns",
+  "material": "horizontal_distribute_sharp",
+  "label": "Plan"
+ },
+ {
+  "slug": "note",
+  "material": "music_note",
+  "label": "Music"
+ },
+ {
+  "slug": "concert",
+  "material": "music_video",
+  "label": "Concert"
+ },
+ {
+  "slug": "snooze",
+  "material": "snooze",
+  "label": "Rest"
+ },
+ {
+  "slug": "graduation",
+  "material": "school",
+  "label": "Graduation"
+ },
+ {
+  "slug": "work",
+  "material": "work",
+  "label": "Work"
+ },
+ {
+  "slug": "office",
+  "material": "business",
+  "label": "Office"
+ },
+ {
+  "slug": "friends",
+  "material": "group",
+  "label": "Friends"
+ },
+ {
+  "slug": "save",
+  "material": "add_to_drive",
+  "label": "Save"
+ },
+ {
+  "slug": "blender",
+  "material": "blender",
+  "label": "Smoothie"
+ },
+ {
+  "slug": "stop",
+  "material": "block",
+  "label": "Quit"
+ },
+ {
+  "slug": "cabin",
+  "material": "cabin",
+  "label": "Cabin"
+ },
+ {
+  "slug": "again",
+  "material": "cached",
+  "label": "Again"
+ },
+ {
+  "slug": "trash",
+  "material": "delete",
+  "label": "Clear out"
+ },
+ {
+  "slug": "done",
+  "material": "delete_forever",
+  "label": "Gone for good"
+ },
+ {
+  "slug": "tram",
+  "material": "tram_sharp",
+  "label": "Tram"
+ },
+ {
+  "slug": "train",
+  "material": "train",
+  "label": "Train"
+ },
+ {
+  "slug": "traffic",
+  "material": "traffic",
+  "label": "Commute"
+ },
+ {
+  "slug": "map",
+  "material": "map",
+  "label": "Road trip"
+ },
+ {
+  "slug": "bird",
+  "material": "flutter_dash",
+  "label": "Bird"
+ },
+ {
+  "slug": "golf",
+  "material": "golf_course",
+  "label": "Golf"
+ },
+ {
+  "slug": "call",
+  "material": "tty_sharp",
+  "label": "Catch up"
+ },
+ {
+  "slug": "fair",
+  "material": "attractions",
+  "label": "Theme park"
+ },
+ {
+  "slug": "todo",
+  "material": "assignment_sharp",
+  "label": "To do"
+ },
+ {
+  "slug": "selfie",
+  "material": "camera_rear",
+  "label": "Selfie"
+ },
+ {
+  "slug": "cloud",
+  "material": "cloud_sharp",
+  "label": "Cloud"
+ },
+ {
+  "slug": "virus",
+  "material": "coronavirus",
+  "label": "Get well"
+ },
+ {
+  "slug": "auto",
+  "material": "motion_photos_auto",
+  "label": "Every year"
+ },
+ {
+  "slug": "mail",
+  "material": "email",
+  "label": "Letter"
+ },
+ {
+  "slug": "phone",
+  "material": "phone",
+  "label": "Phone call"
+ },
+ {
+  "slug": "giftcard",
+  "material": "wallet_giftcard",
+  "label": "Gift card"
+ },
+ {
+  "slug": "launch",
+  "material": "smart_button",
+  "label": "Launch"
+ },
+ {
+  "slug": "brunch",
+  "material": "brunch_dining_rounded",
+  "label": "Brunch"
+ },
+ {
+  "slug": "croissant",
+  "material": "bakery_dining",
+  "label": "Bakery"
+ },
+ {
+  "slug": "collection",
+  "material": "library_add",
+  "label": "Collection"
+ },
+ {
+  "slug": "heart",
+  "material": "favorite",
+  "label": "Love"
+ },
+ {
+  "slug": "tree",
+  "material": "park",
+  "label": "Outdoors"
+ }
+]

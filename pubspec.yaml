@@ -35,13 +35,20 @@ dependencies:
   material_ui: ^1.11.1
   cupertino_ui: ^1.1.7
   flutter_dynamic_icon_plus: ^1.6.0
+  drift: ^2.35.4
+  drift_flutter: ^0.3.1
+  flutter_svg: ^2.5.0
+  image_picker: ^1.2.4
+  share_plus: ^13.3.1
+  path: ^1.9.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^6.0.0
-
+  build_runner: ^2.17.1
+  drift_dev: ^2.35.3
 flutter:
   uses-material-design: true
 
@@ -49,8 +56,31 @@ flutter:
     - assets/
     - assets/sounds/
     - assets/images/icons/
+    - assets/event_icons/
 
   fonts:
+    - family: Inter
+      fonts:
+        - asset: fonts/Inter-400.ttf
+          weight: 400
+        - asset: fonts/Inter-500.ttf
+          weight: 500
+        - asset: fonts/Inter-600.ttf
+          weight: 600
+        - asset: fonts/Inter-700.ttf
+          weight: 700
+    - family: BricolageGrotesque
+      fonts:
+        - asset: fonts/BricolageGrotesque-600.ttf
+          weight: 600
+        - asset: fonts/BricolageGrotesque-700.ttf
+          weight: 700
+        - asset: fonts/BricolageGrotesque-800.ttf
+          weight: 800
+    - family: BricolageDisplay
+      fonts:
+        - asset: fonts/BricolageDisplay-800.ttf
+          weight: 800
     - family: ComicNeue
       fonts:
         - asset: fonts/ComicNeue-Regular.ttf

@@ -282,13 +282,12 @@ class SettingsScreen extends ConsumerWidget {
                       final granted = await notifications.requestPermission();
                       if (!context.mounted) return;
                       if (granted) {
-                        final events = ref.read(eventsProvider);
-                        await ref
+                                                await ref
                             .read(localSettingsProvider.notifier)
                             .setNotify(true);
-                        for (final event in events) {
-                          await notifications.schedule(event.key as int, event);
-                        }
+                        await ref
+                            .read(eventsControllerProvider)
+                            .rescheduleNotifications();
                       } else {
                         await showDialog(
                           context: context,
@@ -392,7 +391,7 @@ class SettingsScreen extends ConsumerWidget {
                               );
                             }
                             await ref
-                                .read(eventsProvider.notifier)
+                                .read(eventsControllerProvider)
                                 .deleteAllEvents();
                             if (!context.mounted) return;
                             context.pop();

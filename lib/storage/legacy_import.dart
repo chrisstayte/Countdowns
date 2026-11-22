@@ -1,21 +1,27 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 import 'dart:ui';
 
+import 'package:countdowns/data/database.dart';
+import 'package:countdowns/models/countdown.dart';
 import 'package:countdowns/models/countdown_event.dart';
-import 'package:countdowns/models/event.dart';
+import 'package:countdowns/models/event_icons.dart';
 import 'package:countdowns/models/local_settings.dart';
 import 'package:flutter/foundation.dart';
-import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Imports files written by the original mobile releases before the UI starts.
+/// Marks, inside the same Drift transaction as the rows, that the v1 JSON
+/// countdowns were imported, so an interruption can never import them twice.
+const _v1ImportedMeta = 'v1JsonImported';
+
+/// Imports files written by the original mobile releases (v1) before the UI
+/// starts. Countdowns go straight into Drift.
 Future<void> importLegacyData(
   Directory directory,
-  Box<Event> box,
-  SharedPreferences prefs,
-) async {
+  AppDatabase db,
+  SharedPreferences prefs, {
+  DateTime? now,
+}) async {
   final settingsFile = File('${directory.path}/settings.json');
   if (!prefs.containsKey('localSettings') && await settingsFile.exists()) {
     final json = await settingsFile.readAsString();
@@ -29,7 +35,10 @@ Future<void> importLegacyData(
     }
   }
 
+  // Earlier builds imported v1 JSON into Hive; those rows arrive through the
+  // Hive copy instead.
   if (prefs.getBool('legacyEventsImported') == true) return;
+  if (await db.readMeta(_v1ImportedMeta) != null) return;
   final file = File('${directory.path}/countdownevents.json');
   if (!await file.exists()) return;
   final raw = await file.readAsString();
@@ -46,26 +55,31 @@ Future<void> importLegacyData(
     return;
   }
 
-  // Reuse the same integer keys if startup is interrupted after the Hive write.
-  final first =
-      prefs.getInt('legacyEventsFirstKey') ??
-      box.keys.whereType<int>().fold(-1, max) + 1;
-  if (!await prefs.setInt('legacyEventsFirstKey', first)) {
-    throw StateError('Could not record the countdown import position');
-  }
-  await box.putAll({
-    for (final (index, old) in events.indexed)
-      if (!box.containsKey(first + index))
-        first + index: Event(
+  final settingsJson = prefs.getString('localSettings');
+  final settings = settingsJson == null
+      ? const LocalSettings()
+      : LocalSettings.fromJson(jsonDecode(settingsJson));
+  final stamp = now ?? DateTime.now();
+  await db.transaction(() async {
+    for (final old in events) {
+      await db.saveCountdown(
+        Countdown(
           title: old.title,
-          eventDateTime: old.eventDate,
-          icon: old.icon,
-          backgroundColor: old.backgroundColor ?? const Color(0xff7877e6),
-          contentColor: old.contentColor,
+          dateTime: old.eventDate,
+          iconSlug: slugForCodePoint(old.icon?.codePoint),
+          colorArgb: (old.backgroundColor ?? const Color(0xff7877e6))
+              .toARGB32(),
           fontFamily: old.fontFamily ?? 'Default',
+          unit: settings.defaultUnit,
+          reminders: settings.notify && old.eventDate.isAfter(stamp)
+              ? const [0]
+              : const [],
+          createdAt: stamp,
         ),
+        now: stamp,
+      );
+    }
+    await db.writeMeta(_v1ImportedMeta, stamp.toIso8601String());
   });
-  if (!await prefs.setBool('legacyEventsImported', true)) {
-    throw StateError('Could not finish the countdown import');
-  }
+  await prefs.setBool('legacyEventsImported', true);
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:countdowns/enums/sorting_method.dart';
+import 'package:countdowns/models/countdown.dart';
 import 'package:countdowns/models/local_settings.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
@@ -42,4 +43,10 @@ class SettingsController extends Notifier<LocalSettings> {
   Future<void> setNotify(bool value) => _save(state.copyWith(notify: value));
   Future<void> setIconName(String value) =>
       _save(state.copyWith(iconName: value));
+  Future<void> setDefaultUnit(CountUnit value) =>
+      _save(state.copyWith(defaultUnit: value));
+  Future<void> setDefaultReminders(List<int> value) =>
+      _save(state.copyWith(defaultReminders: [...value]..sort()));
+  Future<void> setKeepDone(bool value) =>
+      _save(state.copyWith(keepDone: value));
 }

@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:countdowns/models/event.dart';
+import 'package:countdowns/models/countdown.dart';
+import 'package:countdowns/widgets/event_icon.dart';
 import 'package:countdowns/providers/timer_provider.dart';
 import 'package:countdowns/utilities/extensions.dart';
 import 'package:material_ui/material_ui.dart';
@@ -9,7 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class EventContainer extends ConsumerStatefulWidget {
   const EventContainer({super.key, required this.event});
 
-  final Event event;
+  final Countdown event;
 
   @override
   ConsumerState<EventContainer> createState() => _EventContainerState();
@@ -20,7 +21,7 @@ class _EventContainerState extends ConsumerState<EventContainer> {
   late String? secondaryText;
 
   void _updateTimeUI(DateTime now) {
-    Duration timeDifference = widget.event.getTimeDifference(now);
+    Duration timeDifference = widget.event.timeLeft(now);
     int years = (timeDifference.inDays / 365).floor();
     // set the premier text
     if (years > 0) {
@@ -46,7 +47,7 @@ class _EventContainerState extends ConsumerState<EventContainer> {
     } else {
       premierText = 'Completed';
       secondaryText =
-          'on ${DateFormat("MMMM d, yyyy").format(widget.event.eventDateTime)}';
+          'on ${DateFormat("MMMM d, yyyy").format(widget.event.dateTime)}';
     }
   }
 
@@ -56,7 +57,7 @@ class _EventContainerState extends ConsumerState<EventContainer> {
     _updateTimeUI(now);
 
     return Hero(
-      tag: widget.event.key ?? widget.event.title,
+      tag: widget.event.id ?? widget.event.title,
       child: Material(
         type: MaterialType.transparency,
         child: Container(
@@ -67,10 +68,8 @@ class _EventContainerState extends ConsumerState<EventContainer> {
           padding: const EdgeInsets.all(15),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(25),
-            color: widget.event.backgroundColor,
-            gradient: widget.event.backgroundGradient
-                ? widget.event.backgroundColor.gradient
-                : null,
+            color: widget.event.color,
+            gradient: widget.event.backgroundGradient,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -89,17 +88,17 @@ class _EventContainerState extends ConsumerState<EventContainer> {
                         maxLines: 2,
                         style: TextStyle(
                           fontSize: 26,
-                          color: widget.event.backgroundColor.contentColor,
+                          color: widget.event.textColor,
                           fontFamily: widget.event.fontFamily,
                         ),
                       ),
                     ),
-                    if (widget.event.icon != null)
+                    if (widget.event.iconSlug != null)
                       Padding(
                         padding: const EdgeInsets.only(left: 5),
-                        child: Icon(
-                          widget.event.icon,
-                          color: widget.event.backgroundColor.contentColor,
+                        child: EventIcon(
+                          widget.event.iconSlug,
+                          color: widget.event.textColor,
                           size: 30,
                         ),
                       ),
@@ -117,19 +116,19 @@ class _EventContainerState extends ConsumerState<EventContainer> {
                           maxLines: 1,
                           minFontSize: 20,
                           style: TextStyle(
-                            color: widget.event.backgroundColor.contentColor,
+                            color: widget.event.textColor,
                             fontSize: 26,
                             fontWeight: FontWeight.w700,
                             fontFamily: widget.event.fontFamily,
                           ),
                         ),
                       ),
-                      if (widget.event.getTimeDifference(now).isNegative)
+                      if (widget.event.timeLeft(now).isNegative)
                         Padding(
                           padding: const EdgeInsets.only(left: 5),
                           child: Icon(
                             Icons.check_circle,
-                            color: widget.event.backgroundColor.contentColor,
+                            color: widget.event.textColor,
                           ),
                         ),
                     ],
@@ -139,7 +138,7 @@ class _EventContainerState extends ConsumerState<EventContainer> {
                       secondaryText!,
                       maxLines: 1,
                       style: TextStyle(
-                        color: widget.event.backgroundColor.contentColor,
+                        color: widget.event.textColor,
                         fontSize: 18,
                         fontFamily: widget.event.fontFamily,
                       ),

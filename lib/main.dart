@@ -1,42 +1,85 @@
+import 'dart:async';
+
+import 'package:countdowns/data/database.dart';
 import 'package:countdowns/global/global.dart';
-import 'package:countdowns/models/event.dart';
 import 'package:countdowns/providers/event_provider.dart';
 import 'package:countdowns/providers/local_settings_provider.dart';
 import 'package:countdowns/providers/notification_provider.dart';
 import 'package:countdowns/router.dart';
-import 'package:countdowns/storage/legacy_import.dart';
+import 'package:countdowns/storage/startup.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Hive.registerAdapter(EventAdapter());
-  await Hive.initFlutter();
-  final box = await Hive.openBox<Event>(eventsBoxName);
   final prefs = await SharedPreferences.getInstance();
-  if (!kIsWeb &&
-      (defaultTargetPlatform == TargetPlatform.iOS ||
-          defaultTargetPlatform == TargetPlatform.android)) {
-    await importLegacyData(
-      await getApplicationDocumentsDirectory(),
-      box,
-      prefs,
-    );
-  }
   final notifications = EventNotifications();
   await notifications.initialize();
-  runApp(
-    ProviderScope(
+  final db = AppDatabase.open();
+  final mobile =
+      !kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.iOS ||
+          defaultTargetPlatform == TargetPlatform.android);
+  final documents = mobile ? await getApplicationDocumentsDirectory() : null;
+
+  Future<void> start() async {
+    final result = await prepareStorage(
+      db: db,
+      prefs: prefs,
+      notifications: notifications,
+      documents: documents,
+    );
+    if (result == StartupResult.migrationFailed) {
+      // Never show an empty list when Hive still holds countdowns.
+      runApp(StorageErrorApp(onRetry: start));
+      return;
+    }
+    final container = ProviderContainer(
       overrides: [
         preferencesProvider.overrideWithValue(prefs),
         notificationsProvider.overrideWithValue(notifications),
+        databaseProvider.overrideWithValue(db),
       ],
-      child: const MyApp(),
+    );
+    // Rebuild every pending notification from the new database.
+    unawaited(container.read(eventsControllerProvider).rescheduleNotifications());
+    runApp(UncontrolledProviderScope(container: container, child: const MyApp()));
+  }
+
+  await start();
+}
+
+/// Shown if the one-time copy from Hive fails. The Hive data is untouched.
+class StorageErrorApp extends StatelessWidget {
+  const StorageErrorApp({super.key, required this.onRetry});
+  final Future<void> Function() onRetry;
+
+  @override
+  Widget build(BuildContext context) => MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: Scaffold(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Your countdowns are safe, but they couldn’t be updated '
+                'for this version.',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 20),
+              FilledButton(onPressed: onRetry, child: const Text('Try again')),
+            ],
+          ),
+        ),
+      ),
     ),
   );
 }

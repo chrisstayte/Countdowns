@@ -6,6 +6,7 @@ import 'package:countdowns/providers/local_settings_provider.dart';
 import 'package:countdowns/providers/timer_provider.dart';
 import 'package:countdowns/screens/event_screen/time_label.dart';
 import 'package:countdowns/utilities/extensions.dart';
+import 'package:countdowns/widgets/event_icon.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -27,7 +28,7 @@ class EventScreen extends ConsumerWidget {
         body: const Center(child: Text('Event Not Found')),
       );
     }
-    final contentColor = event.backgroundColor.contentColor;
+    final contentColor = event.textColor;
     TextStyle numberTextStyle = TextStyle(
       fontSize: 38,
       fontFamily: event.fontFamily,
@@ -40,19 +41,17 @@ class EventScreen extends ConsumerWidget {
       color: contentColor,
     );
 
-    Duration timeDifference = event.getTimeDifference(now);
+    Duration timeDifference = event.timeLeft(now);
 
     return Hero(
-      tag: event.key ?? event.title,
+      tag: event.id ?? event.title,
       child: Material(
         type: MaterialType.transparency,
         child: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: event.backgroundColor,
-            gradient: event.backgroundGradient
-                ? event.backgroundColor.gradient
-                : null,
+            color: event.color,
+            gradient: event.backgroundGradient,
           ),
           child: Scaffold(
             appBar: AppBar(
@@ -80,8 +79,8 @@ class EventScreen extends ConsumerWidget {
                   context.pop();
                 },
               ),
-              title: Icon(
-                event.icon ?? Icons.event,
+              title: EventIcon(
+                event.iconSlug ?? 'calendar',
                 color: contentColor,
                 size: 32,
               ),
@@ -94,14 +93,14 @@ class EventScreen extends ConsumerWidget {
                       value: 1,
                       child: Text(
                         'Edit',
-                        style: TextStyle(color: event.backgroundColor),
+                        style: TextStyle(color: event.color),
                       ),
                     ),
                     PopupMenuItem(
                       value: 2,
                       child: Text(
                         'Delete',
-                        style: TextStyle(color: event.backgroundColor),
+                        style: TextStyle(color: event.color),
                       ),
                     ),
                   ],
@@ -125,7 +124,7 @@ class EventScreen extends ConsumerWidget {
                         }
                         await context.pushNamed(
                           AppRoutes.eventEdit,
-                          pathParameters: {'id': event.key.toString()},
+                          pathParameters: {'id': event.id.toString()},
                         );
                         break;
                       case 2:
@@ -137,14 +136,14 @@ class EventScreen extends ConsumerWidget {
                               backgroundColor: contentColor,
                               title: Text(
                                 'Delete This Countdown?',
-                                style: TextStyle(color: event.backgroundColor),
+                                style: TextStyle(color: event.color),
                               ),
                               actions: [
                                 TextButton(
                                   child: Text(
                                     "Yes",
                                     style: TextStyle(
-                                      color: event.backgroundColor,
+                                      color: event.color,
                                     ),
                                   ),
                                   onPressed: () async {
@@ -167,8 +166,8 @@ class EventScreen extends ConsumerWidget {
                                       );
                                     }
                                     await ref
-                                        .read(eventsProvider.notifier)
-                                        .deleteEvent(event.key as int);
+                                        .read(eventsControllerProvider)
+                                        .deleteEvent(event.id!);
                                     if (context.mounted) {
                                       context.pop();
                                       context.goNamed(AppRoutes.home);
@@ -180,7 +179,7 @@ class EventScreen extends ConsumerWidget {
                                   child: Text(
                                     'No',
                                     style: TextStyle(
-                                      color: event.backgroundColor,
+                                      color: event.color,
                                     ),
                                   ),
                                 ),
@@ -206,7 +205,7 @@ class EventScreen extends ConsumerWidget {
                     style: TextStyle(
                       fontSize: 48,
                       fontFamily: event.fontFamily,
-                      color: event.backgroundColor.contentColor,
+                      color: event.textColor,
                     ),
                   ),
                 ),
@@ -214,12 +213,12 @@ class EventScreen extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: Text(
                     DateFormat(
-                      event.allDayEvent ? "MM/dd/yyyy" : "MM/dd/yyyy hh:mm a",
-                    ).format(event.eventDateTime),
+                      event.allDay ? "MM/dd/yyyy" : "MM/dd/yyyy hh:mm a",
+                    ).format(event.dateTime),
                     style: TextStyle(
                       fontSize: 24,
                       fontFamily: event.fontFamily,
-                      color: event.backgroundColor.contentColor,
+                      color: event.textColor,
                     ),
                   ),
                 ),
