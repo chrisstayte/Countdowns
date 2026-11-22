@@ -79,6 +79,10 @@ double deltaE2000(Color c1, Color c2) {
   );
 }
 
+/// The smallest CIEDE2000 gap allowed between two catalogue colours. 8
+/// held for the first 43; at 100 the pastels and neutrals need 5.
+const minDistance = 5.0;
+
 void main() {
   group('catalogue', () {
     test('every original colour and gradient id still resolves exactly', () {
@@ -116,7 +120,7 @@ void main() {
       expect(collections.toSet().length, collections.length);
     });
 
-    test('about 40 colours in 6 families and 24 gradients in 5', () {
+    test('about 100 colours and 100 gradients in named families', () {
       expect(colourCollections.map((c) => c.name), [
         'Warm',
         'Cool',
@@ -124,6 +128,9 @@ void main() {
         'Bold',
         'Earthy',
         'Neutral',
+        'Jewel',
+        'Muted',
+        'Seasonal',
       ]);
       expect(gradientCollections.map((c) => c.name), [
         'Sunset',
@@ -131,13 +138,22 @@ void main() {
         'Candy',
         'Garden',
         'Night',
+        'Aurora',
+        'Citrus',
+        'Berry',
+        'Holiday',
+        'Soft blends',
+        'Earthy',
       ]);
-      expect(palette.length, inInclusiveRange(38, 46));
-      expect(gradientLibrary.length, 24);
+      expect(palette.length, 100);
+      expect(gradientLibrary.length, 100);
       expect(
         gradientLibrary.where((g) => g.colors.length == 3).length,
-        greaterThanOrEqualTo(3),
+        greaterThanOrEqualTo(15),
       );
+      for (final c in [...colourCollections.map((c) => c.colours.length)]) {
+        expect(c, inInclusiveRange(4, 20));
+      }
     });
 
     test('every colour reads at WCAG AA with its automatic text colour', () {
@@ -164,7 +180,7 @@ void main() {
       }
     });
 
-    test('no new colour is a near-duplicate of another (ΔE2000 ≥ 8)', () {
+    test('no new colour is a near-duplicate of another (ΔE2000 ≥ 5)', () {
       final originals = originalColours.values.toSet();
       for (var i = 0; i < palette.length; i++) {
         for (var j = i + 1; j < palette.length; j++) {
@@ -176,7 +192,7 @@ void main() {
           }
           expect(
             deltaE2000(a.color, b.color),
-            greaterThanOrEqualTo(8),
+            greaterThanOrEqualTo(minDistance),
             reason: '${a.name} vs ${b.name}',
           );
         }

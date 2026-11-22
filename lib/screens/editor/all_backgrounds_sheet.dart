@@ -177,10 +177,7 @@ class _AllBackgroundsSheetState extends ConsumerState<AllBackgroundsSheet> {
                 key: const ValueKey('direction-divider'),
                 duration: const Duration(milliseconds: 120),
                 opacity: _scrolled ? 1 : 0,
-                child: Container(
-                  height: 1,
-                  color: AppColors.rule,
-                ),
+                child: Container(height: 1, color: AppColors.rule),
               ),
             ],
             Expanded(
@@ -313,40 +310,44 @@ class _NamedTile extends StatelessWidget {
   final GradientDirection direction;
 
   @override
-  Widget build(BuildContext context) => Column(
-    children: [
-      Expanded(
-        child: Center(
-          child: AspectRatio(
-            aspectRatio: 1,
-            child: BackgroundTile(
-              backgroundKey: backgroundKey,
-              selected: selected,
-              legacyBase: legacyBase,
-              direction: direction,
-              onTap: onTap,
+  Widget build(BuildContext context) => RepaintBoundary(
+    // Each swatch paints on its own layer, so scrolling 100 of them and
+    // changing direction only repaints what changed.
+    child: Column(
+      children: [
+        Expanded(
+          child: Center(
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: BackgroundTile(
+                backgroundKey: backgroundKey,
+                selected: selected,
+                legacyBase: legacyBase,
+                direction: direction,
+                onTap: onTap,
+              ),
             ),
           ),
         ),
-      ),
-      SizedBox(
-        height: 16,
-        child: ExcludeSemantics(
-          child: Text(
-            selected ? backgroundName(backgroundKey) : '',
-            maxLines: 1,
-            overflow: TextOverflow.visible,
-            softWrap: false,
-            style: const TextStyle(
-              fontSize: 11,
-              height: 1.3,
-              fontWeight: FontWeight.w700,
-              color: AppColors.ink,
+        SizedBox(
+          height: 16,
+          child: ExcludeSemantics(
+            child: Text(
+              selected ? backgroundName(backgroundKey) : '',
+              maxLines: 1,
+              overflow: TextOverflow.visible,
+              softWrap: false,
+              style: const TextStyle(
+                fontSize: 11,
+                height: 1.3,
+                fontWeight: FontWeight.w700,
+                color: AppColors.ink,
+              ),
             ),
           ),
         ),
-      ),
-    ],
+      ],
+    ),
   );
 }
 

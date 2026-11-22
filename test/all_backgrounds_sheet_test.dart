@@ -109,8 +109,13 @@ void main() {
     await tester.tap(find.text('Gradients'));
     await tester.pumpAndSettle();
     expect(find.text('SUNSET'), findsOneWidget);
-    // Night is the last family; scroll to the end of the grid.
-    await tester.drag(find.byType(CustomScrollView), const Offset(0, -2000));
+    // Night is deep in the list: scroll until Nebula is built, then bring
+    // it fully into view.
+    while (find.bySemanticsLabel('Nebula gradient').evaluate().isEmpty) {
+      await tester.drag(find.byType(CustomScrollView), const Offset(0, -300));
+      await tester.pumpAndSettle();
+    }
+    await tester.ensureVisible(find.bySemanticsLabel('Nebula gradient'));
     await tester.pumpAndSettle();
     await tester.tap(find.bySemanticsLabel('Nebula gradient'));
     await tester.pumpAndSettle();
