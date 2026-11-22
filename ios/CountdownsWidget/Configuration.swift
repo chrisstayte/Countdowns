@@ -9,19 +9,28 @@ struct CountdownEntity: AppEntity {
   static var typeDisplayRepresentation: TypeDisplayRepresentation = "Up next"
   static var defaultQuery = CountdownQuery()
 
+  /// Database IDs are positive. This choice remains resolvable even when
+  /// there are no events, and lets people return to the automatic selection.
+  static let upNext = CountdownEntity(id: 0, title: "Up next")
+
   var displayRepresentation: DisplayRepresentation { DisplayRepresentation(title: "\(title)") }
 }
 
 struct CountdownQuery: EntityQuery {
   func entities(for identifiers: [Int]) async throws -> [CountdownEntity] {
-    SnapshotStore.load()
-      .filter { identifiers.contains($0.id) }
-      .map { CountdownEntity(id: $0.id, title: $0.title) }
+    let events = SnapshotStore.load()
+    return identifiers.compactMap { id in
+      if id == CountdownEntity.upNext.id { return .upNext }
+      return events.first(where: { $0.id == id })
+        .map { CountdownEntity(id: $0.id, title: $0.title) }
+    }
   }
 
   func suggestedEntities() async throws -> [CountdownEntity] {
-    SnapshotStore.load().map { CountdownEntity(id: $0.id, title: $0.title) }
+    [.upNext] + SnapshotStore.load().map { CountdownEntity(id: $0.id, title: $0.title) }
   }
+
+  func defaultResult() async -> CountdownEntity? { .upNext }
 }
 
 enum CountIn: String, AppEnum {

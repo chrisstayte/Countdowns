@@ -88,10 +88,7 @@ struct SmallView: View {
     let count = event.count(at: entry.date, mode: entry.mode(for: event))
     VStack(alignment: .leading, spacing: 0) {
       HStack(alignment: .top, spacing: 6) {
-        Text(event.title)
-          .font(WidgetFont.event(event, 17))
-          .lineLimit(2)
-          .minimumScaleFactor(0.8)
+        EventTitle(event: event, size: 17, lines: 2, minimumScale: 0.8)
         Spacer(minLength: 0)
         EventIcon(event: event, size: 20)
       }
@@ -120,10 +117,7 @@ struct MediumView: View {
         VStack(alignment: .leading, spacing: 2) {
           Text(event.header(pinned: entry.pinned))
             .font(WidgetFont.ui(11, bold: true)).kerning(0.9)
-          Text(event.title)
-            .font(WidgetFont.event(event, 22))
-            .lineLimit(1)
-            .minimumScaleFactor(0.7)
+          EventTitle(event: event, size: 22, minimumScale: 0.7)
         }
         Spacer(minLength: 8)
         EventIcon(event: event, size: 22)
@@ -214,7 +208,7 @@ struct LeadCard: View {
       VStack(alignment: .leading, spacing: 2) {
         Text(event.header(pinned: entry.pinned))
           .font(WidgetFont.ui(11, bold: true)).kerning(0.9)
-        Text(event.title).font(WidgetFont.event(event, 20)).lineLimit(1)
+        EventTitle(event: event, size: 20)
       }
       Spacer(minLength: 8)
       HStack(alignment: .firstTextBaseline, spacing: 3) {
@@ -242,10 +236,7 @@ struct HeroView: View {
         VStack(alignment: .leading, spacing: 4) {
           Text(event.header(pinned: entry.pinned))
             .font(WidgetFont.ui(12, bold: true)).kerning(1)
-          Text(event.title)
-            .font(WidgetFont.event(event, 30))
-            .lineLimit(2)
-            .minimumScaleFactor(0.7)
+          EventTitle(event: event, size: 30, lines: 2, minimumScale: 0.7)
         }
         Spacer(minLength: 0)
         EventIcon(event: event, size: 28)
@@ -280,7 +271,7 @@ struct ListRow: View {
       .frame(width: 34, height: 34)
       .clipShape(RoundedRectangle(cornerRadius: 11, style: .continuous))
       VStack(alignment: .leading, spacing: 0) {
-        Text(event.title).font(WidgetFont.event(event, 15)).lineLimit(1)
+        EventTitle(event: event, size: 15, color: .ink)
         Text(event.shortDate(at: entry.date)).font(WidgetFont.ui(11))
           .foregroundStyle(Color.secondaryText)
       }
