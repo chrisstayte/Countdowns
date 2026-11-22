@@ -35,7 +35,7 @@ String buildIcs(Countdown event, {required DateTime now, String? note}) {
   final lines = <String>[
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//Countdowns//Countdowns app//EN',
+    'PRODID:-//Since & Soon//Since & Soon app//EN',
     'CALSCALE:GREGORIAN',
     'BEGIN:VEVENT',
     'UID:countdown-${event.id ?? 0}-${_date(start)}@countdowns.app',

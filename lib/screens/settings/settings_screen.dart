@@ -43,7 +43,7 @@ class SettingsScreen extends ConsumerWidget {
                     children: [
                       Semantics(
                         button: true,
-                        label: 'Back to Countdowns',
+                        label: 'Back to Since & Soon',
                         child: GestureDetector(
                           onTap: () {
                             feedback(ref);
@@ -59,7 +59,7 @@ class SettingsScreen extends ConsumerWidget {
                                   color: AppColors.primary,
                                 ),
                                 Text(
-                                  'Countdowns',
+                                  'Since & Soon',
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
@@ -359,7 +359,7 @@ class _Notifications extends ConsumerWidget {
       builder: (context) => AlertDialog(
         title: const Text('Notifications are off'),
         content: const Text(
-          'Turn on notifications for Countdowns in Settings to get reminders.',
+          'Turn on notifications for Since & Soon in Settings to get reminders.',
         ),
         actions: [
           TextButton(
@@ -536,7 +536,7 @@ class _Support extends ConsumerWidget {
         GroupCard(
           children: [
             _Row(
-              label: 'Rate Countdowns',
+              label: 'Rate Since & Soon',
               onTap: () => InAppReview.instance.openStoreListing(
                 appStoreId: '1603744166',
               ),
@@ -550,7 +550,7 @@ class _Support extends ConsumerWidget {
                   scheme: 'mailto',
                   path: 'countdowns@chrisstayte.com',
                   query:
-                      'subject=App Feedback&body=\n\n\nApp Version ${info?.version ?? 'Unknown'}',
+                      'subject=Since %26 Soon Feedback&body=\n\n\nApp Version ${info?.version ?? 'Unknown'}',
                 );
                 if (await canLaunchUrl(uri)) await launchUrl(uri);
               },
@@ -580,7 +580,7 @@ class _Support extends ConsumerWidget {
               label: 'About',
               onTap: () => showAboutDialog(
                 context: context,
-                applicationName: 'Countdowns',
+                applicationName: 'Since & Soon',
                 applicationVersion: info?.version,
               ),
             ),
@@ -649,7 +649,7 @@ class _Danger extends ConsumerWidget {
         ),
         const SizedBox(height: 22),
         Text(
-          'Countdowns ${info?.version ?? ''} · Made by Chris Stayte',
+          'Since & Soon ${info?.version ?? ''} · Made by Chris Stayte',
           textAlign: TextAlign.center,
           style: const TextStyle(fontSize: 13, color: AppColors.secondaryText),
         ),
@@ -723,7 +723,7 @@ class _TabletSettingsState extends ConsumerState<_TabletSettings> {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: TextAction(
-                        '‹ Countdowns',
+                        '‹ Since & Soon',
                         onTap: () => context.pop(),
                       ),
                     ),
@@ -781,7 +781,7 @@ class _TabletSettingsState extends ConsumerState<_TabletSettings> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: Text(
-                        'Countdowns ${info?.version ?? ''}',
+                        'Since & Soon ${info?.version ?? ''}',
                         style: AppText.secondary,
                       ),
                     ),

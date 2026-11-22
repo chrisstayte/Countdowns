@@ -232,7 +232,7 @@ class _Sidebar extends ConsumerWidget {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: MarkedTitle(
-                    'Countdowns',
+                    'Since & Soon',
                     style: TextStyle(
                       fontFamily: AppFonts.numerals,
                       fontSize: 26,

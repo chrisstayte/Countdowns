@@ -1,6 +1,6 @@
 {
-    "name": "countdowns",
-    "short_name": "countdowns",
+    "name": "Since & Soon",
+    "short_name": "Since & Soon",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

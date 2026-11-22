@@ -49,7 +49,7 @@ void main() {
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
     PackageInfo.setMockInitialValues(
-      appName: 'Countdowns',
+      appName: 'Since & Soon',
       packageName: 'countdowns',
       version: '2.0.0',
       buildNumber: '5',
@@ -153,7 +153,7 @@ void main() {
     await tap(find.text('Delete countdown'));
     await tap(find.text('Delete'));
     expect(await rows(), isEmpty);
-    expect(find.text('Countdowns'), findsWidgets);
+    expect(find.text('Since & Soon'), findsWidgets);
 
     // Hidden settings are kept as they were.
     final stored = jsonDecode(prefs.getString('localSettings')!);

@@ -1,4 +1,6 @@
-# Countdown
+# Since & Soon
+
+Since & Soon (formerly Countdowns) counts down to the days ahead and up from the days behind.
 
 Created: December 22, 2021 9:38 PM
 Tier: Beginner
@@ -10,7 +12,7 @@ iOS - https://apps.apple.com/us/app/countdowns-chris-stayte/id1603744166
 
 ## Application stack
 
-Countdowns runs on Flutter 3.50.1 and Dart 3.14.0. The previous app declared Dart 3.7, Provider 6 and GoRouter 14.
+Since & Soon runs on Flutter 3.50.1 and Dart 3.14.0. The previous app declared Dart 3.7, Provider 6 and GoRouter 14.
 
 | Area | Implementation |
 | --- | --- |

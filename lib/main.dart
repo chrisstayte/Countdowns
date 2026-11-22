@@ -134,7 +134,7 @@ class MyApp extends ConsumerWidget {
       debugShowMaterialGrid: false,
       showPerformanceOverlay: false,
       showSemanticsDebugger: false,
-      title: 'Countdowns',
+      title: 'Since & Soon',
       theme: buildAppTheme(),
       // Dark mode is hidden for now. The stored themeMode setting is still
       // read and written unchanged so it can come back later.

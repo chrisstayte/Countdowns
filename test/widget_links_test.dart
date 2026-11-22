@@ -88,7 +88,7 @@ void main() {
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
       PackageInfo.setMockInitialValues(
-        appName: 'Countdowns',
+        appName: 'Since & Soon',
         packageName: 'countdowns',
         version: '2.0.0',
         buildNumber: '5',
@@ -154,7 +154,7 @@ void main() {
     ) async {
       await pumpApp(tester);
       await settle(tester);
-      expect(find.text('Countdowns'), findsWidgets);
+      expect(find.text('Since & Soon'), findsWidgets);
       expect(onDetail(), isFalse);
 
       final id = (await tester.runAsync(db.allCountdowns))!.single.id!;

@@ -77,7 +77,7 @@ class _ShareSheetState extends ConsumerState<ShareSheet> {
         buildIcs(
           e,
           now: now,
-          note: '${c.big} ${c.unit} to go. Made with Countdowns.',
+          note: '${c.big} ${c.unit} to go. Made with Since & Soon.',
         ),
       );
       return file;
@@ -338,7 +338,7 @@ class _StoryImage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'MADE WITH COUNTDOWNS',
+              'MADE WITH SINCE & SOON',
               style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w700,
@@ -434,7 +434,7 @@ class _SquareImage extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'COUNTDOWNS',
+                  'SINCE & SOON',
                   style: TextStyle(
                     fontSize: 9,
                     fontWeight: FontWeight.w700,
