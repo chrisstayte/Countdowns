@@ -5,8 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Each open editor owns an independent draft, even for the same saved event.
 class DraftSession {
-  DraftSession(this.eventId);
+  DraftSession(this.eventId, {this.title, this.date});
   final String? eventId;
+
+  /// Prefill for new countdowns (from Search).
+  final String? title;
+  final DateTime? date;
 }
 
 final eventDraftProvider = NotifierProvider.autoDispose
@@ -23,8 +27,10 @@ class EventDraft extends Notifier<Countdown> {
     final settings = ref.read(localSettingsProvider);
     final tomorrow = DateTime.now().add(const Duration(days: 1));
     return Countdown(
-      title: '',
-      dateTime: DateTime(tomorrow.year, tomorrow.month, tomorrow.day, 9),
+      title: session.title ?? '',
+      dateTime:
+          session.date ??
+          DateTime(tomorrow.year, tomorrow.month, tomorrow.day, 9),
       unit: settings.defaultUnit,
       reminders: settings.notify ? settings.defaultReminders : const [],
     );

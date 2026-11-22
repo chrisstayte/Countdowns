@@ -90,7 +90,12 @@ class PhotoCrops {
       points.entries.every((e) => other.points[e.key] == e.value);
 
   @override
-  int get hashCode => Object.hash(sameForAll, Object.hashAllUnordered(points.entries.map((e) => Object.hash(e.key, e.value))));
+  int get hashCode => Object.hash(
+    sameForAll,
+    Object.hashAllUnordered(
+      points.entries.map((e) => Object.hash(e.key, e.value)),
+    ),
+  );
 }
 
 /// Darken strengths offered for photos.
@@ -165,9 +170,8 @@ class Countdown {
   }
 
   /// The moment being counted to (start of the day for all-day events).
-  DateTime get target => allDay
-      ? DateTime(dateTime.year, dateTime.month, dateTime.day)
-      : dateTime;
+  DateTime get target =>
+      allDay ? DateTime(dateTime.year, dateTime.month, dateTime.day) : dateTime;
 
   /// For yearly events, the next time it happens on or after [now].
   DateTime nextOccurrence(DateTime now) {

@@ -113,14 +113,15 @@ abstract final class AppText {
 }
 
 ThemeData buildAppTheme() {
-  final scheme = ColorScheme.fromSeed(
-    seedColor: AppColors.primary,
-    brightness: Brightness.light,
-  ).copyWith(
-    primary: AppColors.primary,
-    onSurface: AppColors.ink,
-    surface: AppColors.ground,
-  );
+  final scheme =
+      ColorScheme.fromSeed(
+        seedColor: AppColors.primary,
+        brightness: Brightness.light,
+      ).copyWith(
+        primary: AppColors.primary,
+        onSurface: AppColors.ink,
+        surface: AppColors.ground,
+      );
   return ThemeData(
     useMaterial3: true,
     colorScheme: scheme,

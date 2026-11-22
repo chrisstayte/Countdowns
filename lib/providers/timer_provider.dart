@@ -20,8 +20,9 @@ class CountdownClock extends Notifier<DateTime> {
 }
 
 /// Ticks on the minute, for lists and cards.
-final minuteClockProvider =
-    NotifierProvider.autoDispose<MinuteClock, DateTime>(MinuteClock.new);
+final minuteClockProvider = NotifierProvider.autoDispose<MinuteClock, DateTime>(
+  MinuteClock.new,
+);
 
 class MinuteClock extends Notifier<DateTime> {
   @override

@@ -38,8 +38,7 @@ const List<PaletteColor> palette = [
   PaletteColor('Lilac', lilac),
 ];
 
-bool isPaletteColor(int argb) =>
-    palette.any((c) => c.color.toARGB32() == argb);
+bool isPaletteColor(int argb) => palette.any((c) => c.color.toARGB32() == argb);
 
 /// How a gradient is laid out across a shape.
 enum GradientDirection {
@@ -172,5 +171,7 @@ Color autoTextColorFor(List<Color> colors) {
     b += c.b;
   }
   final n = colors.length;
-  return autoTextColor(Color.from(alpha: 1, red: r / n, green: g / n, blue: b / n));
+  return autoTextColor(
+    Color.from(alpha: 1, red: r / n, green: g / n, blue: b / n),
+  );
 }

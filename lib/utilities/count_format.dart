@@ -11,10 +11,11 @@ String _plural(int n, String one, String many) => n == 1 ? one : many;
 DateTime _day(DateTime d) => DateTime(d.year, d.month, d.day);
 
 /// Calendar days from [from]'s date to [to]'s date (nights in between).
-int calendarDaysBetween(DateTime from, DateTime to) =>
-    DateTime.utc(to.year, to.month, to.day)
-        .difference(DateTime.utc(from.year, from.month, from.day))
-        .inDays;
+int calendarDaysBetween(DateTime from, DateTime to) => DateTime.utc(
+  to.year,
+  to.month,
+  to.day,
+).difference(DateTime.utc(from.year, from.month, from.day)).inDays;
 
 /// The big number for [unit], as on the detail screen.
 CountText countIn(Countdown event, CountUnit unit, DateTime now) {

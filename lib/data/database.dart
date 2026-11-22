@@ -21,8 +21,7 @@ class Events extends Table {
   /// JSON: a crop point per shape plus a "same for all" flag.
   TextColumn get photoCrops => text().nullable()();
   RealColumn get photoDarken => real().withDefault(const Constant(0.35))();
-  TextColumn get fontFamily =>
-      text().withDefault(const Constant('Default'))();
+  TextColumn get fontFamily => text().withDefault(const Constant('Default'))();
   TextColumn get unit => textEnum<CountUnit>()();
   TextColumn get repeat => textEnum<RepeatRule>()();
   DateTimeColumn get createdAt => dateTime()();
@@ -63,8 +62,7 @@ class Meta extends Table {
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
 
-  factory AppDatabase.open() =>
-      AppDatabase(driftDatabase(name: 'countdowns'));
+  factory AppDatabase.open() => AppDatabase(driftDatabase(name: 'countdowns'));
 
   @override
   int get schemaVersion => 1;
@@ -80,9 +78,9 @@ class AppDatabase extends _$AppDatabase {
     meta,
   )..where((m) => m.key.equals(key))).getSingleOrNull())?.value;
 
-  Future<void> writeMeta(String key, String value) => into(
-    meta,
-  ).insertOnConflictUpdate(MetaCompanion.insert(key: key, value: value));
+  Future<void> writeMeta(String key, String value) =>
+      into(meta)
+          .insertOnConflictUpdate(MetaCompanion.insert(key: key, value: value));
 
   Stream<List<Countdown>> watchCountdowns() {
     // Reminder changes always come with an event write in the same
@@ -110,22 +108,21 @@ class AppDatabase extends _$AppDatabase {
   }
 
   /// Inserts or updates [c] and replaces its reminders. Returns the id.
-  Future<int> saveCountdown(Countdown c, {DateTime? now}) =>
-      transaction(() async {
-        final stamp = now ?? DateTime.now();
-        final companion = _companion(c, stamp);
-        final int id;
-        if (c.id == null) {
-          id = await into(events).insert(companion);
-        } else {
-          id = c.id!;
-          await (update(
-            events,
-          )..where((e) => e.id.equals(id))).write(companion);
-        }
-        await _replaceReminders(id, c.reminders);
-        return id;
-      });
+  Future<int> saveCountdown(Countdown c, {DateTime? now}) => transaction(
+    () async {
+      final stamp = now ?? DateTime.now();
+      final companion = _companion(c, stamp);
+      final int id;
+      if (c.id == null) {
+        id = await into(events).insert(companion);
+      } else {
+        id = c.id!;
+        await (update(events)..where((e) => e.id.equals(id))).write(companion);
+      }
+      await _replaceReminders(id, c.reminders);
+      return id;
+    },
+  );
 
   Future<void> _replaceReminders(int id, List<int> offsets) async {
     final existing = await (select(
@@ -139,35 +136,32 @@ class AppDatabase extends _$AppDatabase {
       }
     }
     for (final offset in wanted) {
-      await into(reminders).insert(
-        RemindersCompanion.insert(eventId: id, offsetMinutes: offset),
-      );
+      await into(
+        reminders,
+      ).insert(RemindersCompanion.insert(eventId: id, offsetMinutes: offset));
     }
   }
 
-  EventsCompanion _companion(Countdown c, DateTime stamp) =>
-      EventsCompanion(
-        title: Value(c.title),
-        eventDateTime: Value(c.dateTime),
-        allDay: Value(c.allDay),
-        iconSlug: Value(c.iconSlug),
-        colorArgb: Value(c.colorArgb),
-        gradientId: Value(c.gradientId),
-        gradientDirection: Value(c.gradientDirection),
-        photoPath: Value(c.photoPath),
-        photoCrops: Value(c.photoCrops?.toJson()),
-        photoDarken: Value(c.photoDarken),
-        fontFamily: Value(c.fontFamily),
-        unit: Value(c.unit),
-        repeat: Value(c.repeat),
-        createdAt: c.id == null
-            ? Value(c.createdAt ?? stamp)
-            : const Value.absent(),
-        updatedAt: Value(stamp),
-        legacyHiveKey: c.id == null
-            ? Value(c.legacyHiveKey)
-            : const Value.absent(),
-      );
+  EventsCompanion _companion(Countdown c, DateTime stamp) => EventsCompanion(
+    title: Value(c.title),
+    eventDateTime: Value(c.dateTime),
+    allDay: Value(c.allDay),
+    iconSlug: Value(c.iconSlug),
+    colorArgb: Value(c.colorArgb),
+    gradientId: Value(c.gradientId),
+    gradientDirection: Value(c.gradientDirection),
+    photoPath: Value(c.photoPath),
+    photoCrops: Value(c.photoCrops?.toJson()),
+    photoDarken: Value(c.photoDarken),
+    fontFamily: Value(c.fontFamily),
+    unit: Value(c.unit),
+    repeat: Value(c.repeat),
+    createdAt: c.id == null
+        ? Value(c.createdAt ?? stamp)
+        : const Value.absent(),
+    updatedAt: Value(stamp),
+    legacyHiveKey: c.id == null ? Value(c.legacyHiveKey) : const Value.absent(),
+  );
 
   Future<void> deleteCountdown(int id) =>
       (delete(events)..where((e) => e.id.equals(id))).go();

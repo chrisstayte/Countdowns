@@ -83,7 +83,11 @@ class RecentsController extends Notifier<Recents> {
   }
 
   Future<void> clearSearches() async {
-    state = Recents(icons: state.icons, fonts: state.fonts, photos: state.photos);
+    state = Recents(
+      icons: state.icons,
+      fonts: state.fonts,
+      photos: state.photos,
+    );
     await ref.read(preferencesProvider).remove(_searchesKey);
   }
 }
@@ -98,6 +102,10 @@ List<String> iconRow(List<String> recent) => [
 /// The editor's 4 recent fonts, topped up with sensible defaults.
 List<String> fontRow(List<String> recent) => [
   ...recent,
-  ...['Default', 'LibreBaskerville', 'ComicNeue', 'NewWaltDisney']
-      .where((f) => !recent.contains(f)),
+  ...[
+    'Default',
+    'LibreBaskerville',
+    'ComicNeue',
+    'NewWaltDisney',
+  ].where((f) => !recent.contains(f)),
 ].take(4).toList();

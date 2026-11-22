@@ -1,6 +1,5 @@
 import 'package:countdowns/constants.dart';
-import 'package:countdowns/screens/event_form/event_form_screen.dart';
-import 'package:countdowns/screens/event_form/options/name_and_date/date_picker_screen.dart';
+import 'package:countdowns/screens/editor/editor_screen.dart';
 import 'package:countdowns/screens/event_screen/event_screen.dart';
 import 'package:countdowns/screens/home/home_screen.dart';
 import 'package:countdowns/screens/search/search_screen.dart';
@@ -38,16 +37,17 @@ final routerProvider = Provider<GoRouter>((ref) {
                 path: AppRoutes.eventEdit,
                 name: AppRoutes.eventEdit,
                 builder: (_, state) =>
-                    EventFormScreen(eventKey: state.pathParameters['id']),
-                routes: [_dateRoute(AppRoutes.editDate)],
+                    EditorScreen(eventKey: state.pathParameters['id']),
               ),
             ],
           ),
           GoRoute(
             path: AppRoutes.eventNew,
             name: AppRoutes.eventNew,
-            builder: (_, _) => const EventFormScreen(),
-            routes: [_dateRoute(AppRoutes.newDate)],
+            builder: (_, state) => EditorScreen(
+              title: state.uri.queryParameters['title'],
+              date: DateTime.tryParse(state.uri.queryParameters['date'] ?? ''),
+            ),
           ),
           GoRoute(
             path: AppRoutes.search,
@@ -80,12 +80,3 @@ final routerProvider = Provider<GoRouter>((ref) {
   ref.onDispose(router.dispose);
   return router;
 });
-
-GoRoute _dateRoute(String name) => GoRoute(
-  path: 'date',
-  name: name,
-  builder: (_, state) => DatePickerScreen(
-    eventDateTime: DateTime.tryParse(state.uri.queryParameters['date'] ?? ''),
-    allDay: state.uri.queryParameters['allDay'] != 'false',
-  ),
-);

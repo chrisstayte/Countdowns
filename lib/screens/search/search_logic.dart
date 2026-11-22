@@ -2,8 +2,18 @@ import 'package:countdowns/models/countdown.dart';
 import 'package:countdowns/models/event_icons.dart';
 
 const _months = [
-  'january', 'february', 'march', 'april', 'may', 'june',
-  'july', 'august', 'september', 'october', 'november', 'december',
+  'january',
+  'february',
+  'march',
+  'april',
+  'may',
+  'june',
+  'july',
+  'august',
+  'september',
+  'october',
+  'november',
+  'december',
 ];
 
 class SearchHit {

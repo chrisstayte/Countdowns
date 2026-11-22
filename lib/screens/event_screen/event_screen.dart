@@ -15,8 +15,11 @@ import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// Opens the share sheet. Set by the share feature.
-typedef ShareOpener =
-    void Function(BuildContext context, Countdown event, CountUnit unit);
+typedef ShareOpener = void Function(
+  BuildContext context,
+  Countdown event,
+  CountUnit unit,
+);
 ShareOpener? openShareSheet;
 
 class EventScreen extends ConsumerWidget {
@@ -193,7 +196,10 @@ class _CountdownDetailState extends ConsumerState<CountdownDetail> {
                     Text(
                       longDate(event, now),
                       style: on(
-                        const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                        const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                     if (photo) const Spacer() else const SizedBox(height: 34),
@@ -324,13 +330,14 @@ class _CountdownDetailState extends ConsumerState<CountdownDetail> {
                     fit: BoxFit.scaleDown,
                     child: Text(
                       t.value,
-                      style: AppText.numeral(
-                        photo ? 26 : 28,
-                        color: Colors.white,
-                      ).copyWith(
-                        height: 1.1,
-                        fontFeatures: const [FontFeature.tabularFigures()],
-                      ),
+                      style:
+                          AppText.numeral(
+                            photo ? 26 : 28,
+                            color: Colors.white,
+                          ).copyWith(
+                            height: 1.1,
+                            fontFeatures: const [FontFeature.tabularFigures()],
+                          ),
                     ),
                   ),
                   Text(

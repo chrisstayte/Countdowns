@@ -45,8 +45,12 @@ Future<void> main() async {
       ],
     );
     // Rebuild every pending notification from the new database.
-    unawaited(container.read(eventsControllerProvider).rescheduleNotifications());
-    runApp(UncontrolledProviderScope(container: container, child: const MyApp()));
+    unawaited(
+      container.read(eventsControllerProvider).rescheduleNotifications(),
+    );
+    runApp(
+      UncontrolledProviderScope(container: container, child: const MyApp()),
+    );
   }
 
   await start();

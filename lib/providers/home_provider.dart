@@ -17,11 +17,13 @@ HomeLists splitEvents(List<Countdown> events, DateTime now) {
 }
 
 final homeListsProvider = Provider.autoDispose<HomeLists>(
-  (ref) => splitEvents(ref.watch(eventsProvider), ref.watch(minuteClockProvider)),
+  (ref) =>
+      splitEvents(ref.watch(eventsProvider), ref.watch(minuteClockProvider)),
 );
 
-final homeFilterProvider =
-    NotifierProvider<HomeFilterController, HomeFilter>(HomeFilterController.new);
+final homeFilterProvider = NotifierProvider<HomeFilterController, HomeFilter>(
+  HomeFilterController.new,
+);
 
 class HomeFilterController extends Notifier<HomeFilter> {
   @override

@@ -187,7 +187,6 @@ class EventNotifications {
     }
   }
 
-
   Future<void> schedule(NotificationRequest request, tz.Location zone) =>
       plugin.zonedSchedule(
         id: request.id,

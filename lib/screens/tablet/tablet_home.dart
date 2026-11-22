@@ -12,10 +12,8 @@ class TabletHome extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) => Scaffold(
     body: HomeList(
       columns: 4,
-      onOpen: (e) => context.pushNamed(
-        AppRoutes.event,
-        pathParameters: {'id': '${e.id}'},
-      ),
+      onOpen: (e) =>
+          context.pushNamed(AppRoutes.event, pathParameters: {'id': '${e.id}'}),
     ),
   );
 }

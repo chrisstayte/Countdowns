@@ -273,7 +273,7 @@ class SettingsScreen extends ConsumerWidget {
                       final granted = await notifications.requestPermission();
                       if (!context.mounted) return;
                       if (granted) {
-                                                await ref
+                        await ref
                             .read(localSettingsProvider.notifier)
                             .setNotify(true);
                         await ref

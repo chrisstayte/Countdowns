@@ -102,7 +102,11 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     ),
     child: Row(
       children: [
-        const Icon(Icons.search_rounded, size: 20, color: AppColors.secondaryText),
+        const Icon(
+          Icons.search_rounded,
+          size: 20,
+          color: AppColors.secondaryText,
+        ),
         const SizedBox(width: 8),
         Expanded(
           child: TextField(
@@ -196,10 +200,23 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 14),
                       child: Row(
                         children: [
-                          const Icon(Icons.history_rounded, size: 18, color: AppColors.muted),
+                          const Icon(
+                            Icons.history_rounded,
+                            size: 18,
+                            color: AppColors.muted,
+                          ),
                           const SizedBox(width: 12),
-                          Expanded(child: Text(r, style: const TextStyle(fontSize: 16))),
-                          const Icon(Icons.north_east_rounded, size: 16, color: AppColors.muted),
+                          Expanded(
+                            child: Text(
+                              r,
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                          ),
+                          const Icon(
+                            Icons.north_east_rounded,
+                            size: 16,
+                            color: AppColors.muted,
+                          ),
                         ],
                       ),
                     ),
@@ -238,6 +255,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           const SectionLabel('By icon'),
           const SizedBox(height: 10),
           GridView.count(
+            padding: EdgeInsets.zero,
             crossAxisCount: 5,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -310,11 +328,17 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                               name,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 15,
+                              ),
                             ),
                             Text(
                               shortDate(date, now),
-                              style: const TextStyle(fontSize: 12, color: AppColors.secondaryText),
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: AppColors.secondaryText,
+                              ),
                             ),
                           ],
                         ),
@@ -459,7 +483,10 @@ class _ResultRow extends StatelessWidget {
                       const SizedBox(height: 2),
                       Text(
                         '${past ? 'Done · ' : ''}${DateFormat('EEE, MMM d, y').format(e.nextOccurrence(now))}',
-                        style: const TextStyle(fontSize: 13, color: AppColors.secondaryText),
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: AppColors.secondaryText,
+                        ),
                       ),
                     ],
                   ),
@@ -479,7 +506,11 @@ class _ResultRow extends StatelessWidget {
       Text(c.big, style: AppText.numeral(22, color: color).copyWith(height: 1)),
       Text(
         c.unit,
-        style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: color),
+        style: TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.w700,
+          color: color,
+        ),
       ),
     ],
   );
