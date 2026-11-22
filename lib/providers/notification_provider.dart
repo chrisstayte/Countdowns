@@ -194,8 +194,8 @@ class EventNotifications {
     }
     final android = _android;
     if (await android?.requestNotificationsPermission() != true) return false;
-    // Exact alarms keep "1 hour before" on the minute. Without them reminders
-    // still arrive, just possibly a few minutes late, so a refusal here
+    // Exact alarms keep reminders on the minute. Without them Android may
+    // deliver up to an hour late, but they still arrive, so a refusal here
     // doesn't turn notifications off.
     await android?.requestExactAlarmsPermission();
     return true;
@@ -262,8 +262,8 @@ class EventNotifications {
   );
 
   /// Exact alarms when Android allows them (they need a permission from
-  /// Android 12, off by default from 14), inexact ones otherwise. Both still
-  /// fire in Doze.
+  /// Android 12, off by default from 14), inexact ones otherwise (Android
+  /// gives those up to an hour's leeway). Both still fire in Doze.
   Future<AndroidScheduleMode> _scheduleMode() async =>
       await _android?.canScheduleExactNotifications() == false
       ? AndroidScheduleMode.inexactAllowWhileIdle
