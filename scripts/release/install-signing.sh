@@ -8,6 +8,17 @@ if [[ "${1:-}" == cleanup ]]; then
   if [[ -f "$dir/profile-paths" ]]; then
     while IFS= read -r profile; do rm -f -- "$profile"; done < "$dir/profile-paths"
   fi
+  if [[ -f "$dir/original-keychains" ]]; then
+    python3 - "$dir/original-keychains" <<'PY'
+import shlex
+import subprocess
+import sys
+from pathlib import Path
+
+keychains = shlex.split(Path(sys.argv[1]).read_text())
+subprocess.run(["security", "list-keychains", "-d", "user", "-s", *keychains], check=True)
+PY
+  fi
   security delete-keychain "$keychain" 2>/dev/null || true
   rm -rf -- "$dir"
   exit 0
@@ -26,13 +37,16 @@ done
 python3 scripts/release/check-profiles.py "$dir"
 
 password=$(openssl rand -hex 32)
+security list-keychains -d user > "$dir/original-keychains"
 security create-keychain -p "$password" "$keychain"
 security set-keychain-settings -lut 3600 "$keychain"
 security unlock-keychain -p "$password" "$keychain"
 security import "$dir/distribution.p12" -k "$keychain" -P "$CERTIFICATE_PASSWORD" -T /usr/bin/codesign
 unset CERTIFICATE_PASSWORD
 rm -f "$dir/distribution.p12"
-security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$password" "$keychain"
+curl --fail --silent --show-error --location https://www.apple.com/certificateauthority/AppleWWDRCAG3.cer -o "$dir/AppleWWDRCAG3.cer"
+security import "$dir/AppleWWDRCAG3.cer" -k "$keychain" -T /usr/bin/codesign
+security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$password" "$keychain" >/dev/null
 security list-keychains -d user -s "$keychain"
 security find-identity -v -p codesigning "$keychain" | grep -F 'Apple Distribution:'
 
