@@ -264,16 +264,17 @@ class _EmptyHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    height: 196,
+    constraints: const BoxConstraints(minHeight: 196),
     padding: const EdgeInsets.all(20),
     decoration: BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(28),
       border: Border.all(color: AppColors.border, width: 1.5),
     ),
+    alignment: Alignment.bottomLeft,
     child: const Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Text(
           'Nothing to count down to yet',

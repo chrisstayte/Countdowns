@@ -246,23 +246,25 @@ void main() {
     expect(out['defaultUnit'], 'days');
   });
 
-  test('saving replaces reminders but keeps ids of the ones that stay',
-      () async {
-    final id = await db.saveCountdown(
-      Countdown(
-        title: 'Trip',
-        dateTime: DateTime(2027, 1, 1),
-        reminders: const [0, 1440],
-      ),
-    );
-    final first = await db.allReminders();
-    final keptId = first.singleWhere((r) => r.offsetMinutes == 0).id;
-    final all = await db.allCountdowns();
-    await db.saveCountdown(all.single.copyWith(reminders: [0, 10080]));
-    final second = await db.allReminders();
-    expect(second.map((r) => r.offsetMinutes).toSet(), {0, 10080});
-    expect(second.singleWhere((r) => r.offsetMinutes == 0).id, keptId);
-    await db.deleteCountdown(id);
-    expect(await db.allReminders(), isEmpty);
-  });
+  test(
+    'saving replaces reminders but keeps ids of the ones that stay',
+    () async {
+      final id = await db.saveCountdown(
+        Countdown(
+          title: 'Trip',
+          dateTime: DateTime(2027, 1, 1),
+          reminders: const [0, 1440],
+        ),
+      );
+      final first = await db.allReminders();
+      final keptId = first.singleWhere((r) => r.offsetMinutes == 0).id;
+      final all = await db.allCountdowns();
+      await db.saveCountdown(all.single.copyWith(reminders: [0, 10080]));
+      final second = await db.allReminders();
+      expect(second.map((r) => r.offsetMinutes).toSet(), {0, 10080});
+      expect(second.singleWhere((r) => r.offsetMinutes == 0).id, keptId);
+      await db.deleteCountdown(id);
+      expect(await db.allReminders(), isEmpty);
+    },
+  );
 }

@@ -389,13 +389,18 @@ class _Row extends StatelessWidget {
         child: Row(
           children: [
             Text(label, style: const TextStyle(fontSize: 16)),
-            const Spacer(),
-            Text(
-              value,
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
-                color: muted ? AppColors.secondaryText : AppColors.primary,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                value,
+                textAlign: TextAlign.right,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                  color: muted ? AppColors.secondaryText : AppColors.primary,
+                ),
               ),
             ),
             ?trailing,

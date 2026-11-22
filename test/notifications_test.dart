@@ -21,7 +21,11 @@ void main() {
     dateTime: DateTime(2020, 2, 3),
     repeat: RepeatRule.yearly,
   );
-  final past = Countdown(id: 3, title: 'Moved in', dateTime: DateTime(2026, 8, 2));
+  final past = Countdown(
+    id: 3,
+    title: 'Moved in',
+    dateTime: DateTime(2026, 8, 2),
+  );
 
   test('one-off events get one-shot notifications, never daily', () {
     final plan = planNotifications(
@@ -70,11 +74,9 @@ void main() {
       for (var i = 0; i < 80; i++)
         Countdown(id: i + 1, title: '$i', dateTime: DateTime(2027, 1, 1 + i)),
     ];
-    final plan = planNotifications(
-      events,
-      [for (final e in events) (id: e.id!, eventId: e.id!, offsetMinutes: 0)],
-      now,
-    );
+    final plan = planNotifications(events, [
+      for (final e in events) (id: e.id!, eventId: e.id!, offsetMinutes: 0),
+    ], now);
     expect(plan, hasLength(maxPendingNotifications));
     expect(plan.last.when, DateTime(2027, 1, maxPendingNotifications, 9));
   });
@@ -91,7 +93,8 @@ void main() {
         .setMockMethodCallHandler(
           const MethodChannel('dexterous.com/flutter/local_notifications'),
           (call) async {
-            if (call.method == 'zonedSchedule') calls.add(call.arguments as Map);
+            if (call.method == 'zonedSchedule')
+              calls.add(call.arguments as Map);
             return null;
           },
         );
@@ -114,8 +117,11 @@ void main() {
       yearly['matchDateTimeComponents'],
       DateTimeComponents.dateAndTime.index,
     );
-    expect(oneOff.containsKey('matchDateTimeComponents') &&
-        oneOff['matchDateTimeComponents'] != null, isFalse);
+    expect(
+      oneOff.containsKey('matchDateTimeComponents') &&
+          oneOff['matchDateTimeComponents'] != null,
+      isFalse,
+    );
     expect(oneOff['title'], 'Japan trip');
   });
 }

@@ -382,13 +382,16 @@ class _CountdownDetailState extends ConsumerState<CountdownDetail> {
                     color: ink,
                   ),
                 ),
-              const Spacer(),
-              Text(
-                '$pct% of the wait is behind you',
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: ink,
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  '$pct% of the wait is behind you',
+                  textAlign: TextAlign.right,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: ink,
+                  ),
                 ),
               ),
             ],

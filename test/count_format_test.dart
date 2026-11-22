@@ -4,13 +4,22 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   final now = DateTime(2026, 11, 21, 20);
-  final christmas = Countdown(title: 'Christmas', dateTime: DateTime(2026, 12, 25));
+  final christmas = Countdown(
+    title: 'Christmas',
+    dateTime: DateTime(2026, 12, 25),
+  );
 
   test('units', () {
     expect(countIn(christmas, CountUnit.days, now), (big: '33', unit: 'days'));
-    expect(countIn(christmas, CountUnit.sleeps, now), (big: '34', unit: 'sleeps'));
+    expect(countIn(christmas, CountUnit.sleeps, now), (
+      big: '34',
+      unit: 'sleeps',
+    ));
     expect(countIn(christmas, CountUnit.weeks, now).big, '4.7');
-    expect(countIn(christmas, CountUnit.hours, now), (big: '796', unit: 'hours'));
+    expect(countIn(christmas, CountUnit.hours, now), (
+      big: '796',
+      unit: 'hours',
+    ));
   });
 
   test('years line shows from 365 days and hides under a year', () {
