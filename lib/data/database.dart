@@ -16,6 +16,9 @@ class Events extends Table {
   TextColumn get gradientId => text().nullable()();
   TextColumn get gradientDirection =>
       textEnum<GradientDirection>().nullable()();
+
+  /// A pattern, texture or illustration id (schema 2).
+  TextColumn get artId => text().nullable()();
   TextColumn get photoPath => text().nullable()();
 
   /// JSON: a crop point per shape plus a "same for all" flag.
@@ -65,10 +68,14 @@ class AppDatabase extends _$AppDatabase {
   factory AppDatabase.open() => AppDatabase(driftDatabase(name: 'countdowns'));
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
+    onUpgrade: (m, from, to) async {
+      // 2: drawn backgrounds. Existing rows get null: nothing changes.
+      if (from < 2) await m.addColumn(events, events.artId);
+    },
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
     },
@@ -150,6 +157,7 @@ class AppDatabase extends _$AppDatabase {
     colorArgb: Value(c.colorArgb),
     gradientId: Value(c.gradientId),
     gradientDirection: Value(c.gradientDirection),
+    artId: Value(c.artId),
     photoPath: Value(c.photoPath),
     photoCrops: Value(c.photoCrops?.toJson()),
     photoDarken: Value(c.photoDarken),
@@ -191,6 +199,7 @@ Countdown countdownFromRow(EventRow row, List<int> reminders) => Countdown(
   colorArgb: row.colorArgb,
   gradientId: row.gradientId,
   gradientDirection: row.gradientDirection,
+  artId: row.artId,
   photoPath: row.photoPath,
   photoCrops: PhotoCrops.fromJson(row.photoCrops),
   photoDarken: row.photoDarken,

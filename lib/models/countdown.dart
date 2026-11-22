@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:countdowns/models/art_catalog.dart';
 import 'package:countdowns/models/palette.dart';
 import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
@@ -162,6 +163,7 @@ class Countdown {
     this.colorArgb = 0xFF7877E6,
     this.gradientId,
     this.gradientDirection,
+    this.artId,
     this.photoPath,
     this.photoCrops,
     this.photoDarken = 0.35,
@@ -183,6 +185,10 @@ class Countdown {
   final String? gradientId;
   final GradientDirection? gradientDirection;
 
+  /// A pattern, texture or illustration (see art_catalog.dart). Shown
+  /// instead of the colour or gradient; a photo still shows over it.
+  final String? artId;
+
   /// Relative to the app documents folder.
   final String? photoPath;
   final PhotoCrops? photoCrops;
@@ -200,6 +206,9 @@ class Countdown {
   Color get color => Color(colorArgb);
   bool get hasPhoto => photoPath != null;
 
+  /// The drawn background, if it has one (and no photo over it).
+  Art? get art => hasPhoto ? null : artById(artId);
+
   List<Color>? get gradient => gradientColors(gradientId, color);
 
   GradientDirection get direction =>
@@ -214,6 +223,7 @@ class Countdown {
   /// Text colour: ink or white by contrast, white on photos.
   Color get textColor {
     if (hasPhoto) return Colors.white;
+    if (art case final a?) return a.textColor;
     final colors = gradient;
     return colors == null ? autoTextColor(color) : autoTextColorFor(colors);
   }
@@ -266,6 +276,7 @@ class Countdown {
     int? colorArgb,
     Object? gradientId = _keep,
     Object? gradientDirection = _keep,
+    Object? artId = _keep,
     Object? photoPath = _keep,
     Object? photoCrops = _keep,
     double? photoDarken,
@@ -287,6 +298,7 @@ class Countdown {
     gradientDirection: gradientDirection == _keep
         ? this.gradientDirection
         : gradientDirection as GradientDirection?,
+    artId: artId == _keep ? this.artId : artId as String?,
     photoPath: photoPath == _keep ? this.photoPath : photoPath as String?,
     photoCrops: photoCrops == _keep
         ? this.photoCrops
@@ -314,6 +326,7 @@ class Countdown {
       other.colorArgb == colorArgb &&
       other.gradientId == gradientId &&
       other.gradientDirection == gradientDirection &&
+      other.artId == artId &&
       other.photoPath == photoPath &&
       other.photoCrops == photoCrops &&
       other.photoDarken == photoDarken &&
@@ -332,6 +345,7 @@ class Countdown {
     colorArgb,
     gradientId,
     gradientDirection,
+    artId,
     photoPath,
     photoCrops,
     photoDarken,

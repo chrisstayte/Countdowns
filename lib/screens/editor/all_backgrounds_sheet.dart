@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:countdowns/models/art_catalog.dart';
 import 'package:countdowns/models/background_catalog.dart';
 import 'package:countdowns/models/countdown.dart';
 import 'package:countdowns/models/palette.dart';
@@ -10,6 +11,7 @@ import 'package:countdowns/storage/photos.dart';
 import 'package:countdowns/theme/app_theme.dart';
 import 'package:countdowns/utilities/count_format.dart';
 import 'package:countdowns/utilities/feedback.dart';
+import 'package:countdowns/widgets/art_painter.dart';
 import 'package:countdowns/widgets/countdown_surface.dart';
 import 'package:countdowns/widgets/event_icon.dart';
 import 'package:countdowns/widgets/ui.dart';
@@ -40,9 +42,8 @@ List<String> availablePhotos({
 /// Extra tabs shown in debug builds with `--dart-define=DEMO_TABS=true`, to
 /// try the tab bar with more kinds than fit (it scrolls).
 const _demoTabsOn = bool.fromEnvironment('DEMO_TABS');
-List<String> get demoBackgroundTabs => kDebugMode && _demoTabsOn
-    ? const ['Patterns', 'Textures', 'Illustrations', 'Emoji']
-    : const [];
+List<String> get demoBackgroundTabs =>
+    kDebugMode && _demoTabsOn ? const ['Emoji'] : const [];
 
 /// What Done returns: the chosen background and the gradient direction.
 class BackgroundChoice {
@@ -61,10 +62,9 @@ class BackgroundChoice {
 }
 
 /// "All backgrounds": every colour, gradient and photo, in collections.
-/// Picks show in the preview at the top and are applied as they happen
-/// through [AllBackgroundsSheet.onChanged], so closing the sheet any way
-/// keeps them. The sheet returns only [addPhotoResult] or an
-/// [ImportedPhoto] (a stock photo that still needs cropping).
+/// Picks show in the preview at the top and are applied as they happen through [AllBackgroundsSheet.onChanged];
+/// the sheet returns only [addPhotoResult] or an [ImportedPhoto] (a stock
+/// photo that still needs cropping).
 class AllBackgroundsSheet extends ConsumerStatefulWidget {
   const AllBackgroundsSheet({super.key, required this.draft, this.onChanged});
   final Countdown draft;
@@ -180,6 +180,7 @@ class _AllBackgroundsSheetState extends ConsumerState<AllBackgroundsSheet> {
                 BackgroundKind.colour => 'Colors',
                 BackgroundKind.gradient => 'Gradients',
                 BackgroundKind.photo => 'Photos',
+                BackgroundKind k when k.art != null => k.art!.label,
                 _ => '$k',
               },
               onChanged: (k) => setState(() {
@@ -229,6 +230,21 @@ class _AllBackgroundsSheetState extends ConsumerState<AllBackgroundsSheet> {
                   },
                   child: ClipRect(
                     child: switch (_tab) {
+                      BackgroundKind.pattern ||
+                      BackgroundKind.texture ||
+                      BackgroundKind.illustration => _Collections(
+                        key: ValueKey(_tab),
+                        sections: [
+                          for (final c in artCollectionsFor(_tab.art!))
+                            (
+                              title: c.name,
+                              keys: [for (final a in c.items) artKey(a)],
+                            ),
+                        ],
+                        selected: _key,
+                        legacyBase: widget.draft.color,
+                        onPick: _pick,
+                      ),
                       BackgroundKind.colour => _Collections(
                         sections: [
                           for (final c in colourCollections)
@@ -285,6 +301,7 @@ typedef _Section = ({String title, List<String> keys});
 
 class _Collections extends StatelessWidget {
   const _Collections({
+    super.key,
     required this.sections,
     required this.selected,
     required this.legacyBase,
@@ -404,13 +421,23 @@ String backgroundName(String key) {
           ? 'Classic gradient'
           : gradientById(ref.value)?.name ?? 'Gradient',
     BackgroundKind.photo => 'Photo',
+    BackgroundKind.pattern ||
+    BackgroundKind.texture ||
+    BackgroundKind.illustration =>
+      artById(ref.value)?.name ?? 'Drawn background',
   };
 }
 
 /// What a screen reader says for a key: "Sunset gradient", "Lavender".
 String backgroundLabel(String key) {
   final name = backgroundName(key);
-  return key.startsWith('gradient:') ? '$name gradient' : name;
+  return switch (parseBackgroundKey(key)?.kind) {
+    BackgroundKind.gradient => '$name gradient',
+    BackgroundKind.pattern => '$name pattern',
+    BackgroundKind.texture => '$name texture',
+    BackgroundKind.illustration => '$name illustration',
+    _ => name,
+  };
 }
 
 /// One background swatch for a key, used on the Look tab and in the sheet.
@@ -459,7 +486,18 @@ class BackgroundTile extends StatelessWidget {
             fit: BoxFit.cover,
           ),
         );
+      case BackgroundKind.pattern ||
+          BackgroundKind.texture ||
+          BackgroundKind.illustration:
+        final art = artById(ref.value);
+        return art == null ? null : BoxDecoration(color: art.ground);
     }
+  }
+
+  /// The drawn art for a pattern, texture or illustration key.
+  Art? get _art {
+    final ref = parseBackgroundKey(backgroundKey);
+    return ref?.kind.art == null ? null : artById(ref!.value);
   }
 
   @override
@@ -490,11 +528,18 @@ class BackgroundTile extends StatelessWidget {
                   ),
                 ),
                 child: Container(
+                  clipBehavior: Clip.antiAlias,
                   decoration:
                       (_fill() ?? const BoxDecoration(color: AppColors.wash))
                           .copyWith(
                             borderRadius: BorderRadius.circular(radius - 4),
                           ),
+                  child: _art == null
+                      ? null
+                      : CustomPaint(
+                          painter: ArtPainter(_art!, scale: 0.55),
+                          size: Size.infinite,
+                        ),
                 ),
               ),
             ),

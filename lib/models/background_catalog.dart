@@ -1,3 +1,4 @@
+import 'package:countdowns/models/art_catalog.dart';
 import 'package:countdowns/models/countdown.dart';
 import 'package:countdowns/models/palette.dart';
 import 'package:material_ui/material_ui.dart';
@@ -563,21 +564,40 @@ const List<String> featuredBackgrounds = [
 
 // MARK: Keys
 
-/// A background by a stable key: `colour:AARRGGBB`, `gradient:<id>` or
-/// `photo:<path>`. Used for the Look tab row, recents and the sheet.
+/// A background by a stable key: `colour:AARRGGBB`, `gradient:<id>`,
+/// `photo:<path>`, or `pattern:<id>`, `texture:<id>`, `illustration:<id>`
+/// for drawn art (see art_catalog.dart). Used for the Look tab row,
+/// recents and the sheet.
 String colourKey(Color c) =>
     'colour:${c.toARGB32().toRadixString(16).padLeft(8, '0').toUpperCase()}';
 String gradientKey(String id) => 'gradient:$id';
 String photoKey(String path) => 'photo:$path';
+String artKey(Art art) => '${art.kind.name}:${art.id}';
 
 /// The key of what [d] shows now.
 String backgroundKeyOf(Countdown d) {
   if (d.hasPhoto) return photoKey(d.photoPath!);
+  if (artById(d.artId) case final art?) return artKey(art);
   if (d.gradientId != null) return gradientKey(d.gradientId!);
   return colourKey(d.color);
 }
 
-enum BackgroundKind { colour, gradient, photo }
+enum BackgroundKind {
+  colour,
+  gradient,
+  photo,
+  pattern,
+  texture,
+  illustration;
+
+  /// The kind of drawn art this is, or null for colours, gradients, photos.
+  ArtKind? get art => switch (this) {
+    pattern => ArtKind.pattern,
+    texture => ArtKind.texture,
+    illustration => ArtKind.illustration,
+    _ => null,
+  };
+}
 
 /// A parsed key.
 typedef BackgroundRef = ({BackgroundKind kind, String value});
@@ -596,6 +616,18 @@ BackgroundRef? parseBackgroundKey(String key) {
       value: value,
     ),
     'photo' when value.isNotEmpty => (kind: BackgroundKind.photo, value: value),
+    'pattern' when value.isNotEmpty => (
+      kind: BackgroundKind.pattern,
+      value: value,
+    ),
+    'texture' when value.isNotEmpty => (
+      kind: BackgroundKind.texture,
+      value: value,
+    ),
+    'illustration' when value.isNotEmpty => (
+      kind: BackgroundKind.illustration,
+      value: value,
+    ),
     _ => null,
   };
 }
@@ -619,11 +651,16 @@ Countdown applyBackground(Countdown d, String key) {
         colorArgb: colourFromKey(ref.value).toARGB32(),
         gradientId: null,
         gradientDirection: null,
+        artId: null,
         photoPath: null,
       );
     case BackgroundKind.gradient:
       if (ref.value == legacyGradientId) {
-        return d.copyWith(gradientId: legacyGradientId, photoPath: null);
+        return d.copyWith(
+          gradientId: legacyGradientId,
+          artId: null,
+          photoPath: null,
+        );
       }
       final g = gradientById(ref.value);
       if (g == null) return d;
@@ -632,6 +669,7 @@ Countdown applyBackground(Countdown d, String key) {
         gradientId: g.id,
         gradientDirection:
             d.gradientDirection ?? GradientDirection.diagonalDown,
+        artId: null,
         photoPath: null,
       );
     case BackgroundKind.photo:
@@ -640,6 +678,20 @@ Countdown applyBackground(Countdown d, String key) {
         photoCrops: d.photoPath == ref.value
             ? d.photoCrops
             : const PhotoCrops(),
+      );
+    case BackgroundKind.pattern ||
+        BackgroundKind.texture ||
+        BackgroundKind.illustration:
+      final art = artById(ref.value);
+      if (art == null || art.kind != ref.kind.art) return d;
+      // The ground is saved as the colour too, so anything that only
+      // knows colours shows something close.
+      return d.copyWith(
+        colorArgb: art.ground.toARGB32(),
+        gradientId: null,
+        gradientDirection: null,
+        artId: art.id,
+        photoPath: null,
       );
   }
 }
@@ -674,6 +726,9 @@ List<String> lookRowKeys({
     if (ref == null || ref.kind == BackgroundKind.photo) continue;
     if (ref.kind == BackgroundKind.gradient &&
         gradientById(ref.value) == null) {
+      continue;
+    }
+    if (ref.kind.art != null && artById(ref.value)?.kind != ref.kind.art) {
       continue;
     }
     add(k);

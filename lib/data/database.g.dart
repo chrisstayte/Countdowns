@@ -100,6 +100,15 @@ class $EventsTable extends Events with TableInfo<$EventsTable, EventRow> {
       ).withConverter<GradientDirection?>(
         $EventsTable.$convertergradientDirectionn,
       );
+  static const VerificationMeta _artIdMeta = const VerificationMeta('artId');
+  @override
+  late final GeneratedColumn<String> artId = GeneratedColumn<String>(
+    'art_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _photoPathMeta = const VerificationMeta(
     'photoPath',
   );
@@ -208,6 +217,7 @@ class $EventsTable extends Events with TableInfo<$EventsTable, EventRow> {
     colorArgb,
     gradientId,
     gradientDirection,
+    artId,
     photoPath,
     photoCrops,
     photoDarken,
@@ -276,6 +286,12 @@ class $EventsTable extends Events with TableInfo<$EventsTable, EventRow> {
       context.handle(
         _gradientIdMeta,
         gradientId.isAcceptableOrUnknown(data['gradient_id']!, _gradientIdMeta),
+      );
+    }
+    if (data.containsKey('art_id')) {
+      context.handle(
+        _artIdMeta,
+        artId.isAcceptableOrUnknown(data['art_id']!, _artIdMeta),
       );
     }
     if (data.containsKey('photo_path')) {
@@ -373,6 +389,10 @@ class $EventsTable extends Events with TableInfo<$EventsTable, EventRow> {
           data['${effectivePrefix}gradient_direction'],
         ),
       ),
+      artId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}art_id'],
+      ),
       photoPath: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}photo_path'],
@@ -444,6 +464,9 @@ class EventRow extends DataClass implements Insertable<EventRow> {
   final int colorArgb;
   final String? gradientId;
   final GradientDirection? gradientDirection;
+
+  /// A pattern, texture or illustration id (schema 2).
+  final String? artId;
   final String? photoPath;
 
   /// JSON: a crop point per shape plus a "same for all" flag.
@@ -466,6 +489,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
     required this.colorArgb,
     this.gradientId,
     this.gradientDirection,
+    this.artId,
     this.photoPath,
     this.photoCrops,
     required this.photoDarken,
@@ -494,6 +518,9 @@ class EventRow extends DataClass implements Insertable<EventRow> {
       map['gradient_direction'] = Variable<String>(
         $EventsTable.$convertergradientDirectionn.toSql(gradientDirection),
       );
+    }
+    if (!nullToAbsent || artId != null) {
+      map['art_id'] = Variable<String>(artId);
     }
     if (!nullToAbsent || photoPath != null) {
       map['photo_path'] = Variable<String>(photoPath);
@@ -535,6 +562,9 @@ class EventRow extends DataClass implements Insertable<EventRow> {
       gradientDirection: gradientDirection == null && nullToAbsent
           ? const Value.absent()
           : Value(gradientDirection),
+      artId: artId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(artId),
       photoPath: photoPath == null && nullToAbsent
           ? const Value.absent()
           : Value(photoPath),
@@ -569,6 +599,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
       gradientDirection: $EventsTable.$convertergradientDirectionn.fromJson(
         serializer.fromJson<String?>(json['gradientDirection']),
       ),
+      artId: serializer.fromJson<String?>(json['artId']),
       photoPath: serializer.fromJson<String?>(json['photoPath']),
       photoCrops: serializer.fromJson<String?>(json['photoCrops']),
       photoDarken: serializer.fromJson<double>(json['photoDarken']),
@@ -598,6 +629,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
       'gradientDirection': serializer.toJson<String?>(
         $EventsTable.$convertergradientDirectionn.toJson(gradientDirection),
       ),
+      'artId': serializer.toJson<String?>(artId),
       'photoPath': serializer.toJson<String?>(photoPath),
       'photoCrops': serializer.toJson<String?>(photoCrops),
       'photoDarken': serializer.toJson<double>(photoDarken),
@@ -623,6 +655,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
     int? colorArgb,
     Value<String?> gradientId = const Value.absent(),
     Value<GradientDirection?> gradientDirection = const Value.absent(),
+    Value<String?> artId = const Value.absent(),
     Value<String?> photoPath = const Value.absent(),
     Value<String?> photoCrops = const Value.absent(),
     double? photoDarken,
@@ -643,6 +676,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
     gradientDirection: gradientDirection.present
         ? gradientDirection.value
         : this.gradientDirection,
+    artId: artId.present ? artId.value : this.artId,
     photoPath: photoPath.present ? photoPath.value : this.photoPath,
     photoCrops: photoCrops.present ? photoCrops.value : this.photoCrops,
     photoDarken: photoDarken ?? this.photoDarken,
@@ -671,6 +705,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
       gradientDirection: data.gradientDirection.present
           ? data.gradientDirection.value
           : this.gradientDirection,
+      artId: data.artId.present ? data.artId.value : this.artId,
       photoPath: data.photoPath.present ? data.photoPath.value : this.photoPath,
       photoCrops: data.photoCrops.present
           ? data.photoCrops.value
@@ -702,6 +737,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
           ..write('colorArgb: $colorArgb, ')
           ..write('gradientId: $gradientId, ')
           ..write('gradientDirection: $gradientDirection, ')
+          ..write('artId: $artId, ')
           ..write('photoPath: $photoPath, ')
           ..write('photoCrops: $photoCrops, ')
           ..write('photoDarken: $photoDarken, ')
@@ -725,6 +761,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
     colorArgb,
     gradientId,
     gradientDirection,
+    artId,
     photoPath,
     photoCrops,
     photoDarken,
@@ -747,6 +784,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
           other.colorArgb == this.colorArgb &&
           other.gradientId == this.gradientId &&
           other.gradientDirection == this.gradientDirection &&
+          other.artId == this.artId &&
           other.photoPath == this.photoPath &&
           other.photoCrops == this.photoCrops &&
           other.photoDarken == this.photoDarken &&
@@ -767,6 +805,7 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
   final Value<int> colorArgb;
   final Value<String?> gradientId;
   final Value<GradientDirection?> gradientDirection;
+  final Value<String?> artId;
   final Value<String?> photoPath;
   final Value<String?> photoCrops;
   final Value<double> photoDarken;
@@ -785,6 +824,7 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
     this.colorArgb = const Value.absent(),
     this.gradientId = const Value.absent(),
     this.gradientDirection = const Value.absent(),
+    this.artId = const Value.absent(),
     this.photoPath = const Value.absent(),
     this.photoCrops = const Value.absent(),
     this.photoDarken = const Value.absent(),
@@ -804,6 +844,7 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
     required int colorArgb,
     this.gradientId = const Value.absent(),
     this.gradientDirection = const Value.absent(),
+    this.artId = const Value.absent(),
     this.photoPath = const Value.absent(),
     this.photoCrops = const Value.absent(),
     this.photoDarken = const Value.absent(),
@@ -829,6 +870,7 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
     Expression<int>? colorArgb,
     Expression<String>? gradientId,
     Expression<String>? gradientDirection,
+    Expression<String>? artId,
     Expression<String>? photoPath,
     Expression<String>? photoCrops,
     Expression<double>? photoDarken,
@@ -848,6 +890,7 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
       if (colorArgb != null) 'color_argb': colorArgb,
       if (gradientId != null) 'gradient_id': gradientId,
       if (gradientDirection != null) 'gradient_direction': gradientDirection,
+      if (artId != null) 'art_id': artId,
       if (photoPath != null) 'photo_path': photoPath,
       if (photoCrops != null) 'photo_crops': photoCrops,
       if (photoDarken != null) 'photo_darken': photoDarken,
@@ -869,6 +912,7 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
     Value<int>? colorArgb,
     Value<String?>? gradientId,
     Value<GradientDirection?>? gradientDirection,
+    Value<String?>? artId,
     Value<String?>? photoPath,
     Value<String?>? photoCrops,
     Value<double>? photoDarken,
@@ -888,6 +932,7 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
       colorArgb: colorArgb ?? this.colorArgb,
       gradientId: gradientId ?? this.gradientId,
       gradientDirection: gradientDirection ?? this.gradientDirection,
+      artId: artId ?? this.artId,
       photoPath: photoPath ?? this.photoPath,
       photoCrops: photoCrops ?? this.photoCrops,
       photoDarken: photoDarken ?? this.photoDarken,
@@ -930,6 +975,9 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
           gradientDirection.value,
         ),
       );
+    }
+    if (artId.present) {
+      map['art_id'] = Variable<String>(artId.value);
     }
     if (photoPath.present) {
       map['photo_path'] = Variable<String>(photoPath.value);
@@ -976,6 +1024,7 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
           ..write('colorArgb: $colorArgb, ')
           ..write('gradientId: $gradientId, ')
           ..write('gradientDirection: $gradientDirection, ')
+          ..write('artId: $artId, ')
           ..write('photoPath: $photoPath, ')
           ..write('photoCrops: $photoCrops, ')
           ..write('photoDarken: $photoDarken, ')
@@ -1493,6 +1542,7 @@ typedef $$EventsTableCreateCompanionBuilder = EventsCompanion Function({
   required int colorArgb,
   Value<String?> gradientId,
   Value<GradientDirection?> gradientDirection,
+  Value<String?> artId,
   Value<String?> photoPath,
   Value<String?> photoCrops,
   Value<double> photoDarken,
@@ -1512,6 +1562,7 @@ typedef $$EventsTableUpdateCompanionBuilder = EventsCompanion Function({
   Value<int> colorArgb,
   Value<String?> gradientId,
   Value<GradientDirection?> gradientDirection,
+  Value<String?> artId,
   Value<String?> photoPath,
   Value<String?> photoCrops,
   Value<double> photoDarken,
@@ -1594,6 +1645,11 @@ class $$EventsTableFilterComposer
   get gradientDirection => $composableBuilder(
     column: $table.gradientDirection,
     builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<String> get artId => $composableBuilder(
+    column: $table.artId,
+    builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<String> get photoPath => $composableBuilder(
@@ -1718,6 +1774,11 @@ class $$EventsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get artId => $composableBuilder(
+    column: $table.artId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get photoPath => $composableBuilder(
     column: $table.photoPath,
     builder: (column) => ColumnOrderings(column),
@@ -1803,6 +1864,9 @@ class $$EventsTableAnnotationComposer
     column: $table.gradientDirection,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get artId =>
+      $composableBuilder(column: $table.artId, builder: (column) => column);
 
   GeneratedColumn<String> get photoPath =>
       $composableBuilder(column: $table.photoPath, builder: (column) => column);
@@ -1902,6 +1966,7 @@ class $$EventsTableTableManager
                 Value<String?> gradientId = const Value.absent(),
                 Value<GradientDirection?> gradientDirection =
                     const Value.absent(),
+                Value<String?> artId = const Value.absent(),
                 Value<String?> photoPath = const Value.absent(),
                 Value<String?> photoCrops = const Value.absent(),
                 Value<double> photoDarken = const Value.absent(),
@@ -1920,6 +1985,7 @@ class $$EventsTableTableManager
                 colorArgb: colorArgb,
                 gradientId: gradientId,
                 gradientDirection: gradientDirection,
+                artId: artId,
                 photoPath: photoPath,
                 photoCrops: photoCrops,
                 photoDarken: photoDarken,
@@ -1941,6 +2007,7 @@ class $$EventsTableTableManager
                 Value<String?> gradientId = const Value.absent(),
                 Value<GradientDirection?> gradientDirection =
                     const Value.absent(),
+                Value<String?> artId = const Value.absent(),
                 Value<String?> photoPath = const Value.absent(),
                 Value<String?> photoCrops = const Value.absent(),
                 Value<double> photoDarken = const Value.absent(),
@@ -1959,6 +2026,7 @@ class $$EventsTableTableManager
                 colorArgb: colorArgb,
                 gradientId: gradientId,
                 gradientDirection: gradientDirection,
+                artId: artId,
                 photoPath: photoPath,
                 photoCrops: photoCrops,
                 photoDarken: photoDarken,

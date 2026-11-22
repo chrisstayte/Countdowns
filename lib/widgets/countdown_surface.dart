@@ -1,5 +1,6 @@
 import 'package:countdowns/models/countdown.dart';
 import 'package:countdowns/storage/photos.dart';
+import 'package:countdowns/widgets/art_painter.dart';
 import 'package:countdowns/theme/app_theme.dart';
 import 'package:countdowns/widgets/cropped_photo.dart';
 import 'package:material_ui/material_ui.dart';
@@ -18,7 +19,7 @@ enum ScrimStyle {
 }
 
 /// Paints an event's background: its colour, gradient (in its direction),
-/// or photo (cropped for [shape], darkened, with a scrim).
+/// drawn art (a pattern, texture or illustration), or photo (cropped for [shape], darkened, with a scrim).
 class CountdownSurface extends StatelessWidget {
   const CountdownSurface({
     super.key,
@@ -51,6 +52,31 @@ class CountdownSurface extends StatelessWidget {
       borderRadius: borderRadius,
       boxShadow: boxShadow,
     );
+    final art = file == null ? event.art : null;
+    if (art != null) {
+      return DecoratedBox(
+        decoration: BoxDecoration(
+          color: art.ground,
+          borderRadius: borderRadius,
+          boxShadow: boxShadow,
+        ),
+        child: ClipRRect(
+          borderRadius: borderRadius,
+          child: Stack(
+            fit: StackFit.passthrough,
+            children: [
+              Positioned.fill(
+                // Drawn once and cached: the art never animates.
+                child: RepaintBoundary(
+                  child: CustomPaint(painter: ArtPainter(art)),
+                ),
+              ),
+              Padding(padding: padding, child: child),
+            ],
+          ),
+        ),
+      );
+    }
     if (file == null) {
       return DecoratedBox(
         decoration: decoration,

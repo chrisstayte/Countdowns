@@ -169,6 +169,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
           photoCrops: result.crops,
           gradientId: null,
           gradientDirection: null,
+          artId: null,
         ),
       );
     }
@@ -190,6 +191,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
         photoCrops: crops ?? start,
         gradientId: null,
         gradientDirection: null,
+        artId: null,
       ),
     );
   }
