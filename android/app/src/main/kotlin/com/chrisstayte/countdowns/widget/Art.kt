@@ -107,11 +107,11 @@ class Art(
     // MARK: Backgrounds
 
     /** Colour, gradient (direction honoured) or darkened photo, clipped. */
-    fun background(canvas: Canvas, e: WidgetEvent, rect: RectF, radius: Float, wide: Boolean) {
+    fun background(canvas: Canvas, e: WidgetEvent, rect: RectF, radius: Float, photoPath: String?) {
         canvas.save()
         val clip = Path().apply { addRoundRect(rect, radius, radius, Path.Direction.CW) }
         canvas.clipPath(clip)
-        val photo = SnapshotStore.file(context, if (wide) e.photoWide else e.photo)
+        val photo = SnapshotStore.file(context, photoPath)
             ?.let { BitmapFactory.decodeFile(it.path) }
         if (photo != null) {
             // Cover, like scaledToFill.
@@ -221,7 +221,7 @@ class Art(
     /** 2×2: title and icon on top, the count and date at the bottom. */
     fun small(e: WidgetEvent, w: Float, h: Float, radius: Float): Bitmap {
         val (bitmap, canvas) = canvasFor(w, h)
-        background(canvas, e, RectF(0f, 0f, w, h), radius, wide = false)
+        background(canvas, e, RectF(0f, 0f, w, h), radius, e.photo)
         val pad = 16f
         val shadow = e.hasPhoto
         val count = counter.count(e, now, modeFor(countIn, e))
@@ -246,7 +246,7 @@ class Art(
     /** 4×2: eyebrow and title, the count bottom left, date and progress right. */
     fun medium(e: WidgetEvent, pinned: Boolean, w: Float, h: Float, radius: Float): Bitmap {
         val (bitmap, canvas) = canvasFor(w, h)
-        background(canvas, e, RectF(0f, 0f, w, h), radius, wide = true)
+        background(canvas, e, RectF(0f, 0f, w, h), radius, e.photoWide)
         val padX = 18f
         val padY = 16f
         val shadow = e.hasPhoto
@@ -285,7 +285,7 @@ class Art(
     /** The lead card at the top of the 4×4 widget. */
     fun lead(e: WidgetEvent, pinned: Boolean, w: Float, h: Float): Bitmap {
         val (bitmap, canvas) = canvasFor(w, h)
-        background(canvas, e, RectF(0f, 0f, w, h), 18f, wide = true)
+        background(canvas, e, RectF(0f, 0f, w, h), 18f, e.photoWide)
         val pad = 16f
         val shadow = e.hasPhoto
         val count = counter.count(e, now, modeFor(countIn, e))
@@ -314,12 +314,55 @@ class Art(
         return bitmap
     }
 
+    /**
+     * The large widget when only one countdown is active: the countdown
+     * fills the widget edge to edge, with its full-screen photo crop.
+     */
+    fun hero(e: WidgetEvent, pinned: Boolean, w: Float, h: Float, radius: Float): Bitmap {
+        val (bitmap, canvas) = canvasFor(w, h)
+        background(canvas, e, RectF(0f, 0f, w, h), radius, e.photoFull ?: e.photo)
+        val pad = 20f
+        val shadow = e.hasPhoto
+        val count = counter.count(e, now, modeFor(countIn, e))
+
+        drawIcon(canvas, e, w - pad - 26f, pad, 26f)
+        val label = paint(Fonts.ui(context, bold = true), 12f, e.text, shadow)
+            .apply { letterSpacing = 0.08f }
+        canvas.drawText(eyebrow(pinned), pad, pad + 12f, label)
+        val title = paint(Fonts.event(context, e.font), 28f, e.text, shadow)
+        canvas.save()
+        canvas.translate(pad, pad + 18f)
+        layout(e.title, title, w - pad * 2 - 34f, 2).draw(canvas)
+        canvas.restore()
+
+        // Bottom up: progress bar, date, then the big count.
+        var bottom = h - pad
+        if (h >= 220f) {
+            val bar = RectF(pad, bottom - 8f, w - pad, bottom)
+            canvas.drawRoundRect(bar, 4f, 4f, Paint(Paint.ANTI_ALIAS_FLAG).apply { color = alpha(e.text, 0.18) })
+            val value = counter.progress(e, now).toFloat()
+            canvas.drawRoundRect(
+                RectF(bar.left, bar.top, bar.left + maxOf(8f, bar.width() * value), bar.bottom),
+                4f, 4f, Paint(Paint.ANTI_ALIAS_FLAG).apply { color = e.text },
+            )
+            bottom = bar.top - 12f
+        }
+        val date = paint(Fonts.ui(context), 15f, e.text, shadow)
+        canvas.drawText(counter.shortDate(e, now), pad, bottom - date.descent(), date)
+        val bigSize = (h * 0.34f).coerceIn(64f, 132f)
+        drawCount(
+            canvas, count, pad, bottom - 26f, w - pad * 2,
+            bigSize = bigSize, unitSize = 20f, gap = 8f, ink = e.text, shadow = shadow,
+        )
+        return bitmap
+    }
+
     /** One row of the Up next list: tile, title and date, count. */
     fun row(e: WidgetEvent, w: Float): Bitmap {
         val h = 38f
         val (bitmap, canvas) = canvasFor(w, h)
         val tile = RectF(0f, 2f, 34f, 36f)
-        background(canvas, e, tile, 11f, wide = false)
+        background(canvas, e, tile, 11f, e.photo)
         drawIcon(canvas, e, tile.centerX() - 9f, tile.centerY() - 9f, 18f)
 
         val mode = modeFor(countIn, e)

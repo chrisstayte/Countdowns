@@ -24,6 +24,16 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <!-- Widget taps: countdowns://event/<id>. Flutter passes the URL to
+                 GoRouter on a cold start and through onNewIntent when the
+                 app is already running (singleTop). -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="countdowns" android:host="event" />
+            </intent-filter>
+            <meta-data android:name="flutter_deeplinking_enabled" android:value="true" />
         </activity>
         <!-- Home screen widget: our own Glance code (see kotlin/.../widget). -->
         <receiver

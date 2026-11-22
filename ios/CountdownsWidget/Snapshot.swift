@@ -7,6 +7,8 @@ let appGroup = "group.com.chrisstayte.countdowns"
 /// One countdown as the Flutter app wrote it to `widget/snapshot.json`.
 struct WidgetEvent: Codable, Identifiable, Hashable {
   let id: Int
+  /// countdowns://event/<id>: what a tap on this countdown opens.
+  let link: String?
   let title: String
   let target: TimeInterval
   let allDay: Bool
@@ -19,6 +21,8 @@ struct WidgetEvent: Codable, Identifiable, Hashable {
   let icon: String?
   let photo: String?
   let photoWide: String?
+  /// The full-screen crop, for the large widget's single-countdown hero.
+  let photoFull: String?
   let darken: Double
   let createdAt: TimeInterval
 }
@@ -131,6 +135,8 @@ extension WidgetEvent {
   }
 
   // MARK: Look
+
+  var url: URL? { link.flatMap(URL.init(string:)) }
 
   var ink: Color { Color(hex: text) }
   var hasPhoto: Bool { photo != nil }

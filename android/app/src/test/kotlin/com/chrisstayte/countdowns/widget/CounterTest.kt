@@ -107,4 +107,44 @@ class CounterTest {
         assertEquals(0.5, counter.progress(thanksgiving, at(2026, 11, 23, 12)), 1e-9)
         assertEquals(1.0, counter.progress(thanksgiving, at(2026, 11, 26, 6)), 1e-9)
     }
+
+    @Test
+    fun parsesLinksAndTheFullPhoto() {
+        assertEquals("countdowns://event/7", birthday.link)
+        assertEquals("photos/7-full-abc.png", birthday.photoFull)
+        assertEquals(null, thanksgiving.photoFull)
+    }
+
+    @Test
+    fun largeLayoutFollowsTheActiveCount() {
+        assertEquals(LargeLayout.Empty, largeLayout(0))
+        assertEquals(LargeLayout.Hero, largeLayout(1))
+        assertEquals(LargeLayout.List, largeLayout(2))
+        assertEquals(LargeLayout.List, largeLayout(12))
+        // Driven by what is still active at draw time, not by the snapshot:
+        // once the flight and Thanksgiving pass, the birthday becomes a hero.
+        val now = at(2026, 11, 21)
+        assertEquals(LargeLayout.List, largeLayout(counter.arrange(events, now, null).events.size))
+        val later = at(2026, 11, 28)
+        assertEquals(LargeLayout.Hero, largeLayout(counter.arrange(events, later, null).events.size))
+        assertEquals(LargeLayout.Empty, largeLayout(counter.arrange(listOf(flight), later, null).events.size))
+    }
+
+    @Test
+    fun listRowsAndLeadFillTheHeight() {
+        // A 4×4 on a phone is about 420dp tall.
+        for (active in 2..12) {
+            val plan = planList(active, 420f)
+            assertEquals(minOf(active - 1, 4), plan.rows)
+            val used = LIST_PADDING * 2 + plan.leadHeight + plan.rows * (ROW_HEIGHT + ROW_GAP)
+            assertEquals("no empty Paper with $active", 420f, used, 0.01f)
+            assertTrue(plan.leadHeight >= MIN_LEAD)
+        }
+        // Two countdowns: one row and a tall lead card, not one lonely row.
+        assertTrue(planList(2, 420f).leadHeight > 250f)
+        // A short widget drops rows before squashing the lead below 78dp.
+        val short = planList(6, 300f)
+        assertTrue(short.leadHeight >= MIN_LEAD)
+        assertEquals(3, short.rows)
+    }
 }

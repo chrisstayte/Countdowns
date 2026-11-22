@@ -2,6 +2,7 @@ package com.chrisstayte.countdowns.widget
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -22,7 +23,9 @@ import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.SizeMode
+import androidx.glance.action.Action
 import androidx.glance.action.actionStartActivity
+import androidx.glance.appwidget.action.actionStartActivity as startActivityWith
 import androidx.glance.appwidget.appWidgetBackground
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.provideContent
@@ -93,15 +96,15 @@ class CountdownWidget : GlanceAppWidget() {
         val h = size.height.value
         val lead = arranged.lead
 
-        val base = GlanceModifier
+        val frame = GlanceModifier
             .fillMaxSize()
             .appWidgetBackground()
             .cornerRadius(radius.dp)
-            .clickable(actionStartActivity<MainActivity>())
 
         when {
             lead == null -> Box(
-                base.background(Color(Palette.PAPER)).padding(12.dp),
+                frame.background(Color(Palette.PAPER)).padding(12.dp)
+                    .clickable(openCountdown(context, null)),
                 contentAlignment = Alignment.Center,
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -126,22 +129,41 @@ class CountdownWidget : GlanceAppWidget() {
             }
 
             // Android cells run taller than iOS ones: a 4×2 is about 210dp, so
-            // the list needs three rows or more, like the iOS large widget.
-            w >= 200 && h >= 280 -> Column(base.background(Color(Palette.PAPER)).padding(18.dp)) {
-                val inner = w - 36
+            // the large layouts start at three rows, like the iOS large widget.
+            w >= 200 && h >= 280 && largeLayout(arranged.events.size) == LargeLayout.Hero -> Image(
+                ImageProvider(art.hero(lead, arranged.pinned, w, h, radius)),
+                contentDescription = art.describe(lead),
+                modifier = frame.clickable(openCountdown(context, lead)),
+                contentScale = ContentScale.FillBounds,
+            )
+
+            w >= 200 && h >= 280 -> Column(
+                frame.background(Color(Palette.PAPER)).padding(LIST_PADDING.dp)
+                    .clickable(openCountdown(context, null)),
+            ) {
+                val inner = w - LIST_PADDING * 2
+                val plan = planList(arranged.events.size, h)
+                // The lead card takes the room the rows leave, so short
+                // lists grow the card instead of leaving empty Paper.
+                val leadArt = if (plan.leadHeight >= 130f) {
+                    art.medium(lead, arranged.pinned, inner, plan.leadHeight, 18f)
+                } else {
+                    art.lead(lead, arranged.pinned, inner, plan.leadHeight)
+                }
                 Image(
-                    ImageProvider(art.lead(lead, arranged.pinned, inner, 78f)),
+                    ImageProvider(leadArt),
                     contentDescription = art.describe(lead),
-                    modifier = GlanceModifier.fillMaxWidth().height(78.dp),
+                    modifier = GlanceModifier.fillMaxWidth().height(plan.leadHeight.dp)
+                        .clickable(openCountdown(context, lead)),
                     contentScale = ContentScale.FillBounds,
                 )
-                val rows = ((h - 36 - 78) / 48).toInt().coerceIn(0, 4)
-                for (e in arranged.events.drop(1).take(rows)) {
-                    Spacer(GlanceModifier.height(10.dp))
+                for (e in arranged.events.drop(1).take(plan.rows)) {
+                    Spacer(GlanceModifier.height(ROW_GAP.dp))
                     Image(
                         ImageProvider(art.row(e, inner)),
                         contentDescription = art.describe(e),
-                        modifier = GlanceModifier.fillMaxWidth().height(38.dp),
+                        modifier = GlanceModifier.fillMaxWidth().height(ROW_HEIGHT.dp)
+                            .clickable(openCountdown(context, e)),
                         contentScale = ContentScale.FillBounds,
                     )
                 }
@@ -150,18 +172,37 @@ class CountdownWidget : GlanceAppWidget() {
             w >= 200 -> Image(
                 ImageProvider(art.medium(lead, arranged.pinned, w, h, radius)),
                 contentDescription = art.describe(lead),
-                modifier = base,
+                modifier = frame.clickable(openCountdown(context, lead)),
                 contentScale = ContentScale.FillBounds,
             )
 
             else -> Image(
                 ImageProvider(art.small(lead, w, h, radius)),
                 contentDescription = art.describe(lead),
-                modifier = base,
+                modifier = frame.clickable(openCountdown(context, lead)),
                 contentScale = ContentScale.FillBounds,
             )
         }
     }
+}
+
+/**
+ * Opens the app on a countdown's detail (countdowns://event/<id>, routed
+ * by GoRouter; a deleted one lands on Home), or just opens the app.
+ * Each link is its own data URI, so every row gets its own PendingIntent.
+ */
+fun openCountdown(context: Context, e: WidgetEvent?): Action {
+    val link = e?.link ?: return actionStartActivity<MainActivity>()
+    return startActivityWith(
+        Intent(Intent.ACTION_VIEW, Uri.parse(link), context, MainActivity::class.java)
+            .putExtra(WidgetLinks.EXTRA, link),
+    )
+}
+
+object WidgetLinks {
+    /** Glance overwrites the intent's data, so the link rides along here
+     *  too; MainActivity restores it (see restoreWidgetLink). */
+    const val EXTRA = "com.chrisstayte.countdowns.WIDGET_LINK"
 }
 
 /** The launcher's widget corner radius in dp (Android 12+), else 20. */

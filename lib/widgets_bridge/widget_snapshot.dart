@@ -7,6 +7,7 @@ import 'package:countdowns/models/event_icons.dart';
 import 'package:countdowns/providers/home_provider.dart';
 import 'package:countdowns/storage/photos.dart';
 import 'package:countdowns/theme/app_theme.dart';
+import 'package:countdowns/widgets_bridge/widget_links.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -49,6 +50,8 @@ Map<String, Object?> buildWidgetSnapshot(List<Countdown> events, DateTime now) {
       for (final e in upcoming)
         {
           'id': e.id,
+          // What a tap on this countdown opens (see widget_links.dart).
+          'link': e.id == null ? null : widgetLinkFor(e.id!).toString(),
           'title': e.title,
           // Seconds since the epoch of the next occurrence.
           'target': e.nextOccurrence(now).millisecondsSinceEpoch ~/ 1000,
@@ -66,6 +69,8 @@ Map<String, Object?> buildWidgetSnapshot(List<Countdown> events, DateTime now) {
               : iconFileName(e.iconSlug!, e.textColor),
           'photo': e.hasPhoto ? photoFileName(e, CropShape.card) : null,
           'photoWide': e.hasPhoto ? photoFileName(e, CropShape.wide) : null,
+          // The large widget's single-countdown hero uses the full crop.
+          'photoFull': e.hasPhoto ? photoFileName(e, CropShape.full) : null,
           'darken': e.photoDarken,
           'createdAt': (e.createdAt ?? now).millisecondsSinceEpoch ~/ 1000,
         },
@@ -135,6 +140,7 @@ class WidgetSnapshotWriter {
         for (final (key, shape, width) in [
           ('photo', CropShape.card, 600),
           ('photoWide', CropShape.wide, 900),
+          ('photoFull', CropShape.full, 700),
         ]) {
           if (m[key] case final String photo) {
             keep.add(photo);

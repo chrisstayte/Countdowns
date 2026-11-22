@@ -6,9 +6,15 @@ import WidgetKit
 struct EventBackground: View {
   let event: WidgetEvent
   var wide = false
+  /// The full-screen crop (the large widget's single-countdown hero).
+  var full = false
+
+  private var photo: String? {
+    full ? (event.photoFull ?? event.photo) : wide ? event.photoWide : event.photo
+  }
 
   var body: some View {
-    if let image = SnapshotStore.image(wide ? event.photoWide : event.photo) {
+    if let image = SnapshotStore.image(photo) {
       ZStack {
         Image(uiImage: image).resizable().scaledToFill()
         LinearGradient(
@@ -155,39 +161,106 @@ struct ProgressBar: View {
   }
 }
 
+/// Two or more countdowns: a lead card and the rest listed under it. The
+/// lead card takes whatever height the rows leave, so a short list grows
+/// the card instead of leaving empty Paper at the bottom.
 struct LargeView: View {
   let entry: CountdownEntry
 
   var body: some View {
     VStack(spacing: 10) {
       if let lead = entry.lead {
-        let count = lead.count(at: entry.date, mode: entry.mode(for: lead))
-        HStack(alignment: .bottom) {
-          VStack(alignment: .leading, spacing: 2) {
-            Text(entry.pinned ? "COUNTDOWN" : "UP NEXT")
-              .font(WidgetFont.ui(11, bold: true)).kerning(0.9)
-            Text(lead.title).font(WidgetFont.event(lead.font, 20)).lineLimit(1)
-          }
-          Spacer(minLength: 8)
-          HStack(alignment: .firstTextBaseline, spacing: 3) {
-            Text(count.big).font(WidgetFont.numeral(48))
-            Text(count.unit).font(WidgetFont.ui(14, bold: true))
-          }
-          .lineLimit(1)
-          .minimumScaleFactor(0.6)
+        Link(destination: lead.url ?? URL(string: "countdowns://")!) {
+          LeadCard(entry: entry, event: lead)
         }
-        .foregroundStyle(lead.ink)
-        .onPhoto(lead)
-        .padding(.horizontal, 16)
-        .padding(.vertical, 14)
-        .background(EventBackground(event: lead, wide: true))
-        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
       }
       ForEach(entry.events.dropFirst().prefix(4)) { event in
-        ListRow(entry: entry, event: event)
+        Link(destination: event.url ?? URL(string: "countdowns://")!) {
+          ListRow(entry: entry, event: event)
+        }
+      }
+    }
+  }
+}
+
+struct LeadCard: View {
+  let entry: CountdownEntry
+  let event: WidgetEvent
+
+  var body: some View {
+    GeometryReader { geo in
+      Group {
+        if geo.size.height >= 130 {
+          // Room to spare: the medium widget's layout, progress included.
+          MediumView(entry: entry, event: event)
+            .padding(.horizontal, 16).padding(.vertical, 14)
+        } else {
+          compact
+            .padding(.horizontal, 16).padding(.vertical, 14)
+        }
+      }
+      .frame(width: geo.size.width, height: geo.size.height, alignment: .topLeading)
+      .background(EventBackground(event: event, wide: true))
+      .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+    }
+    .frame(minHeight: 78, maxHeight: .infinity)
+  }
+
+  private var compact: some View {
+    let count = event.count(at: entry.date, mode: entry.mode(for: event))
+    return HStack(alignment: .bottom) {
+      VStack(alignment: .leading, spacing: 2) {
+        Text(entry.pinned ? "COUNTDOWN" : "UP NEXT")
+          .font(WidgetFont.ui(11, bold: true)).kerning(0.9)
+        Text(event.title).font(WidgetFont.event(event.font, 20)).lineLimit(1)
+      }
+      Spacer(minLength: 8)
+      HStack(alignment: .firstTextBaseline, spacing: 3) {
+        Text(count.big).font(WidgetFont.numeral(48))
+        Text(count.unit).font(WidgetFont.ui(14, bold: true))
+      }
+      .lineLimit(1)
+      .minimumScaleFactor(0.6)
+    }
+    .frame(maxHeight: .infinity, alignment: .bottom)
+    .foregroundStyle(event.ink)
+    .onPhoto(event)
+  }
+}
+
+/// Exactly one active countdown: it fills the large widget edge to edge.
+struct HeroView: View {
+  let entry: CountdownEntry
+  let event: WidgetEvent
+
+  var body: some View {
+    let count = event.count(at: entry.date, mode: entry.mode(for: event))
+    VStack(alignment: .leading, spacing: 0) {
+      HStack(alignment: .top, spacing: 8) {
+        VStack(alignment: .leading, spacing: 4) {
+          Text(entry.pinned ? "COUNTDOWN" : "UP NEXT")
+            .font(WidgetFont.ui(12, bold: true)).kerning(1)
+          Text(event.title)
+            .font(WidgetFont.event(event.font, 30))
+            .lineLimit(2)
+            .minimumScaleFactor(0.7)
+        }
+        Spacer(minLength: 0)
+        EventIcon(event: event, size: 28)
       }
       Spacer(minLength: 0)
+      HStack(alignment: .firstTextBaseline, spacing: 8) {
+        Text(count.big).font(WidgetFont.numeral(120)).minimumScaleFactor(0.4)
+        Text(count.unit).font(WidgetFont.ui(22, bold: true))
+      }
+      .lineLimit(1)
+      Text(event.shortDate(at: entry.date)).font(WidgetFont.ui(15))
+        .padding(.bottom, 12)
+      ProgressBar(value: event.progress(at: entry.date), ink: event.ink)
+        .frame(height: 8)
     }
+    .foregroundStyle(event.ink)
+    .onPhoto(event)
   }
 }
 

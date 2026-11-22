@@ -53,6 +53,34 @@ void main() {
     expect(trip['photo'], isNull);
   });
 
+  test('the snapshot carries only active countdowns, which picks the large '
+      'layout: none is the empty state, one is the hero, more is the list', () {
+    List snapshotOf(List<Countdown> events) =>
+        buildWidgetSnapshot(events, now)['events']! as List;
+    final done = Countdown(
+      id: 1,
+      title: 'Done',
+      dateTime: DateTime(2026, 1, 1),
+    );
+    final trip = Countdown(
+      id: 2,
+      title: 'Trip',
+      dateTime: DateTime(2027, 3, 14),
+      photoPath: 'p.jpg',
+    );
+    final party = Countdown(
+      id: 3,
+      title: 'Party',
+      dateTime: DateTime(2026, 12, 31),
+    );
+    expect(snapshotOf([done]), isEmpty);
+    final single = snapshotOf([done, trip]);
+    expect(single, hasLength(1));
+    // The hero uses the full-screen crop.
+    expect((single.single as Map)['photoFull'], startsWith('photos/2-full-'));
+    expect(snapshotOf([done, trip, party]), hasLength(2));
+  });
+
   test('snapshot is capped', () {
     final many = [
       for (var i = 0; i < 30; i++)

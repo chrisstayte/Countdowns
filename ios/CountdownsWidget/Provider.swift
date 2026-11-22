@@ -64,10 +64,10 @@ struct CountdownProvider: AppIntentTimelineProvider {
 
 extension WidgetEvent {
   static let sample = WidgetEvent(
-    id: 0, title: "Thanksgiving",
+    id: 0, link: nil, title: "Thanksgiving",
     target: Date.now.addingTimeInterval(4 * 86_400 + 3_600).timeIntervalSince1970,
     allDay: true, yearly: false, unit: "days", font: "Default", text: "#1C1633",
     colors: ["#FE7228"], direction: "diagonalDown", icon: nil, photo: nil,
-    photoWide: nil, darken: 0.35,
+    photoWide: nil, photoFull: nil, darken: 0.35,
     createdAt: Date.now.addingTimeInterval(-10 * 86_400).timeIntervalSince1970)
 }

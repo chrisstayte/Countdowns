@@ -1,4 +1,5 @@
 import 'package:countdowns/constants.dart';
+import 'package:countdowns/providers/event_provider.dart';
 import 'package:countdowns/screens/editor/editor_screen.dart';
 import 'package:countdowns/screens/event_screen/event_screen.dart';
 import 'package:countdowns/screens/home/home_screen.dart';
@@ -6,6 +7,7 @@ import 'package:countdowns/screens/search/search_screen.dart';
 import 'package:countdowns/screens/tablet/wall_screen.dart';
 import 'package:countdowns/screens/settings/ios_custom_icon_screen.dart';
 import 'package:countdowns/screens/settings/settings_screen.dart';
+import 'package:countdowns/widgets_bridge/widget_links.dart';
 import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -13,6 +15,16 @@ import 'package:material_ui/material_ui.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final router = GoRouter(
+    // Widget taps arrive as countdowns://event/<id>. Ask the database
+    // itself, not the events stream: on a cold start nothing listens to the
+    // stream yet, so it would never deliver. A deleted countdown falls back
+    // to Home instead of an empty detail.
+    redirect: (_, state) => widgetLinkRedirect(
+      state.uri,
+      (id) async => (await ref.read(databaseProvider).allCountdowns()).any(
+        (e) => e.id == id,
+      ),
+    ),
     routes: [
       GoRoute(
         path: AppRoutes.home,

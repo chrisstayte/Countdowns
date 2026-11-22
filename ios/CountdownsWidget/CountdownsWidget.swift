@@ -32,7 +32,14 @@ struct HomeEntryView: View {
     Group {
       if let lead = entry.lead {
         switch family {
+        case .systemLarge where entry.events.count == 1:
+          // One active countdown: a hero that fills the widget.
+          HeroView(entry: entry, event: lead)
+            .padding(20)
+            .containerBackground(for: .widget) { EventBackground(event: lead, full: true) }
+            .widgetURL(lead.url)
         case .systemLarge:
+          // Each card and row is its own Link to its countdown.
           LargeView(entry: entry)
             .padding(18)
             .containerBackground(for: .widget) { Color.ground }
@@ -40,10 +47,12 @@ struct HomeEntryView: View {
           MediumView(entry: entry, event: lead)
             .padding(.horizontal, 18).padding(.vertical, 16)
             .containerBackground(for: .widget) { EventBackground(event: lead, wide: true) }
+            .widgetURL(lead.url)
         default:
           SmallView(entry: entry, event: lead)
             .padding(16)
             .containerBackground(for: .widget) { EventBackground(event: lead) }
+            .widgetURL(lead.url)
         }
       } else {
         NoCountdownsView()
@@ -74,11 +83,14 @@ struct LockEntryView: View {
 
   var body: some View {
     if let lead = entry.lead {
-      switch family {
-      case .accessoryCircular: CircularView(entry: entry, event: lead)
-      case .accessoryInline: InlineView(entry: entry, event: lead)
-      default: RectangularView(entry: entry, event: lead)
+      Group {
+        switch family {
+        case .accessoryCircular: CircularView(entry: entry, event: lead)
+        case .accessoryInline: InlineView(entry: entry, event: lead)
+        default: RectangularView(entry: entry, event: lead)
+        }
       }
+      .widgetURL(lead.url)
     } else {
       Text("No countdowns")
     }

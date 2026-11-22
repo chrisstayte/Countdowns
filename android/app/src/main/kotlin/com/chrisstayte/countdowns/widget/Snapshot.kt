@@ -15,6 +15,8 @@ import java.util.Locale
 /** One countdown as the Flutter app wrote it to `widget/snapshot.json`. */
 data class WidgetEvent(
     val id: Int,
+    /** countdowns://event/<id>: what a tap on this countdown opens. */
+    val link: String?,
     val title: String,
     /** Seconds since the epoch of the next occurrence when the app wrote it. */
     val target: Long,
@@ -28,6 +30,8 @@ data class WidgetEvent(
     val icon: String?,
     val photo: String?,
     val photoWide: String?,
+    /** The full-screen crop, for the large widget's single-countdown hero. */
+    val photoFull: String?,
     val darken: Double,
     val createdAt: Long,
 ) {
@@ -63,6 +67,7 @@ object SnapshotStore {
             val colors = e.getJSONArray("colors")
             WidgetEvent(
                 id = e.getInt("id"),
+                link = e.optStringOrNull("link"),
                 title = e.getString("title"),
                 target = e.getLong("target"),
                 allDay = e.optBoolean("allDay"),
@@ -75,6 +80,7 @@ object SnapshotStore {
                 icon = e.optStringOrNull("icon"),
                 photo = e.optStringOrNull("photo"),
                 photoWide = e.optStringOrNull("photoWide"),
+                photoFull = e.optStringOrNull("photoFull"),
                 darken = e.optDouble("darken", 0.35),
                 createdAt = e.optLong("createdAt", e.getLong("target")),
             )
@@ -188,4 +194,33 @@ fun modeFor(countIn: String, e: WidgetEvent): CountMode = when (countIn) {
     "days" -> CountMode.Days
     "sleeps" -> CountMode.Sleeps
     else -> if (e.unit == "sleeps") CountMode.Sleeps else CountMode.Days
+}
+
+// MARK: Large widget layout
+
+enum class LargeLayout { Empty, Hero, List }
+
+/** No countdowns: the empty state. One: it fills the widget as a hero.
+ *  Two or more: a lead card with the rest listed under it. */
+fun largeLayout(active: Int): LargeLayout = when {
+    active <= 0 -> LargeLayout.Empty
+    active == 1 -> LargeLayout.Hero
+    else -> LargeLayout.List
+}
+
+/** The list layout inside an [height]-dp widget (18dp padding): up to four
+ *  38dp rows 10dp apart, and the lead card takes every dp that is left, so
+ *  there is never an empty band of Paper at the bottom. */
+data class ListPlan(val rows: Int, val leadHeight: Float)
+
+const val LIST_PADDING = 18f
+const val ROW_HEIGHT = 38f
+const val ROW_GAP = 10f
+const val MIN_LEAD = 78f
+
+fun planList(active: Int, height: Float): ListPlan {
+    val inner = height - LIST_PADDING * 2
+    var rows = (active - 1).coerceIn(0, 4)
+    while (rows > 0 && inner - rows * (ROW_HEIGHT + ROW_GAP) < MIN_LEAD) rows--
+    return ListPlan(rows, inner - rows * (ROW_HEIGHT + ROW_GAP))
 }
