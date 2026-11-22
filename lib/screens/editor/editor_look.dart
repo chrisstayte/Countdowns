@@ -6,6 +6,7 @@ import 'package:countdowns/models/palette.dart';
 import 'package:countdowns/providers/recents_provider.dart';
 import 'package:countdowns/screens/editor/all_backgrounds_sheet.dart';
 import 'package:countdowns/screens/editor/editor_details.dart';
+import 'package:countdowns/screens/editor/photos_tab.dart';
 import 'package:countdowns/theme/app_theme.dart';
 import 'package:countdowns/utilities/feedback.dart';
 import 'package:countdowns/widgets/event_icon.dart';
@@ -20,6 +21,7 @@ class EditorLook extends ConsumerWidget {
     required this.draft,
     required this.edit,
     required this.onAddPhoto,
+    this.onImportedPhoto,
     this.originalColor,
     this.backgroundColumns = 6,
     this.iconColumns = 8,
@@ -28,6 +30,10 @@ class EditorLook extends ConsumerWidget {
   final Countdown draft;
   final DraftEdit edit;
   final VoidCallback onAddPhoto;
+
+  /// A stock photo downloaded from the All backgrounds sheet, already in
+  /// the photo store: the editor crops it like a camera-roll photo.
+  final ValueChanged<String>? onImportedPhoto;
 
   /// The saved colour when editing, so an off-palette colour can be offered
   /// as "Current" until the person picks another.
@@ -132,6 +138,8 @@ class EditorLook extends ConsumerWidget {
     );
     if (picked == addPhotoResult) {
       onAddPhoto();
+    } else if (picked is ImportedPhoto) {
+      onImportedPhoto?.call(picked.path);
     } else if (picked is BackgroundChoice) {
       edit(picked.applyTo);
     }

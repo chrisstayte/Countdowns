@@ -23,6 +23,21 @@ Countdowns runs on Flutter 3.50.1 and Dart 3.14.0. The previous app declared Dar
 
 Use `flutter pub get` to install the locked dependencies, `flutter test` for the regression suite and `flutter run` to open the app on a selected device.
 
+## Stock photos
+
+The All backgrounds sheet can offer free photos from [Pexels](https://www.pexels.com). It needs an API key at build time; without one the stock section is simply hidden and everything else works.
+
+1. Get a free key at <https://www.pexels.com/api/> (sign in, then "Your API key").
+2. Copy `dart_defines.example.json` to `dart_defines.json` (git ignores it) and paste the key in.
+3. Run or build with it:
+   - `flutter run --dart-define-from-file=dart_defines.json`
+   - `flutter build ios --dart-define-from-file=dart_defines.json` (same for `apk`, `appbundle`, `ipa`)
+4. For releases, add a `PEXELS_API_KEY` secret to the `testflight` and `play-internal` environments; the release workflow passes it in.
+
+Never commit the key. It ships inside the app, so treat it as visible to anyone who unpacks the app; Pexels keys are free and can be regenerated. Everything Pexels-specific is in `lib/stock/pexels_photo_source.dart`, so a later source (for example our own catalogue on Cloudflare) replaces that one file.
+
+Privacy: requests to Pexels carry only the search words or category, the page number and the key. No personal data or analytics are sent. Result pages are cached on the device for 24 hours.
+
 ## Releases
 
 Development checks run on `dev`. Promote to `main` to build and validate both signed mobile apps and upload to TestFlight and Google Play internal testing. Production promotion is a separate manual action. See [RELEASING.md](RELEASING.md) for build numbers, app and widget signing, environment secrets, validation, and recovery.

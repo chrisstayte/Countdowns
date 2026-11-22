@@ -10,6 +10,7 @@ import 'package:countdowns/router.dart';
 import 'package:countdowns/screens/event_screen/event_screen.dart';
 import 'package:countdowns/screens/share/share_sheet.dart';
 import 'package:countdowns/storage/photos.dart';
+import 'package:countdowns/stock/stock_provider.dart';
 import 'package:countdowns/storage/startup.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -31,6 +32,10 @@ Future<void> main() async {
           defaultTargetPlatform == TargetPlatform.android);
   final documents = mobile ? await getApplicationDocumentsDirectory() : null;
   PhotoStore.setUp(documents ?? await getApplicationSupportDirectory());
+  // Stock photo pages and downloads are disposable: keep them in caches.
+  try {
+    stockCacheRoot = await getApplicationCacheDirectory();
+  } catch (_) {}
 
   Future<void> start() async {
     final result = await prepareStorage(

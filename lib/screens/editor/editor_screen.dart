@@ -173,6 +173,25 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
     }
   }
 
+  /// A stock photo the sheet downloaded: crop it, then use it, just like
+  /// one from the camera roll.
+  Future<void> _useImportedPhoto(String path) async {
+    final draft = ref.read(eventDraftProvider(_session));
+    final crops = await cropPhoto(
+      context,
+      draft.copyWith(photoPath: path, photoCrops: const PhotoCrops()),
+    );
+    if (!mounted) return;
+    _edit(
+      (d) => d.copyWith(
+        photoPath: path,
+        photoCrops: crops ?? const PhotoCrops(),
+        gradientId: null,
+        gradientDirection: null,
+      ),
+    );
+  }
+
   Future<void> _crop() async {
     feedback(ref);
     final draft = ref.read(eventDraftProvider(_session));
@@ -223,6 +242,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
       draft: draft,
       edit: _edit,
       onAddPhoto: _addPhoto,
+      onImportedPhoto: _useImportedPhoto,
       originalColor: _originalColor,
     );
 
@@ -243,6 +263,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
                     draft: draft,
                     edit: _edit,
                     onAddPhoto: _addPhoto,
+                    onImportedPhoto: _useImportedPhoto,
                     originalColor: _originalColor,
                     backgroundColumns: 6,
                     iconColumns: 8,

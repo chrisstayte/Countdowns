@@ -4,6 +4,7 @@ import 'package:countdowns/models/palette.dart';
 import 'package:countdowns/providers/event_provider.dart';
 import 'package:countdowns/providers/recents_provider.dart';
 import 'package:countdowns/providers/timer_provider.dart';
+import 'package:countdowns/screens/editor/photos_tab.dart';
 import 'package:countdowns/storage/photos.dart';
 import 'package:countdowns/theme/app_theme.dart';
 import 'package:countdowns/utilities/count_format.dart';
@@ -54,7 +55,7 @@ class BackgroundChoice {
 /// "All backgrounds": every colour, gradient and photo, in collections.
 /// Picks apply to the preview at the top; Done returns the chosen key
 /// (see background_catalog.dart) and direction as a [BackgroundChoice]
-/// (or [addPhotoResult]); swiping away keeps what was there.
+/// (or [addPhotoResult], or an [ImportedPhoto] for a downloaded stock photo); swiping away keeps what was there.
 class AllBackgroundsSheet extends ConsumerStatefulWidget {
   const AllBackgroundsSheet({super.key, required this.draft});
   final Countdown draft;
@@ -219,7 +220,10 @@ class _AllBackgroundsSheetState extends ConsumerState<AllBackgroundsSheet> {
                       direction: _direction,
                       onPick: _pick,
                     ),
-                    BackgroundKind.photo => _Photos(
+                    BackgroundKind.photo => PhotosTab(
+                      draft: widget.draft,
+                      onImported: (path) =>
+                          Navigator.pop(context, ImportedPhoto(path)),
                       photos: availablePhotos(
                         current: widget.draft.photoPath,
                         recent: ref.watch(recentsProvider).photos,
@@ -348,60 +352,6 @@ class _NamedTile extends StatelessWidget {
         ),
       ],
     ),
-  );
-}
-
-class _Photos extends StatelessWidget {
-  const _Photos({
-    required this.photos,
-    required this.selected,
-    required this.onPick,
-    required this.onAdd,
-  });
-
-  final List<String> photos;
-  final String selected;
-  final ValueChanged<String> onPick;
-  final VoidCallback onAdd;
-
-  @override
-  Widget build(BuildContext context) => CustomScrollView(
-    slivers: [
-      const SliverPadding(
-        padding: EdgeInsets.only(top: 18, bottom: 10),
-        sliver: SliverToBoxAdapter(
-          child: Text('YOUR PHOTOS', style: AppText.eyebrow),
-        ),
-      ),
-      SliverGrid.builder(
-        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 104,
-          mainAxisSpacing: 10,
-          crossAxisSpacing: 10,
-        ),
-        itemCount: photos.length + 1,
-        itemBuilder: (_, i) => i == 0
-            ? AddPhotoTile(onTap: onAdd)
-            : BackgroundTile(
-                backgroundKey: photoKey(photos[i - 1]),
-                selected: photoKey(photos[i - 1]) == selected,
-                legacyBase: AppColors.ink,
-                onTap: () => onPick(photoKey(photos[i - 1])),
-              ),
-      ),
-      if (photos.isEmpty)
-        const SliverPadding(
-          padding: EdgeInsets.only(top: 16),
-          sliver: SliverToBoxAdapter(
-            child: Text(
-              'Photos you add, and photos on your other countdowns, show '
-              'up here.',
-              style: AppText.secondary,
-            ),
-          ),
-        ),
-      const SliverToBoxAdapter(child: SizedBox(height: 30)),
-    ],
   );
 }
 

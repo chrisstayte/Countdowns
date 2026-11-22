@@ -124,3 +124,6 @@ app.*.symbols
 *.mobileprovision
 *.keystore
 __pycache__/
+
+# Local build settings with secrets (see README "Stock photos")
+dart_defines.json
