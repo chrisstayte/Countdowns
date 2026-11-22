@@ -6,6 +6,7 @@ import 'package:countdowns/providers/event_provider.dart';
 import 'package:countdowns/providers/local_settings_provider.dart';
 import 'package:countdowns/providers/notification_provider.dart';
 import 'package:countdowns/router.dart';
+import 'package:countdowns/storage/photos.dart';
 import 'package:countdowns/storage/startup.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
@@ -24,6 +25,7 @@ Future<void> main() async {
       (defaultTargetPlatform == TargetPlatform.iOS ||
           defaultTargetPlatform == TargetPlatform.android);
   final documents = mobile ? await getApplicationDocumentsDirectory() : null;
+  PhotoStore.setUp(documents ?? await getApplicationSupportDirectory());
 
   Future<void> start() async {
     final result = await prepareStorage(

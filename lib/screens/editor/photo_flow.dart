@@ -1,4 +1,5 @@
 import 'package:countdowns/models/countdown.dart';
+import 'package:countdowns/screens/editor/crop_screen.dart';
 import 'package:countdowns/storage/photos.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:material_ui/material_ui.dart';
@@ -39,5 +40,16 @@ Future<PickedPhoto?> pickAndCropPhoto(
 }
 
 /// Opens the crop screen for the draft's photo.
-Future<PhotoCrops?> cropPhoto(BuildContext context, Countdown draft) async =>
-    null;
+Future<PhotoCrops?> cropPhoto(BuildContext context, Countdown draft) async {
+  final path = draft.photoPath;
+  if (path == null || !PhotoStore.ready) return null;
+  return Navigator.of(context).push<PhotoCrops>(
+    MaterialPageRoute(
+      fullscreenDialog: true,
+      builder: (_) => CropScreen(
+        file: PhotoStore.instance.fileFor(path),
+        initial: draft.photoCrops ?? const PhotoCrops(),
+      ),
+    ),
+  );
+}
