@@ -25,18 +25,15 @@ Use `flutter pub get` to install the locked dependencies, `flutter test` for the
 
 ## Stock photos
 
-The All backgrounds sheet can offer free photos from [Pexels](https://www.pexels.com). It needs an API key at build time; without one the stock section is simply hidden and everything else works.
+The All backgrounds sheet offers free background photos from our own catalogue on Cloudflare R2, served from `https://media.countdowns.stayte.app` as a public JSON manifest plus pre-optimised images. There is no API key. The app caches the manifest on the device and hides the stock sections quietly when it can't be reached. See `lib/stock/` (the app side only knows the `StockPhotoSource` interface).
 
-1. Get a free key at <https://www.pexels.com/api/> (sign in, then "Your API key").
-2. Copy `dart_defines.example.json` to `dart_defines.json` (git ignores it) and paste the key in.
-3. Run or build with it:
-   - `flutter run --dart-define-from-file=dart_defines.json`
-   - `flutter build ios --dart-define-from-file=dart_defines.json` (same for `apk`, `appbundle`, `ipa`)
-4. For releases, add a `PEXELS_API_KEY` secret to the `testflight` and `play-internal` environments; the release workflow passes it in.
+To see the layout before the catalogue is live, run a debug build with the bundled sample catalogue:
 
-Never commit the key. It ships inside the app, so treat it as visible to anyone who unpacks the app; Pexels keys are free and can be regenerated. Everything Pexels-specific is in `lib/stock/pexels_photo_source.dart`, so a later source (for example our own catalogue on Cloudflare) replaces that one file.
+```bash
+flutter run --dart-define=STOCK_FIXTURE=true
+```
 
-Privacy: requests to Pexels carry only the search words or category, the page number and the key. No personal data or analytics are sent. Result pages are cached on the device for 24 hours.
+Privacy: the app only downloads public files from that host. No user data or analytics are sent.
 
 ## Releases
 

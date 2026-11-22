@@ -42,6 +42,7 @@ dependencies:
   path: ^1.9.1
   http: ^1.6.0
   cached_network_image: ^4.0.7
+  flutter_blurhash: ^0.9.1
 
 dev_dependencies:
   flutter_test:
@@ -58,6 +59,8 @@ flutter:
     - assets/sounds/
     - assets/images/icons/
     - assets/event_icons/
+    # Debug sample stock catalogue (--dart-define=STOCK_FIXTURE=true).
+    - assets/dev/stock/
 
   fonts:
     - family: Inter

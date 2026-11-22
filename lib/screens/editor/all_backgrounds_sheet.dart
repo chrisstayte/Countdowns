@@ -222,8 +222,7 @@ class _AllBackgroundsSheetState extends ConsumerState<AllBackgroundsSheet> {
                     ),
                     BackgroundKind.photo => PhotosTab(
                       draft: widget.draft,
-                      onImported: (path) =>
-                          Navigator.pop(context, ImportedPhoto(path)),
+                      onImported: (photo) => Navigator.pop(context, photo),
                       photos: availablePhotos(
                         current: widget.draft.photoPath,
                         recent: ref.watch(recentsProvider).photos,

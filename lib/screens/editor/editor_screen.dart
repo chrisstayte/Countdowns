@@ -11,6 +11,7 @@ import 'package:countdowns/screens/editor/editor_details.dart';
 import 'package:countdowns/screens/editor/editor_look.dart';
 import 'package:countdowns/screens/editor/editor_preview.dart';
 import 'package:countdowns/screens/editor/photo_flow.dart';
+import 'package:countdowns/screens/editor/photos_tab.dart';
 import 'package:countdowns/theme/app_theme.dart';
 import 'package:countdowns/utilities/feedback.dart';
 import 'package:countdowns/widgets/ui.dart';
@@ -175,17 +176,18 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
 
   /// A stock photo the sheet downloaded: crop it, then use it, just like
   /// one from the camera roll.
-  Future<void> _useImportedPhoto(String path) async {
+  Future<void> _useImportedPhoto(ImportedPhoto photo) async {
     final draft = ref.read(eventDraftProvider(_session));
+    final start = photo.startCrops;
     final crops = await cropPhoto(
       context,
-      draft.copyWith(photoPath: path, photoCrops: const PhotoCrops()),
+      draft.copyWith(photoPath: photo.path, photoCrops: start),
     );
     if (!mounted) return;
     _edit(
       (d) => d.copyWith(
-        photoPath: path,
-        photoCrops: crops ?? const PhotoCrops(),
+        photoPath: photo.path,
+        photoCrops: crops ?? start,
         gradientId: null,
         gradientDirection: null,
       ),

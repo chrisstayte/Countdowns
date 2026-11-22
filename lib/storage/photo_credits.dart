@@ -12,20 +12,31 @@ class PhotoCredit {
     required this.photographerUrl,
     required this.pageUrl,
     required this.source,
+    this.id = '',
+    this.license = '',
   });
 
   final String photographer;
   final String photographerUrl;
   final String pageUrl;
 
-  /// "Pexels" today; whatever the source calls itself.
+  /// Where it came from, e.g. "Countdowns catalogue".
   final String source;
+
+  /// The catalogue photo id, so it can be identified after it leaves the
+  /// catalogue.
+  final String id;
+
+  /// `CC0-1.0`, `PDM-1.0`, `owned`, `commissioned`, or empty.
+  final String license;
 
   Map<String, String> toJson() => {
     'photographer': photographer,
     'photographerUrl': photographerUrl,
     'pageUrl': pageUrl,
     'source': source,
+    'id': id,
+    'license': license,
   };
 
   static PhotoCredit fromJson(Map<String, Object?> j) => PhotoCredit(
@@ -33,6 +44,8 @@ class PhotoCredit {
     photographerUrl: j['photographerUrl'] as String? ?? '',
     pageUrl: j['pageUrl'] as String? ?? '',
     source: j['source'] as String? ?? '',
+    id: j['id'] as String? ?? '',
+    license: j['license'] as String? ?? '',
   );
 
   static File _file(String photoPath) =>

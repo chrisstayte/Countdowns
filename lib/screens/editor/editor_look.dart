@@ -34,7 +34,7 @@ class EditorLook extends ConsumerWidget {
 
   /// A stock photo downloaded from the All backgrounds sheet, already in
   /// the photo store: the editor crops it like a camera-roll photo.
-  final ValueChanged<String>? onImportedPhoto;
+  final ValueChanged<ImportedPhoto>? onImportedPhoto;
 
   /// The saved colour when editing, so an off-palette colour can be offered
   /// as "Current" until the person picks another.
@@ -140,7 +140,7 @@ class EditorLook extends ConsumerWidget {
     if (picked == addPhotoResult) {
       onAddPhoto();
     } else if (picked is ImportedPhoto) {
-      onImportedPhoto?.call(picked.path);
+      onImportedPhoto?.call(picked);
     } else if (picked is BackgroundChoice) {
       edit(picked.applyTo);
     }

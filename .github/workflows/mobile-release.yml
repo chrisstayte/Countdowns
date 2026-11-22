@@ -119,8 +119,6 @@ jobs:
     env:
       VERSION: ${{ needs.version.outputs.version }}
       BUILD_NUMBER: ${{ needs.version.outputs.number }}
-      # Optional: stock photos are hidden when it is empty.
-      PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
@@ -133,7 +131,7 @@ jobs:
           PROFILE: ${{ secrets.COUNTDOWNS_APPSTORE_PROFILE_BASE64 }}
           WIDGET_PROFILE: ${{ secrets.COUNTDOWNS_WIDGET_APPSTORE_PROFILE_BASE64 }}
         run: bash scripts/release/install-signing.sh
-      - run: flutter build ipa --release --build-name "$VERSION" --build-number "$BUILD_NUMBER" --dart-define=PEXELS_API_KEY="${PEXELS_API_KEY:-}" --export-options-plist "$RUNNER_TEMP/ios-signing/export.plist"
+      - run: flutter build ipa --release --build-name "$VERSION" --build-number "$BUILD_NUMBER" --export-options-plist "$RUNNER_TEMP/ios-signing/export.plist"
       - name: Validate signed IPA
         env:
           ASC_KEY: ${{ secrets.ASC_API_KEY_P8 }}
@@ -156,8 +154,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
-      # Optional: stock photos are hidden when it is empty.
-      PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
@@ -190,7 +186,7 @@ jobs:
           export ANDROID_UPLOAD_KEYSTORE="$RUNNER_TEMP/upload.jks"
           trap 'rm -f "$ANDROID_UPLOAD_KEYSTORE"' EXIT
           printf '%s' "${ANDROID_KEYSTORE_BASE64:?Missing upload keystore}" | base64 --decode > "$ANDROID_UPLOAD_KEYSTORE"
-          flutter build appbundle --release --build-name "$VERSION" --build-number "$BUILD_NUMBER" --dart-define=PEXELS_API_KEY="${PEXELS_API_KEY:-}"
+          flutter build appbundle --release --build-name "$VERSION" --build-number "$BUILD_NUMBER"
           (cd android && ./gradlew :app:testDebugUnitTest)
           bundle=build/app/outputs/bundle/release/app-release.aab
           unzip -tq "$bundle"
