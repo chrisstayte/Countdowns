@@ -277,7 +277,7 @@ class ScrollHarness {
 }
 
 const seven = [
-  'Colours',
+  'Colors',
   'Gradients',
   'Photos',
   'Patterns',
@@ -292,12 +292,12 @@ void scrollableTests() {
   ) async {
     // The test font is wide (every glyph is a square), so give it room.
     await ScrollHarness().pump(tester, [
-      'Colours',
+      'Colors',
       'Gradients',
       'Photos',
     ], width: 600);
     expect(find.byType(SingleChildScrollView), findsNothing);
-    final left = tester.getRect(find.text('Colours'));
+    final left = tester.getRect(find.text('Colors'));
     final right = tester.getRect(find.text('Photos'));
     // Options span the 360 track (inside its 4pt padding).
     final track = tester.getRect(find.byType(SlidingSegmented<String>));
@@ -382,7 +382,7 @@ void scrollableTests() {
   testWidgets('a drag that starts on the pill still slides it', (tester) async {
     final h = ScrollHarness();
     await h.pump(tester, seven);
-    final start = tester.getCenter(find.text('Colours'));
+    final start = tester.getCenter(find.text('Colors'));
     final g = await tester.startGesture(start);
     for (var i = 0; i < 12; i++) {
       await g.moveBy(const Offset(10, 0));

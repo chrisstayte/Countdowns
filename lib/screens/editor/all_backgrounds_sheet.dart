@@ -171,7 +171,7 @@ class _AllBackgroundsSheetState extends ConsumerState<AllBackgroundsSheet> {
               values: [...BackgroundKind.values, ...demoBackgroundTabs],
               selected: _demo ?? _tab,
               label: (k) => switch (k) {
-                BackgroundKind.colour => 'Colours',
+                BackgroundKind.colour => 'Colors',
                 BackgroundKind.gradient => 'Gradients',
                 BackgroundKind.photo => 'Photos',
                 _ => '$k',
@@ -386,13 +386,13 @@ class _NamedTile extends StatelessWidget {
   );
 }
 
-/// A friendly name for a key: "Sunset", "Lavender", "Custom colour".
+/// A friendly name for a key: "Sunset", "Lavender", "Custom color".
 String backgroundName(String key) {
   final ref = parseBackgroundKey(key);
   if (ref == null) return '';
   return switch (ref.kind) {
     BackgroundKind.colour =>
-      colourName(colourFromKey(ref.value)) ?? 'Custom colour',
+      colourName(colourFromKey(ref.value)) ?? 'Custom color',
     BackgroundKind.gradient =>
       ref.value == legacyGradientId
           ? 'Classic gradient'

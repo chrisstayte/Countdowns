@@ -50,7 +50,7 @@ class EditorLook extends ConsumerWidget {
       children: [
         const SectionLabel(
           'Background',
-          trailing: Text('Photo, gradient or colour', style: _hint),
+          trailing: Text('Photo, gradient or color', style: _hint),
         ),
         const SizedBox(height: 10),
         _BackgroundGrid(

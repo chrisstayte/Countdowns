@@ -254,7 +254,7 @@ void main() {
         Alignment.topLeft,
       );
       await showAllChips(tester);
-      await tester.tap(find.bySemanticsLabel('From the centre'));
+      await tester.tap(find.bySemanticsLabel('From the center'));
       await tester.pumpAndSettle();
       expect(swatchGradient(tester, 'Lagoon gradient'), isA<RadialGradient>());
       expect(swatchGradient(tester, 'Sunset gradient'), isA<RadialGradient>());

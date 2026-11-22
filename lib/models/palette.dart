@@ -40,7 +40,7 @@ enum GradientDirection {
   left('Left', '←'),
   diagonalDown('Diagonal down', '↘'),
   diagonalUp('Diagonal up', '↗'),
-  radial('From the centre', '◎'),
+  radial('From the center', '◎'),
   sweep('Round', '↻');
 
   const GradientDirection(this.label, this.arrow);
