@@ -6,6 +6,8 @@ import 'package:countdowns/providers/event_provider.dart';
 import 'package:countdowns/providers/local_settings_provider.dart';
 import 'package:countdowns/providers/notification_provider.dart';
 import 'package:countdowns/router.dart';
+import 'package:countdowns/screens/event_screen/event_screen.dart';
+import 'package:countdowns/screens/share/share_sheet.dart';
 import 'package:countdowns/storage/photos.dart';
 import 'package:countdowns/storage/startup.dart';
 import 'package:flutter/foundation.dart';
@@ -16,6 +18,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  openShareSheet = showShareSheet;
   final prefs = await SharedPreferences.getInstance();
   final notifications = EventNotifications();
   await notifications.initialize();

@@ -227,6 +227,7 @@ class PillButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         height: height,
+        alignment: Alignment.center,
         padding: EdgeInsets.symmetric(horizontal: height >= 50 ? 22 : 18),
         decoration: BoxDecoration(
           color: onTap == null ? background.withValues(alpha: 0.5) : background,
