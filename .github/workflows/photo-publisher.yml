@@ -1,0 +1,35 @@
+name: Photo publisher checks
+on:
+  push:
+    branches: [dev]
+    paths:
+      - tool/photos/**
+      - lib/stock/stock_categories.dart
+      - .github/workflows/photo-publisher.yml
+  pull_request:
+    branches: [dev]
+    paths:
+      - tool/photos/**
+      - lib/stock/stock_categories.dart
+      - .github/workflows/photo-publisher.yml
+
+permissions:
+  contents: read
+
+jobs:
+  publisher:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: tool/photos/package-lock.json
+      - run: npm ci --ignore-scripts
+        working-directory: tool/photos
+      - run: npm test
+        working-directory: tool/photos
