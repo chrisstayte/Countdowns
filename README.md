@@ -29,6 +29,10 @@ Debug and release builds both read the live catalogue. When the catalogue is emp
 
 Privacy: the app only downloads public files from that host. No user data or analytics are sent.
 
+## Store artwork
+
+The [version 3 store asset pack](store-assets/v3/README.md) includes iOS header and search artwork, Google Play graphics, seven screenshots for each phone/tablet slot, and matching Android launcher icons. Open [the local preview gallery](store-assets/v3/index.html) to review the full set. Rebuild it with the commands in the asset pack's guide.
+
 ## Releases
 
 Development checks run on `dev`. Promote to `main` to build and validate both signed mobile apps and upload to TestFlight and Google Play internal testing. Production promotion is a separate manual action. See [RELEASING.md](RELEASING.md) for build numbers, app and widget signing, environment secrets, validation, and recovery.

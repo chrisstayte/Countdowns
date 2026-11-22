@@ -1,0 +1,1110 @@
+{
+  "name": "Since & Soon",
+  "version": "3.0",
+  "locale": "en-US",
+  "sourceCommit": "9b69637519f09a77329743739e5bcff346e98e47",
+  "sampleClock": "2026-11-22T09:41:00",
+  "screensPerDevice": 7,
+  "capture": "Actual Flutter widgets, deterministic sample events, iOS/Android platform themes, representative safe insets; no native system chrome.",
+  "inputs": [
+    {
+      "path": "tool/store_assets_test.dart",
+      "sha256": "372eaf169da403b18e3c79813b53c40799f8255c157c43a4104bf4c07f8d6f26"
+    },
+    {
+      "path": "tool/store-assets/opaque.swift",
+      "sha256": "c9cab38bf7c42d9c2f9817b31446634ebd79659723d518557febee830c49cf57"
+    },
+    {
+      "path": "tool/store-assets/photos/weekend-away.png",
+      "sha256": "d5b83340ac77bbf53fdc4220f0239a388887f1ebcce14e403936fad9c4c86063"
+    },
+    {
+      "path": "tool/splash/mark.swift",
+      "sha256": "5d6c57333b0b46178d57932246adcd558d950c071554efff46a324462ff52faa"
+    }
+  ],
+  "images": [
+    {
+      "path": "brand/brand-board.png",
+      "width": 1600,
+      "height": 1000,
+      "pngColorType": 2,
+      "bytes": 101638,
+      "sha256": "435d67021fb78532fc5203f1bea7a1465ba2210416a94e03cdf7872adccd24c6"
+    },
+    {
+      "path": "brand/icon-1024.png",
+      "width": 1024,
+      "height": 1024,
+      "pngColorType": 2,
+      "bytes": 76957,
+      "sha256": "7a5d0ce06ccef29334c3c67501a0891c6edb673907d97d40d0b2513dfc5a797e"
+    },
+    {
+      "path": "brand/icon-512.png",
+      "width": 512,
+      "height": 512,
+      "pngColorType": 2,
+      "bytes": 29905,
+      "sha256": "16c5f0834033f30190ec6b50abf941245d93dd7fdac62e887ab95f2a3f991a0a"
+    },
+    {
+      "path": "campaign/apple/header-and-search-results/header.png",
+      "width": 3840,
+      "height": 1646,
+      "pngColorType": 2,
+      "bytes": 136131,
+      "sha256": "cf1e38d3e0320593a58534f6b805f03082e802db1890121c612a52b4cbd1bdc1"
+    },
+    {
+      "path": "campaign/apple/header-and-search-results/search-results.png",
+      "width": 3840,
+      "height": 2560,
+      "pngColorType": 2,
+      "bytes": 213998,
+      "sha256": "73cd54d11b9ae6a90ca02c78ecf3943f4a8240948156033cc9215727a3fc19a6"
+    },
+    {
+      "path": "campaign/apple/header-and-search-results/universal.png",
+      "width": 5244,
+      "height": 2950,
+      "pngColorType": 2,
+      "bytes": 285357,
+      "sha256": "78e8c342cd362772151c80948bbffb0834bbca6f0319c31ffffab92a94c12891"
+    },
+    {
+      "path": "campaign/apple/ipad-13/01-soon.png",
+      "width": 2752,
+      "height": 2064,
+      "pngColorType": 2,
+      "bytes": 1650498,
+      "sha256": "87f3c482e26161088bf471cd1d6276ff98a875d620ac5ebaa1da5b90bb80d5dd"
+    },
+    {
+      "path": "campaign/apple/ipad-13/02-since.png",
+      "width": 2752,
+      "height": 2064,
+      "pngColorType": 2,
+      "bytes": 446546,
+      "sha256": "41062a9928e073f9fd8ca77c15eac722e0f8fbc8702b2dc1c95442c50e70b021"
+    },
+    {
+      "path": "campaign/apple/ipad-13/03-live-countdown.png",
+      "width": 2752,
+      "height": 2064,
+      "pngColorType": 2,
+      "bytes": 2636043,
+      "sha256": "04cb2a87df2356b1b6ee4b606c23392b3487f364df658ffe84bd0ced480de8d9"
+    },
+    {
+      "path": "campaign/apple/ipad-13/04-make-it-yours.png",
+      "width": 2752,
+      "height": 2064,
+      "pngColorType": 2,
+      "bytes": 429315,
+      "sha256": "fcf0dd15e58704ea3ec51db7edb3737e2f972f8552206ae49d43bd15200a26d0"
+    },
+    {
+      "path": "campaign/apple/ipad-13/05-reminders.png",
+      "width": 2752,
+      "height": 2064,
+      "pngColorType": 2,
+      "bytes": 433819,
+      "sha256": "1d43a1822a2a9a70ee04bc0a0119db3eaf3fb7c0eec343dc6c540ff5c9ba950f"
+    },
+    {
+      "path": "campaign/apple/ipad-13/06-share-or-display.png",
+      "width": 2752,
+      "height": 2064,
+      "pngColorType": 2,
+      "bytes": 1368370,
+      "sha256": "b932b7b17d2f31caacc50d48899c7d9cdd20d78db2bf9257bd35eaee84283820"
+    },
+    {
+      "path": "campaign/apple/ipad-13/07-background-library.png",
+      "width": 2752,
+      "height": 2064,
+      "pngColorType": 2,
+      "bytes": 466350,
+      "sha256": "128b33b01f4f0fb2b8e99b7c9901d0a6a737d9bfbfe8027fdf464cb4c2bb6e9f"
+    },
+    {
+      "path": "campaign/apple/iphone/01-soon.png",
+      "width": 1206,
+      "height": 2622,
+      "pngColorType": 2,
+      "bytes": 1003194,
+      "sha256": "383c0287bf493eb18c747f57587b6a87549b9d4581aa300dd40ae2dcffad3178"
+    },
+    {
+      "path": "campaign/apple/iphone/02-since.png",
+      "width": 1206,
+      "height": 2622,
+      "pngColorType": 2,
+      "bytes": 424440,
+      "sha256": "806e4134c49e5a4b3e7d57e54544c512b6a22e692baa6a350acb54584d5de647"
+    },
+    {
+      "path": "campaign/apple/iphone/03-live-countdown.png",
+      "width": 1206,
+      "height": 2622,
+      "pngColorType": 2,
+      "bytes": 1978234,
+      "sha256": "1f79172b3756e09c5d8179484ebf6ed89c2ee80fe361f183a2c61fec74478360"
+    },
+    {
+      "path": "campaign/apple/iphone/04-make-it-yours.png",
+      "width": 1206,
+      "height": 2622,
+      "pngColorType": 2,
+      "bytes": 402646,
+      "sha256": "167a3684dd46ad5d15eee68d813b1b414a3d40cc64ed45f1acd73b941d3e7d6b"
+    },
+    {
+      "path": "campaign/apple/iphone/05-reminders.png",
+      "width": 1206,
+      "height": 2622,
+      "pngColorType": 2,
+      "bytes": 330455,
+      "sha256": "04e40019395948981551d0be3814f02c511c82dde71dc4c917647905db841be4"
+    },
+    {
+      "path": "campaign/apple/iphone/06-share-or-display.png",
+      "width": 1206,
+      "height": 2622,
+      "pngColorType": 2,
+      "bytes": 454967,
+      "sha256": "898bb414384d4be8aa9026109504e1b156050a9ea6a77355f5d31e90f3e964ce"
+    },
+    {
+      "path": "campaign/apple/iphone/07-background-library.png",
+      "width": 1206,
+      "height": 2622,
+      "pngColorType": 2,
+      "bytes": 320830,
+      "sha256": "124f165508d4d7e891570ac97b8f162594928397ee0445d64c88f0d909f88780"
+    },
+    {
+      "path": "campaign/apple/iphone-face-id-large/01-soon.png",
+      "width": 1242,
+      "height": 2688,
+      "pngColorType": 2,
+      "bytes": 1020152,
+      "sha256": "4c2e2cb09a20aa5d2f1d9a6baf97258a874637c6604b31a923d83768221120d0"
+    },
+    {
+      "path": "campaign/apple/iphone-face-id-large/02-since.png",
+      "width": 1242,
+      "height": 2688,
+      "pngColorType": 2,
+      "bytes": 427300,
+      "sha256": "e4248a6379b439f5ad09d47c9ff3da2099961ecd77c6bac99c67dc1ad6214d30"
+    },
+    {
+      "path": "campaign/apple/iphone-face-id-large/03-live-countdown.png",
+      "width": 1242,
+      "height": 2688,
+      "pngColorType": 2,
+      "bytes": 2067980,
+      "sha256": "39a4eb5b0f1346b96f35b206f3c1bc4417c211f62e72f671c808a229a89b1ad4"
+    },
+    {
+      "path": "campaign/apple/iphone-face-id-large/04-make-it-yours.png",
+      "width": 1242,
+      "height": 2688,
+      "pngColorType": 2,
+      "bytes": 413472,
+      "sha256": "5402d43c93b8eb49f3a07bd7feec8ff871984dfeebb6ce608291c9f54240efc0"
+    },
+    {
+      "path": "campaign/apple/iphone-face-id-large/05-reminders.png",
+      "width": 1242,
+      "height": 2688,
+      "pngColorType": 2,
+      "bytes": 334609,
+      "sha256": "c02becf61a772d11e82905c3debd59f578e85a26499b6144534b6249e920d564"
+    },
+    {
+      "path": "campaign/apple/iphone-face-id-large/06-share-or-display.png",
+      "width": 1242,
+      "height": 2688,
+      "pngColorType": 2,
+      "bytes": 458331,
+      "sha256": "1915646a380b016058474389996af641b4fe098c45b2a94e601eed4b1d0dadc9"
+    },
+    {
+      "path": "campaign/apple/iphone-face-id-large/07-background-library.png",
+      "width": 1242,
+      "height": 2688,
+      "pngColorType": 2,
+      "bytes": 331086,
+      "sha256": "131d1cc250d36676e2131e3191c744f8cdeae4ed1e9623e0674e3d2041775283"
+    },
+    {
+      "path": "campaign/apple/iphone-home-button-large/01-soon.png",
+      "width": 1242,
+      "height": 2208,
+      "pngColorType": 2,
+      "bytes": 886031,
+      "sha256": "a3b155ea0f1f32476afbbba3164ea89082d713f5339e6d17d9520cb1843af2ba"
+    },
+    {
+      "path": "campaign/apple/iphone-home-button-large/02-since.png",
+      "width": 1242,
+      "height": 2208,
+      "pngColorType": 2,
+      "bytes": 381365,
+      "sha256": "75a8a08746775448366df661680702a606dcbd25279b148deb063da8d8798c52"
+    },
+    {
+      "path": "campaign/apple/iphone-home-button-large/03-live-countdown.png",
+      "width": 1242,
+      "height": 2208,
+      "pngColorType": 2,
+      "bytes": 1588765,
+      "sha256": "b3cbcc27496dfad90f4432918e4cfc4b97678dbe632348d19618d0cc5e256ecd"
+    },
+    {
+      "path": "campaign/apple/iphone-home-button-large/04-make-it-yours.png",
+      "width": 1242,
+      "height": 2208,
+      "pngColorType": 2,
+      "bytes": 340928,
+      "sha256": "7d63f281fe8834c46fc81f658bbdf79ed4033b24664fd521615fdecfd4ebacde"
+    },
+    {
+      "path": "campaign/apple/iphone-home-button-large/05-reminders.png",
+      "width": 1242,
+      "height": 2208,
+      "pngColorType": 2,
+      "bytes": 269304,
+      "sha256": "56ea97322156b301bbcd675020eef548ee63b1b93e33da144c7e5f805203c63c"
+    },
+    {
+      "path": "campaign/apple/iphone-home-button-large/06-share-or-display.png",
+      "width": 1242,
+      "height": 2208,
+      "pngColorType": 2,
+      "bytes": 404795,
+      "sha256": "144f85cb837acbc2f2ae79fb9f7a643be714c482f1930fe49d6d50b9122c8ab5"
+    },
+    {
+      "path": "campaign/apple/iphone-home-button-large/07-background-library.png",
+      "width": 1242,
+      "height": 2208,
+      "pngColorType": 2,
+      "bytes": 278041,
+      "sha256": "810db0cbad25b6868879cb7efe9a6d0ddcf213e6f8c046edb0c9dafc50e639d8"
+    },
+    {
+      "path": "campaign/apple/iphone-large/01-soon.png",
+      "width": 1320,
+      "height": 2868,
+      "pngColorType": 2,
+      "bytes": 1060616,
+      "sha256": "cdcacdd923c2072f2dc48e905c5cda1ead9bac20f2d2f477beb3470d28963185"
+    },
+    {
+      "path": "campaign/apple/iphone-large/02-since.png",
+      "width": 1320,
+      "height": 2868,
+      "pngColorType": 2,
+      "bytes": 449909,
+      "sha256": "e4c3b068e2e81a0472458906175e845a13afef36000e16dec663a8dc65a69dcc"
+    },
+    {
+      "path": "campaign/apple/iphone-large/03-live-countdown.png",
+      "width": 1320,
+      "height": 2868,
+      "pngColorType": 2,
+      "bytes": 2308917,
+      "sha256": "d4f1dabbc9355663de4f63b04acc62c6331c70e1bf3a5d10dad03fddf050567b"
+    },
+    {
+      "path": "campaign/apple/iphone-large/04-make-it-yours.png",
+      "width": 1320,
+      "height": 2868,
+      "pngColorType": 2,
+      "bytes": 442438,
+      "sha256": "bf725d1f9df7c04b7c2bca1656687d046027664ebd4e54560780ad81664cb386"
+    },
+    {
+      "path": "campaign/apple/iphone-large/05-reminders.png",
+      "width": 1320,
+      "height": 2868,
+      "pngColorType": 2,
+      "bytes": 367617,
+      "sha256": "5b73a4d691e2b6a96d7cb5b2c3aced783d986bfae58edd5e9a8c62e6144a7076"
+    },
+    {
+      "path": "campaign/apple/iphone-large/06-share-or-display.png",
+      "width": 1320,
+      "height": 2868,
+      "pngColorType": 2,
+      "bytes": 473737,
+      "sha256": "875a1263b5d5a03000cdd6f7674739c134ae5b02130c14c0ea49beabff0ea691"
+    },
+    {
+      "path": "campaign/apple/iphone-large/07-background-library.png",
+      "width": 1320,
+      "height": 2868,
+      "pngColorType": 2,
+      "bytes": 362438,
+      "sha256": "cd6b86774664b047e5ad30f7daa5b131ab4a85d1bb17f3e394f494c8ed0b3745"
+    },
+    {
+      "path": "campaign/google-play/app-icon.png",
+      "width": 512,
+      "height": 512,
+      "pngColorType": 6,
+      "bytes": 49139,
+      "sha256": "561fcfec8a1c9a269e4435723a451eafd76f9eff0697236b493047d58d4ac5e1"
+    },
+    {
+      "path": "campaign/google-play/feature-graphic.png",
+      "width": 1024,
+      "height": 500,
+      "pngColorType": 2,
+      "bytes": 51693,
+      "sha256": "de186ae2b8a4b0c81bb32b8175b42c621c652f2934fe56845df70234b76301ef"
+    },
+    {
+      "path": "campaign/google-play/phone/01-soon.png",
+      "width": 1080,
+      "height": 1920,
+      "pngColorType": 2,
+      "bytes": 721395,
+      "sha256": "647fa98a1b2aa2880ac5f406095a02e97bc9281be0cfe2514fdebc9d0b112937"
+    },
+    {
+      "path": "campaign/google-play/phone/02-since.png",
+      "width": 1080,
+      "height": 1920,
+      "pngColorType": 2,
+      "bytes": 323072,
+      "sha256": "6cc6c1ba32b850949578e0f088f91b26986443e79ed7591d84560e2b637b00d9"
+    },
+    {
+      "path": "campaign/google-play/phone/03-live-countdown.png",
+      "width": 1080,
+      "height": 1920,
+      "pngColorType": 2,
+      "bytes": 1253608,
+      "sha256": "bfde6967ae0624a9b7989e8b5e086f675bd6ed95c84927b3d421b2ab59e0162b"
+    },
+    {
+      "path": "campaign/google-play/phone/04-make-it-yours.png",
+      "width": 1080,
+      "height": 1920,
+      "pngColorType": 2,
+      "bytes": 286446,
+      "sha256": "083afa46e9b12948e0509780bbcc8ccf088d24071045e0881ff26325bc479dac"
+    },
+    {
+      "path": "campaign/google-play/phone/05-reminders.png",
+      "width": 1080,
+      "height": 1920,
+      "pngColorType": 2,
+      "bytes": 229563,
+      "sha256": "095ffd1e1c70625f902d67dfef5581cfb4eebc9351a7b22bd3ca9ae481064b49"
+    },
+    {
+      "path": "campaign/google-play/phone/06-share-or-display.png",
+      "width": 1080,
+      "height": 1920,
+      "pngColorType": 2,
+      "bytes": 335103,
+      "sha256": "0899b1bf301d0da0372d23413466f5d0e3ac74a4bb5bfea66b47aaba49b5a124"
+    },
+    {
+      "path": "campaign/google-play/phone/07-background-library.png",
+      "width": 1080,
+      "height": 1920,
+      "pngColorType": 2,
+      "bytes": 235772,
+      "sha256": "285149c84350b156dd2df5d164289adc22a6b181cce09aaf8b0a7c8caabaeb5a"
+    },
+    {
+      "path": "campaign/google-play/tablet-10/01-soon.png",
+      "width": 2560,
+      "height": 1440,
+      "pngColorType": 2,
+      "bytes": 1469279,
+      "sha256": "a1a6ec859ce3de7c77e9efa39a9c2b058a45cdf5758a8af01194a8b5659819ab"
+    },
+    {
+      "path": "campaign/google-play/tablet-10/02-since.png",
+      "width": 2560,
+      "height": 1440,
+      "pngColorType": 2,
+      "bytes": 408303,
+      "sha256": "1d6a082023f56fe24f7b7ca258f3a3ff046d26dd3251ce5d816daa5bc6525674"
+    },
+    {
+      "path": "campaign/google-play/tablet-10/03-live-countdown.png",
+      "width": 2560,
+      "height": 1440,
+      "pngColorType": 2,
+      "bytes": 2271252,
+      "sha256": "ff48194ba7600a08ca1891f447c2089e3e497d1b56479c1363a4ffe8cbe9d2bb"
+    },
+    {
+      "path": "campaign/google-play/tablet-10/04-make-it-yours.png",
+      "width": 2560,
+      "height": 1440,
+      "pngColorType": 2,
+      "bytes": 392845,
+      "sha256": "78acecaff3e596c7efc8087eab49b218e97420488e1e0dcc81db843b6f34df44"
+    },
+    {
+      "path": "campaign/google-play/tablet-10/05-reminders.png",
+      "width": 2560,
+      "height": 1440,
+      "pngColorType": 2,
+      "bytes": 397175,
+      "sha256": "eb6d55711930fd64d16a4ed397d0b1c3cf0f5b679716a929bf150857e7792310"
+    },
+    {
+      "path": "campaign/google-play/tablet-10/06-share-or-display.png",
+      "width": 2560,
+      "height": 1440,
+      "pngColorType": 2,
+      "bytes": 1174910,
+      "sha256": "c6043d6060fe6516d969b8a85798ef01b8072eb4bd4aa5283646ff6d20ef5863"
+    },
+    {
+      "path": "campaign/google-play/tablet-10/07-background-library.png",
+      "width": 2560,
+      "height": 1440,
+      "pngColorType": 2,
+      "bytes": 401989,
+      "sha256": "6e50bdede4974a9b446e32fe3707633fb1bbbb594c6663c811a2f76e56fd8d25"
+    },
+    {
+      "path": "campaign/google-play/tablet-7/01-soon.png",
+      "width": 1920,
+      "height": 1080,
+      "pngColorType": 2,
+      "bytes": 853472,
+      "sha256": "28bde5d878cc3eb1a6a0c63aa1da1e427afc7552f8096b5cf8bc3d48e1789f39"
+    },
+    {
+      "path": "campaign/google-play/tablet-7/02-since.png",
+      "width": 1920,
+      "height": 1080,
+      "pngColorType": 2,
+      "bytes": 296180,
+      "sha256": "314611185a5fc88fb1071dd4e5bfb0d34495f0d2027e2e52f596445ebea5e45a"
+    },
+    {
+      "path": "campaign/google-play/tablet-7/03-live-countdown.png",
+      "width": 1920,
+      "height": 1080,
+      "pngColorType": 2,
+      "bytes": 1374689,
+      "sha256": "95a3085cc944cfee3224924ee82a78d88ea7134ca1ac8f076c4d86e0dec4429e"
+    },
+    {
+      "path": "campaign/google-play/tablet-7/04-make-it-yours.png",
+      "width": 1920,
+      "height": 1080,
+      "pngColorType": 2,
+      "bytes": 279782,
+      "sha256": "e79621640bd9401332d9e3d389c690bc3685c20039abfcd95187ff91b3179003"
+    },
+    {
+      "path": "campaign/google-play/tablet-7/05-reminders.png",
+      "width": 1920,
+      "height": 1080,
+      "pngColorType": 2,
+      "bytes": 282148,
+      "sha256": "494a979976151e0b3ad149a8a4f59eadec13d262ac0509ac4f6c24800aedfc15"
+    },
+    {
+      "path": "campaign/google-play/tablet-7/06-share-or-display.png",
+      "width": 1920,
+      "height": 1080,
+      "pngColorType": 2,
+      "bytes": 725308,
+      "sha256": "90b25eaf747287171163176dd558c527d5622693f1ea64aeaf2678f7a67119fd"
+    },
+    {
+      "path": "campaign/google-play/tablet-7/07-background-library.png",
+      "width": 1920,
+      "height": 1080,
+      "pngColorType": 2,
+      "bytes": 269833,
+      "sha256": "34c1cc5f5642f3e824068304ff13d3508492ecc0f5d3c09e6e9b033defdcbb26"
+    },
+    {
+      "path": "review/android-launcher.png",
+      "width": 1800,
+      "height": 580,
+      "pngColorType": 2,
+      "bytes": 80377,
+      "sha256": "345fc183f80ca19e328af74a824f8da90348269f0fd3428b7a67b35fcfe1a702"
+    },
+    {
+      "path": "review/apple-safe-areas/header.png",
+      "width": 3840,
+      "height": 1646,
+      "pngColorType": 2,
+      "bytes": 137457,
+      "sha256": "21d72778bb43721017ea7905e95cb44df365a599f4887a84a5852dc16df66ada"
+    },
+    {
+      "path": "review/apple-safe-areas/search-results.png",
+      "width": 3840,
+      "height": 2560,
+      "pngColorType": 2,
+      "bytes": 215231,
+      "sha256": "c7ca8e2aae31b9208e9e0d26a346e3bea8b332fb75b251342a3ba4ed2d52a85d"
+    },
+    {
+      "path": "review/apple-safe-areas/universal.png",
+      "width": 5244,
+      "height": 2950,
+      "pngColorType": 2,
+      "bytes": 287267,
+      "sha256": "4da51ff612c041563ddd00094250377f4638d9660d433feec8c9e890254aaa44"
+    },
+    {
+      "path": "review/contact-sheets/apple-ipad-13.png",
+      "width": 1800,
+      "height": 820,
+      "pngColorType": 2,
+      "bytes": 358666,
+      "sha256": "828a5c836189d4572e9f86366a83e15302b64bc73f1ac8b79ca635974f835e33"
+    },
+    {
+      "path": "review/contact-sheets/apple-iphone-face-id-large.png",
+      "width": 1800,
+      "height": 2070,
+      "pngColorType": 2,
+      "bytes": 992169,
+      "sha256": "15afc434455d5de531d34491d531180c18e1ed674f5f801c8dcff39b17069653"
+    },
+    {
+      "path": "review/contact-sheets/apple-iphone-home-button-large.png",
+      "width": 1800,
+      "height": 2070,
+      "pngColorType": 2,
+      "bytes": 846710,
+      "sha256": "1eb2af65528ceaf2dd05637ab7dc1036da89149b70a6599ae29f315a979b4b9d"
+    },
+    {
+      "path": "review/contact-sheets/apple-iphone-large.png",
+      "width": 1800,
+      "height": 2070,
+      "pngColorType": 2,
+      "bytes": 964391,
+      "sha256": "35d0c44907267cd1ecfc9b34590107227dfd2e0a2084bba0f00b091e2f42b64c"
+    },
+    {
+      "path": "review/contact-sheets/apple-iphone.png",
+      "width": 1800,
+      "height": 2070,
+      "pngColorType": 2,
+      "bytes": 1009019,
+      "sha256": "d6844c03edc9678aa8e46e6f37fd71e2601aeb441e501d932a215d77358d7ce1"
+    },
+    {
+      "path": "review/contact-sheets/google-play-phone.png",
+      "width": 1800,
+      "height": 2070,
+      "pngColorType": 2,
+      "bytes": 873229,
+      "sha256": "1601cda0920aa1fbd993c139b7d5e809ff50951010b00887b86f577f5d5d5ba7"
+    },
+    {
+      "path": "review/contact-sheets/google-play-tablet-10.png",
+      "width": 1800,
+      "height": 820,
+      "pngColorType": 2,
+      "bytes": 364044,
+      "sha256": "4f442c4174f942a23dc668817a8c2935e54b40e3e2d2f760c91b299a3d96c9df"
+    },
+    {
+      "path": "review/contact-sheets/google-play-tablet-7.png",
+      "width": 1800,
+      "height": 820,
+      "pngColorType": 2,
+      "bytes": 376898,
+      "sha256": "af2f2ef77739fc5f79b3ad08df5e776e91621efebf5aa0aaaacb31d7f23d9abe"
+    },
+    {
+      "path": "review/overview.png",
+      "width": 2000,
+      "height": 1850,
+      "pngColorType": 2,
+      "bytes": 1000121,
+      "sha256": "c7df6052c2a8410386264f8dcd0f49e2dfeb63ba3223e58c012000a7575e8e3c"
+    },
+    {
+      "path": "screenshots/apple/ipad-13/01-soon.png",
+      "width": 2752,
+      "height": 2064,
+      "pngColorType": 2,
+      "bytes": 4050304,
+      "sha256": "341487fc694461264d7c1ebe63034fccf0a5f142ca4ad626d4ad6b59d342d4e3"
+    },
+    {
+      "path": "screenshots/apple/ipad-13/02-since.png",
+      "width": 2752,
+      "height": 2064,
+      "pngColorType": 2,
+      "bytes": 477565,
+      "sha256": "9867a2c7c01fbc45ac56fd9201366b085acafb941173a65717840b8f94815ed2"
+    },
+    {
+      "path": "screenshots/apple/ipad-13/03-live-countdown.png",
+      "width": 2752,
+      "height": 2064,
+      "pngColorType": 2,
+      "bytes": 6740252,
+      "sha256": "b1829eb14c90d4137d71ad68015c826059ad5dc677b9ba62d0b5285692581cf0"
+    },
+    {
+      "path": "screenshots/apple/ipad-13/04-make-it-yours.png",
+      "width": 2752,
+      "height": 2064,
+      "pngColorType": 2,
+      "bytes": 439719,
+      "sha256": "d6a219e8d8c2c4909429df14892f9fee1ae3443bea51f38de3426998bb6f29bc"
+    },
+    {
+      "path": "screenshots/apple/ipad-13/05-reminders.png",
+      "width": 2752,
+      "height": 2064,
+      "pngColorType": 2,
+      "bytes": 439719,
+      "sha256": "d6a219e8d8c2c4909429df14892f9fee1ae3443bea51f38de3426998bb6f29bc"
+    },
+    {
+      "path": "screenshots/apple/ipad-13/06-share-or-display.png",
+      "width": 2752,
+      "height": 2064,
+      "pngColorType": 2,
+      "bytes": 3241376,
+      "sha256": "205b9c27158b29c0878b1237717ed591a0680b1e8333537781a75db2405c8eaa"
+    },
+    {
+      "path": "screenshots/apple/ipad-13/07-background-library.png",
+      "width": 2752,
+      "height": 2064,
+      "pngColorType": 2,
+      "bytes": 495756,
+      "sha256": "1c47b4185aa351c7c83a8ac1882e87853cbe8a12e9e187153805afc72345a43d"
+    },
+    {
+      "path": "screenshots/apple/iphone/01-soon.png",
+      "width": 1206,
+      "height": 2622,
+      "pngColorType": 2,
+      "bytes": 1348196,
+      "sha256": "b32a4e9744ec649223bc5f8044095793f2b13f4671e804e4c9c7410cadb40faf"
+    },
+    {
+      "path": "screenshots/apple/iphone/02-since.png",
+      "width": 1206,
+      "height": 2622,
+      "pngColorType": 2,
+      "bytes": 394750,
+      "sha256": "97b4a2b9de29e372c95d99db6f83c57a7f4d97915e4e394dd33d84a2bc69e684"
+    },
+    {
+      "path": "screenshots/apple/iphone/03-live-countdown.png",
+      "width": 1206,
+      "height": 2622,
+      "pngColorType": 2,
+      "bytes": 3203585,
+      "sha256": "19cce9d370ec224d8578e4c41287ddfe8b56f6b2d4b0537471426ed11e76f11a"
+    },
+    {
+      "path": "screenshots/apple/iphone/04-make-it-yours.png",
+      "width": 1206,
+      "height": 2622,
+      "pngColorType": 2,
+      "bytes": 317358,
+      "sha256": "726ec2a2e8c3240760b86aa6ec8dcb4bc211cc16543bb2aebccbafa5a547e5ee"
+    },
+    {
+      "path": "screenshots/apple/iphone/05-reminders.png",
+      "width": 1206,
+      "height": 2622,
+      "pngColorType": 2,
+      "bytes": 227907,
+      "sha256": "59cb45d9fb1862ef831fb93d6277ea6069009323c6f997892dcace2198380672"
+    },
+    {
+      "path": "screenshots/apple/iphone/06-share-or-display.png",
+      "width": 1206,
+      "height": 2622,
+      "pngColorType": 2,
+      "bytes": 521123,
+      "sha256": "370421c9f0810b84470877a3e3b39b3b7715f41acc766afc61272bdfa74d8ae2"
+    },
+    {
+      "path": "screenshots/apple/iphone/07-background-library.png",
+      "width": 1206,
+      "height": 2622,
+      "pngColorType": 2,
+      "bytes": 227345,
+      "sha256": "91be69cb4bd63517950cea809293aef30b4df235761107a918f743ba76d8c308"
+    },
+    {
+      "path": "screenshots/apple/iphone-face-id-large/01-soon.png",
+      "width": 1242,
+      "height": 2688,
+      "pngColorType": 2,
+      "bytes": 1378258,
+      "sha256": "98d9fe4d19f285f0adda29e3f8165d27f3b0b51877d7ae8f223d26210fb53412"
+    },
+    {
+      "path": "screenshots/apple/iphone-face-id-large/02-since.png",
+      "width": 1242,
+      "height": 2688,
+      "pngColorType": 2,
+      "bytes": 402817,
+      "sha256": "0bec6294ba52a957d04ba859f9ff594a02c966247cba4ea0098477d8be0367b4"
+    },
+    {
+      "path": "screenshots/apple/iphone-face-id-large/03-live-countdown.png",
+      "width": 1242,
+      "height": 2688,
+      "pngColorType": 2,
+      "bytes": 3366400,
+      "sha256": "1f63a8eebfd82b1b2bdb7298753d969aa891c31b795dc1a0669383b353197fd1"
+    },
+    {
+      "path": "screenshots/apple/iphone-face-id-large/04-make-it-yours.png",
+      "width": 1242,
+      "height": 2688,
+      "pngColorType": 2,
+      "bytes": 328246,
+      "sha256": "c3dd8ffaa46563eea63875e42e15599c1918bd660b00fc05aa5f6d7eb9a18399"
+    },
+    {
+      "path": "screenshots/apple/iphone-face-id-large/05-reminders.png",
+      "width": 1242,
+      "height": 2688,
+      "pngColorType": 2,
+      "bytes": 232047,
+      "sha256": "5574e60fe0b34dff3a70a47da937e3828a76da6a96955b7093a82a762011768c"
+    },
+    {
+      "path": "screenshots/apple/iphone-face-id-large/06-share-or-display.png",
+      "width": 1242,
+      "height": 2688,
+      "pngColorType": 2,
+      "bytes": 522189,
+      "sha256": "c003bc3fca9fcf6153592541b79697cf2ef77cda6589d9e05022d33c1f2f87dd"
+    },
+    {
+      "path": "screenshots/apple/iphone-face-id-large/07-background-library.png",
+      "width": 1242,
+      "height": 2688,
+      "pngColorType": 2,
+      "bytes": 233481,
+      "sha256": "eb95f1a2ece89ec87b81c2b8851445f3f6f88e4fe75f61a72a3b0c149c02c165"
+    },
+    {
+      "path": "screenshots/apple/iphone-home-button-large/01-soon.png",
+      "width": 1242,
+      "height": 2208,
+      "pngColorType": 2,
+      "bytes": 1351114,
+      "sha256": "1bcccb298ced9e811b0ba172e4ad06726cadd72ea8df2524c1b56cd5d6a0ba6c"
+    },
+    {
+      "path": "screenshots/apple/iphone-home-button-large/02-since.png",
+      "width": 1242,
+      "height": 2208,
+      "pngColorType": 2,
+      "bytes": 393048,
+      "sha256": "40e7dbd9755ef484cfa49fd6fd2cc0b3795e0790f7694f004d2611f1c6877ef3"
+    },
+    {
+      "path": "screenshots/apple/iphone-home-button-large/03-live-countdown.png",
+      "width": 1242,
+      "height": 2208,
+      "pngColorType": 2,
+      "bytes": 2884289,
+      "sha256": "4926c773a60571acf6ae7001e72fd9bbfcb49a157a38c4089b55660648872e0d"
+    },
+    {
+      "path": "screenshots/apple/iphone-home-button-large/04-make-it-yours.png",
+      "width": 1242,
+      "height": 2208,
+      "pngColorType": 2,
+      "bytes": 289104,
+      "sha256": "2f7c47c776c45febc478c1f574af02e8b1667d05b80a97e132ec6e751b818566"
+    },
+    {
+      "path": "screenshots/apple/iphone-home-button-large/05-reminders.png",
+      "width": 1242,
+      "height": 2208,
+      "pngColorType": 2,
+      "bytes": 189552,
+      "sha256": "3256c01603baf1c32276505d3ebdcc56d2394eac2d969bfee88988babeb31262"
+    },
+    {
+      "path": "screenshots/apple/iphone-home-button-large/06-share-or-display.png",
+      "width": 1242,
+      "height": 2208,
+      "pngColorType": 2,
+      "bytes": 512538,
+      "sha256": "61a9f5e0fb0a03acb3a922ef0de1c579060da6a9835add64c12eebe8d2727495"
+    },
+    {
+      "path": "screenshots/apple/iphone-home-button-large/07-background-library.png",
+      "width": 1242,
+      "height": 2208,
+      "pngColorType": 2,
+      "bytes": 201131,
+      "sha256": "bcb3dd7af0ebf701df9260d1d536282d58f273726a3cf097a09c97dfeec4135d"
+    },
+    {
+      "path": "screenshots/apple/iphone-large/01-soon.png",
+      "width": 1320,
+      "height": 2868,
+      "pngColorType": 2,
+      "bytes": 1436460,
+      "sha256": "e6e65071e2ab93944c85b67612c80886e85b8d731990f04337db55980847e348"
+    },
+    {
+      "path": "screenshots/apple/iphone-large/02-since.png",
+      "width": 1320,
+      "height": 2868,
+      "pngColorType": 2,
+      "bytes": 416312,
+      "sha256": "e9f35437187ce5a6ad4e4c8f4f5571b28f71254b95bb3ce7dc4ee841270d4fa1"
+    },
+    {
+      "path": "screenshots/apple/iphone-large/03-live-countdown.png",
+      "width": 1320,
+      "height": 2868,
+      "pngColorType": 2,
+      "bytes": 3778285,
+      "sha256": "fc04fa53d57e212b71aed81fbdef7ecadb769ed92ed143a9f1f1f7b0bf6fd991"
+    },
+    {
+      "path": "screenshots/apple/iphone-large/04-make-it-yours.png",
+      "width": 1320,
+      "height": 2868,
+      "pngColorType": 2,
+      "bytes": 359834,
+      "sha256": "2b6e1621bc7dc7c739c337a14de3c20bcb24f9db48a7fbe3cde2118f6550cd9b"
+    },
+    {
+      "path": "screenshots/apple/iphone-large/05-reminders.png",
+      "width": 1320,
+      "height": 2868,
+      "pngColorType": 2,
+      "bytes": 252765,
+      "sha256": "f2ae225910aea381ae3c97664d6c1c794602418dbbe90734fb74373dadd29925"
+    },
+    {
+      "path": "screenshots/apple/iphone-large/06-share-or-display.png",
+      "width": 1320,
+      "height": 2868,
+      "pngColorType": 2,
+      "bytes": 530748,
+      "sha256": "dcba5a1ebf9e932907fed8d25bd38ade923965a6a038bf55bb6831acee0b780a"
+    },
+    {
+      "path": "screenshots/apple/iphone-large/07-background-library.png",
+      "width": 1320,
+      "height": 2868,
+      "pngColorType": 2,
+      "bytes": 259914,
+      "sha256": "7fb247b91c6844f93957bd9ff0684217d19086ddc51b00036dbd34e26f06c016"
+    },
+    {
+      "path": "screenshots/google-play/phone/01-soon.png",
+      "width": 1080,
+      "height": 1920,
+      "pngColorType": 2,
+      "bytes": 1098040,
+      "sha256": "496e381e39757decd03f161d6924582a2b978ec945bb5fe37cf6420da63c7221"
+    },
+    {
+      "path": "screenshots/google-play/phone/02-since.png",
+      "width": 1080,
+      "height": 1920,
+      "pngColorType": 2,
+      "bytes": 324645,
+      "sha256": "1264147049ba95e00d8846982e79333373807b3bbd6bd50661cbb98049ac9a61"
+    },
+    {
+      "path": "screenshots/google-play/phone/03-live-countdown.png",
+      "width": 1080,
+      "height": 1920,
+      "pngColorType": 2,
+      "bytes": 2253104,
+      "sha256": "ea07d6e55db67769fae0c275174380b69c142985f6320feb3a2c5e4fc18a7a26"
+    },
+    {
+      "path": "screenshots/google-play/phone/04-make-it-yours.png",
+      "width": 1080,
+      "height": 1920,
+      "pngColorType": 2,
+      "bytes": 248486,
+      "sha256": "301c214f504d277a991f119342a37e66930c6695ca73d5171bba5689e9656fa5"
+    },
+    {
+      "path": "screenshots/google-play/phone/05-reminders.png",
+      "width": 1080,
+      "height": 1920,
+      "pngColorType": 2,
+      "bytes": 163119,
+      "sha256": "0a7cc9f5fa760f948f74819c77e81cef53eb0d79130003da694907f3dbfc8659"
+    },
+    {
+      "path": "screenshots/google-play/phone/06-share-or-display.png",
+      "width": 1080,
+      "height": 1920,
+      "pngColorType": 2,
+      "bytes": 424099,
+      "sha256": "c3174c6806001ca8d4a7886698927869af946f5402b732806485c318a64a410b"
+    },
+    {
+      "path": "screenshots/google-play/phone/07-background-library.png",
+      "width": 1080,
+      "height": 1920,
+      "pngColorType": 2,
+      "bytes": 171416,
+      "sha256": "367799441ce6a57edfebc7df5d51c9a8f5769640847ed27e1e39b5087c10ab57"
+    },
+    {
+      "path": "screenshots/google-play/tablet-10/01-soon.png",
+      "width": 2560,
+      "height": 1440,
+      "pngColorType": 2,
+      "bytes": 2856269,
+      "sha256": "25560be746b0c0fc96688f691468d0bbe137be6e1a38f08dc087504731ab4481"
+    },
+    {
+      "path": "screenshots/google-play/tablet-10/02-since.png",
+      "width": 2560,
+      "height": 1440,
+      "pngColorType": 2,
+      "bytes": 413142,
+      "sha256": "6528e73c87c898dafb6ade8635d96eec7603b300a2fbba81034785c06e8b0e34"
+    },
+    {
+      "path": "screenshots/google-play/tablet-10/03-live-countdown.png",
+      "width": 2560,
+      "height": 1440,
+      "pngColorType": 2,
+      "bytes": 4617849,
+      "sha256": "da57b0c27b96ae668a9bdac114bdf66558b759d063505281198ec2a5402b2ce6"
+    },
+    {
+      "path": "screenshots/google-play/tablet-10/04-make-it-yours.png",
+      "width": 2560,
+      "height": 1440,
+      "pngColorType": 2,
+      "bytes": 370326,
+      "sha256": "04044d73f99a10f7dcf358099b99a9190ab9df3081976ee56ce2e6eede607d20"
+    },
+    {
+      "path": "screenshots/google-play/tablet-10/05-reminders.png",
+      "width": 2560,
+      "height": 1440,
+      "pngColorType": 2,
+      "bytes": 370326,
+      "sha256": "04044d73f99a10f7dcf358099b99a9190ab9df3081976ee56ce2e6eede607d20"
+    },
+    {
+      "path": "screenshots/google-play/tablet-10/06-share-or-display.png",
+      "width": 2560,
+      "height": 1440,
+      "pngColorType": 2,
+      "bytes": 2149749,
+      "sha256": "b8fbafe0427c05d015520a9449f5c6f18e7f8dbbed60114c0d96c90ca971ea96"
+    },
+    {
+      "path": "screenshots/google-play/tablet-10/07-background-library.png",
+      "width": 2560,
+      "height": 1440,
+      "pngColorType": 2,
+      "bytes": 385558,
+      "sha256": "e4d7a68833a880115bfafc66d67b4c7b14f92326d9b3f929d0ba358aff0b321c"
+    },
+    {
+      "path": "screenshots/google-play/tablet-7/01-soon.png",
+      "width": 1920,
+      "height": 1080,
+      "pngColorType": 2,
+      "bytes": 1619919,
+      "sha256": "d4c6a11af6b6c59055250b4308e06a38d73218f3499fffc9253263b68d70578a"
+    },
+    {
+      "path": "screenshots/google-play/tablet-7/02-since.png",
+      "width": 1920,
+      "height": 1080,
+      "pngColorType": 2,
+      "bytes": 299646,
+      "sha256": "889535761100ffd6e05bd65be0ef3ba0370718fb92e377cf69385a8251248b16"
+    },
+    {
+      "path": "screenshots/google-play/tablet-7/03-live-countdown.png",
+      "width": 1920,
+      "height": 1080,
+      "pngColorType": 2,
+      "bytes": 2774372,
+      "sha256": "0b1a4eae811e6c136919068c6101df57a3662b2d45adbdd30febd5e46a5e00ef"
+    },
+    {
+      "path": "screenshots/google-play/tablet-7/04-make-it-yours.png",
+      "width": 1920,
+      "height": 1080,
+      "pngColorType": 2,
+      "bytes": 268393,
+      "sha256": "3d6e020bbd5e0f2a174145b23652b6f639f52c581fd9d963bb65975d422e7fad"
+    },
+    {
+      "path": "screenshots/google-play/tablet-7/05-reminders.png",
+      "width": 1920,
+      "height": 1080,
+      "pngColorType": 2,
+      "bytes": 268393,
+      "sha256": "3d6e020bbd5e0f2a174145b23652b6f639f52c581fd9d963bb65975d422e7fad"
+    },
+    {
+      "path": "screenshots/google-play/tablet-7/06-share-or-display.png",
+      "width": 1920,
+      "height": 1080,
+      "pngColorType": 2,
+      "bytes": 1281008,
+      "sha256": "7d031bfa45b0c5b6bd37853aac89b85388efa6fd5a793f1bec9fe86fa5603907"
+    },
+    {
+      "path": "screenshots/google-play/tablet-7/07-background-library.png",
+      "width": 1920,
+      "height": 1080,
+      "pngColorType": 2,
+      "bytes": 252641,
+      "sha256": "4acbcb674e50fa48fc176376111fcbe97bba4e72e370fea9a62b21c34422e6b8"
+    }
+  ],
+  "metadata": {
+    "apple": {
+      "name": "Since & Soon",
+      "subtitle": "Countdowns & days since",
+      "promotionalText": "The days ahead. The moments behind. Count down and count up with photos, illustrated backgrounds, flexible reminders, widgets, and countdowns you can share.",
+      "description": "Make room for the days that matter.\n\nSince & Soon counts down to the days you\u2019re looking forward to and counts up from the moments you want to remember. Birthdays, trips, weddings, anniversaries, a new habit, a fresh start: give each one a place of its own.\n\nLOOK FORWARD WITH SOON\nSee what\u2019s coming next and watch the countdown change. Count in days, weeks, sleeps, or hours, and set yearly repeats for dates that come around again.\n\nLOOK BACK WITH SINCE\nKeep track of how long it\u2019s been since something began. Celebrate your progress, remember your favorite moments, and set reminders for milestones.\n\nMAKE EVERY EVENT YOURS\nChoose a photo or explore colors, gradients, patterns, textures, and illustrated backgrounds. Add an icon and pick a font to make each event feel like you.\n\nREMEMBER THE DATE\nSet reminders for the day itself or ahead of time. Keep important dates close with Home Screen and Lock Screen widgets.\n\nSHARE A LITTLE ANTICIPATION\nCreate a story or square countdown image, copy a countdown as text, or share an event as a calendar file.\n\nGIVE YOUR DAYS A BIGGER PICTURE\nOn iPad, browse events beside a live countdown or turn your tablet into a countdown board with wall mode.\n\nNo account needed. Your events are saved on your device.\n\nFor the days ahead. And the days behind.",
+      "whatsNew": "Countdowns is now Since & Soon.\n\n\u2022 A completely redesigned app with warm paper, bold numbers, and a touch of highlighter.\n\u2022 Soon counts down to the days ahead. Since counts up from the moments behind.\n\u2022 Personalize events with photos, colors, gradients, patterns, textures, illustrations, icons, and fonts.\n\u2022 Choose days, weeks, sleeps, or hours.\n\u2022 Set reminders and yearly repeats, and celebrate milestones.\n\u2022 Keep events close with Home Screen and Lock Screen widgets.\n\u2022 Enjoy a roomy iPad layout and countdown wall mode.\n\u2022 Share countdown images, copy countdown text, or send a calendar file.\n\u2022 Choose from a refreshed collection of app icons.",
+      "keywords": "countdown,countup,timer,birthday,anniversary,vacation,wedding,holiday,reminder,widget,milestone",
+      "copyright": "2026 Chris Stayte"
+    },
+    "googlePlay": {
+      "name": "Since & Soon",
+      "shortDescription": "Count down to events, count up from milestones, and make every day yours.",
+      "fullDescription": "Make room for the days that matter.\n\nSince & Soon counts down to the days you\u2019re looking forward to and counts up from the moments you want to remember. Birthdays, trips, weddings, anniversaries, a new habit, a fresh start: give each one a place of its own.\n\nLOOK FORWARD WITH SOON\nSee what\u2019s coming next and watch the countdown change. Count in days, weeks, sleeps, or hours, and set yearly repeats for dates that come around again.\n\nLOOK BACK WITH SINCE\nKeep track of how long it\u2019s been since something began. Celebrate your progress, remember your favorite moments, and set reminders for milestones.\n\nMAKE EVERY EVENT YOURS\nChoose a photo or explore colors, gradients, patterns, textures, and illustrated backgrounds. Add an icon and pick a font to make each event feel like you.\n\nREMEMBER THE DATE\nSet reminders for the day itself or ahead of time. Keep important dates close with Home Screen widgets.\n\nSHARE A LITTLE ANTICIPATION\nCreate a story or square countdown image, copy a countdown as text, or share an event as a calendar file.\n\nGIVE YOUR DAYS A BIGGER PICTURE\nOn a tablet, browse events beside a live countdown or turn your tablet into a countdown board with wall mode.\n\nNo account needed. Your events are saved on your device.\n\nFor the days ahead. And the days behind.",
+      "releaseNotes": "Countdowns is now Since & Soon!\n\u2022 A fresh paper-and-highlighter design.\n\u2022 Count down to events or count up from milestones.\n\u2022 Photos, patterns, textures, illustrations, gradients, and more ways to personalize.\n\u2022 Days, weeks, sleeps, or hours.\n\u2022 Reminders, widgets, and tablet wall mode.\n\u2022 Share countdowns as images or calendar events."
+    }
+  }
+}

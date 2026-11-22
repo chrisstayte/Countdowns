@@ -1,0 +1,4 @@
+# Rebuilt by tool/store-assets/package.py; keep the source PNGs in Git.
+*.zip
+# Browser receipts stay local and in the downloadable pack.
+review/upload-proof-*.jpg
