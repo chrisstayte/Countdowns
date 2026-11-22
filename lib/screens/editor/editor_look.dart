@@ -755,7 +755,7 @@ class _AllIconsSheetState extends State<AllIconsSheet> {
                             maxCrossAxisExtent: 84,
                             mainAxisSpacing: 10,
                             crossAxisSpacing: 10,
-                            childAspectRatio: 0.82,
+                            mainAxisExtent: 108,
                           ),
                       itemCount: icons.length,
                       itemBuilder: (_, i) {

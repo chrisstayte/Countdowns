@@ -261,7 +261,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             physics: const NeverScrollableScrollPhysics(),
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
-            childAspectRatio: 0.78,
+            childAspectRatio: 0.7,
             children: [
               for (final k in kinds.take(5))
                 Semantics(

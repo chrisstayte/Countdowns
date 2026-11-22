@@ -371,44 +371,47 @@ class _CropCanvas extends StatelessWidget {
 
       return GestureDetector(
         onPanUpdate: drag,
-        child: Stack(
-          children: [
-            Positioned.fromRect(
-              rect: image,
-              child: Image.file(file, fit: BoxFit.fill),
-            ),
-            for (final s in order)
-              _Frame(
-                rect: cropFrame(image, s.aspect, points[s]!),
-                shape: s,
-                selected: selected == s,
-                faded: selected != null && selected != s,
+        child: ClipRect(
+          child: Stack(
+            children: [
+              Positioned.fromRect(
+                rect: image,
+                child: Image.file(file, fit: BoxFit.fill),
               ),
-            Positioned(
-              left: 0,
-              right: 0,
-              top: image.bottom - 40,
-              child: Center(
-                child: Container(
-                  height: 28,
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: _dark.withValues(alpha: 0.7),
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: Text(
-                    hint,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
+              for (final s in order)
+                _Frame(
+                  rect: cropFrame(image, s.aspect, points[s]!),
+                  shape: s,
+                  selected: selected == s,
+                  faded: selected != null && selected != s,
+                ),
+              Positioned(
+                left: 0,
+                right: 0,
+                top: image.bottom - 40,
+                child: Center(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: _dark.withValues(alpha: 0.7),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: Text(
+                      hint,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     },
