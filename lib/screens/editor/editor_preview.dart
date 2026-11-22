@@ -82,45 +82,75 @@ class EditorPreview extends StatelessWidget {
                     ],
                   ),
                   const Spacer(),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: [
-                      Text(
-                        count.big,
-                        style: AppText.numeral(
-                          54,
-                          color: ink,
-                        ).copyWith(shadows: shadows),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        count.unit,
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w700,
-                          color: ink,
-                          shadows: shadows,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      if (!compact)
-                        Expanded(
-                          child: Text(
-                            when,
-                            textAlign: TextAlign.right,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                  if (compact)
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.bottomLeft,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.baseline,
+                        textBaseline: TextBaseline.alphabetic,
+                        children: [
+                          Text(
+                            count.big,
+                            style: AppText.numeral(
+                              40,
+                              color: ink,
+                            ).copyWith(shadows: shadows),
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            count.unit,
                             style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
                               color: ink,
                               shadows: shadows,
                             ),
                           ),
+                        ],
+                      ),
+                    )
+                  else
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      textBaseline: TextBaseline.alphabetic,
+                      children: [
+                        Text(
+                          count.big,
+                          style: AppText.numeral(
+                            54,
+                            color: ink,
+                          ).copyWith(shadows: shadows),
                         ),
-                    ],
-                  ),
+                        const SizedBox(width: 8),
+                        Text(
+                          count.unit,
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w700,
+                            color: ink,
+                            shadows: shadows,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        if (!compact)
+                          Expanded(
+                            child: Text(
+                              when,
+                              textAlign: TextAlign.right,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: ink,
+                                shadows: shadows,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
                 ],
               ),
               if (draft.hasPhoto && onCrop != null)

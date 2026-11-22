@@ -73,20 +73,25 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     return Scaffold(
       body: SafeArea(
         bottom: false,
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-              child: Row(
-                children: [
-                  Expanded(child: _field()),
-                  const SizedBox(width: 10),
-                  TextAction('Cancel', onTap: () => context.pop()),
-                ],
-              ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 640),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+                  child: Row(
+                    children: [
+                      Expanded(child: _field()),
+                      const SizedBox(width: 10),
+                      TextAction('Cancel', onTap: () => context.pop()),
+                    ],
+                  ),
+                ),
+                Expanded(child: q.isEmpty ? _start() : _results(q)),
+              ],
             ),
-            Expanded(child: q.isEmpty ? _start() : _results(q)),
-          ],
+          ),
         ),
       ),
     );
