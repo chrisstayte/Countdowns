@@ -53,14 +53,20 @@ List<SearchHit> searchCountdowns(
         at >= 0 ||
         (iconInfo(e.iconSlug)?.label.toLowerCase().contains(q) ?? false) ||
         (q == 'done' && e.isDone(now)) ||
-        (q == 'this week' && !e.isDone(now) && when.isBefore(weekEnd)) ||
+        (q == 'since' && e.isSince) ||
+        (q == 'this week' &&
+            !e.isSince &&
+            !e.isDone(now) &&
+            when.isBefore(weekEnd)) ||
         (year != null && when.year == year) ||
         (month != null && when.month == month);
     if (matches) hits.add(SearchHit(e, start: at, length: q.length));
   }
   hits.sort((a, b) {
-    final ad = a.event.isDone(now), bd = b.event.isDone(now);
-    if (ad != bd) return ad ? 1 : -1;
+    // Countdowns first, then Since, then done.
+    int rank(Countdown e) => e.isDone(now) ? 2 : (e.isSince ? 1 : 0);
+    final ra = rank(a.event), rb = rank(b.event);
+    if (ra != rb) return ra.compareTo(rb);
     return a.event.nextOccurrence(now).compareTo(b.event.nextOccurrence(now));
   });
   return hits;

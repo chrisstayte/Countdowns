@@ -49,7 +49,11 @@ struct CountdownProvider: AppIntentTimelineProvider {
   {
     let upcoming = SnapshotStore.load()
       .filter { !$0.isDone(at: date) }
-      .sorted { $0.occurrence(at: date) < $1.occurrence(at: date) }
+      .sorted { a, b in
+        // Countdowns soonest first, then Since newest start first.
+        if a.isSince != b.isSince { return !a.isSince }
+        return a.isSince ? a.target > b.target : a.occurrence(at: date) < b.occurrence(at: date)
+      }
     var events = upcoming
     var pinned = false
     if let id = configuration.countdown?.id,

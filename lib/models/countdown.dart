@@ -18,6 +18,16 @@ enum CountUnit {
       values.where((u) => u.name == name).firstOrNull ?? CountUnit.days;
 }
 
+/// Soon counts down to a date; Since counts up from one (sober since,
+/// started a job, together since).
+enum EventKind {
+  soon('Soon'),
+  since('Since');
+
+  const EventKind(this.label);
+  final String label;
+}
+
 enum RepeatRule {
   none('Never'),
   yearly('Every year');
@@ -158,6 +168,7 @@ class Countdown {
     this.id,
     required this.title,
     required this.dateTime,
+    this.kind = EventKind.soon,
     this.allDay = true,
     this.iconSlug,
     this.colorArgb = 0xFF7877E6,
@@ -178,7 +189,10 @@ class Countdown {
 
   final int? id;
   final String title;
+
+  /// The date counted to (Soon), or the start counted from (Since).
   final DateTime dateTime;
+  final EventKind kind;
   final bool allDay;
   final String? iconSlug;
   final int colorArgb;
@@ -202,6 +216,8 @@ class Countdown {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final int? legacyHiveKey;
+
+  bool get isSince => kind == EventKind.since;
 
   Color get color => Color(colorArgb);
   bool get hasPhoto => photoPath != null;
@@ -232,10 +248,11 @@ class Countdown {
   DateTime get target =>
       allDay ? DateTime(dateTime.year, dateTime.month, dateTime.day) : dateTime;
 
-  /// For yearly events, the next time it happens on or after [now].
+  /// For yearly events, the next time it happens on or after [now]. Since
+  /// events always give their start.
   DateTime nextOccurrence(DateTime now) {
     final base = target;
-    if (repeat == RepeatRule.none) return base;
+    if (repeat == RepeatRule.none || isSince) return base;
     if (!base.isBefore(now)) return base;
     var year = now.year;
     while (true) {
@@ -248,9 +265,10 @@ class Countdown {
     }
   }
 
-  /// Done means it happened and won't come round again.
+  /// Done means it happened and won't come round again. Since events keep
+  /// counting, so they're never done.
   bool isDone(DateTime now) {
-    if (repeat == RepeatRule.yearly) return false;
+    if (isSince || repeat == RepeatRule.yearly) return false;
     if (allDay) {
       return DateTime(now.year, now.month, now.day).isAfter(target);
     }
@@ -260,7 +278,7 @@ class Countdown {
   /// Time left until the next occurrence (negative once done).
   Duration timeLeft(DateTime now) => nextOccurrence(now).difference(now);
 
-  /// True on the day of an all-day event.
+  /// True on the day of an all-day event (the first day, for Since).
   bool isToday(DateTime now) =>
       allDay &&
       nextOccurrence(now).year == now.year &&
@@ -271,6 +289,7 @@ class Countdown {
     int? id,
     String? title,
     DateTime? dateTime,
+    EventKind? kind,
     bool? allDay,
     Object? iconSlug = _keep,
     int? colorArgb,
@@ -291,6 +310,7 @@ class Countdown {
     id: id ?? this.id,
     title: title ?? this.title,
     dateTime: dateTime ?? this.dateTime,
+    kind: kind ?? this.kind,
     allDay: allDay ?? this.allDay,
     iconSlug: iconSlug == _keep ? this.iconSlug : iconSlug as String?,
     colorArgb: colorArgb ?? this.colorArgb,
@@ -321,6 +341,7 @@ class Countdown {
       other.id == id &&
       other.title == title &&
       other.dateTime == dateTime &&
+      other.kind == kind &&
       other.allDay == allDay &&
       other.iconSlug == iconSlug &&
       other.colorArgb == colorArgb &&
@@ -340,6 +361,7 @@ class Countdown {
     id,
     title,
     dateTime,
+    kind,
     allDay,
     iconSlug,
     colorArgb,

@@ -12,7 +12,7 @@ TextStyle _onEvent(Countdown e, TextStyle s) => s.copyWith(
 
 String _semantics(Countdown e, DateTime now) {
   final c = cardCount(e, now);
-  return '${e.title}, ${c.big} ${c.unit}, ${shortDate(e.nextOccurrence(now), now)}';
+  return '${e.title}, ${c.big} ${c.unit}, ${cardDate(e, now)}';
 }
 
 /// The grid card on Home.
@@ -36,7 +36,7 @@ class CountdownCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final count = cardCount(event, now);
     final years = cardYears(event, now);
-    final date = shortDate(event.nextOccurrence(now), now);
+    final date = cardDate(event, now);
     final ink = event.textColor;
     return Semantics(
       button: onTap != null,

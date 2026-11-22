@@ -59,7 +59,8 @@ class HomeScreen extends ConsumerWidget {
   }
 }
 
-/// The scrolling Home content: header, Up next, filters, cards and Done.
+/// The scrolling Home content: header, Up next, filters, cards, Since and
+/// Done.
 class HomeList extends ConsumerWidget {
   const HomeList({
     super.key,
@@ -81,18 +82,42 @@ class HomeList extends ConsumerWidget {
     final filter = ref.watch(homeFilterProvider);
     final keepDone = ref.watch(localSettingsProvider.select((s) => s.keepDone));
     final upcoming = lists.upcoming;
+    final since = lists.since;
     final done = lists.done;
     final hero = filter == HomeFilter.upcoming ? upcoming.firstOrNull : null;
     final cards = switch (filter) {
       HomeFilter.upcoming => upcoming.skip(1).toList(),
+      HomeFilter.since => since,
       HomeFilter.all => upcoming,
       HomeFilter.done => const <Countdown>[],
     };
+    // All lists Since under its own heading, after the countdowns.
+    final sinceSection = filter == HomeFilter.all ? since : const <Countdown>[];
     final showDone = switch (filter) {
       HomeFilter.upcoming => keepDone && done.isNotEmpty,
+      HomeFilter.since => false,
       HomeFilter.done || HomeFilter.all => done.isNotEmpty,
     };
-    final empty = upcoming.isEmpty && done.isEmpty;
+    final empty = upcoming.isEmpty && since.isEmpty && done.isEmpty;
+
+    Widget grid(List<Countdown> events) => SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      sliver: SliverGrid.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: columns,
+          mainAxisSpacing: 12,
+          crossAxisSpacing: 12,
+          mainAxisExtent: 165,
+        ),
+        itemCount: events.length,
+        itemBuilder: (_, i) => CountdownCard(
+          event: events[i],
+          now: now,
+          selected: events[i].id == selectedId,
+          onTap: () => onOpen(events[i]),
+        ),
+      ),
+    );
 
     return CustomScrollView(
       slivers: [
@@ -117,33 +142,30 @@ class HomeList extends ConsumerWidget {
                     ),
                     const SizedBox(height: 18),
                   ],
-                  _Filters(upcoming: upcoming.length, done: done.length),
+                  _Filters(
+                    upcoming: upcoming.length,
+                    since: since.length,
+                    done: done.length,
+                  ),
                   const SizedBox(height: 18),
                 ],
               ],
             ),
           ),
         ),
-        if (cards.isNotEmpty)
+        if (cards.isNotEmpty) grid(cards),
+        if (sinceSection.isNotEmpty) ...[
           SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            sliver: SliverGrid.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: columns,
-                mainAxisSpacing: 12,
-                crossAxisSpacing: 12,
-                mainAxisExtent: 165,
-              ),
-              itemCount: cards.length,
-              itemBuilder: (_, i) => CountdownCard(
-                event: cards[i],
-                now: now,
-                selected: cards[i].id == selectedId,
-                onTap: () => onOpen(cards[i]),
-              ),
-            ),
+            padding: EdgeInsets.fromLTRB(20, cards.isEmpty ? 0 : 22, 20, 10),
+            sliver: const SliverToBoxAdapter(child: SectionLabel('Since')),
           ),
-        if (!empty && cards.isEmpty && hero == null && !showDone)
+          grid(sinceSection),
+        ],
+        if (!empty &&
+            cards.isEmpty &&
+            sinceSection.isEmpty &&
+            hero == null &&
+            !showDone)
           const SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.all(40),
@@ -218,8 +240,12 @@ class _HomeHeader extends ConsumerWidget {
 }
 
 class _Filters extends ConsumerWidget {
-  const _Filters({required this.upcoming, required this.done});
-  final int upcoming, done;
+  const _Filters({
+    required this.upcoming,
+    required this.since,
+    required this.done,
+  });
+  final int upcoming, since, done;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -229,9 +255,10 @@ class _Filters extends ConsumerWidget {
       selected: filter,
       height: 36,
       label: (f) => switch (f) {
-        HomeFilter.upcoming => 'Upcoming · $upcoming',
-        HomeFilter.done => 'Done · $done',
-        HomeFilter.all => 'All',
+        HomeFilter.upcoming => '${f.label} · $upcoming',
+        HomeFilter.since => '${f.label} · $since',
+        HomeFilter.done => '${f.label} · $done',
+        HomeFilter.all => f.label,
       },
       onChanged: (f) {
         feedback(ref, Sound.select, false);
@@ -259,7 +286,7 @@ class _EmptyHome extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Nothing to count down to yet',
+          'Nothing to count yet',
           style: TextStyle(
             fontFamily: AppFonts.numerals,
             fontSize: 26,
@@ -269,7 +296,8 @@ class _EmptyHome extends StatelessWidget {
         ),
         SizedBox(height: 6),
         Text(
-          'Add a birthday, a trip or a big day, and it’ll show up here.',
+          'Count down to a birthday or a trip, or up from a fresh start, '
+          'and it’ll show up here.',
           style: TextStyle(fontSize: 15, color: AppColors.secondaryText),
         ),
       ],

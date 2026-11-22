@@ -9,6 +9,7 @@ import 'package:countdowns/models/event_icons.dart';
 import 'package:countdowns/providers/home_provider.dart';
 import 'package:countdowns/storage/photos.dart';
 import 'package:countdowns/theme/app_theme.dart';
+import 'package:countdowns/utilities/milestones.dart';
 import 'package:countdowns/widgets/art_painter.dart';
 import 'package:countdowns/widgets_bridge/widget_links.dart';
 import 'package:flutter/foundation.dart';
@@ -16,7 +17,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:path/path.dart' as p;
 
-/// How many upcoming countdowns the widgets can see.
+/// How many countdowns the widgets can see (upcoming first, then Since).
 const widgetEventLimit = 12;
 
 const _channel = MethodChannel('countdowns/widgets');
@@ -70,11 +71,33 @@ const artShapes = {
 String artFileName(Art art, String shapeKey) =>
     'photos/art-${art.id}-$shapeKey-v$artRenderVersion.png';
 
+/// How far ahead a Since event's milestones go in the snapshot. The app
+/// rewrites it whenever it opens, long before these run out.
+const _milestoneYears = 10;
+
+/// Seconds since the epoch of a Since event's milestones, from the last one
+/// passed (or the start) to [_milestoneYears] ahead, for the progress bar.
+List<int> _milestoneSeconds(Countdown e, DateTime now) {
+  final end = DateTime(now.year + _milestoneYears, now.month, now.day);
+  final all = sinceMilestones(e).where((m) => m.at.isBefore(end)).toList();
+  final firstAhead = all.indexWhere((m) => m.at.isAfter(now));
+  final from = firstAhead <= 0 ? 0 : firstAhead - 1;
+  return [
+    if (firstAhead <= 0) e.target.millisecondsSinceEpoch ~/ 1000,
+    for (final m in all.skip(from)) m.at.millisecondsSinceEpoch ~/ 1000,
+  ];
+}
+
 /// The JSON the home screen widgets read (WidgetKit on iOS, Glance on
 /// Android). Widgets compute the count from
 /// `target` themselves, so the snapshot only changes when events do.
+/// Since events count up from `target` and come after the countdowns.
 Map<String, Object?> buildWidgetSnapshot(List<Countdown> events, DateTime now) {
-  final upcoming = splitEvents(events, now).upcoming.take(widgetEventLimit);
+  final lists = splitEvents(events, now);
+  final upcoming = [
+    ...lists.upcoming,
+    ...lists.since,
+  ].take(widgetEventLimit);
   return {
     'version': 1,
     'updatedAt': now.toUtc().toIso8601String(),
@@ -85,8 +108,12 @@ Map<String, Object?> buildWidgetSnapshot(List<Countdown> events, DateTime now) {
           // What a tap on this countdown opens (see widget_links.dart).
           'link': e.id == null ? null : widgetLinkFor(e.id!).toString(),
           'title': e.title,
-          // Seconds since the epoch of the next occurrence.
+          // Seconds since the epoch of the next occurrence (the start, for
+          // Since).
           'target': e.nextOccurrence(now).millisecondsSinceEpoch ~/ 1000,
+          'since': e.isSince,
+          // Since only: milestone times, so widgets show the way to the next.
+          'milestones': e.isSince ? _milestoneSeconds(e, now) : null,
           'allDay': e.allDay,
           'yearly': e.repeat == RepeatRule.yearly,
           'unit': e.unit.name,

@@ -196,6 +196,8 @@ void main() {
         ),
       );
       await v2.customStatement('ALTER TABLE events DROP COLUMN art_id');
+      // Schema 3's column too, so this is a true schema 1 file.
+      await v2.customStatement('ALTER TABLE events DROP COLUMN kind');
       await v2.customStatement('PRAGMA user_version = 1');
       await v2.close();
 

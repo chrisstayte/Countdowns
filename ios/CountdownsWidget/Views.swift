@@ -118,7 +118,7 @@ struct MediumView: View {
     VStack(alignment: .leading, spacing: 0) {
       HStack(alignment: .top) {
         VStack(alignment: .leading, spacing: 2) {
-          Text(entry.pinned ? "COUNTDOWN" : "UP NEXT")
+          Text(event.header(pinned: entry.pinned))
             .font(WidgetFont.ui(11, bold: true)).kerning(0.9)
           Text(event.title)
             .font(WidgetFont.event(event, 22))
@@ -212,7 +212,7 @@ struct LeadCard: View {
     let count = event.count(at: entry.date, mode: entry.mode(for: event))
     return HStack(alignment: .bottom) {
       VStack(alignment: .leading, spacing: 2) {
-        Text(entry.pinned ? "COUNTDOWN" : "UP NEXT")
+        Text(event.header(pinned: entry.pinned))
           .font(WidgetFont.ui(11, bold: true)).kerning(0.9)
         Text(event.title).font(WidgetFont.event(event, 20)).lineLimit(1)
       }
@@ -240,7 +240,7 @@ struct HeroView: View {
     VStack(alignment: .leading, spacing: 0) {
       HStack(alignment: .top, spacing: 8) {
         VStack(alignment: .leading, spacing: 4) {
-          Text(entry.pinned ? "COUNTDOWN" : "UP NEXT")
+          Text(event.header(pinned: entry.pinned))
             .font(WidgetFont.ui(12, bold: true)).kerning(1)
           Text(event.title)
             .font(WidgetFont.event(event, 30))
@@ -356,7 +356,9 @@ struct InlineView: View {
   var body: some View {
     let count = event.count(at: entry.date, mode: entry.mode(for: event))
     if count.unit.isEmpty {
-      Text("\(event.title) is today")
+      Text(event.isSince ? "\(event.title) started today" : "\(event.title) is today")
+    } else if event.isSince {
+      Text("\(Image(systemName: "timer")) \(event.title): \(count.big) \(count.unit)")
     } else {
       Text("\(Image(systemName: "timer")) \(event.title) in \(count.big) \(count.unit)")
     }

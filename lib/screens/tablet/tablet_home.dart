@@ -34,8 +34,9 @@ class _TabletHomeState extends ConsumerState<TabletHome> {
     final filter = ref.watch(homeFilterProvider);
     final list = switch (filter) {
       HomeFilter.upcoming => lists.upcoming,
+      HomeFilter.since => lists.since,
       HomeFilter.done => lists.done,
-      HomeFilter.all => [...lists.upcoming, ...lists.done],
+      HomeFilter.all => [...lists.upcoming, ...lists.since, ...lists.done],
     };
     final selected =
         list.where((e) => e.id == _selectedId).firstOrNull ?? list.firstOrNull;
@@ -44,7 +45,11 @@ class _TabletHomeState extends ConsumerState<TabletHome> {
       backgroundColor: AppColors.ground,
       body: Row(
         children: [
-          _Sidebar(upcoming: lists.upcoming.length, done: lists.done.length),
+          _Sidebar(
+            upcoming: lists.upcoming.length,
+            since: lists.since.length,
+            done: lists.done.length,
+          ),
           SizedBox(
             width: 372,
             child: SafeArea(
@@ -58,11 +63,10 @@ class _TabletHomeState extends ConsumerState<TabletHome> {
                     child: Row(
                       children: [
                         Expanded(
-                          child: Text(switch (filter) {
-                            HomeFilter.upcoming => 'Upcoming',
-                            HomeFilter.done => 'Done',
-                            HomeFilter.all => 'All',
-                          }, style: AppText.largeTitle.copyWith(fontSize: 28)),
+                          child: Text(
+                            filter.label,
+                            style: AppText.largeTitle.copyWith(fontSize: 28),
+                          ),
                         ),
                         RoundButton(
                           icon: Icons.add_rounded,
@@ -150,8 +154,12 @@ class _TabletHomeState extends ConsumerState<TabletHome> {
 }
 
 class _Sidebar extends ConsumerWidget {
-  const _Sidebar({required this.upcoming, required this.done});
-  final int upcoming, done;
+  const _Sidebar({
+    required this.upcoming,
+    required this.since,
+    required this.done,
+  });
+  final int upcoming, since, done;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -244,10 +252,17 @@ class _Sidebar extends ConsumerWidget {
               ),
               item(
                 Icons.schedule_rounded,
-                'Upcoming',
+                'Soon',
                 count: upcoming,
                 selected: filter == HomeFilter.upcoming,
                 onTap: () => setFilter(HomeFilter.upcoming),
+              ),
+              item(
+                Icons.history_rounded,
+                'Since',
+                count: since,
+                selected: filter == HomeFilter.since,
+                onTap: () => setFilter(HomeFilter.since),
               ),
               item(
                 Icons.check_rounded,
@@ -259,7 +274,7 @@ class _Sidebar extends ConsumerWidget {
               item(
                 Icons.view_agenda_outlined,
                 'All',
-                count: upcoming + done,
+                count: upcoming + since + done,
                 selected: filter == HomeFilter.all,
                 onTap: () => setFilter(HomeFilter.all),
               ),
@@ -363,7 +378,7 @@ class _ListRow extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        shortDate(event.nextOccurrence(now), now),
+                        cardDate(event, now),
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,

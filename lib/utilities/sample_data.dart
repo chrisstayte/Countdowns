@@ -58,6 +58,23 @@ List<Countdown> sampleCountdowns(DateTime now) {
       unit: CountUnit.weeks,
     ),
     Countdown(
+      title: 'Quit smoking',
+      dateTime: inDays(-100),
+      kind: EventKind.since,
+      iconSlug: 'leaf',
+      colorArgb: mint.toARGB32(),
+      reminders: const [0],
+    ),
+    Countdown(
+      title: 'Together',
+      dateTime: inDays(-1580, 19),
+      allDay: false,
+      kind: EventKind.since,
+      iconSlug: 'heart',
+      colorArgb: bubblegum.toARGB32(),
+      gradientId: 'sunset',
+    ),
+    Countdown(
       title: 'Moved in',
       dateTime: inDays(-111),
       iconSlug: 'apartment',

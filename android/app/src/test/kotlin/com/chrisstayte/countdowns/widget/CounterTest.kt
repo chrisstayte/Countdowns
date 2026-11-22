@@ -183,4 +183,31 @@ class CounterTest {
         assertEquals(9, counter.arrange(events, now, null).lead?.id)
         assertEquals(7, counter.arrange(events, now, 7).lead?.id)
     }
+
+    @Test
+    fun sinceCountsUpAndComesAfterCountdowns() {
+        // Quit on Aug 13, 2026 (100 days before Nov 21); next milestone Feb 13.
+        val start = at(2026, 8, 13, 0).toEpochSecond()
+        val hundred = at(2026, 11, 21, 0).toEpochSecond()
+        val sixMonths = at(2027, 2, 13, 0).toEpochSecond()
+        val quit = thanksgiving.copy(
+            id = 20, title = "Quit smoking", target = start, since = true,
+            milestones = listOf(hundred, sixMonths),
+        )
+        val now = at(2026, 11, 21)
+        assertFalse(counter.isDone(quit, now))
+        assertEquals(Count("100", "days"), counter.count(quit, now, CountMode.Days))
+        assertEquals(Count("100", "sleeps"), counter.count(quit, now, CountMode.Sleeps))
+        assertEquals("Since Thu, Aug 13", counter.shortDate(quit, now))
+        assertEquals("SINCE", counter.header(quit, pinned = true))
+        // 12 hours into the 84 days from 100 days to six months.
+        assertEquals(12.0 / (84 * 24), counter.progress(quit, now), 1e-9)
+        // Under a day in: hours, like a countdown's last day.
+        val fresh = quit.copy(target = at(2026, 11, 21, 7).toEpochSecond(), allDay = false)
+        assertEquals(Count("5", "hours"), counter.count(fresh, now, CountMode.Days))
+        // Countdowns first, then Since newest start first.
+        val order = counter.arrange(events + quit + fresh, now, null).events.map { it.id }
+        assertEquals(listOf(9, 3, 7, 20, 20), order)
+        assertEquals(fresh, counter.arrange(events + quit + fresh, now, null).events[3])
+    }
 }

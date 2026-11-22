@@ -6,6 +6,7 @@ import 'package:countdowns/providers/timer_provider.dart';
 import 'package:countdowns/theme/app_theme.dart';
 import 'package:countdowns/utilities/count_format.dart';
 import 'package:countdowns/utilities/feedback.dart';
+import 'package:countdowns/utilities/milestones.dart';
 import 'package:countdowns/widgets/countdown_surface.dart';
 import 'package:countdowns/widgets/event_icon.dart';
 import 'package:countdowns/widgets/ui.dart';
@@ -110,11 +111,7 @@ class _CountdownDetailState extends ConsumerState<CountdownDetail> {
     final count = done
         ? (big: '${calendarDaysBetween(event.target, now)}', unit: 'days')
         : countIn(event, _unit, now);
-    final label = done
-        ? '${count.unit} since'
-        : event.isToday(now)
-        ? 'It’s today!'
-        : '${count.unit} to go';
+    final label = done ? '${count.unit} since' : countLabel(event, count, now);
     final years = done ? null : yearsLine(event, _unit, now);
     final bigSize = widget.compact ? 120.0 : 168.0;
 
@@ -391,16 +388,27 @@ class _CountdownDetailState extends ConsumerState<CountdownDetail> {
   Widget _progress(Countdown event, DateTime now, Color ink) {
     final pct = waitProgress(event, now);
     final added = event.createdAt;
+    // Since: the way to the next milestone instead of the wait.
+    final next = event.isSince ? nextMilestone(event, now) : null;
+    final left = next == null
+        ? (added == null ? null : 'Added ${DateFormat('MMM d').format(added)}')
+        : 'Next: ${next.label} · ${DateFormat(next.at.year == now.year ? 'MMM d' : 'MMM d, y').format(next.at)}';
+    final right = next == null
+        ? '$pct% of the wait is behind you'
+        : '$pct% there';
     return Semantics(
-      label: '$pct percent of the wait is behind you',
+      label: next == null
+          ? '$pct percent of the wait is behind you'
+          : 'Next milestone ${next.label} on ${shortDate(next.at, now)}, '
+                '$pct percent of the way there',
       excludeSemantics: true,
       child: Column(
         children: [
           Row(
             children: [
-              if (added != null)
+              if (left != null)
                 Text(
-                  'Added ${DateFormat('MMM d').format(added)}',
+                  left,
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
@@ -410,7 +418,7 @@ class _CountdownDetailState extends ConsumerState<CountdownDetail> {
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  '$pct% of the wait is behind you',
+                  right,
                   textAlign: TextAlign.right,
                   style: TextStyle(
                     fontSize: 13,
@@ -440,7 +448,7 @@ class _CountdownDetailState extends ConsumerState<CountdownDetail> {
     final offsets = [...event.reminders]..sort((a, b) => b.compareTo(a));
     final text = offsets.isEmpty
         ? 'No reminders'
-        : 'Reminders: ${offsets.map((o) => reminderLabel(o).replaceAll('On the day', 'on the day')).join(', ')}';
+        : '${event.isSince ? 'Milestone reminders' : 'Reminders'}: ${offsets.map((o) => reminderLabel(o).replaceAll('On the day', 'on the day')).join(', ')}';
     return Semantics(
       button: true,
       child: GestureDetector(

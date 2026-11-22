@@ -13,7 +13,8 @@ typedef DraftEdit = void Function(Countdown Function(Countdown));
 /// The reminder chips shown up front; "Custom…" offers the rest.
 const mainReminders = [0, 1440, 10080];
 
-/// Details: name, date, time (with all day), repeats, remind me, count in.
+/// Details: Soon or Since, name, date, time (with all day), repeats, remind
+/// me, count in.
 class EditorDetails extends ConsumerWidget {
   const EditorDetails({
     super.key,
@@ -33,9 +34,26 @@ class EditorDetails extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final extra = draft.reminders.where((r) => !mainReminders.contains(r));
+    final since = draft.isSince;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        PillSegmented<EventKind>(
+          values: EventKind.values,
+          selected: draft.kind,
+          label: (k) => k.label,
+          height: 34,
+          fontSize: 13,
+          onChanged: (k) => _setKind(ref, k),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          since
+              ? 'Counts up from when something started.'
+              : 'Counts down to a date.',
+          style: AppText.secondary,
+        ),
+        const SizedBox(height: 20),
         const SectionLabel('Name'),
         const SizedBox(height: 8),
         TextField(
@@ -43,7 +61,9 @@ class EditorDetails extends ConsumerWidget {
           textCapitalization: TextCapitalization.sentences,
           style: const TextStyle(fontSize: 16, color: AppColors.ink),
           decoration: InputDecoration(
-            hintText: 'Birthday, trip, big day…',
+            hintText: since
+                ? 'Quit smoking, new job, together…'
+                : 'Birthday, trip, big day…',
             hintStyle: const TextStyle(color: AppColors.muted),
             filled: true,
             fillColor: AppColors.surface,
@@ -71,7 +91,7 @@ class EditorDetails extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 20),
-        const SectionLabel('When'),
+        SectionLabel(since ? 'Started' : 'When'),
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
@@ -119,18 +139,21 @@ class EditorDetails extends ConsumerWidget {
                   ),
                 ),
               ),
-              const _Divider(),
-              _Row(
-                label: 'Repeats',
-                value: draft.repeat.label,
-                muted: draft.repeat == RepeatRule.none,
-                onTap: () => _pickRepeat(context, ref),
-              ),
+              // Since events mark every anniversary on their own.
+              if (!since) ...[
+                const _Divider(),
+                _Row(
+                  label: 'Repeats',
+                  value: draft.repeat.label,
+                  muted: draft.repeat == RepeatRule.none,
+                  onTap: () => _pickRepeat(context, ref),
+                ),
+              ],
             ],
           ),
         ),
         const SizedBox(height: 20),
-        const SectionLabel('Remind me'),
+        SectionLabel(since ? 'Remind me of milestones' : 'Remind me'),
         const SizedBox(height: 10),
         Wrap(
           spacing: 8,
@@ -187,6 +210,40 @@ class EditorDetails extends ConsumerWidget {
     );
   }
 
+  /// Switching to Since moves a future date to now (a start can't be ahead);
+  /// switching to Soon moves a past date to tomorrow morning.
+  void _setKind(WidgetRef ref, EventKind kind) {
+    feedback(ref, Sound.select, false);
+    edit((d) {
+      if (d.kind == kind) return d;
+      final now = DateTime.now();
+      if (kind == EventKind.since) {
+        final future = d.target.isAfter(now);
+        return d.copyWith(
+          kind: kind,
+          repeat: RepeatRule.none,
+          dateTime: future ? _minute(now) : d.dateTime,
+          allDay: future ? false : d.allDay,
+        );
+      }
+      final tomorrow = now.add(const Duration(days: 1));
+      return d.copyWith(
+        kind: kind,
+        dateTime: d.dateTime.isAfter(now)
+            ? d.dateTime
+            : DateTime(tomorrow.year, tomorrow.month, tomorrow.day, 9),
+      );
+    });
+  }
+
+  /// A Since start is never later than now.
+  Countdown _clampStart(Countdown d) {
+    final now = DateTime.now();
+    return d.isSince && d.dateTime.isAfter(now)
+        ? d.copyWith(dateTime: _minute(now))
+        : d;
+  }
+
   void _toggle(WidgetRef ref, int offset) {
     feedback(ref, Sound.select);
     edit((d) {
@@ -236,26 +293,35 @@ class EditorDetails extends ConsumerWidget {
   Future<void> _pickDate(BuildContext context, WidgetRef ref) async {
     feedback(ref);
     var value = draft.dateTime;
+    final now = DateTime.now();
     final done = await _cupertinoSheet(
       context,
-      'Date',
+      draft.isSince ? 'Started' : 'Date',
       CupertinoDatePicker(
         mode: CupertinoDatePickerMode.date,
-        initialDateTime: draft.dateTime,
+        initialDateTime: draft.isSince && draft.dateTime.isAfter(now)
+            ? now
+            : draft.dateTime,
         minimumYear: 1900,
         maximumYear: 2200,
+        // A start can be any day up to today.
+        maximumDate: draft.isSince
+            ? DateTime(now.year, now.month, now.day, 23, 59)
+            : null,
         onDateTimeChanged: (v) => value = v,
       ),
     );
     if (done) {
       edit(
-        (d) => d.copyWith(
-          dateTime: DateTime(
-            value.year,
-            value.month,
-            value.day,
-            d.dateTime.hour,
-            d.dateTime.minute,
+        (d) => _clampStart(
+          d.copyWith(
+            dateTime: DateTime(
+              value.year,
+              value.month,
+              value.day,
+              d.dateTime.hour,
+              d.dateTime.minute,
+            ),
           ),
         ),
       );
@@ -276,13 +342,15 @@ class EditorDetails extends ConsumerWidget {
     );
     if (done) {
       edit(
-        (d) => d.copyWith(
-          dateTime: DateTime(
-            d.dateTime.year,
-            d.dateTime.month,
-            d.dateTime.day,
-            value.hour,
-            value.minute,
+        (d) => _clampStart(
+          d.copyWith(
+            dateTime: DateTime(
+              d.dateTime.year,
+              d.dateTime.month,
+              d.dateTime.day,
+              value.hour,
+              value.minute,
+            ),
           ),
         ),
       );
@@ -327,6 +395,9 @@ class EditorDetails extends ConsumerWidget {
     if (picked != null) edit((d) => d.copyWith(repeat: picked));
   }
 }
+
+DateTime _minute(DateTime d) =>
+    DateTime(d.year, d.month, d.day, d.hour, d.minute);
 
 Future<bool> _cupertinoSheet(
   BuildContext context,

@@ -20,6 +20,18 @@ import 'package:share_plus/share_plus.dart';
 
 enum ShareFormat { story, square, calendar }
 
+/// "Friday, December 25", or "Since March 3, 2024" for Since events.
+String _date(Countdown e, DateTime now) => e.isSince
+    ? 'Since ${DateFormat('MMMM d, y').format(e.target)}'
+    : DateFormat('EEEE, MMMM d').format(e.nextOccurrence(now));
+
+/// "days to go", or "days since" for Since events.
+String _unitPhrase(Countdown e, CountText c) =>
+    '${c.unit} ${e.isSince ? 'since' : 'to go'}';
+
+/// "34 days to go", or "312 days since".
+String _phrase(Countdown e, CountText c) => '${c.big} ${_unitPhrase(e, c)}';
+
 void showShareSheet(BuildContext context, Countdown event, CountUnit unit) {
   showModalBottomSheet<void>(
     context: context,
@@ -56,8 +68,8 @@ class _ShareSheetState extends ConsumerState<ShareSheet> {
   String _summary(DateTime now) {
     final e = widget.event;
     final c = countIn(e, _unit, now);
-    final date = DateFormat('EEEE, MMMM d').format(e.nextOccurrence(now));
-    return '${c.big} ${c.unit} until ${e.title} ($date)';
+    if (e.isSince) return '${e.title}: ${c.big} ${c.unit} (${_date(e, now)})';
+    return '${c.big} ${c.unit} until ${e.title} (${_date(e, now)})';
   }
 
   Rect? _origin() {
@@ -77,7 +89,7 @@ class _ShareSheetState extends ConsumerState<ShareSheet> {
         buildIcs(
           e,
           now: now,
-          note: '${c.big} ${c.unit} to go. Made with Since & Soon.',
+          note: '${_phrase(e, c)}. Made with Since & Soon.',
         ),
       );
       return file;
@@ -307,7 +319,7 @@ class _StoryImage extends StatelessWidget {
             const SizedBox(height: 10),
             Text(event.title, style: _title(event, 22, ink, s)),
             Text(
-              DateFormat('EEEE, MMMM d').format(event.nextOccurrence(now)),
+              _date(event, now),
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
@@ -328,7 +340,7 @@ class _StoryImage extends StatelessWidget {
               ),
             ),
             Text(
-              '${count.unit} to go',
+              _unitPhrase(event, count),
               style: TextStyle(
                 fontFamily: AppFonts.numerals,
                 fontSize: 20,
@@ -386,8 +398,7 @@ class _SquareImage extends StatelessWidget {
                     children: [
                       Text(event.title, style: _title(event, 26, ink, s)),
                       Text(
-                        DateFormat('EEEE, MMMM d')
-                            .format(event.nextOccurrence(now)),
+                        _date(event, now),
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
@@ -422,7 +433,7 @@ class _SquareImage extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '${count.unit} to go',
+                        _unitPhrase(event, count),
                         style: TextStyle(
                           fontFamily: AppFonts.numerals,
                           fontSize: 20,
@@ -574,9 +585,11 @@ class _CalendarPreview extends StatelessWidget {
                     child: Column(
                       children: [
                         row('File', fileNameFor(event.title, 'ics')),
-                        row('Note', '${count.big} ${count.unit} to go'),
+                        row('Note', _phrase(event, count)),
                         row('Alert', '1 day before'),
-                        if (event.repeat == RepeatRule.yearly)
+                        if (event.isSince)
+                          row('Repeats', 'Every anniversary')
+                        else if (event.repeat == RepeatRule.yearly)
                           row('Repeats', 'Every year'),
                       ],
                     ),

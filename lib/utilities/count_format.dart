@@ -1,4 +1,5 @@
 import 'package:countdowns/models/countdown.dart';
+import 'package:countdowns/utilities/milestones.dart';
 import 'package:intl/intl.dart';
 
 /// A number and its unit word, e.g. ("34", "days").
@@ -17,11 +18,22 @@ int calendarDaysBetween(DateTime from, DateTime to) => DateTime.utc(
   to.day,
 ).difference(DateTime.utc(from.year, from.month, from.day)).inDays;
 
+/// What gets counted: from now to the next occurrence for Soon, from the
+/// start to now for Since.
+({DateTime from, DateTime to}) countSpan(Countdown event, DateTime now) =>
+    event.isSince
+    ? (from: event.target, to: now)
+    : (from: now, to: event.nextOccurrence(now));
+
+Duration _length(DateTime from, DateTime to) {
+  final d = to.difference(from);
+  return d.isNegative ? Duration.zero : d;
+}
+
 /// The big number for [unit], as on the detail screen.
 CountText countIn(Countdown event, CountUnit unit, DateTime now) {
-  final target = event.nextOccurrence(now);
-  final left = target.difference(now);
-  final ms = left.isNegative ? Duration.zero : left;
+  final (:from, :to) = countSpan(event, now);
+  final ms = _length(from, to);
   switch (unit) {
     case CountUnit.days:
       final d = ms.inDays;
@@ -30,7 +42,7 @@ CountText countIn(Countdown event, CountUnit unit, DateTime now) {
       final w = ms.inSeconds / (7 * 24 * 3600);
       return (big: w.toStringAsFixed(1), unit: 'weeks');
     case CountUnit.sleeps:
-      final s = calendarDaysBetween(now, target).clamp(0, 1 << 30);
+      final s = calendarDaysBetween(from, to).clamp(0, 1 << 30);
       return (big: '$s', unit: _plural(s, 'sleep', 'sleeps'));
     case CountUnit.hours:
       final h = ms.inHours;
@@ -46,7 +58,8 @@ CountText cardCount(Countdown event, DateTime now) {
     return (big: '$ago', unit: _plural(ago, 'day ago', 'days ago'));
   }
   if (event.isToday(now)) return (big: 'Today', unit: '');
-  final left = event.timeLeft(now);
+  final (:from, :to) = countSpan(event, now);
+  final left = _length(from, to);
   if (event.unit != CountUnit.sleeps && left.inDays < 1) {
     if (left.inHours >= 1) {
       return (
@@ -60,7 +73,7 @@ CountText cardCount(Countdown event, DateTime now) {
   return countIn(event, event.unit, now);
 }
 
-/// Whole calendar years until [target], and the date after them.
+/// Whole calendar years from [now] to [target], and the date after them.
 ({int years, DateTime after}) _wholeYears(DateTime now, DateTime target) {
   var years = target.year - now.year;
   DateTime add(int y) =>
@@ -71,12 +84,12 @@ CountText cardCount(Countdown event, DateTime now) {
   return (years: years, after: add(years));
 }
 
-/// The quiet line under the giant number for events a year or more away:
+/// The quiet line under the giant number for spans of a year or more:
 /// "2 years, 41 days", "2 years, 6 weeks", or "2 years" for hours.
 String? yearsLine(Countdown event, CountUnit unit, DateTime now) {
-  final target = event.nextOccurrence(now);
-  if (target.difference(now).inDays < 365) return null;
-  final (:years, :after) = _wholeYears(now, target);
+  final (:from, to: target) = countSpan(event, now);
+  if (target.difference(from).inDays < 365) return null;
+  final (:years, :after) = _wholeYears(from, target);
   if (years < 1) return null;
   final y = '$years ${_plural(years, 'year', 'years')}';
   final restDays = unit == CountUnit.sleeps
@@ -98,6 +111,7 @@ String? yearsLine(Countdown event, CountUnit unit, DateTime now) {
 
 /// "in 2 years" for cards when an event is two or more years away.
 String? cardYears(Countdown event, DateTime now) {
+  if (event.isSince) return null;
   final target = event.nextOccurrence(now);
   final (:years, after: _) = _wholeYears(now, target);
   return years >= 2 ? 'in $years years' : null;
@@ -115,9 +129,8 @@ List<({String value, String label})> detailTiles(
   CountUnit unit,
   DateTime now,
 ) {
-  final target = event.nextOccurrence(now);
-  final raw = target.difference(now);
-  final ms = raw.isNegative ? Duration.zero : raw;
+  final (:from, :to) = countSpan(event, now);
+  final ms = _length(from, to);
   switch (unit) {
     case CountUnit.days:
       return [
@@ -132,9 +145,9 @@ List<({String value, String label})> detailTiles(
         (value: _pad(ms.inHours % 24), label: 'hours'),
       ];
     case CountUnit.sleeps:
-      final nights = calendarDaysBetween(now, target).clamp(0, 1 << 30);
+      final nights = calendarDaysBetween(from, to).clamp(0, 1 << 30);
       var saturdays = 0, mondays = 0;
-      final start = _day(now);
+      final start = _day(from);
       for (var i = 0; i < nights; i++) {
         final d = DateTime(start.year, start.month, start.day + i);
         if (d.weekday == DateTime.saturday) saturdays++;
@@ -157,8 +170,10 @@ List<({String value, String label})> detailTiles(
   }
 }
 
-/// Share of the wait already behind you, 0 to 100.
+/// Share of the wait already behind you, 0 to 100. For Since, the way to
+/// the next milestone.
 int waitProgress(Countdown event, DateTime now) {
+  if (event.isSince) return milestoneProgress(event, now);
   final start = event.createdAt;
   if (start == null) return 0;
   final target = event.nextOccurrence(now);
@@ -175,13 +190,36 @@ final _time = DateFormat('h:mm a');
 String shortDate(DateTime d, DateTime now) =>
     (d.year == now.year ? _cardDate : _cardDateYear).format(d);
 
-/// "Friday, December 25 · All day" or "Sunday, March 14, 2027 · 9:30 AM".
+/// The date line on cards: when it happens, or "Since Mar 3, 2025" (no
+/// weekday, so the year fits) when it started.
+String cardDate(Countdown event, DateTime now) {
+  final d = event.nextOccurrence(now);
+  if (!event.isSince) return shortDate(d, now);
+  return 'Since ${(d.year == now.year ? _sinceDate : _sinceDateYear).format(d)}';
+}
+
+final _sinceDate = DateFormat('MMM d');
+final _sinceDateYear = DateFormat('MMM d, y');
+
+/// What follows the big number: "days to go" or "days since".
+String countLabel(Countdown event, CountText count, DateTime now) {
+  if (event.isToday(now)) {
+    return event.isSince ? 'Started today' : 'It’s today!';
+  }
+  return '${count.unit} ${event.isSince ? 'since' : 'to go'}';
+}
+
+/// "Friday, December 25 · All day" or "Sunday, March 14, 2027 · 9:30 AM",
+/// after "Since" for Since events.
 String longDate(Countdown event, DateTime now) {
   final d = event.nextOccurrence(now);
   final date = DateFormat(
     d.year == now.year ? 'EEEE, MMMM d' : 'EEEE, MMMM d, y',
   ).format(d);
-  return '$date · ${event.allDay ? 'All day' : _time.format(event.dateTime)}';
+  final time = event.allDay
+      ? (event.isSince ? '' : ' · All day')
+      : ' · ${_time.format(event.dateTime)}';
+  return '${event.isSince ? 'Since ' : ''}$date$time';
 }
 
 String timeOfDay(DateTime d) => _time.format(d);

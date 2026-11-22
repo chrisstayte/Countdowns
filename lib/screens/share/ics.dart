@@ -29,9 +29,11 @@ String _fold(String line) {
 }
 
 /// A calendar file for [event], made on the device. [note] goes in the
-/// description. One alert the day before.
+/// description. One alert the day before. A Since event becomes its start
+/// date, repeating every year, so each anniversary shows up.
 String buildIcs(Countdown event, {required DateTime now, String? note}) {
   final start = event.nextOccurrence(now);
+  final yearly = event.isSince || event.repeat == RepeatRule.yearly;
   final lines = <String>[
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
@@ -47,7 +49,7 @@ String buildIcs(Countdown event, {required DateTime now, String? note}) {
       'DTSTART:${_utc(start)}',
       'DTEND:${_utc(start.add(const Duration(hours: 1)))}',
     ],
-    if (event.repeat == RepeatRule.yearly) 'RRULE:FREQ=YEARLY',
+    if (yearly) 'RRULE:FREQ=YEARLY',
     'SUMMARY:${_escape(event.title)}',
     if (note != null) 'DESCRIPTION:${_escape(note)}',
     'BEGIN:VALARM',

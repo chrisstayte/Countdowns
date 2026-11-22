@@ -10,6 +10,10 @@ class Events extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get title => text()();
   DateTimeColumn get eventDateTime => dateTime()();
+
+  /// Soon or Since (schema 3). Older rows are Soon.
+  TextColumn get kind =>
+      textEnum<EventKind>().withDefault(Constant(EventKind.soon.name))();
   BoolColumn get allDay => boolean().withDefault(const Constant(true))();
   TextColumn get iconSlug => text().nullable()();
   IntColumn get colorArgb => integer()();
@@ -68,13 +72,15 @@ class AppDatabase extends _$AppDatabase {
   factory AppDatabase.open() => AppDatabase(driftDatabase(name: 'countdowns'));
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
     onUpgrade: (m, from, to) async {
       // 2: drawn backgrounds. Existing rows get null: nothing changes.
       if (from < 2) await m.addColumn(events, events.artId);
+      // 3: Since events. Existing rows default to Soon.
+      if (from < 3) await m.addColumn(events, events.kind);
     },
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
@@ -152,6 +158,7 @@ class AppDatabase extends _$AppDatabase {
   EventsCompanion _companion(Countdown c, DateTime stamp) => EventsCompanion(
     title: Value(c.title),
     eventDateTime: Value(c.dateTime),
+    kind: Value(c.kind),
     allDay: Value(c.allDay),
     iconSlug: Value(c.iconSlug),
     colorArgb: Value(c.colorArgb),
@@ -194,6 +201,7 @@ Countdown countdownFromRow(EventRow row, List<int> reminders) => Countdown(
   id: row.id,
   title: row.title,
   dateTime: row.eventDateTime,
+  kind: row.kind,
   allDay: row.allDay,
   iconSlug: row.iconSlug,
   colorArgb: row.colorArgb,

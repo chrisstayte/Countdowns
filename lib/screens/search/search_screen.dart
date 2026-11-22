@@ -488,7 +488,7 @@ class _ResultRow extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        '${past ? 'Done · ' : ''}${DateFormat('EEE, MMM d, y').format(e.nextOccurrence(now))}',
+                        '${past ? 'Done · ' : e.isSince ? 'Since ' : ''}${DateFormat('EEE, MMM d, y').format(e.nextOccurrence(now))}',
                         style: const TextStyle(
                           fontSize: 13,
                           color: AppColors.secondaryText,

@@ -227,7 +227,7 @@ class Art(
         return w + unitWidth
     }
 
-    private fun eyebrow(pinned: Boolean) = if (pinned) "COUNTDOWN" else "UP NEXT"
+    private fun eyebrow(e: WidgetEvent, pinned: Boolean) = counter.header(e, pinned)
 
     // MARK: Faces
 
@@ -268,7 +268,7 @@ class Art(
         drawIcon(canvas, e, w - padX - 22f, padY, 22f)
         val label = paint(Fonts.ui(context, bold = true), 11f, e.text, shadow)
             .apply { letterSpacing = 0.08f }
-        canvas.drawText(eyebrow(pinned), padX, padY + 11f, label)
+        canvas.drawText(eyebrow(e, pinned), padX, padY + 11f, label)
         val title = paint(Fonts.event(context, e.fontFile), 22f, e.text, shadow)
         fit(e.title, title, w - padX * 2 - 30f, 0.7f)
         canvas.save()
@@ -323,7 +323,7 @@ class Art(
         canvas.translate(pad, baseline - 24f)
         layout(e.title, title, titleW, 1).draw(canvas)
         canvas.restore()
-        canvas.drawText(eyebrow(pinned), pad, baseline - 28f, label)
+        canvas.drawText(eyebrow(e, pinned), pad, baseline - 28f, label)
         return bitmap
     }
 
@@ -341,7 +341,7 @@ class Art(
         drawIcon(canvas, e, w - pad - 26f, pad, 26f)
         val label = paint(Fonts.ui(context, bold = true), 12f, e.text, shadow)
             .apply { letterSpacing = 0.08f }
-        canvas.drawText(eyebrow(pinned), pad, pad + 12f, label)
+        canvas.drawText(eyebrow(e, pinned), pad, pad + 12f, label)
         val title = paint(Fonts.event(context, e.fontFile), 28f, e.text, shadow)
         canvas.save()
         canvas.translate(pad, pad + 18f)
@@ -403,7 +403,11 @@ class Art(
 
     fun describe(e: WidgetEvent): String {
         val c = counter.count(e, now, modeFor(countIn, e))
-        val count = if (c.unit.isEmpty()) "${e.title} is today" else "${e.title}, ${c.big} ${c.unit}"
+        val count = when {
+            c.unit.isNotEmpty() -> "${e.title}, ${c.big} ${c.unit}"
+            e.since -> "${e.title} started today"
+            else -> "${e.title} is today"
+        }
         return "$count, ${counter.shortDate(e, now)}"
     }
 }

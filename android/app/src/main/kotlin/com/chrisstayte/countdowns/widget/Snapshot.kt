@@ -38,6 +38,11 @@ data class WidgetEvent(
     val scrim: Boolean = true,
     /** A Google font's file, relative to the widget folder; null until downloaded. */
     val fontFile: String? = null,
+    /** Since events count up from [target]. */
+    val since: Boolean = false,
+    /** Since only: milestone times (the last passed, or the start, then the
+     *  ones ahead), for the progress bar. */
+    val milestones: List<Long> = emptyList(),
 ) {
     val hasPhoto get() = photo != null
 
@@ -92,6 +97,10 @@ object SnapshotStore {
                 createdAt = e.optLong("createdAt", e.getLong("target")),
                 scrim = e.optBoolean("scrim", true),
                 fontFile = e.optStringOrNull("fontFile"),
+                since = e.optBoolean("since", false),
+                milestones = e.optJSONArray("milestones")
+                    ?.let { m -> (0 until m.length()).map { m.getLong(it) } }
+                    ?: emptyList(),
             )
         }
     }
@@ -113,10 +122,11 @@ class Counter(private val zone: ZoneId = ZoneId.systemDefault()) {
 
     private fun at(seconds: Long) = Instant.ofEpochSecond(seconds).atZone(zone)
 
-    /** The next time it happens on or after [now] (yearly events roll over). */
+    /** The next time it happens on or after [now] (yearly events roll over).
+     *  The start, for Since. */
     fun occurrence(e: WidgetEvent, now: ZonedDateTime): ZonedDateTime {
         var date = at(e.target)
-        if (!e.yearly) return date
+        if (!e.yearly || e.since) return date
         var guard = 0
         while (passed(e, date, now) && guard++ < 400) date = date.plusYears(1)
         return date
@@ -129,12 +139,18 @@ class Counter(private val zone: ZoneId = ZoneId.systemDefault()) {
     fun isToday(e: WidgetEvent, now: ZonedDateTime): Boolean =
         e.allDay && occurrence(e, now).toLocalDate() == now.toLocalDate()
 
+    /** Since events keep counting, so they're never done. */
     fun isDone(e: WidgetEvent, now: ZonedDateTime): Boolean =
-        !e.yearly && passed(e, occurrence(e, now), now)
+        !e.since && !e.yearly && passed(e, occurrence(e, now), now)
+
+    /** What gets counted: now to the occurrence, or the start to now. */
+    private fun span(e: WidgetEvent, now: ZonedDateTime): Pair<ZonedDateTime, ZonedDateTime> =
+        if (e.since) occurrence(e, now) to now else now to occurrence(e, now)
 
     fun sleeps(e: WidgetEvent, now: ZonedDateTime): Int {
-        val from: LocalDate = now.toLocalDate()
-        val to: LocalDate = occurrence(e, now).toLocalDate()
+        val (start, end) = span(e, now)
+        val from: LocalDate = start.withZoneSameInstant(zone).toLocalDate()
+        val to: LocalDate = end.withZoneSameInstant(zone).toLocalDate()
         return maxOf(0, ChronoUnit.DAYS.between(from, to).toInt())
     }
 
@@ -145,7 +161,8 @@ class Counter(private val zone: ZoneId = ZoneId.systemDefault()) {
             val s = sleeps(e, now)
             return Count("$s", if (s == 1) "sleep" else "sleeps")
         }
-        val left = Duration.between(now, occurrence(e, now)).seconds
+        val (from, to) = span(e, now)
+        val left = Duration.between(from, to).seconds
         if (left < 86_400) {
             if (left >= 3_600) {
                 val h = left / 3_600
@@ -157,8 +174,16 @@ class Counter(private val zone: ZoneId = ZoneId.systemDefault()) {
         return Count("$d", if (d == 1L) "day" else "days")
     }
 
-    /** Share of the wait already behind you, 0 to 1. */
+    /** Share of the wait already behind you, 0 to 1. For Since, the way
+     *  from the last milestone to the next. */
     fun progress(e: WidgetEvent, now: ZonedDateTime): Double {
+        if (e.since) {
+            val t = now.toEpochSecond()
+            val next = e.milestones.firstOrNull { it > t } ?: return 1.0
+            val last = e.milestones.lastOrNull { it <= t } ?: e.target
+            if (next <= last) return 1.0
+            return ((t - last).toDouble() / (next - last)).coerceIn(0.0, 1.0)
+        }
         val start = e.createdAt
         val end = occurrence(e, now).toEpochSecond()
         val total = (end - start).toDouble()
@@ -169,12 +194,20 @@ class Counter(private val zone: ZoneId = ZoneId.systemDefault()) {
     fun shortDate(e: WidgetEvent, now: ZonedDateTime): String {
         val date = occurrence(e, now)
         val pattern = if (date.year == now.year) "EEE, MMM d" else "EEE, MMM d, yyyy"
-        return date.format(DateTimeFormatter.ofPattern(pattern, Locale.US))
+        val text = date.format(DateTimeFormatter.ofPattern(pattern, Locale.US))
+        return if (e.since) "Since $text" else text
     }
 
-    /** Upcoming events, soonest first, with the pinned one (if any) leading. */
+    /** The small heading over a featured countdown. */
+    fun header(e: WidgetEvent, pinned: Boolean): String =
+        if (e.since) "SINCE" else if (pinned) "COUNTDOWN" else "UP NEXT"
+
+    /** Upcoming events soonest first, then Since newest start first, with
+     *  the pinned one (if any) leading. */
     fun arrange(events: List<WidgetEvent>, now: ZonedDateTime, pinnedId: Int?): Arranged {
-        val upcoming = events.filter { !isDone(it, now) }.sortedBy { occurrence(it, now) }
+        val active = events.filter { !isDone(it, now) }
+        val upcoming = active.filter { !it.since }.sortedBy { occurrence(it, now) } +
+            active.filter { it.since }.sortedByDescending { it.target }
         val chosen = pinnedId?.let { id -> upcoming.firstOrNull { it.id == id } }
             ?: return Arranged(upcoming, pinned = false)
         return Arranged(listOf(chosen) + upcoming.filter { it.id != chosen.id }, pinned = true)
@@ -186,7 +219,7 @@ class Counter(private val zone: ZoneId = ZoneId.systemDefault()) {
         val midnight = now.toLocalDate().plusDays(1).atStartOfDay(zone)
         val soon = events.any { e ->
             !isDone(e, now) &&
-                Duration.between(now, occurrence(e, now)).seconds < 86_400
+                Duration.between(span(e, now).first, span(e, now).second).seconds < 86_400
         }
         if (!soon) return midnight
         val quarter = now.plusMinutes(15).truncatedTo(ChronoUnit.MINUTES)

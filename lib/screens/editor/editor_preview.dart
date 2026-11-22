@@ -32,9 +32,10 @@ class EditorPreview extends StatelessWidget {
     final ink = draft.textColor;
     final shadows = draft.hasPhoto ? photoTextShadow : null;
     final count = cardCount(draft, now);
-    final when = draft.allDay
+    final date = draft.allDay
         ? DateFormat('EEE, MMM d').format(draft.dateTime)
         : DateFormat('EEE, MMM d · h:mm a').format(draft.dateTime);
+    final when = draft.isSince ? 'Since $date' : date;
     final title = draft.title.isEmpty ? 'Name your countdown' : draft.title;
     return Semantics(
       label: 'Preview: $title, ${count.big} ${count.unit}',

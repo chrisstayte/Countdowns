@@ -13,16 +13,17 @@ import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// An always-on board for an iPad on a stand: the clock, Up next and the
-/// next four countdowns.
+/// next four countdowns, with Since events filling any room left.
 class WallScreen extends ConsumerWidget {
   const WallScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final now = ref.watch(clockProvider);
-    final upcoming = ref.watch(homeListsProvider).upcoming;
-    final hero = upcoming.firstOrNull;
-    final tiles = upcoming.skip(1).take(4).toList();
+    final lists = ref.watch(homeListsProvider);
+    final all = [...lists.upcoming, ...lists.since];
+    final hero = all.firstOrNull;
+    final tiles = all.skip(1).take(4).toList();
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.light,
       child: Scaffold(
@@ -130,8 +131,9 @@ class _Hero extends StatelessWidget {
   Widget build(BuildContext context) {
     final ink = event.textColor;
     final s = event.hasPhoto ? photoTextShadow : null;
-    final left = event.timeLeft(now);
-    final ms = left.isNegative ? Duration.zero : left;
+    final (:from, :to) = countSpan(event, now);
+    final span = to.difference(from);
+    final ms = span.isNegative ? Duration.zero : span;
     final count = cardCount(event, now);
     String pad(int n) => n.toString().padLeft(2, '0');
     TextStyle on(TextStyle t) => t.copyWith(color: ink, shadows: s);
@@ -144,7 +146,7 @@ class _Hero extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'UP NEXT',
+            event.isSince ? 'SINCE' : 'UP NEXT',
             style: on(
               const TextStyle(
                 fontSize: 14,
@@ -277,7 +279,7 @@ class _Tile extends StatelessWidget {
             ),
           ),
           Text(
-            shortDate(event.nextOccurrence(now), now),
+            cardDate(event, now),
             style: on(
               const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
             ),

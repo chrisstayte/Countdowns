@@ -1,4 +1,5 @@
 import 'package:countdowns/models/countdown.dart';
+import 'package:countdowns/utilities/milestones.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -79,6 +80,7 @@ List<NotificationRequest> planNotifications(
 
 NotificationRequest? _plan(Countdown event, ReminderSlot slot, DateTime now) {
   final offset = slot.offsetMinutes;
+  if (event.isSince) return _planMilestone(event, slot, now);
   var occurrence = event.nextOccurrence(now);
   var when = _reminderTime(event, occurrence, offset);
   DateTimeComponents? match;
@@ -117,6 +119,44 @@ NotificationRequest? _plan(Countdown event, ReminderSlot slot, DateTime now) {
     when: when,
     match: match,
   );
+}
+
+/// Since events remind before milestones instead of a deadline: each
+/// reminder aims at the next milestone it hasn't passed. One at a time, so
+/// it's planned again each time the app opens.
+NotificationRequest? _planMilestone(
+  Countdown event,
+  ReminderSlot slot,
+  DateTime now,
+) {
+  final offset = slot.offsetMinutes;
+  for (final m in upcomingMilestones(event, now.subtract(_lookBack))) {
+    final when = _reminderTime(event, m.at, offset);
+    if (!when.isAfter(now)) continue;
+    return NotificationRequest(
+      id: slot.id,
+      title: event.title,
+      body: _milestoneBody(m.label, offset),
+      when: when,
+    );
+  }
+  return null;
+}
+
+/// All-day reminders go off at 9 AM, which can be after a milestone's
+/// midnight, so look a day back for milestones still to be announced.
+const _lookBack = Duration(days: 1);
+
+String _milestoneBody(String label, int offset) {
+  if (offset == 0) return '$label today';
+  if (offset == 1440) return '$label tomorrow';
+  if (offset % 10080 == 0) {
+    final weeks = offset ~/ 10080;
+    return weeks == 1 ? '$label in a week' : '$label in $weeks weeks';
+  }
+  if (offset % 1440 == 0) return '$label in ${offset ~/ 1440} days';
+  final hours = offset ~/ 60;
+  return hours == 1 ? '$label in an hour' : '$label in $hours hours';
 }
 
 /// When a reminder [offset] minutes before [occurrence] goes off. Whole days

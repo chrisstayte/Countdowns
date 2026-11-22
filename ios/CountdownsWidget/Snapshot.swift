@@ -31,6 +31,11 @@ struct WidgetEvent: Codable, Identifiable, Hashable {
   /// A Google font's file, relative to the widget folder, for `font`.
   /// Nil for bundled fonts, and until the app has downloaded it.
   var fontFile: String? = nil
+  /// Since events count up from `target`. Missing in older snapshots.
+  var since: Bool? = nil
+  /// Since only: milestone times (the last one passed, or the start, then
+  /// the ones ahead), for the progress bar.
+  var milestones: [TimeInterval]? = nil
 }
 
 struct WidgetSnapshot: Codable {
@@ -73,10 +78,13 @@ struct Count {
 extension WidgetEvent {
   private var calendar: Calendar { Calendar.current }
 
+  var isSince: Bool { since == true }
+
   /// The next time it happens on or after `now` (yearly events roll over).
+  /// The start, for Since.
   func occurrence(at now: Date) -> Date {
     var date = Date(timeIntervalSince1970: target)
-    guard yearly else { return date }
+    guard yearly, !isSince else { return date }
     while passed(date, at: now) {
       date = calendar.date(byAdding: .year, value: 1, to: date) ?? date
     }
@@ -94,18 +102,28 @@ extension WidgetEvent {
     allDay && calendar.isDate(occurrence(at: now), inSameDayAs: now)
   }
 
-  func isDone(at now: Date) -> Bool { !yearly && passed(occurrence(at: now), at: now) }
+  /// Since events keep counting, so they're never done.
+  func isDone(at now: Date) -> Bool {
+    !isSince && !yearly && passed(occurrence(at: now), at: now)
+  }
+
+  /// What gets counted: now to the occurrence, or the start to now.
+  func span(at now: Date) -> (from: Date, to: Date) {
+    isSince ? (occurrence(at: now), now) : (now, occurrence(at: now))
+  }
 
   func sleeps(at now: Date) -> Int {
-    let from = calendar.startOfDay(for: now)
-    let to = calendar.startOfDay(for: occurrence(at: now))
+    let (start, end) = span(at: now)
+    let from = calendar.startOfDay(for: start)
+    let to = calendar.startOfDay(for: end)
     return max(0, calendar.dateComponents([.day], from: from, to: to).day ?? 0)
   }
 
   func count(at now: Date, mode: CountMode) -> Count {
     if isDone(at: now) { return Count(big: "0", unit: "days") }
     if isToday(at: now) { return Count(big: "Today", unit: "") }
-    let left = occurrence(at: now).timeIntervalSince(now)
+    let (from, to) = span(at: now)
+    let left = to.timeIntervalSince(from)
     if mode == .sleeps {
       let s = sleeps(at: now)
       return Count(big: "\(s)", unit: s == 1 ? "sleep" : "sleeps")
@@ -121,8 +139,17 @@ extension WidgetEvent {
     return Count(big: "\(d)", unit: d == 1 ? "day" : "days")
   }
 
-  /// Share of the wait already behind you, 0 to 1.
+  /// Share of the wait already behind you, 0 to 1. For Since, the way
+  /// from the last milestone to the next.
   func progress(at now: Date) -> Double {
+    if isSince {
+      let t = now.timeIntervalSince1970
+      let marks = milestones ?? []
+      guard let next = marks.first(where: { $0 > t }) else { return 1 }
+      let last = marks.last(where: { $0 <= t }) ?? target
+      guard next > last else { return 1 }
+      return min(1, max(0, (t - last) / (next - last)))
+    }
     let start = Date(timeIntervalSince1970: createdAt)
     let end = occurrence(at: now)
     let total = end.timeIntervalSince(start)
@@ -137,7 +164,12 @@ extension WidgetEvent {
     f.setLocalizedDateFormatFromTemplate(
       calendar.component(.year, from: date) == calendar.component(.year, from: now)
         ? "EEEMMMd" : "EEEMMMdyyyy")
-    return f.string(from: date)
+    return isSince ? "Since \(f.string(from: date))" : f.string(from: date)
+  }
+
+  /// The small heading over a featured countdown.
+  func header(pinned: Bool) -> String {
+    isSince ? "SINCE" : pinned ? "COUNTDOWN" : "UP NEXT"
   }
 
   // MARK: Look

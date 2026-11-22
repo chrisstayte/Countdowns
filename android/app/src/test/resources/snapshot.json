@@ -23,7 +23,9 @@
       "darken": 0.35,
       "createdAt": 1795219200,
       "scrim": true,
-      "fontFile": null
+      "fontFile": null,
+      "since": false,
+      "milestones": null
     },
     {
       "id": 7,
@@ -47,7 +49,9 @@
       "darken": 0.4,
       "createdAt": 1795219200,
       "scrim": true,
-      "fontFile": null
+      "fontFile": null,
+      "since": false,
+      "milestones": null
     },
     {
       "id": 9,
@@ -70,7 +74,9 @@
       "darken": 0.35,
       "createdAt": 1795219200,
       "scrim": true,
-      "fontFile": "fonts/Roboto.ttf"
+      "fontFile": "fonts/Roboto.ttf",
+      "since": false,
+      "milestones": null
     }
   ]
 }

@@ -95,7 +95,7 @@ void main() {
     }
 
     await settle();
-    expect(find.text('Nothing to count down to yet'), findsOneWidget);
+    expect(find.text('Nothing to count yet'), findsOneWidget);
 
     // Saving without a name asks for one.
     await tap(find.text('New countdown'));
@@ -107,6 +107,7 @@ void main() {
     await settle();
     await tap(find.text('Never'));
     await tap(find.text('Every year'));
+    await tester.ensureVisible(find.text('Sleeps'));
     await tap(find.text('Sleeps'));
     await tap(find.text('Look'));
     await tap(find.bySemanticsLabel(RegExp('^Sunset gradient')));
@@ -154,6 +155,24 @@ void main() {
     await tap(find.text('Delete'));
     expect(await rows(), isEmpty);
     expect(find.text('Since & Soon'), findsWidgets);
+
+    // A Since event counts up from its start, which defaults to now.
+    await tap(find.text('New countdown'));
+    await tap(find.text('Since'));
+    expect(find.text('STARTED'), findsOneWidget);
+    expect(find.text('Repeats'), findsNothing);
+    await tester.enterText(find.byType(TextField), 'Quit smoking');
+    await settle();
+    await tap(find.text('Save'));
+    final since = (await rows()).single;
+    expect(since.kind, EventKind.since);
+    expect(since.allDay, isFalse);
+    expect(since.dateTime.isAfter(DateTime.now()), isFalse);
+    expect(find.text('days since'), findsOneWidget);
+    await tap(find.bySemanticsLabel('Close'));
+    expect(find.text('Since · 1'), findsOneWidget);
+    await tap(find.text('Since · 1'));
+    expect(find.textContaining('Quit smoking'), findsWidgets);
 
     // Hidden settings are kept as they were.
     final stored = jsonDecode(prefs.getString('localSettings')!);

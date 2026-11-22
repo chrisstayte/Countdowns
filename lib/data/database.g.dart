@@ -42,6 +42,16 @@ class $EventsTable extends Events with TableInfo<$EventsTable, EventRow> {
         type: DriftSqlType.dateTime,
         requiredDuringInsert: true,
       );
+  @override
+  late final GeneratedColumnWithTypeConverter<EventKind, String> kind =
+      GeneratedColumn<String>(
+        'kind',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: Constant(EventKind.soon.name),
+      ).withConverter<EventKind>($EventsTable.$converterkind);
   static const VerificationMeta _allDayMeta = const VerificationMeta('allDay');
   @override
   late final GeneratedColumn<bool> allDay = GeneratedColumn<bool>(
@@ -212,6 +222,7 @@ class $EventsTable extends Events with TableInfo<$EventsTable, EventRow> {
     id,
     title,
     eventDateTime,
+    kind,
     allDay,
     iconSlug,
     colorArgb,
@@ -367,6 +378,12 @@ class $EventsTable extends Events with TableInfo<$EventsTable, EventRow> {
         DriftSqlType.dateTime,
         data['${effectivePrefix}event_date_time'],
       )!,
+      kind: $EventsTable.$converterkind.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}kind'],
+        )!,
+      ),
       allDay: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}all_day'],
@@ -441,6 +458,8 @@ class $EventsTable extends Events with TableInfo<$EventsTable, EventRow> {
     return $EventsTable(attachedDatabase, alias);
   }
 
+  static JsonTypeConverter2<EventKind, String, String> $converterkind =
+      const EnumNameConverter<EventKind>(EventKind.values);
   static JsonTypeConverter2<GradientDirection, String, String>
   $convertergradientDirection = const EnumNameConverter<GradientDirection>(
     GradientDirection.values,
@@ -459,6 +478,9 @@ class EventRow extends DataClass implements Insertable<EventRow> {
   final int id;
   final String title;
   final DateTime eventDateTime;
+
+  /// Soon or Since (schema 3). Older rows are Soon.
+  final EventKind kind;
   final bool allDay;
   final String? iconSlug;
   final int colorArgb;
@@ -484,6 +506,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
     required this.id,
     required this.title,
     required this.eventDateTime,
+    required this.kind,
     required this.allDay,
     this.iconSlug,
     required this.colorArgb,
@@ -506,6 +529,9 @@ class EventRow extends DataClass implements Insertable<EventRow> {
     map['id'] = Variable<int>(id);
     map['title'] = Variable<String>(title);
     map['event_date_time'] = Variable<DateTime>(eventDateTime);
+    {
+      map['kind'] = Variable<String>($EventsTable.$converterkind.toSql(kind));
+    }
     map['all_day'] = Variable<bool>(allDay);
     if (!nullToAbsent || iconSlug != null) {
       map['icon_slug'] = Variable<String>(iconSlug);
@@ -551,6 +577,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
       id: Value(id),
       title: Value(title),
       eventDateTime: Value(eventDateTime),
+      kind: Value(kind),
       allDay: Value(allDay),
       iconSlug: iconSlug == null && nullToAbsent
           ? const Value.absent()
@@ -592,6 +619,9 @@ class EventRow extends DataClass implements Insertable<EventRow> {
       id: serializer.fromJson<int>(json['id']),
       title: serializer.fromJson<String>(json['title']),
       eventDateTime: serializer.fromJson<DateTime>(json['eventDateTime']),
+      kind: $EventsTable.$converterkind.fromJson(
+        serializer.fromJson<String>(json['kind']),
+      ),
       allDay: serializer.fromJson<bool>(json['allDay']),
       iconSlug: serializer.fromJson<String?>(json['iconSlug']),
       colorArgb: serializer.fromJson<int>(json['colorArgb']),
@@ -622,6 +652,9 @@ class EventRow extends DataClass implements Insertable<EventRow> {
       'id': serializer.toJson<int>(id),
       'title': serializer.toJson<String>(title),
       'eventDateTime': serializer.toJson<DateTime>(eventDateTime),
+      'kind': serializer.toJson<String>(
+        $EventsTable.$converterkind.toJson(kind),
+      ),
       'allDay': serializer.toJson<bool>(allDay),
       'iconSlug': serializer.toJson<String?>(iconSlug),
       'colorArgb': serializer.toJson<int>(colorArgb),
@@ -650,6 +683,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
     int? id,
     String? title,
     DateTime? eventDateTime,
+    EventKind? kind,
     bool? allDay,
     Value<String?> iconSlug = const Value.absent(),
     int? colorArgb,
@@ -669,6 +703,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
     id: id ?? this.id,
     title: title ?? this.title,
     eventDateTime: eventDateTime ?? this.eventDateTime,
+    kind: kind ?? this.kind,
     allDay: allDay ?? this.allDay,
     iconSlug: iconSlug.present ? iconSlug.value : this.iconSlug,
     colorArgb: colorArgb ?? this.colorArgb,
@@ -696,6 +731,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
       eventDateTime: data.eventDateTime.present
           ? data.eventDateTime.value
           : this.eventDateTime,
+      kind: data.kind.present ? data.kind.value : this.kind,
       allDay: data.allDay.present ? data.allDay.value : this.allDay,
       iconSlug: data.iconSlug.present ? data.iconSlug.value : this.iconSlug,
       colorArgb: data.colorArgb.present ? data.colorArgb.value : this.colorArgb,
@@ -732,6 +768,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
           ..write('id: $id, ')
           ..write('title: $title, ')
           ..write('eventDateTime: $eventDateTime, ')
+          ..write('kind: $kind, ')
           ..write('allDay: $allDay, ')
           ..write('iconSlug: $iconSlug, ')
           ..write('colorArgb: $colorArgb, ')
@@ -756,6 +793,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
     id,
     title,
     eventDateTime,
+    kind,
     allDay,
     iconSlug,
     colorArgb,
@@ -779,6 +817,7 @@ class EventRow extends DataClass implements Insertable<EventRow> {
           other.id == this.id &&
           other.title == this.title &&
           other.eventDateTime == this.eventDateTime &&
+          other.kind == this.kind &&
           other.allDay == this.allDay &&
           other.iconSlug == this.iconSlug &&
           other.colorArgb == this.colorArgb &&
@@ -800,6 +839,7 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
   final Value<int> id;
   final Value<String> title;
   final Value<DateTime> eventDateTime;
+  final Value<EventKind> kind;
   final Value<bool> allDay;
   final Value<String?> iconSlug;
   final Value<int> colorArgb;
@@ -819,6 +859,7 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
     this.id = const Value.absent(),
     this.title = const Value.absent(),
     this.eventDateTime = const Value.absent(),
+    this.kind = const Value.absent(),
     this.allDay = const Value.absent(),
     this.iconSlug = const Value.absent(),
     this.colorArgb = const Value.absent(),
@@ -839,6 +880,7 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
     this.id = const Value.absent(),
     required String title,
     required DateTime eventDateTime,
+    this.kind = const Value.absent(),
     this.allDay = const Value.absent(),
     this.iconSlug = const Value.absent(),
     required int colorArgb,
@@ -865,6 +907,7 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
     Expression<int>? id,
     Expression<String>? title,
     Expression<DateTime>? eventDateTime,
+    Expression<String>? kind,
     Expression<bool>? allDay,
     Expression<String>? iconSlug,
     Expression<int>? colorArgb,
@@ -885,6 +928,7 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
       if (id != null) 'id': id,
       if (title != null) 'title': title,
       if (eventDateTime != null) 'event_date_time': eventDateTime,
+      if (kind != null) 'kind': kind,
       if (allDay != null) 'all_day': allDay,
       if (iconSlug != null) 'icon_slug': iconSlug,
       if (colorArgb != null) 'color_argb': colorArgb,
@@ -907,6 +951,7 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
     Value<int>? id,
     Value<String>? title,
     Value<DateTime>? eventDateTime,
+    Value<EventKind>? kind,
     Value<bool>? allDay,
     Value<String?>? iconSlug,
     Value<int>? colorArgb,
@@ -927,6 +972,7 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
       id: id ?? this.id,
       title: title ?? this.title,
       eventDateTime: eventDateTime ?? this.eventDateTime,
+      kind: kind ?? this.kind,
       allDay: allDay ?? this.allDay,
       iconSlug: iconSlug ?? this.iconSlug,
       colorArgb: colorArgb ?? this.colorArgb,
@@ -956,6 +1002,11 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
     }
     if (eventDateTime.present) {
       map['event_date_time'] = Variable<DateTime>(eventDateTime.value);
+    }
+    if (kind.present) {
+      map['kind'] = Variable<String>(
+        $EventsTable.$converterkind.toSql(kind.value),
+      );
     }
     if (allDay.present) {
       map['all_day'] = Variable<bool>(allDay.value);
@@ -1019,6 +1070,7 @@ class EventsCompanion extends UpdateCompanion<EventRow> {
           ..write('id: $id, ')
           ..write('title: $title, ')
           ..write('eventDateTime: $eventDateTime, ')
+          ..write('kind: $kind, ')
           ..write('allDay: $allDay, ')
           ..write('iconSlug: $iconSlug, ')
           ..write('colorArgb: $colorArgb, ')
@@ -1537,6 +1589,7 @@ typedef $$EventsTableCreateCompanionBuilder = EventsCompanion Function({
   Value<int> id,
   required String title,
   required DateTime eventDateTime,
+  Value<EventKind> kind,
   Value<bool> allDay,
   Value<String?> iconSlug,
   required int colorArgb,
@@ -1557,6 +1610,7 @@ typedef $$EventsTableUpdateCompanionBuilder = EventsCompanion Function({
   Value<int> id,
   Value<String> title,
   Value<DateTime> eventDateTime,
+  Value<EventKind> kind,
   Value<bool> allDay,
   Value<String?> iconSlug,
   Value<int> colorArgb,
@@ -1620,6 +1674,12 @@ class $$EventsTableFilterComposer
     column: $table.eventDateTime,
     builder: (column) => ColumnFilters(column),
   );
+
+  ColumnWithTypeConverterFilters<EventKind, EventKind, String> get kind =>
+      $composableBuilder(
+        column: $table.kind,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<bool> get allDay => $composableBuilder(
     column: $table.allDay,
@@ -1749,6 +1809,11 @@ class $$EventsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get allDay => $composableBuilder(
     column: $table.allDay,
     builder: (column) => ColumnOrderings(column),
@@ -1844,6 +1909,9 @@ class $$EventsTableAnnotationComposer
     column: $table.eventDateTime,
     builder: (column) => column,
   );
+
+  GeneratedColumnWithTypeConverter<EventKind, String> get kind =>
+      $composableBuilder(column: $table.kind, builder: (column) => column);
 
   GeneratedColumn<bool> get allDay =>
       $composableBuilder(column: $table.allDay, builder: (column) => column);
@@ -1960,6 +2028,7 @@ class $$EventsTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<String> title = const Value.absent(),
                 Value<DateTime> eventDateTime = const Value.absent(),
+                Value<EventKind> kind = const Value.absent(),
                 Value<bool> allDay = const Value.absent(),
                 Value<String?> iconSlug = const Value.absent(),
                 Value<int> colorArgb = const Value.absent(),
@@ -1980,6 +2049,7 @@ class $$EventsTableTableManager
                 id: id,
                 title: title,
                 eventDateTime: eventDateTime,
+                kind: kind,
                 allDay: allDay,
                 iconSlug: iconSlug,
                 colorArgb: colorArgb,
@@ -2001,6 +2071,7 @@ class $$EventsTableTableManager
                 Value<int> id = const Value.absent(),
                 required String title,
                 required DateTime eventDateTime,
+                Value<EventKind> kind = const Value.absent(),
                 Value<bool> allDay = const Value.absent(),
                 Value<String?> iconSlug = const Value.absent(),
                 required int colorArgb,
@@ -2021,6 +2092,7 @@ class $$EventsTableTableManager
                 id: id,
                 title: title,
                 eventDateTime: eventDateTime,
+                kind: kind,
                 allDay: allDay,
                 iconSlug: iconSlug,
                 colorArgb: colorArgb,
