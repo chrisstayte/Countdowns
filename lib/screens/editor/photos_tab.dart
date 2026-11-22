@@ -306,22 +306,24 @@ class _PhotosTabState extends ConsumerState<PhotosTab> {
         SliverToBoxAdapter(
           child: SizedBox(
             height: 84,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: _side),
-              itemCount: widget.photos.length + 1,
-              separatorBuilder: (_, _) => const SizedBox(width: 10),
-              itemBuilder: (_, i) => SizedBox(
-                width: 84,
-                child: i == 0
-                    ? AddPhotoTile(onTap: widget.onAdd)
-                    : _OwnPhoto(
-                        path: widget.photos[i - 1],
-                        selected:
-                            photoKey(widget.photos[i - 1]) == widget.selected,
-                        onTap: () =>
-                            widget.onPick(photoKey(widget.photos[i - 1])),
-                      ),
+            child: _EdgeFade(
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: _side),
+                itemCount: widget.photos.length + 1,
+                separatorBuilder: (_, _) => const SizedBox(width: 10),
+                itemBuilder: (_, i) => SizedBox(
+                  width: 84,
+                  child: i == 0
+                      ? AddPhotoTile(onTap: widget.onAdd)
+                      : _OwnPhoto(
+                          path: widget.photos[i - 1],
+                          selected:
+                              photoKey(widget.photos[i - 1]) == widget.selected,
+                          onTap: () =>
+                              widget.onPick(photoKey(widget.photos[i - 1])),
+                        ),
+                ),
               ),
             ),
           ),
@@ -520,14 +522,42 @@ class _Row extends StatelessWidget {
   Widget build(BuildContext context) => SizedBox(
     height: stockRowHeight,
     // Full width of the sheet, so photos scroll out to its edges.
-    child: ListView.separated(
-      scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(horizontal: _side),
-      itemCount: photos.length,
-      separatorBuilder: (_, _) => const SizedBox(width: 8),
-      itemBuilder: (_, i) =>
-          SizedBox(width: stockTileWidth(photos[i]), child: tile(photos[i])),
+    child: _EdgeFade(
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: _side),
+        itemCount: photos.length,
+        separatorBuilder: (_, _) => const SizedBox(width: 8),
+        itemBuilder: (_, i) =>
+            SizedBox(width: stockTileWidth(photos[i]), child: tile(photos[i])),
+      ),
     ),
+  );
+}
+
+/// Fades a full-width row out across the side margins, so photos scrolling
+/// past the sheet's edge soften away instead of being cut. At rest the
+/// margins are empty, so nothing in view is faded.
+class _EdgeFade extends StatelessWidget {
+  const _EdgeFade({required this.child});
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => ShaderMask(
+    blendMode: BlendMode.dstIn,
+    shaderCallback: (rect) {
+      final f = (_side / rect.width).clamp(0.0, 0.5);
+      return LinearGradient(
+        colors: const [
+          Colors.transparent,
+          Colors.black,
+          Colors.black,
+          Colors.transparent,
+        ],
+        stops: [0, f, 1 - f, 1],
+      ).createShader(rect);
+    },
+    child: child,
   );
 }
 
