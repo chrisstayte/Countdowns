@@ -141,157 +141,171 @@ class _AllBackgroundsSheetState extends ConsumerState<AllBackgroundsSheet> {
     final preview = BackgroundChoice(_key, _direction).applyTo(widget.draft);
     return FractionallySizedBox(
       heightFactor: 0.92,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const SheetHandle(),
-            const SizedBox(height: 8),
-            Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // The header keeps the side margins; the tab body below runs
+          // edge to edge so photo rows can scroll out to the sheet edge.
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Expanded(
-                  child: Text(
-                    'All backgrounds',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppText.sheetTitle,
-                  ),
+                const SheetHandle(),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    const Expanded(
+                      child: Text(
+                        'All backgrounds',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppText.sheetTitle,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    PillButton(
+                      label: 'Done',
+                      // Picks already applied; Done just closes.
+                      onTap: () => Navigator.pop(context),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 12),
-                PillButton(
-                  label: 'Done',
-                  // Picks already applied; Done just closes.
-                  onTap: () => Navigator.pop(context),
+                const SizedBox(height: 12),
+                BackgroundPreviewStrip(event: preview),
+                const SizedBox(height: 12),
+                // Scrolls once there are more kinds than fit; with three it
+                // fills the width like before.
+                PillSegmented<Object>(
+                  key: const ValueKey('background-kind-tabs'),
+                  scrollable: true,
+                  values: [...BackgroundKind.values, ...demoBackgroundTabs],
+                  selected: _demo ?? _tab,
+                  label: (k) => switch (k) {
+                    BackgroundKind.colour => 'Colors',
+                    BackgroundKind.gradient => 'Gradients',
+                    BackgroundKind.photo => 'Photos',
+                    BackgroundKind k when k.art != null => k.art!.label,
+                    _ => '$k',
+                  },
+                  onChanged: (k) => setState(() {
+                    if (k is BackgroundKind) {
+                      _tab = k;
+                      _demo = null;
+                    } else {
+                      _demo = k as String;
+                    }
+                    _scrolled = false;
+                  }),
                 ),
               ],
             ),
-            const SizedBox(height: 12),
-            BackgroundPreviewStrip(event: preview),
-            const SizedBox(height: 12),
-            // Scrolls once there are more kinds than fit; with three it
-            // fills the width like before.
-            PillSegmented<Object>(
-              key: const ValueKey('background-kind-tabs'),
-              scrollable: true,
-              values: [...BackgroundKind.values, ...demoBackgroundTabs],
-              selected: _demo ?? _tab,
-              label: (k) => switch (k) {
-                BackgroundKind.colour => 'Colors',
-                BackgroundKind.gradient => 'Gradients',
-                BackgroundKind.photo => 'Photos',
-                BackgroundKind k when k.art != null => k.art!.label,
-                _ => '$k',
-              },
-              onChanged: (k) => setState(() {
-                if (k is BackgroundKind) {
-                  _tab = k;
-                  _demo = null;
-                } else {
-                  _demo = k as String;
-                }
-                _scrolled = false;
-              }),
-            ),
-            if (_demo != null)
-              Expanded(
-                child: Center(
-                  child: Text(
-                    '$_demo: debug placeholder tab',
-                    style: AppText.secondary,
-                  ),
+          ),
+          if (_demo != null)
+            Expanded(
+              child: Center(
+                child: Text(
+                  '$_demo: debug placeholder tab',
+                  style: AppText.secondary,
                 ),
               ),
-            if (_demo == null && _tab == BackgroundKind.gradient) ...[
-              const SizedBox(height: 14),
-              DirectionPicker(
+            ),
+          if (_demo == null && _tab == BackgroundKind.gradient) ...[
+            const SizedBox(height: 14),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: DirectionPicker(
                 key: const ValueKey('pinned-direction-row'),
                 colors: _chipColors,
                 selected: _direction,
                 onPick: _pickDirection,
               ),
-              const SizedBox(height: 8),
-              // A hairline once the families scroll under the row.
-              AnimatedOpacity(
-                key: const ValueKey('direction-divider'),
-                duration: const Duration(milliseconds: 120),
-                opacity: _scrolled ? 1 : 0,
-                child: Container(height: 1, color: AppColors.rule),
+            ),
+            const SizedBox(height: 8),
+            // A hairline once the families scroll under the row.
+            AnimatedOpacity(
+              key: const ValueKey('direction-divider'),
+              duration: const Duration(milliseconds: 120),
+              opacity: _scrolled ? 1 : 0,
+              child: Container(
+                height: 1,
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                color: AppColors.rule,
               ),
-            ],
-            if (_demo == null)
-              Expanded(
-                // Fade the grid out under the tabs as it scrolls.
-                child: NotificationListener<ScrollUpdateNotification>(
-                  onNotification: (n) {
-                    final under = n.metrics.pixels > 4;
-                    if (under != _scrolled) setState(() => _scrolled = under);
-                    return false;
+            ),
+          ],
+          if (_demo == null)
+            Expanded(
+              // Fade the grid out under the tabs as it scrolls.
+              child: NotificationListener<ScrollUpdateNotification>(
+                onNotification: (n) {
+                  final under = n.metrics.pixels > 4;
+                  if (under != _scrolled) setState(() => _scrolled = under);
+                  return false;
+                },
+                child: ClipRect(
+                  child: switch (_tab) {
+                    BackgroundKind.pattern ||
+                    BackgroundKind.texture ||
+                    BackgroundKind.illustration => _Collections(
+                      key: ValueKey(_tab),
+                      sections: [
+                        for (final c in artCollectionsFor(_tab.art!))
+                          (
+                            title: c.name,
+                            keys: [for (final a in c.items) artKey(a)],
+                          ),
+                      ],
+                      selected: _key,
+                      legacyBase: widget.draft.color,
+                      onPick: _pick,
+                    ),
+                    BackgroundKind.colour => _Collections(
+                      sections: [
+                        for (final c in colourCollections)
+                          (
+                            title: c.name,
+                            keys: [
+                              for (final p in c.colours) colourKey(p.color),
+                            ],
+                          ),
+                      ],
+                      selected: _key,
+                      legacyBase: widget.draft.color,
+                      onPick: _pick,
+                    ),
+                    BackgroundKind.gradient => _Collections(
+                      sections: [
+                        for (final c in gradientCollections)
+                          (
+                            title: c.name,
+                            keys: [
+                              for (final g in c.gradients) gradientKey(g.id),
+                            ],
+                          ),
+                      ],
+                      selected: _key,
+                      legacyBase: widget.draft.color,
+                      direction: _direction,
+                      onPick: _pick,
+                    ),
+                    BackgroundKind.photo => PhotosTab(
+                      draft: widget.draft,
+                      onImported: (photo) => Navigator.pop(context, photo),
+                      photos: availablePhotos(
+                        current: widget.draft.photoPath,
+                        recent: ref.watch(recentsProvider).photos,
+                        others: [for (final e in _all) ?e.photoPath],
+                      ),
+                      selected: _key,
+                      onPick: _pick,
+                      onAdd: () => Navigator.pop(context, addPhotoResult),
+                    ),
                   },
-                  child: ClipRect(
-                    child: switch (_tab) {
-                      BackgroundKind.pattern ||
-                      BackgroundKind.texture ||
-                      BackgroundKind.illustration => _Collections(
-                        key: ValueKey(_tab),
-                        sections: [
-                          for (final c in artCollectionsFor(_tab.art!))
-                            (
-                              title: c.name,
-                              keys: [for (final a in c.items) artKey(a)],
-                            ),
-                        ],
-                        selected: _key,
-                        legacyBase: widget.draft.color,
-                        onPick: _pick,
-                      ),
-                      BackgroundKind.colour => _Collections(
-                        sections: [
-                          for (final c in colourCollections)
-                            (
-                              title: c.name,
-                              keys: [
-                                for (final p in c.colours) colourKey(p.color),
-                              ],
-                            ),
-                        ],
-                        selected: _key,
-                        legacyBase: widget.draft.color,
-                        onPick: _pick,
-                      ),
-                      BackgroundKind.gradient => _Collections(
-                        sections: [
-                          for (final c in gradientCollections)
-                            (
-                              title: c.name,
-                              keys: [
-                                for (final g in c.gradients) gradientKey(g.id),
-                              ],
-                            ),
-                        ],
-                        selected: _key,
-                        legacyBase: widget.draft.color,
-                        direction: _direction,
-                        onPick: _pick,
-                      ),
-                      BackgroundKind.photo => PhotosTab(
-                        draft: widget.draft,
-                        onImported: (photo) => Navigator.pop(context, photo),
-                        photos: availablePhotos(
-                          current: widget.draft.photoPath,
-                          recent: ref.watch(recentsProvider).photos,
-                          others: [for (final e in _all) ?e.photoPath],
-                        ),
-                        selected: _key,
-                        onPick: _pick,
-                        onAdd: () => Navigator.pop(context, addPhotoResult),
-                      ),
-                    },
-                  ),
                 ),
               ),
-          ],
-        ),
+            ),
+        ],
       ),
     );
   }
@@ -320,26 +334,33 @@ class _Collections extends StatelessWidget {
   @override
   Widget build(BuildContext context) => CustomScrollView(
     slivers: [
-      for (final s in sections) ...[
-        SliverPadding(
-          padding: const EdgeInsets.only(top: 18, bottom: 10),
-          sliver: SliverToBoxAdapter(
-            child: Text(s.title.toUpperCase(), style: AppText.eyebrow),
-          ),
+      SliverPadding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        sliver: SliverMainAxisGroup(
+          slivers: [
+            for (final s in sections) ...[
+              SliverPadding(
+                padding: const EdgeInsets.only(top: 18, bottom: 10),
+                sliver: SliverToBoxAdapter(
+                  child: Text(s.title.toUpperCase(), style: AppText.eyebrow),
+                ),
+              ),
+              SliverGrid.builder(
+                gridDelegate: _namedGrid,
+                itemCount: s.keys.length,
+                itemBuilder: (_, i) => _NamedTile(
+                  backgroundKey: s.keys[i],
+                  selected: s.keys[i] == selected,
+                  legacyBase: legacyBase,
+                  direction: direction,
+                  onTap: () => onPick(s.keys[i]),
+                ),
+              ),
+            ],
+            const SliverToBoxAdapter(child: SizedBox(height: 30)),
+          ],
         ),
-        SliverGrid.builder(
-          gridDelegate: _namedGrid,
-          itemCount: s.keys.length,
-          itemBuilder: (_, i) => _NamedTile(
-            backgroundKey: s.keys[i],
-            selected: s.keys[i] == selected,
-            legacyBase: legacyBase,
-            direction: direction,
-            onTap: () => onPick(s.keys[i]),
-          ),
-        ),
-      ],
-      const SliverToBoxAdapter(child: SizedBox(height: 30)),
+      ),
     ],
   );
 }

@@ -308,6 +308,7 @@ class _PhotosTabState extends ConsumerState<PhotosTab> {
             height: 84,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: _side),
               itemCount: widget.photos.length + 1,
               separatorBuilder: (_, _) => const SizedBox(width: 10),
               itemBuilder: (_, i) => SizedBox(
@@ -327,7 +328,7 @@ class _PhotosTabState extends ConsumerState<PhotosTab> {
         ),
         if (credit != null && credit.photographer.isNotEmpty)
           SliverPadding(
-            padding: const EdgeInsets.only(top: 8),
+            padding: const EdgeInsets.fromLTRB(_side, 8, _side, 0),
             sliver: SliverToBoxAdapter(
               child: Text(
                 'Current photo by ${credit.photographer}',
@@ -364,7 +365,7 @@ class _PhotosTabState extends ConsumerState<PhotosTab> {
     final seeAll = _seeAll;
     return [
       SliverPadding(
-        padding: const EdgeInsets.only(top: 22, bottom: 4),
+        padding: const EdgeInsets.fromLTRB(_side, 22, _side, 4),
         sliver: SliverToBoxAdapter(
           child: TextField(
             key: const ValueKey('stock-search'),
@@ -386,7 +387,7 @@ class _PhotosTabState extends ConsumerState<PhotosTab> {
       ),
       if (_failed != null)
         SliverPadding(
-          padding: const EdgeInsets.only(top: 12),
+          padding: const EdgeInsets.fromLTRB(_side, 12, _side, 0),
           sliver: SliverToBoxAdapter(
             child: _Notice(
               text: _failedRateLimited
@@ -400,14 +401,17 @@ class _PhotosTabState extends ConsumerState<PhotosTab> {
       if (_query.isNotEmpty) ...[
         _Heading('RESULTS FOR “${_query.toUpperCase()}”'),
         if (_results.isEmpty)
-          const SliverToBoxAdapter(
-            child: Text('No photos match.', style: AppText.secondary),
+          const SliverPadding(
+            padding: EdgeInsets.symmetric(horizontal: _side),
+            sliver: SliverToBoxAdapter(
+              child: Text('No photos match.', style: AppText.secondary),
+            ),
           )
         else
           _gridOf(_results),
       ] else if (seeAll != null) ...[
         SliverPadding(
-          padding: const EdgeInsets.only(top: 18, bottom: 10),
+          padding: const EdgeInsets.fromLTRB(_side, 18, _side, 10),
           sliver: SliverToBoxAdapter(
             child: Row(
               children: [
@@ -474,24 +478,31 @@ class _PhotosTabState extends ConsumerState<PhotosTab> {
   );
 
   Widget _gridOf(List<StockPhoto> photos, {VoidCallback? onNearEnd}) =>
-      SliverGrid.builder(
-        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 130,
-          mainAxisSpacing: 8,
-          crossAxisSpacing: 8,
-          childAspectRatio: 0.8,
+      SliverPadding(
+        padding: const EdgeInsets.symmetric(horizontal: _side),
+        sliver: SliverGrid.builder(
+          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 130,
+            mainAxisSpacing: 8,
+            crossAxisSpacing: 8,
+            childAspectRatio: 0.8,
+          ),
+          itemCount: photos.length,
+          itemBuilder: (_, i) {
+            if (onNearEnd != null && i >= photos.length - 6) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (mounted) onNearEnd();
+              });
+            }
+            return _tile(photos[i]);
+          },
         ),
-        itemCount: photos.length,
-        itemBuilder: (_, i) {
-          if (onNearEnd != null && i >= photos.length - 6) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (mounted) onNearEnd();
-            });
-          }
-          return _tile(photos[i]);
-        },
       );
 }
+
+/// The sheet's side margin. The tab spans the sheet's full width so photo
+/// rows can scroll to its edges; everything else is inset by this.
+const _side = 20.0;
 
 /// Row height for category and recent rows; widths follow each photo's
 /// aspect ratio so nothing jumps when the image arrives.
@@ -506,11 +517,17 @@ class _Row extends StatelessWidget {
   final Widget Function(StockPhoto) tile;
 
   @override
-  Widget build(BuildContext context) => BleedScroller(
+  Widget build(BuildContext context) => SizedBox(
     height: stockRowHeight,
-    itemCount: photos.length,
-    itemBuilder: (_, i) =>
-        SizedBox(width: stockTileWidth(photos[i]), child: tile(photos[i])),
+    // Full width of the sheet, so photos scroll out to its edges.
+    child: ListView.separated(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: _side),
+      itemCount: photos.length,
+      separatorBuilder: (_, _) => const SizedBox(width: 8),
+      itemBuilder: (_, i) =>
+          SizedBox(width: stockTileWidth(photos[i]), child: tile(photos[i])),
+    ),
   );
 }
 
@@ -521,7 +538,7 @@ class _Heading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SliverPadding(
-    padding: const EdgeInsets.only(top: 22, bottom: 10),
+    padding: const EdgeInsets.fromLTRB(_side, 22, _side, 10),
     sliver: SliverToBoxAdapter(
       child: Row(
         children: [
