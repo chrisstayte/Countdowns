@@ -876,8 +876,11 @@ class _IllustrationPainter {
   void _sprites() {
     final kinds = art.sprites.where((s) => s != Sprite.sailboat).toList();
     if (kinds.isEmpty || art.spriteColors.isEmpty) return;
-    final base = 13 * u;
-    final cell = base * 4.6 / math.sqrt(art.density);
+    // Bigger canvases (the detail screen, iPad) get slightly bigger sprites
+    // spaced much further apart, so a full screen stays calm.
+    final roomy = (math.min(w, h) / (180 * u)).clamp(1.0, 1.9);
+    final base = 13 * u * math.sqrt(roomy);
+    final cell = base * 4.6 * math.sqrt(roomy) / math.sqrt(art.density);
     final colors = art.spriteColors;
     var n = 0;
     for (var y = cell * 0.2; y < horizon + base * 0.5; y += cell * 0.86) {
