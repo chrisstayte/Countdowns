@@ -772,19 +772,56 @@ class _IllustrationPainter {
 
   late final double landH = art.land == Land.none
       ? 0
+      : _swatch
+      ? h * 0.3
       : (h * 0.22).clamp(math.min(26 * u, h * 0.3), 220 * u);
   late final double horizon = h - landH;
 
-  late final double heroR = (math.min(w, h) * 0.17).clamp(12 * u, 70 * u);
-  late final Offset heroC = Offset(
-    w * 0.76,
-    math.min(h * 0.38, horizon - heroR * 1.4),
-  );
+  late final double heroR = _swatch
+      ? math.min(w, h) * 0.17
+      : (math.min(w, h) * 0.17).clamp(12 * u, 70 * u);
+  late final Offset heroC = _swatch
+      ? Offset(w * 0.7, h * 0.34)
+      : Offset(w * 0.76, math.min(h * 0.38, horizon - heroR * 1.4));
+
+  /// Swatches are too small for the scattered layout, so they get a
+  /// fixed little scene: a few sprites, the hero and the land.
+  bool get _swatch => math.min(w, h) < 90;
 
   void paint() {
     _hero();
-    _sprites();
+    if (_swatch) {
+      _swatchSprites();
+    } else {
+      _sprites();
+    }
     _land();
+  }
+
+  void _swatchSprites() {
+    final kinds = art.sprites.where((s) => s != Sprite.sailboat).toList();
+    if (kinds.isEmpty || art.spriteColors.isEmpty) return;
+    final spots = art.hero == SkyFeature.none || art.hero == SkyFeature.rainbow
+        ? const [(0.3, 0.32), (0.72, 0.36), (0.48, 0.66)]
+        : const [(0.26, 0.3), (0.32, 0.66)];
+    for (var i = 0; i < spots.length; i++) {
+      final (fx, fy) = spots[i];
+      final kind = kinds[i % kinds.length];
+      final c = Offset(w * fx, math.min(h * fy, horizon - h * 0.08));
+      cv.save();
+      cv.translate(c.dx, c.dy);
+      if (!_upright.contains(kind)) cv.rotate(i.isEven ? -0.25 : 0.25);
+      final r = math.min(w, h) * (_big.contains(kind) ? 0.16 : 0.13);
+      _spritePath(
+        kind,
+        r,
+        cv,
+        art.spriteColors[i % art.spriteColors.length],
+        1.6 * u,
+        rng,
+      );
+      cv.restore();
+    }
   }
 
   void _hero() {

@@ -123,6 +123,44 @@ void main() {
         await _save(rec.endRecording(), width, height, kind.name);
       }
 
+      // Swatches as the sheet shows them (50pt tiles), at 3x.
+      {
+        const tile = 50.0, pad = 8.0, per = 12;
+        final rows = (artLibrary.length / per).ceil();
+        final rec = ui.PictureRecorder();
+        final canvas = ui.Canvas(rec)..scale(3);
+        canvas.drawRect(
+          ui.Rect.fromLTWH(
+            0,
+            0,
+            per * (tile + pad) + pad,
+            rows * (tile + pad) + pad,
+          ),
+          ui.Paint()..color = const ui.Color(0xFFFFFFFF),
+        );
+        for (var i = 0; i < artLibrary.length; i++) {
+          final r = ui.Rect.fromLTWH(
+            pad + (i % per) * (tile + pad),
+            pad + (i ~/ per) * (tile + pad),
+            tile,
+            tile,
+          );
+          canvas.save();
+          canvas.clipRRect(
+            ui.RRect.fromRectAndRadius(r, const ui.Radius.circular(17)),
+          );
+          canvas.translate(r.left, r.top);
+          paintArt(canvas, r.size, artLibrary[i], scale: 0.55);
+          canvas.restore();
+        }
+        await _save(
+          rec.endRecording(),
+          ((per * (tile + pad) + pad) * 3).toInt(),
+          ((rows * (tile + pad) + pad) * 3).toInt(),
+          'swatches',
+        );
+      }
+
       // Other shapes: wide widget and full screen, for a few pieces.
       final picks = [
         'birthday',
