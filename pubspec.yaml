@@ -23,7 +23,6 @@ dependencies:
   font_awesome_flutter: ^11.0.0
   intl: ^0.20.2
   flutter_animate: ^4.2.0+1
-  flex_color_picker: ^4.0.0
   in_app_review: ^2.0.6
   flutter_local_notifications: ^23.0.3
   permission_handler: ^13.0.2

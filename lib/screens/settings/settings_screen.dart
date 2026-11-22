@@ -1,485 +1,676 @@
-import 'dart:async';
-
-import 'package:audioplayers/audioplayers.dart';
-import 'package:countdowns/models/app_icons.dart';
 import 'package:countdowns/constants.dart';
-import 'package:countdowns/enums/sorting_method.dart';
-import 'package:countdowns/global/global.dart';
-import 'package:countdowns/providers/notification_provider.dart';
+import 'package:countdowns/models/app_icons.dart';
+import 'package:countdowns/models/countdown.dart';
+import 'package:countdowns/models/palette.dart';
 import 'package:countdowns/providers/event_provider.dart';
 import 'package:countdowns/providers/local_settings_provider.dart';
-
-import 'package:countdowns/screens/settings/widget/settings_container.dart';
+import 'package:countdowns/providers/notification_provider.dart';
+import 'package:countdowns/theme/app_theme.dart';
+import 'package:countdowns/utilities/feedback.dart';
 import 'package:countdowns/utilities/sample_data.dart';
-
+import 'package:countdowns/widgets/ui.dart';
 import 'package:flutter/foundation.dart';
-import 'package:material_ui/material_ui.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_timezone/flutter_timezone.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:in_app_review/in_app_review.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-final _packageInfoProvider = FutureProvider(
+final packageInfoProvider = FutureProvider(
   (ref) => PackageInfo.fromPlatform(),
 );
+
+bool get _showAppIcon => !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final settings = ref.watch(localSettingsProvider);
-    final packageInfo = ref.watch(_packageInfoProvider).asData?.value;
-    final notifications = ref.watch(notificationsProvider);
-    final flutterLocalNotificationsPlugin = notifications.plugin;
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            var settings = ref.read(localSettingsProvider);
-            if (settings.hapticFeedback) {
-              HapticFeedback.lightImpact();
-            }
-            if (settings.soundEffects) {
-              AudioPlayer().play(
-                AssetSource('sounds/tap.mp3'),
-                ctx: AudioContext(
-                  iOS: AudioContextIOS(
-                    category: AVAudioSessionCategory.ambient,
-                  ),
-                ),
-                mode: PlayerMode.lowLatency,
-              );
-            }
-            context.pop();
-          },
-        ),
-      ),
-      body: ListView(
-        shrinkWrap: true,
-        physics: ClampingScrollPhysics(),
-        padding: const EdgeInsets.only(
-          top: 15.0,
-          left: 15.0,
-          right: 15.0,
-          bottom: 85.0,
-        ),
+  Widget build(BuildContext context, WidgetRef ref) => Scaffold(
+    body: SafeArea(
+      bottom: false,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (kDebugMode)
-            SettingsContainer(
-              title: 'Debug',
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ListTile(
-                  title: const Text('Load sample countdowns'),
-                  onTap: () async {
-                    for (final c in sampleCountdowns(DateTime.now())) {
-                      await ref.read(eventsControllerProvider).save(c);
-                    }
-                  },
-                ),
-                ListTile(
-                  title: const Text('Send Notification'),
-                  trailing: const Icon(Icons.notification_add),
-                  onTap: () async {
-                    await Future.delayed(const Duration(seconds: 2), () {
-                      flutterLocalNotificationsPlugin.cancelAll();
-                    });
-                    flutterLocalNotificationsPlugin.show(
-                      id: 0,
-                      title: 'Countdowns',
-                      body: 'This is a test notification',
-                      notificationDetails: NotificationDetails(
-                        android: AndroidNotificationDetails(
-                          'test',
-                          'test',
-                          importance: Importance.max,
-                          priority: Priority.high,
-                          showWhen: false,
-                          enableVibration: true,
-                          playSound: true,
-                          enableLights: true,
-                          color: Global.colors.primaryColor,
-                          ledColor: Colors.red,
-                          ledOnMs: 1000,
-                          ledOffMs: 500,
-                        ),
-                        iOS: const DarwinNotificationDetails(
-                          presentAlert: false,
-                          presentBadge: false,
-                          presentSound: false,
-                          presentBanner: false,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                ListTile(
-                  title: const Text("Print Current Time Zone"),
-                  onTap: () async {
-                    final timeZone = await FlutterTimezone.getLocalTimezone();
-                    debugPrint(timeZone.identifier);
-                  },
-                ),
-                ListTile(
-                  title: const Text("Print Scheduled Events"),
-                  onTap: () async {
-                    final List<PendingNotificationRequest>
-                    pendingNotificationRequests =
-                        await flutterLocalNotificationsPlugin
-                            .pendingNotificationRequests();
-
-                    for (var element in pendingNotificationRequests) {
-                      debugPrint(element.id.toString());
-                    }
-                  },
-                ),
-              ],
-            ),
-          SettingsContainer(
-            title: 'events',
-            children: [
-              ListTile(
-                leading: const Icon(Icons.sort_rounded),
-                title: const Text("Sort"),
-                trailing: FractionallySizedBox(
-                  widthFactor: 0.6,
-                  child: DropdownButton<SortingMethod>(
-                    isExpanded: true,
-                    alignment: Alignment.centerRight,
-                    value: settings.sortingMethod,
-                    underline: Container(),
-                    items: SortingMethod.values
-                        .map(
-                          (sortingMethod) => DropdownMenuItem(
-                            alignment: Alignment.centerRight,
-                            value: sortingMethod,
-                            child: Text(
-                              sortingMethod.nameReadable,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                Semantics(
+                  button: true,
+                  label: 'Back to Countdowns',
+                  child: GestureDetector(
+                    onTap: () {
+                      feedback(ref);
+                      context.pop();
+                    },
+                    child: const SizedBox(
+                      height: 44,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.chevron_left_rounded,
+                            color: AppColors.primary,
+                          ),
+                          Text(
+                            'Countdowns',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.primary,
                             ),
                           ),
-                        )
-                        .toList(),
-                    onChanged: (value) {
-                      ref
-                          .read(localSettingsProvider.notifier)
-                          .setSortingMethod(value!);
-                    },
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SettingsContainer(
-            title: 'Display',
-            children: [
-              if (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS)
-                ListTile(
-                  leading: Container(
-                    clipBehavior: Clip.hardEdge,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(0.2237 * 28),
-                    ),
-                    child: Image.asset(
-                      appIconFor(settings.iconName).assetPath,
-                      height: 28,
-                    ),
-                  ),
-                  title: const Text('App Icon'),
-                  trailing: Icon(Icons.arrow_forward),
-                  onTap: () => context.pushNamed(AppRoutes.appIcon),
-                ),
-            ],
-          ),
-          SettingsContainer(
-            title: 'sounds and haptics',
-            children: [
-              ListTile(
-                leading: const Icon(Icons.volume_up_rounded),
-                title: const Text('Sounds Effects'),
-                trailing: Switch.adaptive(
-                  value: settings.soundEffects,
-                  onChanged: (value) {
-                    ref
-                        .read(localSettingsProvider.notifier)
-                        .setSoundEffectsMode(value);
-                  },
-                ),
-              ),
-              ListTile(
-                leading: const Icon(Icons.vibration_rounded),
-                title: const Text('Haptic Feedback'),
-                trailing: Switch.adaptive(
-                  value: settings.hapticFeedback,
-                  onChanged: (value) {
-                    ref
-                        .read(localSettingsProvider.notifier)
-                        .setHapticFeedbackMode(value);
-                  },
-                ),
-              ),
-            ],
-          ),
-          if (notifications.supported)
-            SettingsContainer(
-              title: 'Notifications',
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.notifications),
-                  title: const Text('When Event Ends'),
-                  trailing: Switch.adaptive(
-                    value: settings.notify,
-                    onChanged: (value) async {
-                      // If the user is requesting to turn them off, simply do so.
-                      if (!value) {
-                        ref
-                            .read(localSettingsProvider.notifier)
-                            .setNotify(value);
-                        await flutterLocalNotificationsPlugin.cancelAll();
-                        return;
-                      }
-
-                      AlertDialog goToSettingsAlertDialog = AlertDialog(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: Global.styles.containerCornerRadius,
-                        ),
-                        title: const Text('Permissions Required'),
-                        content: const Text('Please enable notifications.'),
-                        actions: [
-                          OutlinedButton(
-                            onPressed: () => context.pop(),
-                            child: const Text('Nevermind'),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              openAppSettings();
-                              context.pop();
-                              return;
-                            },
-                            child: const Text('Take Me There'),
-                          ),
                         ],
-                      );
-
-                      final granted = await notifications.requestPermission();
-                      if (!context.mounted) return;
-                      if (granted) {
-                        await ref
-                            .read(localSettingsProvider.notifier)
-                            .setNotify(true);
-                        await ref
-                            .read(eventsControllerProvider)
-                            .rescheduleNotifications();
-                      } else {
-                        await showDialog(
-                          context: context,
-                          builder: (_) => goToSettingsAlertDialog,
-                        );
-                      }
-                    },
+                      ),
+                    ),
                   ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 4),
+                  child: Text('Settings', style: AppText.largeTitle),
                 ),
               ],
             ),
-          SettingsContainer(
-            title: 'support',
-            children: [
-              ListTile(
-                leading: const Icon(Icons.privacy_tip_rounded),
-                title: const Text('Privacy Policy'),
-                trailing: const Icon(Icons.chevron_right_rounded),
-                onTap: () => launchUrl(
-                  Uri.parse('https://chrisstayte.app/countdowns/privacy/'),
+          ),
+          const Expanded(child: SettingsList()),
+        ],
+      ),
+    ),
+  );
+}
+
+/// Every setting, grouped. Shared by the phone screen and the iPad
+/// sidebar layout.
+class SettingsList extends ConsumerWidget {
+  const SettingsList({super.key, this.section});
+
+  /// On iPad, only this section is shown.
+  final SettingsSection? section;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final sections = section == null ? SettingsSection.values : [section!];
+    return ListView(
+      padding: EdgeInsets.fromLTRB(
+        16,
+        12,
+        16,
+        40 + MediaQuery.paddingOf(context).bottom,
+      ),
+      children: [
+        for (final s in sections) ...[
+          if (s == SettingsSection.appearance && !_showAppIcon)
+            const SizedBox.shrink()
+          else ...[
+            _section(context, ref, s),
+            const SizedBox(height: 22),
+          ],
+        ],
+      ],
+    );
+  }
+
+  Widget _section(BuildContext context, WidgetRef ref, SettingsSection s) =>
+      switch (s) {
+        SettingsSection.appearance => const _Appearance(),
+        SettingsSection.countdowns => const _Countdowns(),
+        SettingsSection.notifications => const _Notifications(),
+        SettingsSection.support => const _Support(),
+        SettingsSection.danger => const _Danger(),
+      };
+}
+
+enum SettingsSection {
+  appearance('Appearance', Icons.palette_outlined),
+  countdowns('Countdowns', Icons.hourglass_empty_rounded),
+  notifications('Notifications and feel', Icons.notifications_none_rounded),
+  support('Support and about', Icons.info_outline_rounded),
+  danger('Delete', Icons.delete_outline_rounded);
+
+  const SettingsSection(this.label, this.icon);
+  final String label;
+  final IconData icon;
+}
+
+class _Heading extends StatelessWidget {
+  const _Heading(this.text);
+  final String text;
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.fromLTRB(4, 0, 4, 8),
+    child: SectionLabel(text),
+  );
+}
+
+/// A coloured icon tile, as on the canvas.
+class _Badge extends StatelessWidget {
+  const _Badge(this.icon, this.color);
+  final IconData icon;
+  final Color color;
+  @override
+  Widget build(BuildContext context) => Container(
+    width: 30,
+    height: 30,
+    decoration: BoxDecoration(
+      color: color,
+      borderRadius: BorderRadius.circular(9),
+    ),
+    child: Icon(icon, size: 17, color: AppColors.ink),
+  );
+}
+
+class _Row extends StatelessWidget {
+  const _Row({
+    required this.label,
+    this.badge,
+    this.trailing,
+    this.value,
+    this.onTap,
+  });
+
+  final String label;
+  final Widget? badge;
+  final Widget? trailing;
+  final String? value;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) => InkWell(
+    onTap: onTap,
+    child: SizedBox(
+      height: 54,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Row(
+          children: [
+            if (badge != null) ...[badge!, const SizedBox(width: 12)],
+            Expanded(child: Text(label, style: AppText.body)),
+            if (value != null)
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 190),
+                child: Text(
+                  value!,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: AppColors.secondaryText,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ),
                 ),
               ),
-              ListTile(
-                leading: const Icon(Icons.article_rounded),
-                title: const Text('Terms of Use'),
-                trailing: const Icon(Icons.chevron_right_rounded),
-                onTap: () => launchUrl(
-                  Uri.parse('https://chrisstayte.app/countdowns/terms/'),
+            if (trailing != null)
+              trailing!
+            else if (onTap != null) ...[
+              const SizedBox(width: 4),
+              const Icon(
+                Icons.chevron_right_rounded,
+                size: 20,
+                color: AppColors.secondaryText,
+              ),
+            ],
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+class _Line extends StatelessWidget {
+  const _Line();
+  @override
+  Widget build(BuildContext context) => const Padding(
+    padding: EdgeInsets.only(left: 58),
+    child: Divider(height: 1, thickness: 1, color: AppColors.divider),
+  );
+}
+
+class _Appearance extends ConsumerWidget {
+  const _Appearance();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final iconName = ref.watch(localSettingsProvider.select((s) => s.iconName));
+    final icon = appIconFor(iconName);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const _Heading('Appearance'),
+        GroupCard(
+          children: [
+            _Row(
+              label: 'App icon',
+              badge: ClipRRect(
+                borderRadius: BorderRadius.circular(0.2237 * 30),
+                child: Image.asset(icon.assetPath, width: 30, height: 30),
+              ),
+              value: icon.label,
+              onTap: () {
+                feedback(ref);
+                context.pushNamed(AppRoutes.appIcon);
+              },
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _Countdowns extends ConsumerWidget {
+  const _Countdowns();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settings = ref.watch(localSettingsProvider);
+    final controller = ref.read(localSettingsProvider.notifier);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const _Heading('Countdowns'),
+        GroupCard(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Row(
+                    children: [
+                      _Badge(Icons.timer_outlined, sun),
+                      SizedBox(width: 12),
+                      Text('Count in by default', style: AppText.body),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  PillSegmented<CountUnit>(
+                    values: CountUnit.values,
+                    selected: settings.defaultUnit,
+                    label: (u) => u.label,
+                    height: 34,
+                    fontSize: 13,
+                    onChanged: (u) {
+                      feedback(ref, Sound.select);
+                      controller.setDefaultUnit(u);
+                    },
+                  ),
+                ],
+              ),
+            ),
+            const _Line(),
+            _Row(
+              label: 'Keep finished in Done',
+              badge: const _Badge(Icons.check_rounded, lime),
+              trailing: AppSwitch(
+                label: 'Keep finished in Done',
+                value: settings.keepDone,
+                onChanged: (v) {
+                  feedback(ref, Sound.select);
+                  controller.setKeepDone(v);
+                },
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _Notifications extends ConsumerWidget {
+  const _Notifications();
+
+  Future<void> _setNotify(
+    BuildContext context,
+    WidgetRef ref,
+    bool value,
+  ) async {
+    feedback(ref, Sound.select);
+    final controller = ref.read(localSettingsProvider.notifier);
+    final events = ref.read(eventsControllerProvider);
+    if (!value) {
+      await controller.setNotify(false);
+      await events.rescheduleNotifications();
+      return;
+    }
+    final granted = await ref.read(notificationsProvider).requestPermission();
+    if (!context.mounted) return;
+    if (granted) {
+      await controller.setNotify(true);
+      await events.rescheduleNotifications();
+      return;
+    }
+    await showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Notifications are off'),
+        content: const Text(
+          'Turn on notifications for Countdowns in Settings to get reminders.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Not now'),
+          ),
+          TextButton(
+            onPressed: () {
+              openAppSettings();
+              Navigator.pop(context);
+            },
+            child: const Text('Open Settings'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settings = ref.watch(localSettingsProvider);
+    final controller = ref.read(localSettingsProvider.notifier);
+    final supported = ref.watch(notificationsProvider).supported;
+    final defaults = [...settings.defaultReminders]
+      ..sort((a, b) => b.compareTo(a));
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const _Heading('Notifications and feel'),
+        GroupCard(
+          children: [
+            if (supported) ...[
+              _Row(
+                label: 'Notify when one ends',
+                badge: const _Badge(Icons.notifications_none_rounded, bubblegum),
+                trailing: AppSwitch(
+                  label: 'Notify when one ends',
+                  value: settings.notify,
+                  onChanged: (v) => _setNotify(context, ref, v),
                 ),
               ),
-              const AboutListTile(
-                icon: Icon(Icons.info_outline_rounded),
+              const _Line(),
+            ],
+            _Row(
+              label: 'Sound effects',
+              badge: const _Badge(Icons.volume_up_outlined, sky),
+              trailing: AppSwitch(
+                label: 'Sound effects',
+                value: settings.soundEffects,
+                onChanged: (v) {
+                  controller.setSoundEffectsMode(v);
+                  feedback(ref, Sound.select);
+                },
+              ),
+            ),
+            const _Line(),
+            _Row(
+              label: 'Haptic feedback',
+              badge: const _Badge(Icons.vibration_rounded, lilac),
+              trailing: AppSwitch(
+                label: 'Haptic feedback',
+                value: settings.hapticFeedback,
+                onChanged: (v) {
+                  controller.setHapticFeedbackMode(v);
+                  feedback(ref, Sound.select);
+                },
+              ),
+            ),
+            const _Line(),
+            _Row(
+              label: 'Default reminders',
+              badge: const _Badge(Icons.alarm_rounded, peach),
+              value: defaults.isEmpty
+                  ? 'None'
+                  : defaults.map(_short).join(', '),
+              onTap: () => _editDefaults(context, ref),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  static String _short(int offset) => switch (offset) {
+    0 => 'Day of',
+    1440 => 'Day before',
+    10080 => 'Week before',
+    _ => reminderLabel(offset).replaceAll(' before', ''),
+  };
+
+  Future<void> _editDefaults(BuildContext context, WidgetRef ref) async {
+    feedback(ref);
+    await showModalBottomSheet<void>(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+      ),
+      builder: (context) => Consumer(
+        builder: (context, ref, _) {
+          final selected = ref.watch(
+            localSettingsProvider.select((s) => s.defaultReminders),
+          );
+          return SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SheetHandle(),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      const Expanded(
+                        child: Text(
+                          'Default reminders',
+                          style: AppText.sheetTitle,
+                        ),
+                      ),
+                      PillButton(
+                        label: 'Done',
+                        onTap: () => Navigator.pop(context),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  const Text(
+                    'New countdowns start with these.',
+                    style: AppText.secondary,
+                  ),
+                  const SizedBox(height: 16),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      for (final e in reminderChoices.entries)
+                        ChoiceChipButton(
+                          label: e.value,
+                          selected: selected.contains(e.key),
+                          onTap: () {
+                            final next = {...selected};
+                            if (!next.remove(e.key)) next.add(e.key);
+                            ref
+                                .read(localSettingsProvider.notifier)
+                                .setDefaultReminders(next.toList());
+                          },
+                        ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _Support extends ConsumerWidget {
+  const _Support();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final info = ref.watch(packageInfoProvider).asData?.value;
+    void open(String url) => launchUrl(Uri.parse(url));
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const _Heading('Support and about'),
+        GroupCard(
+          children: [
+            _Row(
+              label: 'Rate Countdowns',
+              onTap: () => InAppReview.instance.openStoreListing(
+                appStoreId: '1603744166',
+              ),
+            ),
+            const _Line(),
+            _Row(
+              label: 'Contact',
+              value: 'countdowns@chrisstayte.com',
+              onTap: () async {
+                final uri = Uri(
+                  scheme: 'mailto',
+                  path: 'countdowns@chrisstayte.com',
+                  query:
+                      'subject=App Feedback&body=\n\n\nApp Version ${info?.version ?? 'Unknown'}',
+                );
+                if (await canLaunchUrl(uri)) await launchUrl(uri);
+              },
+            ),
+            const _Line(),
+            _Row(
+              label: 'Privacy Policy',
+              onTap: () => open('https://chrisstayte.app/countdowns/privacy/'),
+            ),
+            const _Line(),
+            _Row(
+              label: 'Terms of Use',
+              onTap: () => open('https://chrisstayte.app/countdowns/terms/'),
+            ),
+            const _Line(),
+            _Row(
+              label: 'Source code',
+              onTap: () => open('https://github.com/chrisstayte/countdowns'),
+            ),
+            const _Line(),
+            _Row(
+              label: '@chrisstayte',
+              onTap: () => open('https://x.com/chrisstayte'),
+            ),
+            const _Line(),
+            _Row(
+              label: 'About',
+              onTap: () => showAboutDialog(
+                context: context,
                 applicationName: 'Countdowns',
-                applicationIcon: Icon(Icons.info_outline_rounded),
+                applicationVersion: info?.version,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
 
-                child: Text('About'),
+class _Danger extends ConsumerWidget {
+  const _Danger();
+
+  Future<void> _deleteAll(BuildContext context, WidgetRef ref) async {
+    feedback(ref);
+    final yes = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete all countdowns?'),
+        content: const Text('This can’t be undone.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Keep them'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(foregroundColor: AppColors.danger),
+            child: const Text('Delete all'),
+          ),
+        ],
+      ),
+    );
+    if (yes != true) return;
+    feedback(ref, Sound.trash);
+    await ref.read(eventsControllerProvider).deleteAllEvents();
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final info = ref.watch(packageInfoProvider).asData?.value;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Semantics(
+          button: true,
+          child: GestureDetector(
+            onTap: () => _deleteAll(context, ref),
+            child: Container(
+              height: 52,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(22),
               ),
-              ListTile(
-                leading: const FaIcon(FontAwesomeIcons.github),
-                title: const Text('Source Code'),
-                trailing: const Icon(Icons.chevron_right_rounded),
-                onTap: () => launchUrl(
-                  Uri.parse('https://github.com/chrisstayte/countdowns'),
+              child: const Text(
+                'Delete all countdowns',
+                style: TextStyle(
+                  color: AppColors.danger,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
-              ListTile(
-                leading: const FaIcon(FontAwesomeIcons.xTwitter),
-                title: const Text('@chrisstayte'),
-                trailing: const Icon(Icons.chevron_right_rounded),
-                onTap: () => launchUrl(Uri.parse('https://x.com/chrisstayte')),
-              ),
-              ListTile(
-                leading: const Icon(Icons.email),
-                title: const Text('Contact'),
-                trailing: const Text(
-                  'countdowns@chrisstayte.com',
-                  style: TextStyle(fontSize: 12),
-                ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 22),
+        Text(
+          'Countdowns ${info?.version ?? ''} · Made by Chris Stayte',
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 13, color: AppColors.secondaryText),
+        ),
+        if (kDebugMode) ...[
+          const SizedBox(height: 22),
+          const _Heading('Debug'),
+          GroupCard(
+            children: [
+              _Row(
+                label: 'Load sample countdowns',
                 onTap: () async {
-                  final Uri uri = Uri(
-                    scheme: 'mailto',
-                    path: 'countdowns@chrisstayte.com',
-                    query:
-                        'subject=App Feedback&body=\n\n\nApp Version ${packageInfo?.version ?? 'Unknown'}', //add subject and body here
-                  );
-
-                  if (await canLaunchUrl(uri)) {
-                    await launchUrl(uri);
+                  for (final c in sampleCountdowns(DateTime.now())) {
+                    await ref.read(eventsControllerProvider).save(c);
+                  }
+                },
+              ),
+              const _Line(),
+              _Row(
+                label: 'Print pending notifications',
+                onTap: () async {
+                  final List<PendingNotificationRequest> pending = await ref
+                      .read(notificationsProvider)
+                      .plugin
+                      .pendingNotificationRequests();
+                  for (final p in pending) {
+                    debugPrint('${p.id} ${p.title} ${p.body}');
                   }
                 },
               ),
             ],
           ),
-          SettingsContainer(
-            title: 'danger',
-            children: [
-              ListTile(
-                onTap: () => showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: const Text('Delete All Events'),
-                      content: const Text('This is not reversable.'),
-                      actions: [
-                        TextButton(
-                          child: const Text("Yes"),
-                          onPressed: () async {
-                            var settings = ref.read(localSettingsProvider);
-                            if (settings.hapticFeedback) {
-                              HapticFeedback.lightImpact();
-                            }
-                            if (settings.soundEffects) {
-                              AudioPlayer().play(
-                                AssetSource('sounds/trash.mp3'),
-                                ctx: AudioContext(
-                                  iOS: AudioContextIOS(
-                                    category: AVAudioSessionCategory.ambient,
-                                  ),
-                                ),
-                                mode: PlayerMode.lowLatency,
-                              );
-                            }
-                            await ref
-                                .read(eventsControllerProvider)
-                                .deleteAllEvents();
-                            if (!context.mounted) return;
-                            context.pop();
-                          },
-                        ),
-                        TextButton(
-                          onPressed: () => context.pop(),
-                          child: const Text('No'),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-                title: const Text('Delete All Events'),
-                trailing: const Icon(Icons.delete, color: Colors.red),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 50),
-            child: Column(
-              children: [
-                const Text(
-                  'Leave a review',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
-                ),
-                const SizedBox(height: 10),
-                Center(
-                  child: GestureDetector(
-                    onTap: () => InAppReview.instance.openStoreListing(
-                      appStoreId: '1603744166',
-                    ),
-                    child: Container(
-                      padding: const EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).cardColor,
-                        borderRadius: BorderRadius.circular(5),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withValues(alpha: 0.5),
-                            spreadRadius: 3,
-                            blurRadius: 5,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: List.generate(
-                          5,
-                          (index) => const Icon(
-                            Icons.star_rounded,
-                            color: Colors.amber,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Countdowns',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
-                  color: Theme.of(context).brightness == Brightness.light
-                      ? Global.colors.secondaryColor
-                      : Global.colors.accentColor,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                'Version ${packageInfo?.version ?? 'Unknown'} Build ${packageInfo?.buildNumber ?? 'Unknown'}',
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xffa6a5f6),
-                ),
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                'Made with ❤️ using flutter',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xffa6a5f6),
-                ),
-              ),
-            ],
-          ),
         ],
-      ),
+      ],
     );
   }
 }
