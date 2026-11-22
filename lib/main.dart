@@ -12,6 +12,7 @@ import 'package:countdowns/screens/share/share_sheet.dart';
 import 'package:countdowns/storage/photos.dart';
 import 'package:countdowns/storage/startup.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
@@ -115,6 +116,13 @@ class MyApp extends ConsumerWidget {
       // Dark mode is hidden for now. The stored themeMode setting is still
       // read and written unchanged so it can come back later.
       themeMode: ThemeMode.light,
+      // Dark status bar text on Paper by default. Screens on dark grounds
+      // (wall mode, crop, photo details) put their own light region on top,
+      // and leaving them falls back to this one instead of keeping theirs.
+      builder: (context, child) => AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.dark,
+        child: child!,
+      ),
     );
   }
 }
