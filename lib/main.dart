@@ -62,9 +62,14 @@ Future<void> main() async {
       final events = next.value;
       if (events != null) unawaited(widgets.write(events));
     }, fireImmediately: true);
-    // Rebuild every pending notification from the new database.
-    unawaited(
-      container.read(eventsControllerProvider).rescheduleNotifications(),
+    // Rebuild every pending notification from the new database, and again
+    // whenever the app comes back: the time zone, the clock or the exact
+    // alarm permission may have changed, and reminders past the iOS limit
+    // move up as earlier ones go off.
+    final events = container.read(eventsControllerProvider);
+    unawaited(events.rescheduleNotifications());
+    AppLifecycleListener(
+      onResume: () => unawaited(events.rescheduleNotifications()),
     );
     // Flutter draws nothing before runApp, so the native splash (Paper and
     // the icon mark) stays up through storage setup and this first read.

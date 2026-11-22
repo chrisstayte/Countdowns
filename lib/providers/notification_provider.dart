@@ -43,9 +43,11 @@ class NotificationRequest {
   final int id;
   final String title;
   final String body;
+
+  /// The first time it goes off, in local time.
   final DateTime when;
 
-  /// Null for one-shot notifications. Yearly events use
+  /// Null for one-shot notifications. Yearly reminders use
   /// [DateTimeComponents.dateAndTime]. Never [DateTimeComponents.time], which
   /// repeats every day.
   final DateTimeComponents? match;
@@ -57,7 +59,8 @@ class NotificationRequest {
 /// A reminder row: its id and the minutes before the event.
 typedef ReminderSlot = ({int id, int eventId, int offsetMinutes});
 
-/// Works out which notifications to schedule. Pure, so it can be tested.
+/// Works out which notifications to schedule, soonest first, capped at
+/// [maxPendingNotifications]. Pure, so it can be tested.
 List<NotificationRequest> planNotifications(
   List<Countdown> events,
   List<ReminderSlot> reminders,
@@ -67,56 +70,76 @@ List<NotificationRequest> planNotifications(
     for (final e in events)
       if (e.id != null) e.id!: e,
   };
-  final requests = <NotificationRequest>[];
-  for (final slot in reminders) {
-    final event = byId[slot.eventId];
-    if (event == null) continue;
-    final yearly = event.repeat == RepeatRule.yearly;
-    var occurrence = event.nextOccurrence(now);
-    DateTime fireTime(DateTime occ) {
-      final base = event.allDay
-          ? DateTime(occ.year, occ.month, occ.day, allDayReminderHour)
-          : occ;
-      // Whole days move by calendar day so the wall-clock time survives a
-      // daylight-saving change in between.
-      final days = slot.offsetMinutes ~/ 1440;
-      final minutes = slot.offsetMinutes % 1440;
-      return DateTime(
-        base.year,
-        base.month,
-        base.day - days,
-        base.hour,
-        base.minute - minutes,
-      );
-    }
-
-    var when = fireTime(occurrence);
-    if (yearly && !when.isAfter(now)) {
-      // This year's reminder has passed; the platform repeats it next year
-      // anyway, but give it the next year's date as its first fire time.
-      occurrence = DateTime(
-        occurrence.year + 1,
-        occurrence.month,
-        occurrence.day,
-        occurrence.hour,
-        occurrence.minute,
-      );
-      when = fireTime(occurrence);
-    }
-    if (!when.isAfter(now)) continue;
-    requests.add(
-      NotificationRequest(
-        id: slot.id,
-        title: event.title,
-        body: _body(event, slot.offsetMinutes),
-        when: when,
-        match: yearly ? DateTimeComponents.dateAndTime : null,
-      ),
-    );
-  }
-  requests.sort((a, b) => a.when.compareTo(b.when));
+  final requests = [
+    for (final slot in reminders)
+      if (byId[slot.eventId] case final event?) ?_plan(event, slot, now),
+  ]..sort((a, b) => a.when.compareTo(b.when));
   return requests.take(maxPendingNotifications).toList();
 }
+
+NotificationRequest? _plan(Countdown event, ReminderSlot slot, DateTime now) {
+  final offset = slot.offsetMinutes;
+  var occurrence = event.nextOccurrence(now);
+  var when = _reminderTime(event, occurrence, offset);
+  DateTimeComponents? match;
+  if (event.repeat == RepeatRule.yearly) {
+    // This year's reminder has passed: aim at next year's.
+    if (!when.isAfter(now)) {
+      occurrence = _followingYear(event, occurrence);
+      when = _reminderTime(event, occurrence, offset);
+    }
+    // iOS repeats on month, day and time alone and fires at the next match,
+    // so only repeat when this reminder is the next match (less than a year
+    // away) and next year's lands on the same date and time. Feb 29, and
+    // reminders that count back across it, don't; they go one at a time and
+    // are planned again each time the app opens.
+    final next = _reminderTime(
+      event,
+      _followingYear(event, occurrence),
+      offset,
+    );
+    final lastYear = DateTime(
+      when.year - 1,
+      when.month,
+      when.day,
+      when.hour,
+      when.minute,
+    );
+    if (!lastYear.isAfter(now) && _sameDayAndTime(when, next)) {
+      match = DateTimeComponents.dateAndTime;
+    }
+  }
+  if (!when.isAfter(now)) return null;
+  return NotificationRequest(
+    id: slot.id,
+    title: event.title,
+    body: _body(event, offset),
+    when: when,
+    match: match,
+  );
+}
+
+/// When a reminder [offset] minutes before [occurrence] goes off. Whole days
+/// move by calendar day, so the time of day survives a daylight-saving change
+/// in between; the rest is real elapsed time.
+DateTime _reminderTime(Countdown event, DateTime occurrence, int offset) =>
+    DateTime(
+      occurrence.year,
+      occurrence.month,
+      occurrence.day - offset ~/ 1440,
+      event.allDay ? allDayReminderHour : occurrence.hour,
+      event.allDay ? 0 : occurrence.minute,
+    ).subtract(Duration(minutes: offset % 1440));
+
+/// The yearly occurrence after [occurrence], with Feb 29 handled.
+DateTime _followingYear(Countdown event, DateTime occurrence) =>
+    event.nextOccurrence(occurrence.add(const Duration(days: 1)));
+
+bool _sameDayAndTime(DateTime a, DateTime b) =>
+    a.month == b.month &&
+    a.day == b.day &&
+    a.hour == b.hour &&
+    a.minute == b.minute;
 
 String _body(Countdown event, int offset) {
   if (offset == 0) return event.allDay ? 'It’s today!' : 'It’s happening now!';
@@ -132,16 +155,23 @@ String _body(Countdown event, int offset) {
 
 class EventNotifications {
   final plugin = FlutterLocalNotificationsPlugin();
+
   bool get supported =>
       !kIsWeb &&
       (defaultTargetPlatform == TargetPlatform.iOS ||
           defaultTargetPlatform == TargetPlatform.android);
 
+  AndroidFlutterLocalNotificationsPlugin? get _android => plugin
+      .resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin
+      >();
+
   Future<void> initialize() async {
     if (!supported) return;
+    tz.initializeTimeZones();
     await plugin.initialize(
       settings: const InitializationSettings(
-        android: AndroidInitializationSettings('@mipmap/countdowns'),
+        android: AndroidInitializationSettings('ic_stat_countdowns'),
         iOS: DarwinInitializationSettings(
           requestAlertPermission: false,
           requestBadgePermission: false,
@@ -149,9 +179,9 @@ class EventNotifications {
         ),
       ),
     );
-    tz.initializeTimeZones();
   }
 
+  /// Asks to show notifications. True when they're allowed.
   Future<bool> requestPermission() async {
     if (!supported) return false;
     if (defaultTargetPlatform == TargetPlatform.iOS) {
@@ -162,54 +192,92 @@ class EventNotifications {
               ?.requestPermissions(alert: true, badge: true, sound: true) ??
           false;
     }
-    final android = plugin
-        .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin
-        >();
-    return await android?.requestNotificationsPermission() == true &&
-        await android?.requestExactAlarmsPermission() == true;
+    final android = _android;
+    if (await android?.requestNotificationsPermission() != true) return false;
+    // Exact alarms keep "1 hour before" on the minute. Without them reminders
+    // still arrive, just possibly a few minutes late, so a refusal here
+    // doesn't turn notifications off.
+    await android?.requestExactAlarmsPermission();
+    return true;
   }
 
+  /// Removes pending and delivered notifications.
   Future<void> cancelAll() async {
     if (supported) await plugin.cancelAll();
   }
 
-  /// Replaces every pending notification with [requests].
+  /// Replaces every pending notification with [requests]. Delivered ones stay
+  /// in the notification centre.
   Future<void> replaceAll(List<NotificationRequest> requests) async {
     if (!supported) return;
-    await plugin.cancelAll();
+    await plugin.cancelAllPendingNotifications();
     if (requests.isEmpty) return;
-    final zone = tz.getLocation(
-      (await FlutterTimezone.getLocalTimezone()).identifier,
-    );
+    final zone = await _localZone();
+    final mode = await _scheduleMode();
     for (final request in requests) {
-      await schedule(request, zone);
+      // One failure (say, a reminder that passed while planning) mustn't
+      // drop the rest.
+      try {
+        await schedule(request, zone, mode);
+      } catch (error, stack) {
+        FlutterError.reportError(
+          FlutterErrorDetails(
+            exception: error,
+            stack: stack,
+            library: 'countdown notifications',
+            context: ErrorDescription('scheduling $request'),
+          ),
+        );
+      }
     }
   }
 
-  Future<void> schedule(NotificationRequest request, tz.Location zone) =>
-      plugin.zonedSchedule(
-        id: request.id,
-        title: request.title,
-        body: request.body,
-        scheduledDate: tz.TZDateTime.from(request.when, zone),
-        notificationDetails: const NotificationDetails(
-          android: AndroidNotificationDetails(
-            'event_notification',
-            'Event Notification',
-            importance: Importance.max,
-            priority: Priority.max,
-            showWhen: true,
-            enableVibration: true,
-            styleInformation: BigTextStyleInformation(''),
-          ),
-          iOS: DarwinNotificationDetails(
-            presentAlert: true,
-            presentBadge: true,
-            presentSound: true,
-          ),
-        ),
-        androidScheduleMode: AndroidScheduleMode.exact,
-        matchDateTimeComponents: request.match,
+  Future<void> schedule(
+    NotificationRequest request,
+    tz.Location zone, [
+    AndroidScheduleMode mode = AndroidScheduleMode.exactAllowWhileIdle,
+  ]) => plugin.zonedSchedule(
+    id: request.id,
+    title: request.title,
+    body: request.body,
+    scheduledDate: tz.TZDateTime.from(request.when, zone),
+    notificationDetails: const NotificationDetails(
+      android: AndroidNotificationDetails(
+        'event_notification',
+        'Event Notification',
+        importance: Importance.max,
+        priority: Priority.max,
+        showWhen: true,
+        enableVibration: true,
+        styleInformation: BigTextStyleInformation(''),
+      ),
+      iOS: DarwinNotificationDetails(
+        presentAlert: true,
+        presentBadge: true,
+        presentSound: true,
+      ),
+    ),
+    androidScheduleMode: mode,
+    matchDateTimeComponents: request.match,
+  );
+
+  /// Exact alarms when Android allows them (they need a permission from
+  /// Android 12, off by default from 14), inexact ones otherwise. Both still
+  /// fire in Doze.
+  Future<AndroidScheduleMode> _scheduleMode() async =>
+      await _android?.canScheduleExactNotifications() == false
+      ? AndroidScheduleMode.inexactAllowWhileIdle
+      : AndroidScheduleMode.exactAllowWhileIdle;
+
+  /// The device's zone, so yearly repeats keep their local time.
+  Future<tz.Location> _localZone() async {
+    try {
+      return tz.getLocation(
+        (await FlutterTimezone.getLocalTimezone()).identifier,
       );
+    } catch (_) {
+      // An unknown zone name: the times still land on the right instant.
+      return tz.UTC;
+    }
+  }
 }

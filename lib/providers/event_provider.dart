@@ -52,11 +52,17 @@ class EventsController {
     await rescheduleNotifications();
   }
 
-  /// Rebuilds every pending notification from the database.
+  Future<void> _rescheduling = Future.value();
+
+  /// Rebuilds every pending notification from the database. Runs one at a
+  /// time, so a slow run can't put back reminders a later one removed.
   ///
   /// A platform scheduling failure must not make a committed write look like
   /// it failed, so errors are reported, not thrown.
-  Future<void> rescheduleNotifications() async {
+  Future<void> rescheduleNotifications() =>
+      _rescheduling = _rescheduling.then((_) => _reschedule());
+
+  Future<void> _reschedule() async {
     final notifications = ref.read(notificationsProvider);
     try {
       if (!ref.read(localSettingsProvider).notify) {
