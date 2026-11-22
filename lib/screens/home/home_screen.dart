@@ -16,12 +16,22 @@ import 'package:material_ui/material_ui.dart';
 /// Width from which Home becomes the iPad split view.
 const tabletBreakpoint = 900.0;
 
+/// The split view also needs a tablet-sized screen, so a phone turned
+/// sideways (wide but short) keeps the phone layout.
+const tabletShortestSide = 600.0;
+
+bool useTabletLayout(BuildContext context) {
+  final size = MediaQuery.sizeOf(context);
+  return size.width >= tabletBreakpoint &&
+      size.shortestSide >= tabletShortestSide;
+}
+
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (MediaQuery.sizeOf(context).width >= tabletBreakpoint) {
+    if (useTabletLayout(context)) {
       return const TabletHome();
     }
     return Scaffold(

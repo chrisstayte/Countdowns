@@ -230,71 +230,83 @@ class _Sidebar extends ConsumerWidget {
       color: _sidebar,
       child: SafeArea(
         right: false,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Padding(
-                padding: EdgeInsets.fromLTRB(10, 0, 10, 18),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: MarkedTitle(
-                    'Since & Soon',
-                    style: TextStyle(
-                      fontFamily: AppFonts.numerals,
-                      fontSize: 26,
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.ink,
-                    ),
+        // Scrolls when the window is too short for every item (a small
+        // split-screen window, for example). Otherwise Settings stays
+        // pinned to the bottom.
+        child: LayoutBuilder(
+          builder: (context, constraints) => SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: IntrinsicHeight(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(10, 0, 10, 18),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: MarkedTitle(
+                            'Since & Soon',
+                            style: TextStyle(
+                              fontFamily: AppFonts.numerals,
+                              fontSize: 26,
+                              fontWeight: FontWeight.w800,
+                              color: AppColors.ink,
+                            ),
+                          ),
+                        ),
+                      ),
+                      item(
+                        Icons.schedule_rounded,
+                        'Soon',
+                        count: upcoming,
+                        selected: filter == HomeFilter.upcoming,
+                        onTap: () => setFilter(HomeFilter.upcoming),
+                      ),
+                      item(
+                        Icons.history_rounded,
+                        'Since',
+                        count: since,
+                        selected: filter == HomeFilter.since,
+                        onTap: () => setFilter(HomeFilter.since),
+                      ),
+                      item(
+                        Icons.check_rounded,
+                        'Done',
+                        count: done,
+                        selected: filter == HomeFilter.done,
+                        onTap: () => setFilter(HomeFilter.done),
+                      ),
+                      item(
+                        Icons.view_agenda_outlined,
+                        'All',
+                        count: upcoming + since + done,
+                        selected: filter == HomeFilter.all,
+                        onTap: () => setFilter(HomeFilter.all),
+                      ),
+                      item(
+                        Icons.search_rounded,
+                        'Search',
+                        onTap: () => context.pushNamed(AppRoutes.search),
+                      ),
+                      item(
+                        Icons.grid_view_rounded,
+                        'Wall mode',
+                        onTap: () => context.pushNamed(AppRoutes.wall),
+                      ),
+                      const Spacer(),
+                      item(
+                        Icons.tune_rounded,
+                        'Settings',
+                        onTap: () => context.pushNamed(AppRoutes.settings),
+                      ),
+                    ],
                   ),
                 ),
               ),
-              item(
-                Icons.schedule_rounded,
-                'Soon',
-                count: upcoming,
-                selected: filter == HomeFilter.upcoming,
-                onTap: () => setFilter(HomeFilter.upcoming),
-              ),
-              item(
-                Icons.history_rounded,
-                'Since',
-                count: since,
-                selected: filter == HomeFilter.since,
-                onTap: () => setFilter(HomeFilter.since),
-              ),
-              item(
-                Icons.check_rounded,
-                'Done',
-                count: done,
-                selected: filter == HomeFilter.done,
-                onTap: () => setFilter(HomeFilter.done),
-              ),
-              item(
-                Icons.view_agenda_outlined,
-                'All',
-                count: upcoming + since + done,
-                selected: filter == HomeFilter.all,
-                onTap: () => setFilter(HomeFilter.all),
-              ),
-              item(
-                Icons.search_rounded,
-                'Search',
-                onTap: () => context.pushNamed(AppRoutes.search),
-              ),
-              item(
-                Icons.grid_view_rounded,
-                'Wall mode',
-                onTap: () => context.pushNamed(AppRoutes.wall),
-              ),
-              const Spacer(),
-              item(
-                Icons.tune_rounded,
-                'Settings',
-                onTap: () => context.pushNamed(AppRoutes.settings),
-              ),
-            ],
+            ),
           ),
         ),
       ),
