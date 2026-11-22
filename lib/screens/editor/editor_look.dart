@@ -1,0 +1,459 @@
+import 'package:countdowns/models/background_catalog.dart';
+import 'package:countdowns/models/countdown.dart';
+import 'package:countdowns/models/event_icons.dart';
+import 'package:countdowns/models/icon_catalog.dart';
+import 'package:countdowns/models/palette.dart';
+import 'package:countdowns/providers/recents_provider.dart';
+import 'package:countdowns/screens/editor/all_backgrounds_sheet.dart';
+import 'package:countdowns/screens/editor/all_fonts_sheet.dart';
+import 'package:countdowns/screens/editor/all_icons_sheet.dart';
+import 'package:countdowns/screens/editor/editor_details.dart';
+import 'package:countdowns/screens/editor/photos_tab.dart';
+import 'package:countdowns/theme/app_theme.dart';
+import 'package:countdowns/utilities/feedback.dart';
+import 'package:countdowns/widgets/event_icon.dart';
+import 'package:countdowns/widgets/ui.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
+
+/// Look: background (photo, gradient or colour), icon and font.
+class EditorLook extends ConsumerWidget {
+  const EditorLook({
+    super.key,
+    required this.draft,
+    required this.edit,
+    required this.onAddPhoto,
+    this.onImportedPhoto,
+    this.originalColor,
+    this.backgroundColumns = 6,
+    this.iconColumns = 8,
+  });
+
+  final Countdown draft;
+  final DraftEdit edit;
+  final VoidCallback onAddPhoto;
+
+  /// A stock photo downloaded from the All backgrounds sheet, already in
+  /// the photo store: the editor crops it like a camera-roll photo.
+  final ValueChanged<ImportedPhoto>? onImportedPhoto;
+
+  /// The saved colour when editing, so an off-palette colour can be offered
+  /// as "Current" until the person picks another.
+  final int? originalColor;
+  final int backgroundColumns;
+  final int iconColumns;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final recents = ref.watch(recentsProvider);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const SectionLabel(
+          'Background',
+          // Flexible so a large text size or narrow screen trims it
+          // instead of overflowing the heading row.
+          trailing: Flexible(
+            child: Text(
+              'Color, gradient, photo and more',
+              style: _hint,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.end,
+            ),
+          ),
+        ),
+        const SizedBox(height: 10),
+        _BackgroundGrid(
+          draft: draft,
+          edit: edit,
+          columns: backgroundColumns,
+          originalColor: originalColor,
+          recentPhotos: recents.photos,
+          recentBackgrounds: recents.backgrounds,
+          onAddPhoto: onAddPhoto,
+        ),
+        const SizedBox(height: 10),
+        SeeAllButton(
+          label: 'All backgrounds',
+          onTap: () => _allBackgrounds(context, ref),
+        ),
+        if (draft.gradientId != null && !draft.hasPhoto) ...[
+          const SizedBox(height: 14),
+          _DirectionRow(draft: draft, edit: edit),
+        ],
+        if (draft.hasPhoto) ...[
+          const SizedBox(height: 14),
+          _DarkenRow(draft: draft, edit: edit),
+        ],
+        const SizedBox(height: 20),
+        const SectionLabel('Icon'),
+        const SizedBox(height: 10),
+        _IconGrid(
+          slugs: iconRow(recents.icons),
+          selected: draft.iconSlug,
+          columns: iconColumns,
+          onPick: (slug) => _pickIcon(ref, slug),
+          showNone: true,
+        ),
+        const SizedBox(height: 10),
+        SeeAllButton(
+          label: 'All ${eventIconCatalog.length} icons',
+          onTap: () => _allIcons(context, ref),
+        ),
+        const SizedBox(height: 20),
+        const SectionLabel('Font'),
+        const SizedBox(height: 10),
+        _FontGrid(
+          families: _fontRow(recents.fonts),
+          draft: draft,
+          onPick: (f) => _pickFont(ref, f),
+        ),
+        const SizedBox(height: 10),
+        SeeAllButton(
+          label: allFontsLabel(ref.watch(fontCatalogProvider).value),
+          onTap: () => _allFonts(context, ref),
+        ),
+      ],
+    );
+  }
+
+  List<String> _fontRow(List<String> recent) {
+    final row = fontRow(recent);
+    // Keep the current font visible.
+    final current = canonicalEventFont(draft.fontFamily);
+    if (!row.contains(current)) return [current, ...row.take(3)];
+    return row;
+  }
+
+  void _pickIcon(WidgetRef ref, String? slug) {
+    feedback(ref, Sound.select);
+    edit((d) => d.copyWith(iconSlug: slug));
+  }
+
+  void _pickFont(WidgetRef ref, String family) {
+    feedback(ref, Sound.select);
+    edit((d) => d.copyWith(fontFamily: family));
+  }
+
+  Future<void> _allBackgrounds(BuildContext context, WidgetRef ref) async {
+    feedback(ref);
+    final picked = await showModalBottomSheet<Object>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+      ),
+      // Picks apply as they're made, so closing the sheet any way
+      // (Done, swipe, tapping outside, back) keeps them.
+      builder: (_) =>
+          AllBackgroundsSheet(draft: draft, onChanged: (c) => edit(c.applyTo)),
+    );
+    if (picked == addPhotoResult) {
+      onAddPhoto();
+    } else if (picked is ImportedPhoto) {
+      onImportedPhoto?.call(picked);
+    }
+  }
+
+  Future<void> _allIcons(BuildContext context, WidgetRef ref) async {
+    feedback(ref);
+    final picked = await showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+      ),
+      builder: (_) => AllIconsSheet(selected: draft.iconSlug),
+    );
+    if (picked != null) _pickIcon(ref, picked);
+  }
+
+  Future<void> _allFonts(BuildContext context, WidgetRef ref) async {
+    feedback(ref);
+    final picked = await showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+      ),
+      builder: (_) => AllFontsSheet(draft: draft),
+    );
+    if (picked != null) _pickFont(ref, picked);
+  }
+}
+
+const _hint = TextStyle(
+  fontSize: 12,
+  fontWeight: FontWeight.w600,
+  color: AppColors.secondaryText,
+);
+
+/// The Look tab's short row: Add photo, photos, the current background,
+/// recently used ones and featured picks (see lookRowKeys). Everything else
+/// is in the All backgrounds sheet.
+class _BackgroundGrid extends ConsumerWidget {
+  const _BackgroundGrid({
+    required this.draft,
+    required this.edit,
+    required this.columns,
+    required this.originalColor,
+    required this.recentPhotos,
+    required this.recentBackgrounds,
+    required this.onAddPhoto,
+  });
+
+  final Countdown draft;
+  final DraftEdit edit;
+  final int columns;
+  final int? originalColor;
+  final List<String> recentPhotos;
+  final List<String> recentBackgrounds;
+  final VoidCallback onAddPhoto;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final current = backgroundKeyOf(draft);
+    final custom = originalColor != null && !isPaletteColor(originalColor!)
+        ? colourKey(Color(originalColor!))
+        : null;
+    final keys = lookRowKeys(
+      draft: draft,
+      recentPhotos: availablePhotos(recent: recentPhotos),
+      recentBackgrounds: recentBackgrounds,
+      originalColor: originalColor,
+    );
+    return GridView.count(
+      padding: EdgeInsets.zero,
+      crossAxisCount: columns,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      mainAxisSpacing: 8,
+      crossAxisSpacing: 8,
+      childAspectRatio: 1.1,
+      children: [
+        AddPhotoTile(onTap: onAddPhoto),
+        for (final k in keys)
+          BackgroundTile(
+            backgroundKey: k,
+            selected: k == current,
+            legacyBase: draft.color,
+            badge: k == custom ? 'Current' : null,
+            onTap: () {
+              if (k == current) return;
+              feedback(ref, Sound.select);
+              edit((d) => applyBackground(d, k));
+            },
+          ),
+      ],
+    );
+  }
+}
+
+class _DirectionRow extends ConsumerWidget {
+  const _DirectionRow({required this.draft, required this.edit});
+  final Countdown draft;
+  final DraftEdit edit;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) => DirectionPicker(
+    colors: draft.gradient!,
+    selected: draft.direction,
+    onPick: (dir) {
+      feedback(ref, Sound.select);
+      edit((d) => d.copyWith(gradientDirection: dir));
+    },
+  );
+}
+
+class _DarkenRow extends ConsumerWidget {
+  const _DarkenRow({required this.draft, required this.edit});
+  final Countdown draft;
+  final DraftEdit edit;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final current = photoDarkenLevels.entries
+        .reduce(
+          (a, b) =>
+              (a.value - draft.photoDarken).abs() <=
+                  (b.value - draft.photoDarken).abs()
+              ? a
+              : b,
+        )
+        .key;
+    return Row(
+      children: [
+        const SizedBox(
+          width: 72,
+          child: Text('DARKEN', style: AppText.eyebrow),
+        ),
+        Expanded(
+          child: ChipSegmented<String>(
+            values: photoDarkenLevels.keys.toList(),
+            selected: current,
+            label: (k) => k,
+            height: 36,
+            spacing: 6,
+            equalWidths: true,
+            onChanged: (k) {
+              feedback(ref, Sound.select, false);
+              edit((d) => d.copyWith(photoDarken: photoDarkenLevels[k]));
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _IconGrid extends StatelessWidget {
+  const _IconGrid({
+    required this.slugs,
+    required this.selected,
+    required this.onPick,
+    required this.columns,
+    this.showNone = false,
+  });
+
+  final List<String> slugs;
+  final String? selected;
+  final ValueChanged<String?> onPick;
+  final int columns;
+  final bool showNone;
+
+  @override
+  Widget build(BuildContext context) {
+    // Keep the chosen icon visible even if it isn't in the row.
+    final row = selected != null && !slugs.contains(selected)
+        ? [selected!, ...slugs.take(slugs.length - 1)]
+        : slugs;
+    Widget tile(String? slug) {
+      final on = slug == selected;
+      return Semantics(
+        button: true,
+        selected: on,
+        label: slug == null ? 'No icon' : iconInfo(slug)?.label,
+        child: GestureDetector(
+          onTap: () => onPick(slug),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 150),
+            decoration: BoxDecoration(
+              color: on ? AppColors.highlighter : AppColors.wash,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            alignment: Alignment.center,
+            child: slug == null
+                ? Icon(Icons.block_rounded, size: 20, color: AppColors.muted)
+                : EventIcon(slug, size: 22, color: AppColors.ink),
+          ),
+        ),
+      );
+    }
+
+    return GridView.count(
+      padding: EdgeInsets.zero,
+      crossAxisCount: columns,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      mainAxisSpacing: 6,
+      crossAxisSpacing: 6,
+      childAspectRatio: 1.05,
+      children: [if (showNone) tile(null), for (final s in row) tile(s)],
+    );
+  }
+}
+
+class _FontGrid extends StatelessWidget {
+  const _FontGrid({
+    required this.families,
+    required this.draft,
+    required this.onPick,
+  });
+  final List<String> families;
+  final Countdown draft;
+  final ValueChanged<String> onPick;
+
+  @override
+  Widget build(BuildContext context) => GridView.count(
+    padding: EdgeInsets.zero,
+    crossAxisCount: 2,
+    shrinkWrap: true,
+    physics: const NeverScrollableScrollPhysics(),
+    mainAxisSpacing: 8,
+    crossAxisSpacing: 8,
+    mainAxisExtent: 54,
+    children: [
+      for (final family in families)
+        _FontTile(
+          family: family,
+          sample: draft.title.isEmpty ? 'Countdown' : draft.title,
+          selected: canonicalEventFont(draft.fontFamily) == family,
+          onTap: () => onPick(family),
+        ),
+    ],
+  );
+}
+
+class _FontTile extends StatelessWidget {
+  const _FontTile({
+    required this.family,
+    required this.sample,
+    required this.selected,
+    required this.onTap,
+  });
+  final String family;
+  final String sample;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) => Semantics(
+    button: true,
+    selected: selected,
+    label: '${eventFontLabel(family)} font',
+    child: GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        decoration: BoxDecoration(
+          color: AppColors.wash,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: selected ? AppColors.ink : Colors.transparent,
+            width: 2,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            FontSample(
+              family: family,
+              text: sample,
+              style: const TextStyle(
+                fontSize: 18,
+                height: 1.1,
+                color: AppColors.ink,
+              ),
+            ),
+            Text(
+              eventFontLabel(family),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+                color: AppColors.secondaryText,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android 12+ splash icon: a 240dp canvas whose centre 160dp circle is
+     visible. The mark is scaled to 112dp tall (its corners sit 75dp from
+     the centre), so the circle never clips it. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="240dp"
+    android:height="240dp"
+    android:viewportWidth="240"
+    android:viewportHeight="240">
+    <group
+        android:scaleX="0.13913"
+        android:scaleY="0.13913"
+        android:translateX="48.696"
+        android:translateY="48.696">
+    <!-- Same coordinates as tool/splash/mark.swift (the iOS PDF). -->
+    <path android:pathData="M195,184 L830,164" android:strokeColor="#FFE36E" android:strokeWidth="92" android:strokeLineCap="round" />
+    <path android:pathData="M205,860 L820,840" android:strokeColor="#FFE36E" android:strokeWidth="92" android:strokeLineCap="round" />
+    <path android:pathData="M249,163 L824,163 L534,665 Z" android:strokeColor="#2E2A3A" android:strokeAlpha="0.55" android:strokeWidth="18" android:strokeLineCap="round" android:strokeLineJoin="round" />
+    <path android:pathData="M594,440 L534,335 L249,840 L824,840 L664,568" android:strokeColor="#2E2A3A" android:strokeAlpha="0.55" android:strokeWidth="18" android:strokeLineCap="round" android:strokeLineJoin="round" />
+    <path android:pathData="M225,173 L800,173 L510,675 Z" android:strokeColor="#2E2A3A" android:strokeWidth="26" android:strokeLineCap="round" android:strokeLineJoin="round" />
+    <path android:pathData="M570,450 L510,345 L225,850 L800,850 L640,578" android:strokeColor="#2E2A3A" android:strokeWidth="26" android:strokeLineCap="round" android:strokeLineJoin="round" />
+    </group>
+</vector>

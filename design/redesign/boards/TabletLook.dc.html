@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Look and details, iPad</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Inter:wght@400;500;600;700&amp;family=Libre+Baskerville:wght@400;700&amp;family=Comic+Neue:wght@400;700&amp;family=Roboto:wght@400;700&amp;family=Luxurious+Roman&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#4A0D67}a:hover{color:#1C1633}
+button{font:inherit;cursor:pointer}
+input{font:inherit}
+@font-face{font-family:'CarnivaleeFreakshow';src:url(/_blob/b5692f0f7701c2b3c3a3b87689f0eb8b)}
+@font-face{font-family:'DiarioDeAndy';src:url(/_blob/a0f4bcd96836b633ffd19744c8d1170b)}
+@font-face{font-family:'GoodTimes';src:url(/_blob/892158b16779b47856d11b66141f02ad)}
+@font-face{font-family:'NewWaltDisney';src:url(/_blob/cb2417967e8d87c41d188f7075ea6ab5)}
+@font-face{font-family:'Starjedi';src:url(/_blob/016d6673ab73ace54286b8565f4c1b4b)}
+@font-face{font-family:'Sunnyspells';src:url(/_blob/d4374ef08c1bff95db3ad13f895887b6)}
+</style>
+</helmet>
+<div style="width: 1194px; height: 834px; box-sizing: border-box; overflow: hidden; background: #ECEAFB; color: #1C1633; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column">
+  <header style="height: 76px; padding: 24px 28px 0; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between">
+    <a href="TabletSplit.dc.html" style="height: 44px; display: flex; align-items: center; font-weight: 600; font-size: 16px; color: #4A0D67; text-decoration: none">Cancel</a>
+    <span style="font-weight: 700; font-size: 18px">Edit countdown</span>
+    <a href="TabletSplit.dc.html" style="height: 42px; padding: 0 22px; border-radius: 21px; background: #1B998B; color: #FFFFFF; text-decoration: none; display: flex; align-items: center; font-weight: 700; font-size: 15px">Save</a>
+  </header>
+  <div style="flex: 1; min-height: 0; padding: 12px 24px 24px; display: grid; grid-template-columns: 340px 1fr 1fr; gap: 20px">
+
+    <section aria-label="Preview" style="display: flex; flex-direction: column; gap: 14px">
+      <div style="background: {{cardBg}}; color: {{ink}}; border-radius: 28px; height: 300px; padding: 22px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 16px 34px rgba(28,22,51,0.2); position: relative">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; text-shadow: {{shadow}}"><span style="font-family: {{font}}; font-size: 30px; font-weight: 700">Japan trip</span><sc-if value="{{hasIcon}}" hint-placeholder-val="{{true}}"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{iconPath}}"></path></svg></sc-if></div>
+        <div style="text-shadow: {{shadow}}"><div style="display: flex; align-items: baseline; gap: 8px"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 96px; font-weight: 800; line-height: 0.85; letter-spacing: -0.04em">113</span><span style="font-size: 22px; font-weight: 700">days</span></div><span style="font-size: 14px; font-weight: 600">Sun, Mar 14 · 9:30 AM</span></div>
+        <sc-if value="{{isPhoto}}" hint-placeholder-val="{{true}}"><a href="TabletCrop.dc.html" style="position: absolute; right: 16px; top: 64px; height: 34px; padding: 0 12px; border-radius: 17px; background: rgba(255,255,255,0.9); color: #1C1633; text-decoration: none; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 2v16h16M2 6h16v16"></path></svg>Crop</a></sc-if>
+      </div>
+      <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5E5878">Also shows up as</span>
+      <div style="display: grid; grid-template-columns: 110px 1fr; gap: 12px">
+        <div style="height: 110px; border-radius: 22px; background: {{cardBg}}; color: {{ink}}; padding: 12px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-end; text-shadow: {{shadow}}"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 800; line-height: 0.9">113</span><span style="font-size: 11px; font-weight: 700">days</span></div>
+        <div style="height: 110px; border-radius: 22px; background: {{cardBg}}; color: {{ink}}; padding: 12px 14px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; text-shadow: {{shadow}}"><span style="font-family: {{font}}; font-size: 15px; font-weight: 700">Japan trip</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 800; line-height: 0.9">114 <span style="font-size: 13px">sleeps</span></span></div>
+      </div>
+      <span style="font-size: 12px; color: #5E5878">Small and wide widgets. Each keeps its own crop.</span>
+    </section>
+
+    <section aria-label="Details" style="background: #FFFFFF; border-radius: 26px; padding: 20px; display: flex; flex-direction: column; gap: 18px; min-height: 0">
+      <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 800">Details</h2>
+      <div style="display: flex; flex-direction: column; gap: 8px"><label for="tname" style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5E5878">Name</label><input id="tname" value="Japan trip" style="height: 46px; border-radius: 14px; border: 1.5px solid #D6D3F0; padding: 0 14px; font-size: 16px; color: #1C1633; background: #F5F4FF"></div>
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        <h3 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5E5878">When</h3>
+        <div style="background: #F5F4FF; border-radius: 14px; display: flex; flex-direction: column">
+          <button style="height: 46px; border: none; background: transparent; padding: 0 14px; display: flex; justify-content: space-between; align-items: center; font-size: 15px; color: #1C1633"><span>Date</span><span style="font-weight: 600; color: #4A0D67">Sun, Mar 14, 2027</span></button>
+          <div style="height: 1px; background: #E4E1F5; margin: 0 14px"></div>
+          <button style="height: 46px; border: none; background: transparent; padding: 0 14px; display: flex; justify-content: space-between; align-items: center; font-size: 15px; color: #1C1633"><span>Time</span><span style="font-weight: 600; color: #4A0D67">9:30 AM</span></button>
+          <div style="height: 1px; background: #E4E1F5; margin: 0 14px"></div>
+          <button style="height: 46px; border: none; background: transparent; padding: 0 14px; display: flex; justify-content: space-between; align-items: center; font-size: 15px; color: #1C1633"><span>Repeats</span><span style="font-weight: 600; color: #5E5878">Never</span></button>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        <h3 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5E5878">Remind me</h3>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap">
+          <sc-for list="{{reminders}}" as="r" hint-placeholder-count="4">
+            <button onClick="{{r.pick}}" aria-pressed="{{r.on}}" style="height: 38px; padding: 0 14px; border-radius: 19px; border: 1.5px solid {{r.border}}; background: {{r.bg}}; color: {{r.fg}}; font-size: 14px; font-weight: 600">{{r.label}}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        <div style="display: flex; justify-content: space-between; align-items: baseline"><h3 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5E5878">Count in</h3></div>
+        <div style="display: flex; gap: 4px; background: #F5F4FF; border-radius: 20px; padding: 4px">
+          <sc-for list="{{units}}" as="u" hint-placeholder-count="4"><button onClick="{{u.pick}}" aria-pressed="{{u.on}}" style="flex: 1; height: 34px; border: none; border-radius: 17px; background: {{u.bg}}; color: {{u.fg}}; font-size: 13px; font-weight: 700">{{u.label}}</button></sc-for>
+        </div>
+      </div>
+    </section>
+
+    <section aria-label="Look" style="background: #FFFFFF; border-radius: 26px; padding: 20px; display: flex; flex-direction: column; gap: 16px; min-height: 0">
+      <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 800">Look</h2>
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        <h3 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5E5878">Background</h3>
+        <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px">
+          <a href="TabletCrop.dc.html" aria-label="Add a photo" style="height: 40px; border-radius: 12px; border: 1.5px dashed #4A0D67; background: #F5F4FF; color: #4A0D67; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"></rect><circle cx="9" cy="10" r="1.6"></circle><path d="M21 16l-5-5-8 8"></path></svg></a>
+          <sc-for list="{{bgs}}" as="b" hint-placeholder-count="17"><button onClick="{{b.pick}}" aria-label="{{b.name}}" aria-pressed="{{b.on}}" style="height: 40px; border-radius: {{b.radius}}; border: 3px solid {{b.ring}}; background: {{b.fill}}; box-shadow: inset 0 0 0 2px #FFFFFF; padding: 0"></button></sc-for>
+        </div>
+        <sc-if value="{{isPhoto}}" hint-placeholder-val="{{true}}">
+          <div style="display: flex; align-items: center; gap: 8px"><span style="font-size: 12px; font-weight: 700; color: #5E5878; width: 56px">Darken</span><sc-for list="{{dims}}" as="d" hint-placeholder-count="3"><button onClick="{{d.pick}}" aria-pressed="{{d.on}}" style="flex: 1; height: 32px; border-radius: 16px; border: 1.5px solid {{d.border}}; background: {{d.bg}}; color: {{d.fg}}; font-size: 12px; font-weight: 600">{{d.label}}</button></sc-for></div>
+        </sc-if>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        <h3 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5E5878">Icon</h3>
+        <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px">
+          <sc-for list="{{icons}}" as="ic" hint-placeholder-count="12"><button onClick="{{ic.pick}}" aria-label="{{ic.name}}" aria-pressed="{{ic.on}}" style="height: 40px; border-radius: 12px; border: none; background: {{ic.bg}}; color: {{ic.fg}}; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ic.d}}"></path></svg></button></sc-for>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        <h3 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5E5878">Font</h3>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+          <sc-for list="{{fonts}}" as="f" hint-placeholder-count="4"><button onClick="{{f.pick}}" aria-pressed="{{f.on}}" style="height: 44px; border-radius: 12px; border: 2px solid {{f.border}}; background: #F5F4FF; color: #1C1633; padding: 0 10px; text-align: left; font-family: {{f.family}}; font-size: 17px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">Japan trip</button></sc-for>
+        </div>
+        <a href="TabletEditor.dc.html" style="font-size: 13px; font-weight: 700; color: #4A0D67">All 11 fonts</a>
+      </div>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1194,"height":834}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { bg: 'fuji', icon: 'plane', dim: 'Medium', font: 'Default', unit: 'Days', rem: ['On the day', '1 week before'] }; }
+  renderVals() {
+    const PH = { fuji: '/_blob/936f0c7563d452e48e8a01312dd864ba', beach: '/_blob/176363716b4c903c7c79827e2038e0ec' };
+    const C = [['Lavender','#7877E6'],['Charcoal','#8A8796'],['Sun','#F7BC33'],['Tomato','#FF564A'],['Peach','#FEA08B'],['Tangerine','#FE7228'],['Lime','#83C236'],['Cobalt','#597FFE'],['Sky','#66B6FE'],['Bubblegum','#FE607C'],['Mint','#5FD3B5'],['Lilac','#C9A7F5']];
+    const G = [['Sunset','linear-gradient(135deg, #FE7228, #FE607C)'],['Lagoon','linear-gradient(135deg, #66B6FE, #5FD3B5)'],['Grape','linear-gradient(135deg, #7877E6, #C9A7F5)']];
+    const I = {
+      none: 'M5 19L19 5', plane: 'M2 16l20-7-3-3-8 3-5-3-2 1 4 4-4 2-2-1-1 1 3 3z',
+      gift: 'M4 8h16v4H4zM12 8v13M19 12v9H5v-9M7.5 8a2.5 2.5 0 0 1 0-5C10 3 12 8 12 8s2-5 4.5-5a2.5 2.5 0 0 1 0 5',
+      cake: 'M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1M2 21h20M7 8v3M12 8v3M17 8v3',
+      spark: 'M12 3l1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2z',
+      heart: 'M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z',
+      cap: 'M22 10L12 5 2 10l10 5 10-5zM6 12v5c3 2 9 2 12 0v-5',
+      home: 'M3 10l9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z',
+      dining: 'M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7',
+      ring: 'M8 8l4-5 4 5M12 21a6 6 0 1 0 0-12 6 6 0 0 0 0 12z',
+      baby: 'M9 12h.01M15 12h.01M10 16c1 .7 3 .7 4 0M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 3c-1 2 0 3 2 3',
+      sun: 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4'
+    };
+    const F = [['Default', "'Bricolage Grotesque', sans-serif"], ['Baskerville', "'Libre Baskerville', serif"], ['Comic Neue', "'Comic Neue', cursive"], ['Not Disney', "'NewWaltDisney', fantasy"]];
+    const D = { Light: 0.15, Medium: 0.35, Strong: 0.55 };
+    const s = this.state, isPhoto = !!PH[s.bg], a = D[s.dim];
+    const all = [['fuji', 'Japan photo', 'url(' + PH.fuji + ') center/cover', '12px'], ['beach', 'Beach photo', 'url(' + PH.beach + ') center/cover', '12px']].concat(G.map(([n, g]) => [n, n, g, '20px'])).concat(C.map(([n, c]) => [n, n, c, '20px']));
+    const cur = all.find((x) => x[0] === s.bg);
+    const pill = (on) => ({ bg: on ? '#1C1633' : 'transparent', fg: on ? '#FFFFFF' : '#1C1633', border: on ? '#1C1633' : '#D6D3F0', on: on ? 'true' : 'false' });
+    return {
+      isPhoto, hasIcon: s.icon !== 'none', iconPath: I[s.icon], font: (F.find((f) => f[0] === s.font) || F[0])[1],
+      cardBg: isPhoto ? 'linear-gradient(rgba(18,15,34,' + a + '), rgba(18,15,34,' + (a + 0.15) + ')), url(' + PH[s.bg] + ') center/cover' : cur[2],
+      ink: isPhoto ? '#FFFFFF' : '#1C1633', shadow: isPhoto ? '0 1px 8px rgba(0,0,0,0.35)' : 'none',
+      bgs: all.map(([k, name, fill, radius]) => ({ name, fill, radius, on: s.bg === k ? 'true' : 'false', ring: s.bg === k ? '#1C1633' : 'transparent', pick: () => this.setState({ bg: k }) })),
+      dims: Object.keys(D).map((label) => ({ label, ...pill(s.dim === label), pick: () => this.setState({ dim: label }) })),
+      icons: Object.keys(I).map((k) => ({ name: k === 'none' ? 'No icon' : k, d: I[k], on: s.icon === k ? 'true' : 'false', bg: s.icon === k ? '#1C1633' : '#F5F4FF', fg: s.icon === k ? '#FFFFFF' : '#1C1633', pick: () => this.setState({ icon: k }) })),
+      fonts: F.map(([name, family]) => ({ name, family, on: s.font === name ? 'true' : 'false', border: s.font === name ? '#1C1633' : 'transparent', pick: () => this.setState({ font: name }) })),
+      reminders: ['On the day', '1 day before', '1 week before', 'Custom…'].map((label) => ({ label, ...pill(s.rem.includes(label)), pick: () => this.setState({ rem: s.rem.includes(label) ? s.rem.filter((x) => x !== label) : s.rem.concat([label]) }) })),
+      units: ['Days', 'Weeks', 'Sleeps', 'Hours'].map((label) => ({ label, on: s.unit === label ? 'true' : 'false', bg: s.unit === label ? '#1C1633' : 'transparent', fg: s.unit === label ? '#FFFFFF' : '#1C1633', pick: () => this.setState({ unit: label }) }))
+    };
+  }
+}
+</script>
+</body>
+</html>

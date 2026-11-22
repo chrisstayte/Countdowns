@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Photo countdown detail, phone</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Inter:wght@400;500;600;700&amp;family=Libre+Baskerville:wght@400;700&amp;family=Comic+Neue:wght@400;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#4A0D67}a:hover{color:#1C1633}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #1C1633 url(/_blob/936f0c7563d452e48e8a01312dd864ba) center/cover; color: #FFFFFF; font-family: Inter, system-ui, sans-serif">
+  <div aria-hidden="true" style="position: absolute; inset: 0; background: linear-gradient(rgba(18,15,34,0.45) 0%, rgba(18,15,34,0.05) 35%, rgba(18,15,34,0.2) 55%, rgba(18,15,34,0.75) 100%)"></div>
+  <div style="position: relative; height: 100%; padding: 54px 20px 34px; box-sizing: border-box; display: flex; flex-direction: column">
+    <header style="display: flex; justify-content: space-between; align-items: center">
+      <a href="PhotoHome.dc.html" aria-label="Back" style="width: 44px; height: 44px; border-radius: 22px; background: rgba(255,255,255,0.2); color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 6l-6 6 6 6"></path></svg></a>
+      <div style="display: flex; gap: 8px">
+        <a href="PhoneShare.dc.html" aria-label="Share" style="width: 44px; height: 44px; border-radius: 22px; background: rgba(255,255,255,0.2); color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 8l5-5 5 5M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"></path></svg></a>
+        <a href="PhotoEditor.dc.html" style="height: 44px; padding: 0 16px; border-radius: 22px; background: rgba(255,255,255,0.2); color: #FFFFFF; text-decoration: none; display: flex; align-items: center; font-weight: 600; font-size: 15px">Edit</a>
+      </div>
+    </header>
+    <div style="margin-top: 22px; display: flex; flex-direction: column; gap: 4px; text-shadow: 0 1px 10px rgba(0,0,0,0.3)">
+      <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 40px; font-weight: 800">Japan trip</h1>
+      <span style="font-size: 15px; font-weight: 600">Sunday, March 14, 2027 · 9:30 AM</span>
+    </div>
+    <div style="margin-top: auto; display: flex; flex-direction: column; text-shadow: 0 2px 18px rgba(0,0,0,0.35)">
+      <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 168px; font-weight: 800; line-height: 0.82; letter-spacing: -0.05em">{{big}}</span>
+      <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; font-weight: 700; padding-left: 4px">{{unitLabel}}</span>
+    </div>
+    <div style="margin-top: 22px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+      <sc-for list="{{tiles}}" as="t" hint-placeholder-count="3">
+        <div style="height: 74px; border-radius: 18px; background: rgba(255,255,255,0.16); border: 1px solid rgba(255,255,255,0.25); display: flex; flex-direction: column; align-items: center; justify-content: center"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 26px; font-weight: 800; font-variant-numeric: tabular-nums">{{t.v}}</span><span style="font-size: 12px; font-weight: 600">{{t.l}}</span></div>
+      </sc-for>
+    </div>
+    <div role="group" aria-label="Count in" style="margin-top: 16px; display: flex; gap: 4px; background: rgba(18,15,34,0.45); border-radius: 22px; padding: 4px">
+      <sc-for list="{{units}}" as="u" hint-placeholder-count="4">
+        <button onClick="{{u.pick}}" aria-pressed="{{u.on}}" style="flex: 1; height: 38px; border: none; border-radius: 19px; background: {{u.bg}}; color: {{u.fg}}; font-size: 14px; font-weight: 700">{{u.label}}</button>
+      </sc-for>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { unit: 'sleeps' }; }
+  componentDidMount() { this.t = setInterval(() => this.forceUpdate(), 1000); }
+  componentWillUnmount() { clearInterval(this.t); }
+  renderVals() {
+    const ms = Math.max(new Date(2027, 2, 14, 9, 30).getTime() - Date.now(), 0);
+    const days = Math.floor(ms / 864e5), pad = (n) => String(n).padStart(2, '0');
+    const M = { days: [String(days), 'days to go'], weeks: [(ms / 6048e5).toFixed(1), 'weeks to go'], sleeps: [String(days + 1), 'sleeps to go'], hours: [Math.floor(ms / 36e5).toLocaleString('en-US'), 'hours to go'] };
+    const T = { days: [[pad(Math.floor(ms / 36e5) % 24), 'hours'], [pad(Math.floor(ms / 6e4) % 60), 'minutes'], [pad(Math.floor(ms / 1e3) % 60), 'seconds']], weeks: [[String(Math.floor(days / 7)), 'weeks'], [String(days % 7), 'days'], [pad(Math.floor(ms / 36e5) % 24), 'hours']], sleeps: [[String(Math.floor((days + 1) / 7)), 'weekends'], [String(Math.floor((days + 1) / 7)), 'Mondays'], [String(days + 1), 'bedtimes']], hours: [[Math.floor(ms / 6e4).toLocaleString('en-US'), 'minutes'], [(ms / 1e9 * 1000).toFixed(1) + 'M', 'seconds'], [pad(Math.floor(ms / 6e4) % 60) + ':' + pad(Math.floor(ms / 1e3) % 60), 'this hour']] };
+    const u = this.state.unit;
+    return {
+      big: M[u][0], unitLabel: M[u][1],
+      tiles: T[u].map(([v, l]) => ({ v, l })),
+      units: ['days', 'weeks', 'sleeps', 'hours'].map((k) => ({ label: k.charAt(0).toUpperCase() + k.slice(1), on: u === k ? 'true' : 'false', bg: u === k ? '#FFFFFF' : 'transparent', fg: u === k ? '#1C1633' : '#FFFFFF', pick: () => this.setState({ unit: k }) }))
+    };
+  }
+}
+</script>
+</body>
+</html>

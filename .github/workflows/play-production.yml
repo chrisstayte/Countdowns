@@ -1,0 +1,39 @@
+name: Promote tested Play release to production
+on:
+  workflow_dispatch:
+    inputs:
+      version_code:
+        description: Tested internal version code to release to all production users
+        type: string
+        required: true
+
+permissions: {}
+
+concurrency:
+  group: countdowns-mobile-release
+  cancel-in-progress: false
+
+jobs:
+  promote:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: play-production
+    steps:
+      - name: Check the requested version code
+        env:
+          VERSION_CODE: ${{ inputs.version_code }}
+        run: |
+          [[ "$VERSION_CODE" =~ ^[1-9][0-9]{0,9}$ ]] && (( VERSION_CODE <= 2100000000 ))
+      - name: Install Play uploader
+        run: sudo gem install fastlane --version 2.237.0 --no-document
+      - name: Promote the internal release containing the tested build
+        env:
+          VERSION_CODE: ${{ inputs.version_code }}
+          SUPPLY_JSON_KEY_DATA: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+        run: |
+          : "${SUPPLY_JSON_KEY_DATA:?Missing production service account}"
+          fastlane supply --package_name com.chrisstayte.countdowns \
+            --track internal --version_code "$VERSION_CODE" \
+            --track_promote_to production --track_promote_release_status completed \
+            --skip_upload_metadata --skip_upload_images --skip_upload_screenshots --skip_upload_changelogs

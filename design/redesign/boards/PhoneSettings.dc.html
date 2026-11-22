@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Settings, phone</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#4A0D67}a:hover{color:#1C1633}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; overflow: hidden; background: #F5F4FF; color: #1C1633; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column">
+  <header style="padding: 54px 16px 8px; display: flex; flex-direction: column; gap: 4px">
+    <a href="Main.dc.html" style="height: 44px; align-self: flex-start; display: flex; align-items: center; gap: 4px; font-size: 16px; font-weight: 600; color: #4A0D67; text-decoration: none"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M15 6l-6 6 6 6"></path></svg>Countdowns</a>
+    <h1 style="margin: 0 4px; font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 800; letter-spacing: -0.02em">Settings</h1>
+  </header>
+
+  <div style="flex: 1; overflow-y: auto; padding: 12px 16px 40px; display: flex; flex-direction: column; gap: 22px; min-height: 0">
+    <section style="display: flex; flex-direction: column; gap: 8px">
+      <h2 style="margin: 0 4px; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5E5878">Appearance</h2>
+      <div style="background: #FFFFFF; border-radius: 22px; padding: 16px; display: flex; flex-direction: column; gap: 16px">
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+          <sc-for list="{{themes}}" as="t" hint-placeholder-count="3">
+            <button onClick="{{t.pick}}" aria-pressed="{{t.on}}" style="border: none; background: transparent; padding: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; color: #1C1633; font-size: 13px; font-weight: 600">
+              <span style="width: 100%; height: 92px; border-radius: 16px; border: 3px solid {{t.ring}}; box-sizing: border-box; overflow: hidden; display: flex">
+                <span style="flex: 1; background: {{t.left}}; padding: 10px 6px; display: flex; flex-direction: column; gap: 5px"><span style="height: 18px; border-radius: 6px; background: #FE7228"></span><span style="height: 18px; border-radius: 6px; background: #66B6FE"></span><span style="height: 6px; width: 60%; border-radius: 3px; background: {{t.lineL}}"></span></span>
+                <span style="flex: 1; background: {{t.right}}; padding: 10px 6px; display: flex; flex-direction: column; gap: 5px"><span style="height: 18px; border-radius: 6px; background: #FF564A"></span><span style="height: 18px; border-radius: 6px; background: #F7BC33"></span><span style="height: 6px; width: 60%; border-radius: 3px; background: {{t.lineR}}"></span></span>
+              </span>
+              {{t.label}}
+            </button>
+          </sc-for>
+        </div>
+        <div style="height: 1px; background: #ECEAFB"></div>
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <span style="font-size: 15px; font-weight: 600">App icon</span>
+          <div style="display: flex; gap: 14px">
+            <sc-for list="{{appIcons}}" as="a" hint-placeholder-count="3">
+              <button onClick="{{a.pick}}" aria-pressed="{{a.on}}" style="border: none; background: transparent; padding: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; color: #1C1633; font-size: 12px; font-weight: 600"><span style="padding: 3px; border-radius: 19px; border: 3px solid {{a.ring}}; display: flex"><img src="{{a.src}}" alt="" style="width: 58px; height: 58px; border-radius: 13px; display: block"></span>{{a.label}}</button>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: 8px">
+      <h2 style="margin: 0 4px; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5E5878">Countdowns</h2>
+      <div style="background: #FFFFFF; border-radius: 22px; display: flex; flex-direction: column">
+        <button style="height: 54px; border: none; background: transparent; padding: 0 16px; display: flex; align-items: center; gap: 12px; color: #1C1633; font-size: 15px; text-align: left"><span style="width: 30px; height: 30px; border-radius: 9px; background: #7877E6; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1C1633" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h10M4 18h6"></path></svg></span><span style="flex: 1">Sort</span><span style="color: #5E5878; font-weight: 600">Soonest first</span><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5E5878" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6"></path></svg></button>
+        <div style="height: 1px; background: #ECEAFB; margin-left: 58px"></div>
+        <div style="padding: 12px 16px; display: flex; flex-direction: column; gap: 10px">
+          <div style="display: flex; align-items: center; gap: 12px; font-size: 15px"><span style="width: 30px; height: 30px; border-radius: 9px; background: #F7BC33; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1C1633" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l2 2M9 2h6"></path></svg></span>Count in by default</div>
+          <div role="group" aria-label="Count in by default" style="display: flex; gap: 4px; background: #F5F4FF; border-radius: 20px; padding: 4px">
+            <sc-for list="{{units}}" as="u" hint-placeholder-count="4">
+              <button onClick="{{u.pick}}" aria-pressed="{{u.on}}" style="flex: 1; height: 34px; border: none; border-radius: 17px; background: {{u.bg}}; color: {{u.fg}}; font-size: 13px; font-weight: 700">{{u.label}}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="height: 1px; background: #ECEAFB; margin-left: 58px"></div>
+        <sc-for list="{{toggles1}}" as="t" hint-placeholder-count="1">
+          <div style="height: 54px; padding: 0 16px; display: flex; align-items: center; gap: 12px; font-size: 15px"><span style="width: 30px; height: 30px; border-radius: 9px; background: {{t.color}}; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1C1633" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="{{t.icon}}"></path></svg></span><span style="flex: 1">{{t.label}}</span><button role="switch" aria-checked="{{t.on}}" aria-label="{{t.label}}" onClick="{{t.flip}}" style="width: 52px; height: 32px; border-radius: 16px; border: none; background: {{t.track}}; padding: 3px; display: flex; justify-content: {{t.align}}"><span style="width: 26px; height: 26px; border-radius: 13px; background: #FFFFFF; box-shadow: 0 1px 3px rgba(0,0,0,0.2)"></span></button></div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: 8px">
+      <h2 style="margin: 0 4px; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5E5878">Notifications and feel</h2>
+      <div style="background: #FFFFFF; border-radius: 22px; display: flex; flex-direction: column">
+        <sc-for list="{{toggles2}}" as="t" hint-placeholder-count="3">
+          <div style="height: 54px; padding: 0 16px; display: flex; align-items: center; gap: 12px; font-size: 15px"><span style="width: 30px; height: 30px; border-radius: 9px; background: {{t.color}}; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1C1633" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="{{t.icon}}"></path></svg></span><span style="flex: 1">{{t.label}}</span><button role="switch" aria-checked="{{t.on}}" aria-label="{{t.label}}" onClick="{{t.flip}}" style="width: 52px; height: 32px; border-radius: 16px; border: none; background: {{t.track}}; padding: 3px; display: flex; justify-content: {{t.align}}"><span style="width: 26px; height: 26px; border-radius: 13px; background: #FFFFFF; box-shadow: 0 1px 3px rgba(0,0,0,0.2)"></span></button></div>
+        </sc-for>
+        <button style="height: 54px; border: none; background: transparent; padding: 0 16px; display: flex; align-items: center; gap: 12px; color: #1C1633; font-size: 15px; text-align: left"><span style="width: 30px; height: 30px; border-radius: 9px; background: #FEA08B; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1C1633" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path></svg></span><span style="flex: 1">Default reminders</span><span style="color: #5E5878; font-weight: 600; font-size: 14px">Week before, day of</span><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5E5878" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6"></path></svg></button>
+      </div>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: 8px">
+      <h2 style="margin: 0 4px; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5E5878">Support and about</h2>
+      <div style="background: #FFFFFF; border-radius: 22px; display: flex; flex-direction: column">
+        <sc-for list="{{links}}" as="l" hint-placeholder-count="5">
+          <a href="#about" style="height: 50px; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; color: #1C1633; text-decoration: none; font-size: 15px">{{l}}<svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5E5878" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6"></path></svg></a>
+        </sc-for>
+      </div>
+    </section>
+
+    <button style="height: 52px; border-radius: 22px; border: none; background: #FFFFFF; color: #B3261E; font-size: 15px; font-weight: 700">Delete all countdowns</button>
+    <span style="text-align: center; font-size: 13px; color: #5E5878">Countdowns 2.0.0 · Made by Chris Stayte</span>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { theme: 'System', icon: 'Light', unit: 'Sleeps', done: true, notify: true, sound: false, haptic: true }; }
+  renderVals() {
+    const s = this.state;
+    const tog = (key, label, color, icon) => ({ label, color, icon, on: s[key] ? 'true' : 'false', track: s[key] ? '#1B998B' : '#D6D3F0', align: s[key] ? 'flex-end' : 'flex-start', flip: () => this.setState({ [key]: !s[key] }) });
+    const T = { System: ['#FFFFFF', '#1C1633', '#D6D3F0', '#5E5878'], Light: ['#FFFFFF', '#FFFFFF', '#D6D3F0', '#D6D3F0'], Dark: ['#1C1633', '#1C1633', '#5E5878', '#5E5878'] };
+    return {
+      themes: Object.keys(T).map((label) => ({ label, left: T[label][0], right: T[label][1], lineL: T[label][2], lineR: T[label][3], on: s.theme === label ? 'true' : 'false', ring: s.theme === label ? '#1C1633' : '#ECEAFB', pick: () => this.setState({ theme: label }) })),
+      appIcons: [['Light', '/_blob/9312cb2f096dc89cfa099519122edac9'], ['Dark', '/_blob/677c20436cc6534d47c8ff8f70a07fcd'], ['Original', '/_blob/b46e75a78d7d40676e401523058334bc']].map(([label, src]) => ({ label, src, on: s.icon === label ? 'true' : 'false', ring: s.icon === label ? '#1C1633' : 'transparent', pick: () => this.setState({ icon: label }) })),
+      units: ['Days', 'Weeks', 'Sleeps', 'Hours'].map((label) => ({ label, on: s.unit === label ? 'true' : 'false', bg: s.unit === label ? '#1C1633' : 'transparent', fg: s.unit === label ? '#FFFFFF' : '#1C1633', pick: () => this.setState({ unit: label }) })),
+      toggles1: [tog('done', 'Keep finished in Done', '#83C236', 'M20 6L9 17l-5-5')],
+      toggles2: [
+        tog('notify', 'Notify when one ends', '#FE607C', 'M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.9 1.9 0 0 0 3.4 0'),
+        tog('sound', 'Sound effects', '#66B6FE', 'M11 5L6 9H2v6h4l5 4zM15.5 8.5a5 5 0 0 1 0 7'),
+        tog('haptic', 'Haptic feedback', '#C9A7F5', 'M7 4h10v16H7zM3 8v8M21 8v8')
+      ],
+      links: ['Rate Countdowns', 'Contact', 'Privacy Policy', 'Terms of Use', 'Source code']
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -7,16 +7,56 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		08906FF6E9C904FFCCEB057A /* Views.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92812E65511874B325D82853 /* Views.swift */; };
+		09D404CA2AA39D6D00403237 /* icon-light@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 09D404C42AA39D6D00403237 /* icon-light@3x.png */; };
+		09D404CB2AA39D6D00403237 /* icon-light@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 09D404C52AA39D6D00403237 /* icon-light@2x.png */; };
+		09D404CC2AA39D6D00403237 /* icon-dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 09D404C62AA39D6D00403237 /* icon-dark@3x.png */; };
+		09D404CD2AA39D6D00403237 /* icon-dark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 09D404C72AA39D6D00403237 /* icon-dark@2x.png */; };
+		09D404CE2AA39D6D00403237 /* icon-original@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 09D404C82AA39D6D00403237 /* icon-original@2x.png */; };
+		09D404CF2AA39D6D00403237 /* icon-original@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 09D404C92AA39D6D00403237 /* icon-original@3x.png */; };
+		0B80C628EFB7030306DC2601 /* BricolageGrotesque-700.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B068CE6375575D14200765A0 /* BricolageGrotesque-700.ttf */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
-		37096EDCA63F9808B1EA7E81 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33AE3347F72413F25CDF8892 /* Pods_Runner.framework */; };
+		1548C3AC3A0FECB38446051B /* CountdownsWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D7D19C0773A69EEFA46D21 /* CountdownsWidget.swift */; };
+		2B85E09AD4C41D0A847397DB /* Inter-700.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 42C0D84B37811DD4044CB834 /* Inter-700.ttf */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
+		4C577BA9CBEDEC22F8A8955E /* Fonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2421EF5976B8ABE3633069EA /* Fonts.swift */; };
+		645E1C61FEC67A81219193DD /* BricolageDisplay-800.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A0ED9DAC1539BB93A929D3F4 /* BricolageDisplay-800.ttf */; };
+		655E1223C5B9693BC94BE3C4 /* BricolageGrotesque-800.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4EFA607E81B77C4F92BEFD43 /* BricolageGrotesque-800.ttf */; };
+		656E30FCAE5EFAE79DC6BDB1 /* Provider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCA078D6597EF9C253AA361 /* Provider.swift */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
+		78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */; };
+		86D5495BC86BF1E8B7A8F897 /* CountdownsWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B9E8659EC860EEF3893C7B63 /* CountdownsWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		96D510F7759FB02C771DC813 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84FED4AD605EF7EC01D939C4 /* Foundation.framework */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
+		AB4B2267B601F45EF5163227 /* Inter-600.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D30FC21EF09190EA84C9C52 /* Inter-600.ttf */; };
+		B49D470768C34EC29FB18B40 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9143109E42B1D6693D3FDBD /* Configuration.swift */; };
+		D4386A9489ED663F1B32E368 /* Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC5915502EF3452A38371F51 /* Snapshot.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		AB978E3F73A00B477FB7E14C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BAA29B9348AED96D967C673A;
+			remoteInfo = CountdownsWidget;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
+		6EA7101F5423D8EFCF9D85D5 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				86D5495BC86BF1E8B7A8F897 /* CountdownsWidget.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9705A1C41CF9048500538489 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -30,17 +70,27 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0283936507CF44D7170F3586 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		09213B96278F4EF90070B3CA /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
+		09D404C42AA39D6D00403237 /* icon-light@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-light@3x.png"; sourceTree = "<group>"; };
+		09D404C52AA39D6D00403237 /* icon-light@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-light@2x.png"; sourceTree = "<group>"; };
+		09D404C62AA39D6D00403237 /* icon-dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-dark@3x.png"; sourceTree = "<group>"; };
+		09D404C72AA39D6D00403237 /* icon-dark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-dark@2x.png"; sourceTree = "<group>"; };
+		09D404C82AA39D6D00403237 /* icon-original@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-original@2x.png"; sourceTree = "<group>"; };
+		09D404C92AA39D6D00403237 /* icon-original@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-original@3x.png"; sourceTree = "<group>"; };
+		0D30FC21EF09190EA84C9C52 /* Inter-600.ttf */ = {isa = PBXFileReference; includeInIndex = 1; path = "Inter-600.ttf"; sourceTree = "<group>"; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
-		20CEAF14F9865978E8C259BB /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
-		33AE3347F72413F25CDF8892 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2421EF5976B8ABE3633069EA /* Fonts.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Fonts.swift; sourceTree = "<group>"; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
-		4ED7A3FA5959DCEFB9F07BBF /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
+		42C0D84B37811DD4044CB834 /* Inter-700.ttf */ = {isa = PBXFileReference; includeInIndex = 1; path = "Inter-700.ttf"; sourceTree = "<group>"; };
+		4EFA607E81B77C4F92BEFD43 /* BricolageGrotesque-800.ttf */ = {isa = PBXFileReference; includeInIndex = 1; path = "BricolageGrotesque-800.ttf"; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		78E0A7A72DC9AD7400C4905E /* FlutterGeneratedPluginSwiftPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = FlutterGeneratedPluginSwiftPackage; path = Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
+		84FED4AD605EF7EC01D939C4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		92812E65511874B325D82853 /* Views.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Views.swift; sourceTree = "<group>"; };
+		92EAEC8F125C6651E4BE781D /* CountdownsWidget.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = CountdownsWidget.entitlements; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
 		97C146EE1CF9000F007C117D /* Runner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Runner.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -48,23 +98,90 @@
 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A0ED9DAC1539BB93A929D3F4 /* BricolageDisplay-800.ttf */ = {isa = PBXFileReference; includeInIndex = 1; path = "BricolageDisplay-800.ttf"; sourceTree = "<group>"; };
+		A3D7D19C0773A69EEFA46D21 /* CountdownsWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CountdownsWidget.swift; sourceTree = "<group>"; };
+		B068CE6375575D14200765A0 /* BricolageGrotesque-700.ttf */ = {isa = PBXFileReference; includeInIndex = 1; path = "BricolageGrotesque-700.ttf"; sourceTree = "<group>"; };
+		B9E8659EC860EEF3893C7B63 /* CountdownsWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CountdownsWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		BC5915502EF3452A38371F51 /* Snapshot.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Snapshot.swift; sourceTree = "<group>"; };
+		D35CA0954E5CEB924FEA74B8 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D9143109E42B1D6693D3FDBD /* Configuration.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
+		DFCA078D6597EF9C253AA361 /* Provider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Provider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		6DE3422910AFD495AC361796 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				96D510F7759FB02C771DC813 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		97C146EB1CF9000F007C117D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				37096EDCA63F9808B1EA7E81 /* Pods_Runner.framework in Frameworks */,
+				78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		09D404C32AA39D6D00403237 /* AppIcons */ = {
+			isa = PBXGroup;
+			children = (
+				09D404C42AA39D6D00403237 /* icon-light@3x.png */,
+				09D404C52AA39D6D00403237 /* icon-light@2x.png */,
+				09D404C62AA39D6D00403237 /* icon-dark@3x.png */,
+				09D404C72AA39D6D00403237 /* icon-dark@2x.png */,
+				09D404C82AA39D6D00403237 /* icon-original@2x.png */,
+				09D404C92AA39D6D00403237 /* icon-original@3x.png */,
+			);
+			path = AppIcons;
+			sourceTree = "<group>";
+		};
+		37483E697B99D51E88F59F55 /* WidgetFonts */ = {
+			isa = PBXGroup;
+			children = (
+				A0ED9DAC1539BB93A929D3F4 /* BricolageDisplay-800.ttf */,
+				B068CE6375575D14200765A0 /* BricolageGrotesque-700.ttf */,
+				4EFA607E81B77C4F92BEFD43 /* BricolageGrotesque-800.ttf */,
+				0D30FC21EF09190EA84C9C52 /* Inter-600.ttf */,
+				42C0D84B37811DD4044CB834 /* Inter-700.ttf */,
+			);
+			name = WidgetFonts;
+			path = ../fonts;
+			sourceTree = "<group>";
+		};
+		57BBA656224F1F8D0AD157E0 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				84FED4AD605EF7EC01D939C4 /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		8F9C28B4A84F06E6355FABB5 /* CountdownsWidget */ = {
+			isa = PBXGroup;
+			children = (
+				A3D7D19C0773A69EEFA46D21 /* CountdownsWidget.swift */,
+				D9143109E42B1D6693D3FDBD /* Configuration.swift */,
+				DFCA078D6597EF9C253AA361 /* Provider.swift */,
+				BC5915502EF3452A38371F51 /* Snapshot.swift */,
+				92812E65511874B325D82853 /* Views.swift */,
+				2421EF5976B8ABE3633069EA /* Fonts.swift */,
+				D35CA0954E5CEB924FEA74B8 /* Info.plist */,
+				92EAEC8F125C6651E4BE781D /* CountdownsWidget.entitlements */,
+			);
+			name = CountdownsWidget;
+			path = CountdownsWidget;
+			sourceTree = "<group>";
+		};
 		9740EEB11CF90186004384FC /* Flutter */ = {
 			isa = PBXGroup;
 			children = (
+				78E0A7A72DC9AD7400C4905E /* FlutterGeneratedPluginSwiftPackage */,
 				3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */,
 				9740EEB21CF90195004384FC /* Debug.xcconfig */,
 				7AFA3C8E1D35360C0083082E /* Release.xcconfig */,
@@ -79,8 +196,9 @@
 				9740EEB11CF90186004384FC /* Flutter */,
 				97C146F01CF9000F007C117D /* Runner */,
 				97C146EF1CF9000F007C117D /* Products */,
-				F9F861A225BA3968D65C1BB8 /* Pods */,
-				C09C50E276681EE9AD7B364D /* Frameworks */,
+				CBF1BA0C8D5BEEC063588B31 /* Frameworks */,
+				8F9C28B4A84F06E6355FABB5 /* CountdownsWidget */,
+				37483E697B99D51E88F59F55 /* WidgetFonts */,
 			);
 			sourceTree = "<group>";
 		};
@@ -88,6 +206,7 @@
 			isa = PBXGroup;
 			children = (
 				97C146EE1CF9000F007C117D /* Runner.app */,
+				B9E8659EC860EEF3893C7B63 /* CountdownsWidget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -95,6 +214,7 @@
 		97C146F01CF9000F007C117D /* Runner */ = {
 			isa = PBXGroup;
 			children = (
+				09D404C32AA39D6D00403237 /* AppIcons */,
 				09213B96278F4EF90070B3CA /* Runner.entitlements */,
 				97C146FA1CF9000F007C117D /* Main.storyboard */,
 				97C146FD1CF9000F007C117D /* Assets.xcassets */,
@@ -108,22 +228,12 @@
 			path = Runner;
 			sourceTree = "<group>";
 		};
-		C09C50E276681EE9AD7B364D /* Frameworks */ = {
+		CBF1BA0C8D5BEEC063588B31 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				33AE3347F72413F25CDF8892 /* Pods_Runner.framework */,
+				57BBA656224F1F8D0AD157E0 /* iOS */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		F9F861A225BA3968D65C1BB8 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				0283936507CF44D7170F3586 /* Pods-Runner.debug.xcconfig */,
-				20CEAF14F9865978E8C259BB /* Pods-Runner.release.xcconfig */,
-				4ED7A3FA5959DCEFB9F07BBF /* Pods-Runner.profile.xcconfig */,
-			);
-			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -133,23 +243,43 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 97C147051CF9000F007C117D /* Build configuration list for PBXNativeTarget "Runner" */;
 			buildPhases = (
-				FBE060CF8F1C08AB1E822FF5 /* [CP] Check Pods Manifest.lock */,
 				9740EEB61CF901F6004384FC /* Run Script */,
 				97C146EA1CF9000F007C117D /* Sources */,
 				97C146EB1CF9000F007C117D /* Frameworks */,
 				97C146EC1CF9000F007C117D /* Resources */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
+				6EA7101F5423D8EFCF9D85D5 /* Embed Foundation Extensions */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
-				8A403F1DE2DDF52CB64845DD /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B66CF411EF48BC2517C3BB3F /* PBXTargetDependency */,
+			);
+			name = Runner;
+			packageProductDependencies = (
+				78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */,
+			);
+			productName = Runner;
+			productReference = 97C146EE1CF9000F007C117D /* Runner.app */;
+			productType = "com.apple.product-type.application";
+		};
+		BAA29B9348AED96D967C673A /* CountdownsWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8A56FBF914B15BD0F75179F1 /* Build configuration list for PBXNativeTarget "CountdownsWidget" */;
+			buildPhases = (
+				D8147FC1F2527D2BA76EF8ED /* Sources */,
+				6DE3422910AFD495AC361796 /* Frameworks */,
+				B4F739B3F205CA56E19E0F2C /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = Runner;
-			productName = Runner;
-			productReference = 97C146EE1CF9000F007C117D /* Runner.app */;
-			productType = "com.apple.product-type.application";
+			name = CountdownsWidget;
+			productName = CountdownsWidget;
+			productReference = B9E8659EC860EEF3893C7B63 /* CountdownsWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -157,7 +287,7 @@
 		97C146E61CF9000F007C117D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 1510;
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {
 					97C146ED1CF9000F007C117D = {
@@ -175,11 +305,15 @@
 				Base,
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
+			packageReferences = (
+				781AD8BC2B33823900A9FFBB /* XCLocalSwiftPackageReference "FlutterGeneratedPluginSwiftPackage" */,
+			);
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				97C146ED1CF9000F007C117D /* Runner */,
+				BAA29B9348AED96D967C673A /* CountdownsWidget */,
 			);
 		};
 /* End PBXProject section */
@@ -193,6 +327,24 @@
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
+				09D404CA2AA39D6D00403237 /* icon-light@3x.png in Resources */,
+				09D404CF2AA39D6D00403237 /* icon-original@3x.png in Resources */,
+				09D404CD2AA39D6D00403237 /* icon-dark@2x.png in Resources */,
+				09D404CC2AA39D6D00403237 /* icon-dark@3x.png in Resources */,
+				09D404CB2AA39D6D00403237 /* icon-light@2x.png in Resources */,
+				09D404CE2AA39D6D00403237 /* icon-original@2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B4F739B3F205CA56E19E0F2C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				645E1C61FEC67A81219193DD /* BricolageDisplay-800.ttf in Resources */,
+				0B80C628EFB7030306DC2601 /* BricolageGrotesque-700.ttf in Resources */,
+				655E1223C5B9693BC94BE3C4 /* BricolageGrotesque-800.ttf in Resources */,
+				AB4B2267B601F45EF5163227 /* Inter-600.ttf in Resources */,
+				2B85E09AD4C41D0A847397DB /* Inter-700.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -215,23 +367,6 @@
 			shellPath = /bin/sh;
 			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin";
 		};
-		8A403F1DE2DDF52CB64845DD /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		9740EEB61CF901F6004384FC /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -247,28 +382,6 @@
 			shellPath = /bin/sh;
 			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build";
 		};
-		FBE060CF8F1C08AB1E822FF5 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Runner-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -281,7 +394,29 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D8147FC1F2527D2BA76EF8ED /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1548C3AC3A0FECB38446051B /* CountdownsWidget.swift in Sources */,
+				B49D470768C34EC29FB18B40 /* Configuration.swift in Sources */,
+				656E30FCAE5EFAE79DC6BDB1 /* Provider.swift in Sources */,
+				D4386A9489ED663F1B32E368 /* Snapshot.swift in Sources */,
+				08906FF6E9C904FFCCEB057A /* Views.swift in Sources */,
+				4C577BA9CBEDEC22F8A8955E /* Fonts.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B66CF411EF48BC2517C3BB3F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = CountdownsWidget;
+			target = BAA29B9348AED96D967C673A /* CountdownsWidget */;
+			targetProxy = AB978E3F73A00B477FB7E14C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		97C146FA1CF9000F007C117D /* Main.storyboard */ = {
@@ -344,7 +479,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = iphoneos;
@@ -358,6 +493,7 @@
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
@@ -366,7 +502,7 @@
 				DEVELOPMENT_TEAM = G3DYVCQJHD;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Countdowns;
+				INFOPLIST_KEY_CFBundleDisplayName = "Since & Soon";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -377,10 +513,64 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Profile;
+		};
+		62433DA9B2CE21226A2AE20B /* Profile */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = "";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = CountdownsWidget/CountdownsWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = G3DYVCQJHD;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = CountdownsWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.chrisstayte.countdowns.CountdownsWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Profile;
+		};
+		6EDC5FA59872E82391B1F652 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = "";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = CountdownsWidget/CountdownsWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = G3DYVCQJHD;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = CountdownsWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.chrisstayte.countdowns.CountdownsWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
 		};
 		97C147031CF9000F007C117D /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -429,7 +619,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -478,7 +668,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = iphoneos;
@@ -494,6 +684,7 @@
 			baseConfigurationReference = 9740EEB21CF90195004384FC /* Debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
@@ -502,7 +693,7 @@
 				DEVELOPMENT_TEAM = G3DYVCQJHD;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Countdowns;
+				INFOPLIST_KEY_CFBundleDisplayName = "Since & Soon";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -514,7 +705,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -524,6 +715,7 @@
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
@@ -532,7 +724,7 @@
 				DEVELOPMENT_TEAM = G3DYVCQJHD;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Countdowns;
+				INFOPLIST_KEY_CFBundleDisplayName = "Since & Soon";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -543,14 +735,50 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
 		};
+		9B5ACF95962538B8198D7600 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9740EEB21CF90195004384FC /* Debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = "";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = CountdownsWidget/CountdownsWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = G3DYVCQJHD;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = CountdownsWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.chrisstayte.countdowns.CountdownsWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		8A56FBF914B15BD0F75179F1 /* Build configuration list for PBXNativeTarget "CountdownsWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6EDC5FA59872E82391B1F652 /* Release */,
+				9B5ACF95962538B8198D7600 /* Debug */,
+				62433DA9B2CE21226A2AE20B /* Profile */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		97C146E91CF9000F007C117D /* Build configuration list for PBXProject "Runner" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -572,6 +800,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		781AD8BC2B33823900A9FFBB /* XCLocalSwiftPackageReference "FlutterGeneratedPluginSwiftPackage" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FlutterGeneratedPluginSwiftPackage;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 97C146E61CF9000F007C117D /* Project object */;
 }

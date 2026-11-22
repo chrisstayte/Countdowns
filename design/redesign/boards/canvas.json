@@ -1,0 +1,373 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "DetailUnits.dc.html": {
+      "h": 844,
+      "title": "Detail \u00b7 Days, Weeks, Sleeps, Hours",
+      "w": 1680,
+      "x": 0,
+      "y": 4118
+    },
+    "Main.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "radius": 44,
+      "title": "Phone \u00b7 Home",
+      "w": 390,
+      "x": 0,
+      "y": 0
+    },
+    "PhoneDetail.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "radius": 44,
+      "title": "Phone \u00b7 Countdown detail",
+      "w": 390,
+      "x": 470,
+      "y": 0
+    },
+    "PhoneEditor.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "radius": 44,
+      "title": "Phone \u00b7 New countdown",
+      "w": 390,
+      "x": 940,
+      "y": 0
+    },
+    "PhoneFonts.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "radius": 44,
+      "title": "Editor \u00b7 All fonts",
+      "w": 390,
+      "x": 0,
+      "y": 5382
+    },
+    "PhoneSearch.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "radius": 44,
+      "title": "Phone \u00b7 Search",
+      "w": 390,
+      "x": 1410,
+      "y": 0
+    },
+    "PhoneSettings.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "radius": 44,
+      "title": "Phone \u00b7 Settings",
+      "w": 390,
+      "x": 470,
+      "y": 5382
+    },
+    "PhoneShare.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "radius": 44,
+      "title": "Share \u00b7 Share sheet",
+      "w": 390,
+      "x": 1760,
+      "y": 4118
+    },
+    "ShareLink.dc.html": {
+      "h": 844,
+      "radius": 44,
+      "title": "Share \u00b7 What your friend sees",
+      "w": 390,
+      "x": 2230,
+      "y": 4118
+    },
+    "TabletEditor.dc.html": {
+      "h": 834,
+      "is_interactive": true,
+      "radius": 28,
+      "title": "Tablet \u00b7 Editor studio",
+      "w": 1194,
+      "x": 1274,
+      "y": 1600
+    },
+    "TabletSettings.dc.html": {
+      "h": 834,
+      "is_interactive": true,
+      "radius": 28,
+      "title": "Tablet \u00b7 Settings",
+      "w": 1194,
+      "x": 940,
+      "y": 5382
+    },
+    "TabletSplit.dc.html": {
+      "h": 834,
+      "is_interactive": true,
+      "radius": 28,
+      "title": "Tablet \u00b7 Split view",
+      "w": 1194,
+      "x": 0,
+      "y": 1600
+    },
+    "TabletWall.dc.html": {
+      "h": 834,
+      "radius": 28,
+      "title": "Tablet \u00b7 Wall mode",
+      "w": 1194,
+      "x": 2548,
+      "y": 1600
+    },
+    "WidgetGallery.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "radius": 28,
+      "title": "Widgets \u00b7 Sizes and settings",
+      "w": 1240,
+      "x": 940,
+      "y": 2854
+    },
+    "WidgetsHome.dc.html": {
+      "h": 844,
+      "radius": 44,
+      "title": "Widgets \u00b7 Home screen",
+      "w": 390,
+      "x": 0,
+      "y": 2854
+    },
+    "WidgetsLock.dc.html": {
+      "h": 844,
+      "radius": 44,
+      "title": "Widgets \u00b7 Lock screen",
+      "w": 390,
+      "x": 470,
+      "y": 2854
+    },
+    "PhotoEditor.dc.html": {
+      "x": 0,
+      "y": 6826,
+      "w": 390,
+      "h": 844,
+      "title": "Photos \u00b7 Pick a photo",
+      "radius": 44,
+      "is_interactive": true
+    },
+    "PhotoHome.dc.html": {
+      "x": 470,
+      "y": 6826,
+      "w": 390,
+      "h": 844,
+      "title": "Photos \u00b7 Home",
+      "radius": 44,
+      "is_interactive": true
+    },
+    "PhotoDetail.dc.html": {
+      "x": 940,
+      "y": 6826,
+      "w": 390,
+      "h": 844,
+      "title": "Photos \u00b7 Countdown detail",
+      "radius": 44,
+      "is_interactive": true
+    },
+    "PhotoWidgets.dc.html": {
+      "x": 1410,
+      "y": 6826,
+      "w": 390,
+      "h": 844,
+      "title": "Photos \u00b7 Widgets",
+      "radius": 44
+    },
+    "PhotoStyle.dc.html": {
+      "x": 1880,
+      "y": 6826,
+      "w": 390,
+      "h": 844,
+      "title": "Photos \u00b7 All-in-one look picker",
+      "radius": 44,
+      "is_interactive": true
+    },
+    "PhotoCrop.dc.html": {
+      "x": 2350,
+      "y": 6826,
+      "w": 390,
+      "h": 844,
+      "title": "Photos \u00b7 Crop for every shape",
+      "radius": 44,
+      "is_interactive": true
+    },
+    "TabletLook.dc.html": {
+      "x": 0,
+      "y": 7750,
+      "w": 1194,
+      "h": 834,
+      "title": "Photos \u00b7 iPad look and details",
+      "radius": 28,
+      "is_interactive": true
+    },
+    "TabletCrop.dc.html": {
+      "x": 1274,
+      "y": 7750,
+      "w": 1194,
+      "h": 834,
+      "title": "Photos \u00b7 iPad crop for every shape",
+      "radius": 28,
+      "is_interactive": true
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-11-21T16:05:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "noteOrder": [
+    "phoneTitle",
+    "tabletTitle",
+    "phoneNote",
+    "tabletNote",
+    "widgetTitle",
+    "widgetNote",
+    "unitsTitle",
+    "shareNote",
+    "settingsTitle",
+    "settingsNote",
+    "note-8reevx",
+    "photoTitle",
+    "photoNote"
+  ],
+  "notes": {
+    "note-8reevx": {
+      "bold": false,
+      "kind": "title1",
+      "size": 24,
+      "text": "",
+      "w": 240,
+      "x": 1506,
+      "y": 1028
+    },
+    "phoneNote": {
+      "fill": "purple",
+      "size": 24,
+      "text": "Direction: bold and playful. Each countdown's own colour and font lead; the app chrome stays quiet (soft lavender ground, near-black ink).\n\nHome leads with 'Up next', then upcoming cards, then a separate Done section, so past events stop mixing in.\n\nDetail shows one giant number with a unit switcher (Days, Weeks, Sleeps, Hours) instead of five rows of zeros.\n\nThe editor keeps a live preview on top and splits the rest into two tabs: Details (name, date, time, repeats, reminders, count in) and Look (photo, gradients, colours, icon, 4 recent fonts plus All fonts).\n\nSearch opens on recents, quick filters (This week, December, 2027, Done) and icon shortcuts, plus holiday suggestions to add. Typing highlights the match and lists upcoming first, then done.",
+      "w": 320,
+      "x": 1880,
+      "y": 0
+    },
+    "phoneTitle": {
+      "kind": "title1",
+      "maxW": 1800,
+      "text": "Phone",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    },
+    "settingsNote": {
+      "fill": "purple",
+      "size": 24,
+      "text": "Fonts: the phone editor shows your 4 most recent fonts, and 'All fonts' slides up a sheet with all 11, filterable by Clean, Classic and Fun; the iPad editor uses an anchored scroll box with jump links. The picker previews the event's real title and groups fonts into Clean, Classic and Fun. Fonts here are the app's real font files.\n\nSettings keep everything today's app has (sort, theme, app icon, sounds, haptics, notifications, support, about, delete all) and add defaults for new countdowns: unit, reminders and Done section.\n\niPad settings use a sidebar of categories with a roomy detail pane, so theme and app icon get big visual pickers.",
+      "w": 320,
+      "x": 2214,
+      "y": 5382
+    },
+    "settingsTitle": {
+      "kind": "title1",
+      "maxW": 2134,
+      "text": "Fonts and settings",
+      "w": 240,
+      "x": 0,
+      "y": 5082
+    },
+    "shareNote": {
+      "fill": "purple",
+      "size": 24,
+      "text": "Each unit gets its own supporting tiles: Days shows hours/min/sec, Weeks shows weeks + days, Sleeps shows weekends and bedtimes, Hours shows the giant totals.\n\nShare opens a sheet with three formats: Story image, Square image, and a Calendar file (.ics). The image keeps whatever unit you were looking at.\n\nEverything is made on the phone and sent in the message, so sharing needs no backend. The friend gets the image plus a calendar file they can tap to add.",
+      "w": 320,
+      "x": 2700,
+      "y": 4118
+    },
+    "tabletNote": {
+      "fill": "purple",
+      "size": 24,
+      "text": "Split view: sidebar filters, a card list and a live detail pane side by side, so tapping a card never leaves the list.\n\nEditor studio: large live preview on the left (card and full-screen), controls on the right.\n\nWall mode: an always-on board for an iPad on a stand or kitchen counter, the most tablet-only idea here.",
+      "w": 320,
+      "x": 3822,
+      "y": 1600
+    },
+    "tabletTitle": {
+      "kind": "title1",
+      "maxW": 3742,
+      "text": "Tablet",
+      "w": 240,
+      "x": 0,
+      "y": 1300
+    },
+    "unitsTitle": {
+      "kind": "title1",
+      "maxW": 2620,
+      "text": "Units and sharing",
+      "w": 240,
+      "x": 0,
+      "y": 3818
+    },
+    "widgetNote": {
+      "fill": "purple",
+      "size": 24,
+      "text": "Widgets reuse the card look: event colour fill, big Bricolage numeral, title in the event's own font.\n\nEach widget can follow 'Up next' automatically or be pinned to one countdown, and count in days or sleeps.\n\nLock screen gets circular, rectangular and inline accessories, plus a Live Activity on the day itself that counts down hours and minutes.\n\nSame widgets carry to Android (Glance) and iPad's extra-large size later.",
+      "w": 320,
+      "x": 2260,
+      "y": 2854
+    },
+    "widgetTitle": {
+      "kind": "title1",
+      "maxW": 2180,
+      "text": "Widgets",
+      "w": 240,
+      "x": 0,
+      "y": 2554
+    },
+    "photoTitle": {
+      "kind": "title1",
+      "maxW": 2740,
+      "text": "Photos",
+      "w": 240,
+      "x": 0,
+      "y": 6526
+    },
+    "photoNote": {
+      "fill": "purple",
+      "size": 24,
+      "w": 320,
+      "x": 2820,
+      "y": 6826,
+      "text": "Background becomes Colour or Photo in the editor. Pick from your library or a recent photo, darken it so the numbers stay readable, crop it, and choose whether widgets use it too.\n\nOn photo countdowns, text flips to white with a soft shadow, and the detail screen goes full-bleed with glassy tiles.\n\nPhotos are copied into the app on the phone, so this needs no backend. The photos here are stand-in illustrations.\n\nLook picker: one screen for background and icon. The first tile adds a photo; recent photos, gradients and colours follow, then icons (or none).\n\nCrop: 'All shapes' outlines every place the photo shows (full screen, card or small widget, wide widget). Pick a shape to set its own crop point, or turn on 'Same spot for all' to move them together.\n\niPad: one screen with the live preview (plus small and wide widget previews), Details (name, date, time, repeats, reminders, unit) and Look (background, photo, icon, font) side by side. The iPad crop shows each shape's actual crop as a live thumbnail, and adds an iPad landscape shape."
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "PhoneDetail.dc.html",
+    "PhoneEditor.dc.html",
+    "PhoneSearch.dc.html",
+    "TabletSplit.dc.html",
+    "TabletEditor.dc.html",
+    "TabletWall.dc.html",
+    "WidgetsHome.dc.html",
+    "WidgetsLock.dc.html",
+    "WidgetGallery.dc.html",
+    "DetailUnits.dc.html",
+    "PhoneShare.dc.html",
+    "ShareLink.dc.html",
+    "PhoneFonts.dc.html",
+    "PhoneSettings.dc.html",
+    "TabletSettings.dc.html",
+    "PhotoEditor.dc.html",
+    "PhotoHome.dc.html",
+    "PhotoDetail.dc.html",
+    "PhotoWidgets.dc.html",
+    "PhotoStyle.dc.html",
+    "PhotoCrop.dc.html",
+    "TabletLook.dc.html",
+    "TabletCrop.dc.html"
+  ],
+  "pages": [],
+  "title": "Countdowns redesign"
+}

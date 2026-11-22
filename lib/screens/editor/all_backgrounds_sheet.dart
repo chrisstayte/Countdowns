@@ -1,0 +1,802 @@
+import 'package:flutter/foundation.dart';
+import 'package:countdowns/models/art_catalog.dart';
+import 'package:countdowns/models/background_catalog.dart';
+import 'package:countdowns/models/countdown.dart';
+import 'package:countdowns/models/palette.dart';
+import 'package:countdowns/providers/event_provider.dart';
+import 'package:countdowns/providers/recents_provider.dart';
+import 'package:countdowns/providers/timer_provider.dart';
+import 'package:countdowns/screens/editor/photos_tab.dart';
+import 'package:countdowns/storage/photos.dart';
+import 'package:countdowns/theme/app_theme.dart';
+import 'package:countdowns/utilities/count_format.dart';
+import 'package:countdowns/utilities/feedback.dart';
+import 'package:countdowns/widgets/art_painter.dart';
+import 'package:countdowns/widgets/countdown_surface.dart';
+import 'package:countdowns/widgets/event_icon.dart';
+import 'package:countdowns/widgets/ui.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
+
+/// What the sheet returns when "Add photo" is tapped: the editor closes the
+/// sheet and runs its own photo picker and crop.
+const addPhotoResult = 'add-photo';
+
+/// Photos that exist on disk, current first, then recents, then photos on
+/// other countdowns. No duplicates.
+List<String> availablePhotos({
+  String? current,
+  List<String> recent = const [],
+  List<String> others = const [],
+}) {
+  final seen = <String>{};
+  return [
+    for (final p in [?current, ...recent, ...others])
+      if (seen.add(p) &&
+          PhotoStore.ready &&
+          PhotoStore.instance.fileFor(p).existsSync())
+        p,
+  ];
+}
+
+/// Extra tabs shown in debug builds with `--dart-define=DEMO_TABS=true`, to
+/// try the tab bar with more kinds than fit (it scrolls).
+const _demoTabsOn = bool.fromEnvironment('DEMO_TABS');
+List<String> get demoBackgroundTabs =>
+    kDebugMode && _demoTabsOn ? const ['Emoji'] : const [];
+
+/// What Done returns: the chosen background and the gradient direction.
+class BackgroundChoice {
+  const BackgroundChoice(this.key, this.direction);
+  final String key;
+  final GradientDirection direction;
+
+  /// [d] with this choice applied (the direction only matters for a
+  /// gradient).
+  Countdown applyTo(Countdown d) {
+    final next = applyBackground(d, key);
+    return next.gradientId == null || next.hasPhoto
+        ? next
+        : next.copyWith(gradientDirection: direction);
+  }
+}
+
+/// "All backgrounds": every colour, gradient and photo, in collections.
+/// Picks show in the preview at the top and are applied as they happen through [AllBackgroundsSheet.onChanged];
+/// the sheet returns only [addPhotoResult] or an [ImportedPhoto] (a stock
+/// photo that still needs cropping).
+class AllBackgroundsSheet extends ConsumerStatefulWidget {
+  const AllBackgroundsSheet({super.key, required this.draft, this.onChanged});
+  final Countdown draft;
+
+  /// Every pick applies straight away: a colour, gradient, direction or
+  /// photo is passed here the moment it's tapped, so swiping the sheet away
+  /// keeps it. Done just closes.
+  final ValueChanged<BackgroundChoice>? onChanged;
+
+  @override
+  ConsumerState<AllBackgroundsSheet> createState() =>
+      _AllBackgroundsSheetState();
+}
+
+class _AllBackgroundsSheetState extends ConsumerState<AllBackgroundsSheet> {
+  late String _key = backgroundKeyOf(widget.draft);
+
+  /// A debug-only demo tab, when one is picked (see [demoBackgroundTabs]).
+  String? _demo;
+
+  late BackgroundKind _tab =
+      parseBackgroundKey(_key)?.kind ?? BackgroundKind.colour;
+  late GradientDirection _direction = widget.draft.direction;
+
+  /// Whether the gradient grid has scrolled under the pinned Direction row.
+  bool _scrolled = false;
+
+  /// Every countdown, for "photos on your other countdowns". Read once from
+  /// the database: the events stream may have no listener under a sheet.
+  List<Countdown> _all = const [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadOthers();
+  }
+
+  Future<void> _loadOthers() async {
+    try {
+      final all = await ref.read(databaseProvider).allCountdowns();
+      if (mounted) setState(() => _all = all);
+    } catch (_) {
+      // No database (tests): show current and recent photos only.
+    }
+  }
+
+  void _pick(String key) {
+    if (key == _key) return;
+    feedback(ref, Sound.select);
+    setState(() => _key = key);
+    widget.onChanged?.call(BackgroundChoice(_key, _direction));
+  }
+
+  void _pickDirection(GradientDirection d) {
+    if (d == _direction) return;
+    feedback(ref, Sound.select);
+    setState(() => _direction = d);
+    widget.onChanged?.call(BackgroundChoice(_key, _direction));
+  }
+
+  /// Colours for the direction chips: the chosen gradient, or the first
+  /// in the catalogue while a colour or photo is chosen.
+  List<Color> get _chipColors {
+    final ref = parseBackgroundKey(_key);
+    if (ref?.kind == BackgroundKind.gradient) {
+      final c = gradientColors(ref!.value, widget.draft.color);
+      if (c != null) return c;
+    }
+    return gradientLibrary.first.colors;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final preview = BackgroundChoice(_key, _direction).applyTo(widget.draft);
+    return FractionallySizedBox(
+      heightFactor: 0.92,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // The header keeps the side margins; the tab body below runs
+          // edge to edge so photo rows can scroll out to the sheet edge.
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SheetHandle(),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    const Expanded(
+                      child: Text(
+                        'All backgrounds',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppText.sheetTitle,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    PillButton(
+                      label: 'Done',
+                      // Picks already applied; Done just closes.
+                      onTap: () => Navigator.pop(context),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                BackgroundPreviewStrip(event: preview),
+                const SizedBox(height: 12),
+                // Scrolls once there are more kinds than fit; with three it
+                // fills the width like before.
+                PillSegmented<Object>(
+                  key: const ValueKey('background-kind-tabs'),
+                  scrollable: true,
+                  values: [...BackgroundKind.values, ...demoBackgroundTabs],
+                  selected: _demo ?? _tab,
+                  label: (k) => switch (k) {
+                    BackgroundKind.colour => 'Colors',
+                    BackgroundKind.gradient => 'Gradients',
+                    BackgroundKind.photo => 'Photos',
+                    BackgroundKind k when k.art != null => k.art!.label,
+                    _ => '$k',
+                  },
+                  onChanged: (k) => setState(() {
+                    if (k is BackgroundKind) {
+                      _tab = k;
+                      _demo = null;
+                    } else {
+                      _demo = k as String;
+                    }
+                    _scrolled = false;
+                  }),
+                ),
+              ],
+            ),
+          ),
+          if (_demo != null)
+            Expanded(
+              child: Center(
+                child: Text(
+                  '$_demo: debug placeholder tab',
+                  style: AppText.secondary,
+                ),
+              ),
+            ),
+          if (_demo == null && _tab == BackgroundKind.gradient) ...[
+            const SizedBox(height: 14),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: DirectionPicker(
+                key: const ValueKey('pinned-direction-row'),
+                colors: _chipColors,
+                selected: _direction,
+                onPick: _pickDirection,
+              ),
+            ),
+            const SizedBox(height: 8),
+            // A hairline once the families scroll under the row.
+            AnimatedOpacity(
+              key: const ValueKey('direction-divider'),
+              duration: const Duration(milliseconds: 120),
+              opacity: _scrolled ? 1 : 0,
+              child: Container(
+                height: 1,
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                color: AppColors.rule,
+              ),
+            ),
+          ],
+          if (_demo == null)
+            Expanded(
+              // Fade the grid out under the tabs as it scrolls.
+              child: NotificationListener<ScrollUpdateNotification>(
+                onNotification: (n) {
+                  final under = n.metrics.pixels > 4;
+                  if (under != _scrolled) setState(() => _scrolled = under);
+                  return false;
+                },
+                child: ClipRect(
+                  child: switch (_tab) {
+                    BackgroundKind.pattern ||
+                    BackgroundKind.texture ||
+                    BackgroundKind.illustration => _Collections(
+                      key: ValueKey(_tab),
+                      sections: [
+                        for (final c in artCollectionsFor(_tab.art!))
+                          (
+                            title: c.name,
+                            keys: [for (final a in c.items) artKey(a)],
+                          ),
+                      ],
+                      selected: _key,
+                      legacyBase: widget.draft.color,
+                      onPick: _pick,
+                    ),
+                    BackgroundKind.colour => _Collections(
+                      sections: [
+                        for (final c in colourCollections)
+                          (
+                            title: c.name,
+                            keys: [
+                              for (final p in c.colours) colourKey(p.color),
+                            ],
+                          ),
+                      ],
+                      selected: _key,
+                      legacyBase: widget.draft.color,
+                      onPick: _pick,
+                    ),
+                    BackgroundKind.gradient => _Collections(
+                      sections: [
+                        for (final c in gradientCollections)
+                          (
+                            title: c.name,
+                            keys: [
+                              for (final g in c.gradients) gradientKey(g.id),
+                            ],
+                          ),
+                      ],
+                      selected: _key,
+                      legacyBase: widget.draft.color,
+                      direction: _direction,
+                      onPick: _pick,
+                    ),
+                    BackgroundKind.photo => PhotosTab(
+                      draft: widget.draft,
+                      onImported: (photo) => Navigator.pop(context, photo),
+                      photos: availablePhotos(
+                        current: widget.draft.photoPath,
+                        recent: ref.watch(recentsProvider).photos,
+                        others: [for (final e in _all) ?e.photoPath],
+                      ),
+                      selected: _key,
+                      onPick: _pick,
+                      onAdd: () => Navigator.pop(context, addPhotoResult),
+                    ),
+                  },
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+typedef _Section = ({String title, List<String> keys});
+
+class _Collections extends StatelessWidget {
+  const _Collections({
+    super.key,
+    required this.sections,
+    required this.selected,
+    required this.legacyBase,
+    required this.onPick,
+    this.direction = GradientDirection.diagonalDown,
+  });
+
+  final List<_Section> sections;
+  final String selected;
+  final Color legacyBase;
+  final ValueChanged<String> onPick;
+
+  /// How gradient swatches are drawn.
+  final GradientDirection direction;
+
+  @override
+  Widget build(BuildContext context) => CustomScrollView(
+    slivers: [
+      SliverPadding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        sliver: SliverMainAxisGroup(
+          slivers: [
+            for (final s in sections) ...[
+              SliverPadding(
+                padding: const EdgeInsets.only(top: 18, bottom: 10),
+                sliver: SliverToBoxAdapter(
+                  child: Text(s.title.toUpperCase(), style: AppText.eyebrow),
+                ),
+              ),
+              SliverGrid.builder(
+                gridDelegate: _namedGrid,
+                itemCount: s.keys.length,
+                itemBuilder: (_, i) => _NamedTile(
+                  backgroundKey: s.keys[i],
+                  selected: s.keys[i] == selected,
+                  legacyBase: legacyBase,
+                  direction: direction,
+                  onTap: () => onPick(s.keys[i]),
+                ),
+              ),
+            ],
+            const SliverToBoxAdapter(child: SizedBox(height: 30)),
+          ],
+        ),
+      ),
+    ],
+  );
+}
+
+const _namedGrid = SliverGridDelegateWithMaxCrossAxisExtent(
+  maxCrossAxisExtent: 56,
+  mainAxisSpacing: 2,
+  crossAxisSpacing: 8,
+  mainAxisExtent: 70,
+);
+
+/// A swatch with its name under it when it is the one chosen.
+class _NamedTile extends StatelessWidget {
+  const _NamedTile({
+    required this.backgroundKey,
+    required this.selected,
+    required this.legacyBase,
+    required this.onTap,
+    this.direction = GradientDirection.diagonalDown,
+  });
+
+  final String backgroundKey;
+  final bool selected;
+  final Color legacyBase;
+  final VoidCallback onTap;
+  final GradientDirection direction;
+
+  @override
+  Widget build(BuildContext context) => RepaintBoundary(
+    // Each swatch paints on its own layer, so scrolling 100 of them and
+    // changing direction only repaints what changed.
+    child: Column(
+      children: [
+        Expanded(
+          child: Center(
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: BackgroundTile(
+                backgroundKey: backgroundKey,
+                selected: selected,
+                legacyBase: legacyBase,
+                direction: direction,
+                onTap: onTap,
+              ),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 16,
+          child: ExcludeSemantics(
+            child: Text(
+              selected ? backgroundName(backgroundKey) : '',
+              maxLines: 1,
+              overflow: TextOverflow.visible,
+              softWrap: false,
+              style: const TextStyle(
+                fontSize: 11,
+                height: 1.3,
+                fontWeight: FontWeight.w700,
+                color: AppColors.ink,
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+/// A friendly name for a key: "Sunset", "Lavender", "Custom color".
+String backgroundName(String key) {
+  final ref = parseBackgroundKey(key);
+  if (ref == null) return '';
+  return switch (ref.kind) {
+    BackgroundKind.colour =>
+      colourName(colourFromKey(ref.value)) ?? 'Custom color',
+    BackgroundKind.gradient =>
+      ref.value == legacyGradientId
+          ? 'Classic gradient'
+          : gradientById(ref.value)?.name ?? 'Gradient',
+    BackgroundKind.photo => 'Photo',
+    BackgroundKind.pattern ||
+    BackgroundKind.texture ||
+    BackgroundKind.illustration =>
+      artById(ref.value)?.name ?? 'Drawn background',
+  };
+}
+
+/// What a screen reader says for a key: "Sunset gradient", "Lavender".
+String backgroundLabel(String key) {
+  final name = backgroundName(key);
+  return switch (parseBackgroundKey(key)?.kind) {
+    BackgroundKind.gradient => '$name gradient',
+    BackgroundKind.pattern => '$name pattern',
+    BackgroundKind.texture => '$name texture',
+    BackgroundKind.illustration => '$name illustration',
+    _ => name,
+  };
+}
+
+/// One background swatch for a key, used on the Look tab and in the sheet.
+/// The chosen one gets an Ink ring and a check, so it never relies on
+/// colour alone.
+class BackgroundTile extends StatelessWidget {
+  const BackgroundTile({
+    super.key,
+    required this.backgroundKey,
+    required this.selected,
+    required this.onTap,
+    this.legacyBase = AppColors.ink,
+    this.badge,
+    this.direction = GradientDirection.diagonalDown,
+  });
+
+  final String backgroundKey;
+  final bool selected;
+  final VoidCallback onTap;
+
+  /// The countdown's colour, for drawing the old automatic gradient.
+  final Color legacyBase;
+  final String? badge;
+
+  /// How a gradient swatch is drawn.
+  final GradientDirection direction;
+
+  BoxDecoration? _fill() {
+    final ref = parseBackgroundKey(backgroundKey);
+    if (ref == null) return null;
+    switch (ref.kind) {
+      case BackgroundKind.colour:
+        return BoxDecoration(color: colourFromKey(ref.value));
+      case BackgroundKind.gradient:
+        final colors = gradientColors(ref.value, legacyBase);
+        if (colors == null) return null;
+        return BoxDecoration(gradient: buildGradient(colors, direction));
+      case BackgroundKind.photo:
+        if (!PhotoStore.ready) return null;
+        return BoxDecoration(
+          image: DecorationImage(
+            image: ResizeImage(
+              FileImage(PhotoStore.instance.fileFor(ref.value)),
+              width: 160,
+            ),
+            fit: BoxFit.cover,
+          ),
+        );
+      case BackgroundKind.pattern ||
+          BackgroundKind.texture ||
+          BackgroundKind.illustration:
+        final art = artById(ref.value);
+        return art == null ? null : BoxDecoration(color: art.ground);
+    }
+  }
+
+  /// The drawn art for a pattern, texture or illustration key.
+  Art? get _art {
+    final ref = parseBackgroundKey(backgroundKey);
+    return ref?.kind.art == null ? null : artById(ref!.value);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final photo = backgroundKey.startsWith('photo:');
+    final radius = photo ? 14.0 : 21.0;
+    return Semantics(
+      button: true,
+      selected: selected,
+      label: badge == null
+          ? backgroundLabel(backgroundKey)
+          : '$badge ${backgroundLabel(backgroundKey).toLowerCase()}',
+      excludeSemantics: true,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Positioned.fill(
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 150),
+                padding: const EdgeInsets.all(3),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(radius),
+                  border: Border.all(
+                    color: selected ? AppColors.ink : Colors.transparent,
+                    width: 3,
+                  ),
+                ),
+                child: Container(
+                  clipBehavior: Clip.antiAlias,
+                  decoration:
+                      (_fill() ?? const BoxDecoration(color: AppColors.wash))
+                          .copyWith(
+                            borderRadius: BorderRadius.circular(radius - 4),
+                          ),
+                  child: _art == null
+                      ? null
+                      : CustomPaint(
+                          painter: ArtPainter(_art!, scale: 0.55),
+                          size: Size.infinite,
+                        ),
+                ),
+              ),
+            ),
+            if (selected)
+              Positioned(
+                right: -3,
+                top: -3,
+                child: Container(
+                  width: 20,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    color: AppColors.ink,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: AppColors.surface, width: 2),
+                  ),
+                  child: const Icon(
+                    Icons.check_rounded,
+                    size: 12,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            if (badge != null)
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: -6,
+                child: Center(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    decoration: BoxDecoration(
+                      color: AppColors.ink,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      badge!,
+                      style: const TextStyle(
+                        fontSize: 8,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// The dashed "Add a photo" tile.
+class AddPhotoTile extends StatelessWidget {
+  const AddPhotoTile({super.key, required this.onTap});
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) => Semantics(
+    button: true,
+    label: 'Add a photo',
+    excludeSemantics: true,
+    child: GestureDetector(
+      onTap: onTap,
+      child: CustomPaint(
+        painter: _DashedRRect(),
+        child: const Center(
+          child: Icon(
+            Icons.add_photo_alternate_outlined,
+            color: AppColors.primary,
+            size: 20,
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+class _DashedRRect extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rrect = RRect.fromRectAndRadius(
+      Offset.zero & size,
+      const Radius.circular(12),
+    );
+    canvas.drawRRect(rrect, Paint()..color = AppColors.ground);
+    final paint = Paint()
+      ..color = AppColors.primary
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5;
+    final path = Path()..addRRect(rrect.deflate(0.75));
+    for (final metric in path.computeMetrics()) {
+      for (double d = 0; d < metric.length; d += 7) {
+        canvas.drawPath(metric.extractPath(d, d + 4), paint);
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+/// A short card showing the countdown with the background being tried.
+class BackgroundPreviewStrip extends ConsumerWidget {
+  const BackgroundPreviewStrip({super.key, required this.event});
+  final Countdown event;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final count = cardCount(event, ref.watch(minuteClockProvider));
+    final ink = event.textColor;
+    final shadow = event.hasPhoto ? photoTextShadow : null;
+    return Semantics(
+      label: 'Preview: ${backgroundName(backgroundKeyOf(event))}',
+      excludeSemantics: true,
+      child: SizedBox(
+        height: 72,
+        child: CountdownSurface(
+          event: event,
+          shape: CropShape.wide,
+          borderRadius: BorderRadius.circular(20),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            children: [
+              if (event.iconSlug != null) ...[
+                EventIcon(event.iconSlug!, size: 22, color: ink),
+                const SizedBox(width: 10),
+              ],
+              Expanded(
+                child: Text(
+                  event.title.isEmpty ? 'Countdown' : event.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontFamily: resolveEventFont(event.fontFamily),
+                    fontFamilyFallback: eventFontFallback,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: ink,
+                    shadows: shadow,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                count.big,
+                style: AppText.numeral(
+                  32,
+                  color: ink,
+                ).copyWith(height: 1, shadows: shadow),
+              ),
+              if (count.unit.isNotEmpty) ...[
+                const SizedBox(width: 4),
+                Text(
+                  count.unit,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: ink,
+                    shadows: shadow,
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// The 8 gradient directions as chips, each previewing [colors] that way.
+/// Scrolls sideways edge to edge. Used on the Look tab and pinned at the
+/// top of the sheet's Gradients tab.
+class DirectionPicker extends StatelessWidget {
+  const DirectionPicker({
+    super.key,
+    required this.colors,
+    required this.selected,
+    required this.onPick,
+  });
+
+  final List<Color> colors;
+  final GradientDirection selected;
+  final ValueChanged<GradientDirection> onPick;
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      const SectionLabel('Direction'),
+      const SizedBox(height: 8),
+      BleedScroller(
+        height: 44,
+        itemCount: GradientDirection.values.length,
+        itemBuilder: (_, i) {
+          final dir = GradientDirection.values[i];
+          final on = selected == dir;
+          return Semantics(
+            button: true,
+            selected: on,
+            label: dir.label,
+            excludeSemantics: true,
+            child: GestureDetector(
+              onTap: () => onPick(dir),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 150),
+                width: 56,
+                padding: const EdgeInsets.all(3),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(
+                    color: on ? AppColors.ink : AppColors.border,
+                    width: on ? 3 : 1.5,
+                  ),
+                ),
+                child: Container(
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    gradient: buildGradient(colors, dir),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    dir.arrow,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: autoTextColorFor(colors),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    ],
+  );
+}

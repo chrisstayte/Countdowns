@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Photo widgets, home screen</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Inter:wght@400;500;600;700&amp;family=Libre+Baskerville:wght@400;700&amp;family=Comic+Neue:wght@400;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#4A0D67}a:hover{color:#1C1633}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: linear-gradient(160deg, #2B2160 0%, #5B3F8F 45%, #E58FA8 100%); color: #FFFFFF; font-family: Inter, system-ui, sans-serif; padding: 70px 22px 0">
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px">
+    <div style="grid-column: span 2; height: 160px; border-radius: 24px; background: linear-gradient(90deg, rgba(18,15,34,0.6), rgba(18,15,34,0.05) 70%), url(/_blob/936f0c7563d452e48e8a01312dd864ba) center 60%/cover; padding: 16px 18px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; text-shadow: 0 1px 8px rgba(0,0,0,0.35)">
+      <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px; font-weight: 700">Japan trip</span>
+      <div style="display: flex; flex-direction: column"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 60px; font-weight: 800; line-height: 0.85; letter-spacing: -0.04em">{{japan}}</span><span style="font-size: 14px; font-weight: 700">sleeps to go · Sun, Mar 14</span></div>
+    </div>
+    <div style="height: 160px; border-radius: 24px; background: linear-gradient(rgba(18,15,34,0.1), rgba(18,15,34,0.55)), url(/_blob/00a21eed18e810a61157f9f560de52e9) center/cover; padding: 14px 16px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; text-shadow: 0 1px 8px rgba(0,0,0,0.35)">
+      <span style="font-family: 'Comic Neue', cursive; font-size: 17px; font-weight: 700; line-height: 1.1">Mia’s birthday</span>
+      <div style="display: flex; flex-direction: column"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 48px; font-weight: 800; line-height: 0.85">{{mia}}</span><span style="font-size: 13px; font-weight: 700">days</span></div>
+    </div>
+    <div style="height: 160px; border-radius: 24px; background: #FF564A; color: #1C1633; padding: 14px 16px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between">
+      <span style="font-family: 'Libre Baskerville', serif; font-size: 17px; font-weight: 700">Christmas</span>
+      <div style="display: flex; flex-direction: column"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 48px; font-weight: 800; line-height: 0.85">{{xmas}}</span><span style="font-size: 13px; font-weight: 700">days</span></div>
+    </div>
+  </div>
+  <div style="display: flex; justify-content: space-around; margin-top: 10px; font-size: 11px; font-weight: 600">
+    <span>Countdowns</span><span>Countdowns</span>
+  </div>
+  <div aria-hidden="true" style="margin-top: 26px; display: grid; grid-template-columns: repeat(4, 62px); justify-content: space-between; row-gap: 26px">
+    <span style="height: 62px; border-radius: 16px; background: rgba(255,255,255,0.22)"></span><span style="height: 62px; border-radius: 16px; background: rgba(255,255,255,0.22)"></span><span style="height: 62px; border-radius: 16px; background: rgba(255,255,255,0.22)"></span><span style="height: 62px; border-radius: 16px; background: rgba(255,255,255,0.22)"></span>
+    <span style="height: 62px; border-radius: 16px; background: rgba(255,255,255,0.22)"></span><span style="height: 62px; border-radius: 16px; background: rgba(255,255,255,0.22)"></span><span style="height: 62px; border-radius: 16px; background: rgba(255,255,255,0.22)"></span><span style="height: 62px; border-radius: 16px; background: rgba(255,255,255,0.22)"></span>
+  </div>
+  <div aria-hidden="true" style="position: absolute; left: 14px; right: 14px; bottom: 14px; height: 92px; border-radius: 32px; background: rgba(255,255,255,0.22); display: grid; grid-template-columns: repeat(4, 62px); justify-content: space-around; align-items: center">
+    <span style="height: 62px; border-radius: 16px; background: rgba(255,255,255,0.3)"></span><span style="height: 62px; border-radius: 16px; background: rgba(255,255,255,0.3)"></span><span style="height: 62px; border-radius: 16px; background: rgba(255,255,255,0.3)"></span><span style="height: 62px; border-radius: 16px; background: rgba(255,255,255,0.3)"></span>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const now = Date.now(), d = (t) => Math.max(Math.floor((t.getTime() - now) / 864e5), 0);
+    return { japan: d(new Date(2027, 2, 14, 9, 30)) + 1, mia: d(new Date(2027, 1, 3)), xmas: d(new Date(2026, 11, 25)) };
+  }
+}
+</script>
+</body>
+</html>

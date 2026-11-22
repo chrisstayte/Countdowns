@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_name">Countdown</string>
+    <string name="widget_description">Up next, or one countdown you pick.</string>
+</resources>

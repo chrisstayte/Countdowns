@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Settings, tablet</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#4A0D67}a:hover{color:#1C1633}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 1194px; height: 834px; box-sizing: border-box; overflow: hidden; background: #ECEAFB; color: #1C1633; font-family: Inter, system-ui, sans-serif; display: flex">
+  <nav aria-label="Settings" style="width: 300px; flex-shrink: 0; padding: 28px 18px; box-sizing: border-box; display: flex; flex-direction: column; gap: 6px">
+    <a href="TabletSplit.dc.html" style="height: 44px; align-self: flex-start; display: flex; align-items: center; gap: 4px; font-size: 16px; font-weight: 600; color: #4A0D67; text-decoration: none"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M15 6l-6 6 6 6"></path></svg>Countdowns</a>
+    <h1 style="margin: 4px 10px 16px; font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 800">Settings</h1>
+    <sc-for list="{{cats}}" as="c" hint-placeholder-count="4">
+      <button onClick="{{c.pick}}" aria-current="{{c.cur}}" style="height: 52px; border: none; border-radius: 16px; background: {{c.bg}}; color: {{c.fg}}; display: flex; align-items: center; gap: 12px; padding: 0 12px; font-size: 16px; font-weight: 600; text-align: left"><span style="width: 32px; height: 32px; border-radius: 10px; background: {{c.color}}; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#1C1633" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="{{c.icon}}"></path></svg></span>{{c.label}}</button>
+    </sc-for>
+    <span style="margin-top: auto; padding: 0 12px; font-size: 13px; color: #5E5878">Countdowns 2.0.0</span>
+  </nav>
+
+  <main style="flex: 1; margin: 16px 16px 16px 0; background: #FFFFFF; border-radius: 32px; padding: 36px 44px; box-sizing: border-box; overflow-y: auto; display: flex; flex-direction: column; gap: 30px; min-width: 0">
+    <sc-if value="{{isAppearance}}" hint-placeholder-val="{{true}}">
+      <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; font-weight: 800">Appearance</h2>
+      <section style="display: flex; flex-direction: column; gap: 12px">
+        <h3 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5E5878">Theme</h3>
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px">
+          <sc-for list="{{themes}}" as="t" hint-placeholder-count="3">
+            <button onClick="{{t.pick}}" aria-pressed="{{t.on}}" style="border: none; background: transparent; padding: 0; display: flex; flex-direction: column; gap: 8px; color: #1C1633; font-size: 15px; font-weight: 600; text-align: left">
+              <span style="height: 150px; border-radius: 20px; border: 3px solid {{t.ring}}; box-sizing: border-box; overflow: hidden; display: flex">
+                <span style="width: 34%; background: {{t.side}}"></span>
+                <span style="flex: 1; background: {{t.main}}; padding: 14px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px"><span style="border-radius: 10px; background: #FE7228"></span><span style="border-radius: 10px; background: #FF564A"></span><span style="border-radius: 10px; background: #F7BC33"></span><span style="border-radius: 10px; background: #66B6FE"></span></span>
+              </span>
+              {{t.label}}
+            </button>
+          </sc-for>
+        </div>
+      </section>
+      <section style="display: flex; flex-direction: column; gap: 12px">
+        <h3 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5E5878">App icon</h3>
+        <div style="display: flex; gap: 28px">
+          <sc-for list="{{appIcons}}" as="a" hint-placeholder-count="3">
+            <button onClick="{{a.pick}}" aria-pressed="{{a.on}}" style="border: none; background: transparent; padding: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; color: #1C1633; font-size: 14px; font-weight: 600"><span style="padding: 4px; border-radius: 28px; border: 3px solid {{a.ring}}; display: flex"><img src="{{a.src}}" alt="" style="width: 88px; height: 88px; border-radius: 20px; display: block"></span>{{a.label}}</button>
+          </sc-for>
+        </div>
+      </section>
+      <section style="display: flex; flex-direction: column; gap: 12px">
+        <h3 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5E5878">Home layout</h3>
+        <div style="display: flex; gap: 6px; background: #F5F4FF; border-radius: 22px; padding: 4px; max-width: 360px">
+          <sc-for list="{{layouts}}" as="u" hint-placeholder-count="2">
+            <button onClick="{{u.pick}}" aria-pressed="{{u.on}}" style="flex: 1; height: 38px; border: none; border-radius: 19px; background: {{u.bg}}; color: {{u.fg}}; font-size: 14px; font-weight: 700">{{u.label}}</button>
+          </sc-for>
+        </div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{isCountdowns}}" hint-placeholder-val="{{false}}">
+      <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; font-weight: 800">Countdowns</h2>
+      <section style="display: flex; flex-direction: column; gap: 12px">
+        <h3 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5E5878">Sort</h3>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; max-width: 560px">
+          <sc-for list="{{sorts}}" as="u" hint-placeholder-count="4">
+            <button onClick="{{u.pick}}" aria-pressed="{{u.on}}" style="height: 52px; border-radius: 16px; border: 2px solid {{u.ring}}; background: #F5F4FF; color: #1C1633; font-size: 15px; font-weight: 600; text-align: left; padding: 0 16px">{{u.label}}</button>
+          </sc-for>
+        </div>
+      </section>
+      <section style="display: flex; flex-direction: column; gap: 12px">
+        <h3 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5E5878">Count in by default</h3>
+        <div style="display: flex; gap: 6px; background: #F5F4FF; border-radius: 22px; padding: 4px; max-width: 560px">
+          <sc-for list="{{units}}" as="u" hint-placeholder-count="4">
+            <button onClick="{{u.pick}}" aria-pressed="{{u.on}}" style="flex: 1; height: 38px; border: none; border-radius: 19px; background: {{u.bg}}; color: {{u.fg}}; font-size: 14px; font-weight: 700">{{u.label}}</button>
+          </sc-for>
+        </div>
+      </section>
+      <div style="max-width: 560px; background: #F5F4FF; border-radius: 18px; display: flex; flex-direction: column">
+        <sc-for list="{{togglesC}}" as="t" hint-placeholder-count="1">
+          <div style="height: 58px; padding: 0 16px; display: flex; align-items: center; gap: 12px; font-size: 16px"><span style="flex: 1">{{t.label}}</span><button role="switch" aria-checked="{{t.on}}" aria-label="{{t.label}}" onClick="{{t.flip}}" style="width: 52px; height: 32px; border-radius: 16px; border: none; background: {{t.track}}; padding: 3px; display: flex; justify-content: {{t.align}}"><span style="width: 26px; height: 26px; border-radius: 13px; background: #FFFFFF; box-shadow: 0 1px 3px rgba(0,0,0,0.2)"></span></button></div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isNotify}}" hint-placeholder-val="{{false}}">
+      <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; font-weight: 800">Notifications and feel</h2>
+      <div style="max-width: 560px; background: #F5F4FF; border-radius: 18px; display: flex; flex-direction: column">
+        <sc-for list="{{togglesN}}" as="t" hint-placeholder-count="3">
+          <div style="height: 58px; padding: 0 16px; display: flex; align-items: center; gap: 12px; font-size: 16px"><span style="flex: 1">{{t.label}}</span><button role="switch" aria-checked="{{t.on}}" aria-label="{{t.label}}" onClick="{{t.flip}}" style="width: 52px; height: 32px; border-radius: 16px; border: none; background: {{t.track}}; padding: 3px; display: flex; justify-content: {{t.align}}"><span style="width: 26px; height: 26px; border-radius: 13px; background: #FFFFFF; box-shadow: 0 1px 3px rgba(0,0,0,0.2)"></span></button></div>
+        </sc-for>
+      </div>
+      <section style="display: flex; flex-direction: column; gap: 12px">
+        <h3 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5E5878">Default reminders for new countdowns</h3>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap">
+          <button aria-pressed="true" style="height: 42px; padding: 0 16px; border-radius: 21px; border: none; background: #1C1633; color: #FFFFFF; font-size: 14px; font-weight: 600">On the day</button>
+          <button aria-pressed="true" style="height: 42px; padding: 0 16px; border-radius: 21px; border: none; background: #1C1633; color: #FFFFFF; font-size: 14px; font-weight: 600">1 week before</button>
+          <button aria-pressed="false" style="height: 42px; padding: 0 16px; border-radius: 21px; border: 1.5px solid #D6D3F0; background: transparent; color: #1C1633; font-size: 14px; font-weight: 600">1 day before</button>
+          <button aria-pressed="false" style="height: 42px; padding: 0 16px; border-radius: 21px; border: 1.5px solid #D6D3F0; background: transparent; color: #1C1633; font-size: 14px; font-weight: 600">1 month before</button>
+        </div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{isAbout}}" hint-placeholder-val="{{false}}">
+      <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; font-weight: 800">Support and about</h2>
+      <div style="max-width: 560px; background: #F5F4FF; border-radius: 18px; display: flex; flex-direction: column">
+        <sc-for list="{{links}}" as="l" hint-placeholder-count="5">
+          <a href="#about" style="height: 54px; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; color: #1C1633; text-decoration: none; font-size: 16px">{{l}}<svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5E5878" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6"></path></svg></a>
+        </sc-for>
+      </div>
+      <section style="max-width: 560px; display: flex; flex-direction: column; gap: 10px; border: 1.5px solid #F2C4C0; border-radius: 18px; padding: 18px">
+        <h3 style="margin: 0; font-size: 16px; font-weight: 700">Delete all countdowns</h3>
+        <p style="margin: 0; font-size: 14px; color: #5E5878">Removes every countdown on this device. This can't be undone.</p>
+        <button style="align-self: flex-start; height: 44px; padding: 0 18px; border-radius: 22px; border: none; background: #B3261E; color: #FFFFFF; font-size: 15px; font-weight: 700">Delete all</button>
+      </section>
+    </sc-if>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1194,"height":834}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { cat: 'Appearance', theme: 'System', icon: 'Light', layout: 'Grid', sort: 'Soonest first', unit: 'Sleeps', done: true, notify: true, sound: false, haptic: true }; }
+  renderVals() {
+    const s = this.state;
+    const seg = (opts, key) => opts.map((label) => ({ label, on: s[key] === label ? 'true' : 'false', bg: s[key] === label ? '#1C1633' : 'transparent', fg: s[key] === label ? '#FFFFFF' : '#1C1633', ring: s[key] === label ? '#1C1633' : 'transparent', pick: () => this.setState({ [key]: label }) }));
+    const tog = (key, label) => ({ label, on: s[key] ? 'true' : 'false', track: s[key] ? '#1B998B' : '#D6D3F0', align: s[key] ? 'flex-end' : 'flex-start', flip: () => this.setState({ [key]: !s[key] }) });
+    const C = [
+      ['Appearance', '#7877E6', 'M12 3a9 9 0 1 0 0 18c1 0 1.5-.8 1.5-1.5 0-1.2-1-1.5-1-2.5 0-1 .8-1.5 2-1.5H17a4 4 0 0 0 4-4c0-4.4-4-8.5-9-8.5z'],
+      ['Countdowns', '#F7BC33', 'M12 21a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM12 9v4l2 2M9 2h6'],
+      ['Notifications', '#FE607C', 'M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.9 1.9 0 0 0 3.4 0'],
+      ['Support and about', '#66B6FE', 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 16v-4M12 8h.01']
+    ];
+    const T = { System: ['#1C1633', '#F5F4FF'], Light: ['#ECEAFB', '#FFFFFF'], Dark: ['#120F22', '#1C1633'] };
+    return {
+      isAppearance: s.cat === 'Appearance', isCountdowns: s.cat === 'Countdowns', isNotify: s.cat === 'Notifications', isAbout: s.cat === 'Support and about',
+      cats: C.map(([label, color, icon]) => ({ label, color, icon, cur: s.cat === label ? 'page' : 'false', bg: s.cat === label ? '#FFFFFF' : 'transparent', fg: '#1C1633', pick: () => this.setState({ cat: label }) })),
+      themes: Object.keys(T).map((label) => ({ label, side: T[label][0], main: T[label][1], on: s.theme === label ? 'true' : 'false', ring: s.theme === label ? '#1C1633' : '#ECEAFB', pick: () => this.setState({ theme: label }) })),
+      appIcons: [['Light', '/_blob/9312cb2f096dc89cfa099519122edac9'], ['Dark', '/_blob/677c20436cc6534d47c8ff8f70a07fcd'], ['Original', '/_blob/b46e75a78d7d40676e401523058334bc']].map(([label, src]) => ({ label, src, on: s.icon === label ? 'true' : 'false', ring: s.icon === label ? '#1C1633' : 'transparent', pick: () => this.setState({ icon: label }) })),
+      layouts: seg(['Grid', 'List'], 'layout'),
+      sorts: seg(['Soonest first', 'Latest first', 'A to Z', 'Z to A'], 'sort'),
+      units: seg(['Days', 'Weeks', 'Sleeps', 'Hours'], 'unit'),
+      togglesC: [tog('done', 'Keep finished countdowns in Done')],
+      togglesN: [tog('notify', 'Notify when a countdown ends'), tog('sound', 'Sound effects'), tog('haptic', 'Haptic feedback')],
+      links: ['Rate Countdowns', 'Contact', 'Privacy Policy', 'Terms of Use', 'Source code']
+    };
+  }
+}
+</script>
+</body>
+</html>

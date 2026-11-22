@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Countdowns home, phone</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Inter:wght@400;500;600;700&amp;family=Libre+Baskerville:wght@400;700&amp;family=Comic+Neue:wght@400;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#4A0D67}a:hover{color:#1C1633}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #F5F4FF; color: #1C1633; font-family: Inter, system-ui, sans-serif">
+  <div style="padding: 58px 20px 0; display: flex; flex-direction: column; gap: 18px">
+    <header style="display: flex; align-items: center; justify-content: space-between">
+      <div style="display: flex; flex-direction: column; gap: 2px">
+        <span style="font-size: 13px; font-weight: 600; color: #5E5878; letter-spacing: 0.02em">Saturday, November 21</span>
+        <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 800; letter-spacing: -0.02em">Countdowns</h1>
+      </div>
+      <div style="display: flex; gap: 8px">
+        <a href="PhoneSearch.dc.html" aria-label="Search" style="width: 44px; height: 44px; border-radius: 22px; background: #FFFFFF; color: #1C1633; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg></a>
+        <a href="PhoneSettings.dc.html" aria-label="Settings" style="width: 44px; height: 44px; border-radius: 22px; background: #FFFFFF; color: #1C1633; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"></path><circle cx="16" cy="6" r="2"></circle><circle cx="10" cy="12" r="2"></circle><circle cx="18" cy="18" r="2"></circle></svg></a>
+      </div>
+    </header>
+
+    <a href="PhoneDetail.dc.html" style="text-decoration: none; color: #1C1633; display: block; border-radius: 28px; background: #FE7228; padding: 20px; box-sizing: border-box; height: 196px; position: relative">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start">
+        <div style="display: flex; flex-direction: column; gap: 4px">
+          <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase">Up next</span>
+          <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 26px; font-weight: 700">{{hero.title}}</span>
+        </div>
+        <span style="width: 44px; height: 44px; border-radius: 22px; background: rgba(28,22,51,0.12); display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{hero.icon}}"></path></svg></span>
+      </div>
+      <div style="position: absolute; left: 20px; right: 20px; bottom: 18px; display: flex; align-items: flex-end; justify-content: space-between">
+        <div style="display: flex; align-items: baseline; gap: 8px">
+          <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 84px; font-weight: 800; line-height: 0.85; letter-spacing: -0.04em">{{hero.big}}</span>
+          <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 700">{{hero.unit}}</span>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px; font-size: 13px; font-weight: 600">
+          <span>{{hero.rest}}</span>
+          <span>{{hero.date}}</span>
+        </div>
+      </div>
+    </a>
+
+    <nav aria-label="Filter" style="display: flex; gap: 8px">
+      <button style="height: 36px; padding: 0 16px; border-radius: 18px; border: none; background: #1C1633; color: #FFFFFF; font-size: 14px; font-weight: 600">Upcoming · 5</button>
+      <button style="height: 36px; padding: 0 16px; border-radius: 18px; border: 1.5px solid #D6D3F0; background: transparent; color: #1C1633; font-size: 14px; font-weight: 600">Done · 1</button>
+      <button style="height: 36px; padding: 0 16px; border-radius: 18px; border: 1.5px solid #D6D3F0; background: transparent; color: #1C1633; font-size: 14px; font-weight: 600">All</button>
+    </nav>
+
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+      <sc-for list="{{cards}}" as="ev" hint-placeholder-count="4">
+        <a href="PhoneDetail.dc.html" style="text-decoration: none; color: {{ev.ink}}; background: {{ev.color}}; border-radius: 24px; height: 165px; padding: 16px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 6px">
+            <span style="font-family: {{ev.font}}; font-size: 18px; font-weight: 600; line-height: 1.15">{{ev.title}}</span>
+            <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="{{ev.icon}}"></path></svg>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 2px">
+            <div style="display: flex; align-items: baseline; gap: 5px">
+              <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 44px; font-weight: 800; line-height: 0.9; letter-spacing: -0.03em">{{ev.big}}</span>
+              <span style="font-size: 15px; font-weight: 700">{{ev.unit}}</span>
+            </div>
+            <span style="font-size: 12px; font-weight: 600; opacity: 0.85">{{ev.date}}</span>
+          </div>
+        </a>
+      </sc-for>
+    </div>
+
+    <section aria-label="Done" style="display: flex; flex-direction: column; gap: 10px">
+      <h2 style="margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5E5878">Done</h2>
+      <div style="display: flex; align-items: center; gap: 12px; background: #FFFFFF; border-radius: 20px; padding: 12px 14px">
+        <span style="width: 40px; height: 40px; border-radius: 14px; background: #83C236; display: flex; align-items: center; justify-content: center; color: #1C1633"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg></span>
+        <div style="flex: 1; display: flex; flex-direction: column"><span style="font-weight: 600; font-size: 15px">Moved in</span><span style="font-size: 13px; color: #5E5878">Aug 2, 2026</span></div>
+        <span style="font-size: 13px; font-weight: 600; color: #5E5878">{{pastAgo}} days ago</span>
+      </div>
+    </section>
+  </div>
+
+  <div style="position: absolute; left: 0; right: 0; bottom: 30px; display: flex; justify-content: center">
+    <a href="PhoneEditor.dc.html" style="height: 52px; padding: 0 22px; border-radius: 26px; background: #1C1633; color: #FFFFFF; text-decoration: none; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 15px; box-shadow: 0 6px 16px rgba(28,22,51,0.18)"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>New countdown</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  componentDidMount() { this.t = setInterval(() => this.forceUpdate(), 30000); }
+  componentWillUnmount() { clearInterval(this.t); }
+  renderVals() {
+    const I = {
+      dining: 'M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7',
+      gift: 'M4 8h16v4H4zM12 8v13M19 12v9H5v-9M7.5 8a2.5 2.5 0 0 1 0-5C10 3 12 8 12 8s2-5 4.5-5a2.5 2.5 0 0 1 0 5',
+      spark: 'M12 3l1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2z',
+      cake: 'M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1M2 21h20M7 8v3M12 8v3M17 8v3',
+      plane: 'M2 16l20-7-3-3-8 3-5-3-2 1 4 4-4 2-2-1-1 1 3 3z'
+    };
+    const now = Date.now();
+    const fmt = (d) => d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    const make = (title, d, color, ink, icon, font) => {
+      const ms = d.getTime() - now;
+      const days = Math.floor(ms / 864e5);
+      const hrs = Math.floor(ms / 36e5) % 24;
+      const big = days >= 1 ? String(days) : String(Math.max(hrs, 0));
+      const unit = days >= 1 ? (days === 1 ? 'day' : 'days') : 'hours';
+      return { title, color, ink, icon: I[icon], font, big, unit, rest: hrs + ' hr', date: fmt(d) };
+    };
+    const hero = make('Thanksgiving', new Date(2026, 10, 26), '#FE7228', '#1C1633', 'dining', '');
+    const cards = [
+      make('Christmas', new Date(2026, 11, 25), '#FF564A', '#1C1633', 'gift', "'Libre Baskerville', serif"),
+      make('New Year’s Eve', new Date(2026, 11, 31, 20), '#F7BC33', '#1C1633', 'spark', "'Bricolage Grotesque', sans-serif"),
+      make('Mia’s birthday', new Date(2027, 1, 3), '#FE607C', '#1C1633', 'cake', "'Comic Neue', cursive"),
+      make('Japan trip', new Date(2027, 2, 14, 9, 30), '#66B6FE', '#1C1633', 'plane', "'Bricolage Grotesque', sans-serif")
+    ];
+    const pastAgo = Math.floor((now - new Date(2026, 7, 2).getTime()) / 864e5);
+    return { hero, cards, pastAgo };
+  }
+}
+</script>
+</body>
+</html>

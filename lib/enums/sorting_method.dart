@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 enum SortingMethod {
@@ -22,7 +21,7 @@ extension SortingMethodExtension on SortingMethod {
     }
   }
 
-  IconData get icon {
+  FaIconData get icon {
     switch (this) {
       case SortingMethod.alphaAscending:
         return FontAwesomeIcons.arrowDownAZ;

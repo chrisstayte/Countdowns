@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Photo background editor, phone</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Inter:wght@400;500;600;700&amp;family=Libre+Baskerville:wght@400;700&amp;family=Comic+Neue:wght@400;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#4A0D67}a:hover{color:#1C1633}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #F5F4FF; color: #1C1633; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column">
+  <header style="padding: 54px 16px 10px; display: flex; align-items: center; justify-content: space-between">
+    <a href="Main.dc.html" style="height: 44px; padding: 0 6px; display: flex; align-items: center; font-weight: 600; font-size: 16px; color: #4A0D67; text-decoration: none">Cancel</a>
+    <span style="font-weight: 700; font-size: 17px">Edit countdown</span>
+    <a href="PhotoDetail.dc.html" style="height: 40px; padding: 0 18px; border-radius: 20px; background: #1B998B; color: #FFFFFF; text-decoration: none; display: flex; align-items: center; font-weight: 700; font-size: 15px">Save</a>
+  </header>
+
+  <div style="padding: 8px 20px 18px">
+    <div style="background: {{cardBg}}; color: {{ink}}; border-radius: 24px; height: 200px; padding: 18px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 14px 30px rgba(28,22,51,0.18)">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start">
+        <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 26px; font-weight: 700; text-shadow: {{shadow}}">Japan trip</span>
+        <svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 16l20-7-3-3-8 3-5-3-2 1 4 4-4 2-2-1-1 1 3 3z"></path></svg>
+      </div>
+      <div style="display: flex; align-items: baseline; gap: 8px; text-shadow: {{shadow}}">
+        <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 64px; font-weight: 800; line-height: 0.9; letter-spacing: -0.03em">113</span>
+        <span style="font-size: 18px; font-weight: 700">days</span>
+        <span style="margin-left: auto; font-size: 13px; font-weight: 600">Sun, Mar 14</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="flex: 1; background: #FFFFFF; border-radius: 28px 28px 0 0; padding: 20px 20px 40px; display: flex; flex-direction: column; gap: 22px">
+    <section style="display: flex; flex-direction: column; gap: 10px">
+      <h2 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5E5878">Background</h2>
+      <div role="group" aria-label="Background type" style="display: flex; gap: 6px; background: #F5F4FF; border-radius: 22px; padding: 4px">
+        <sc-for list="{{modes}}" as="m" hint-placeholder-count="2">
+          <button onClick="{{m.pick}}" aria-pressed="{{m.on}}" style="flex: 1; height: 38px; border: none; border-radius: 19px; background: {{m.bg}}; color: {{m.fg}}; font-size: 14px; font-weight: 700">{{m.label}}</button>
+        </sc-for>
+      </div>
+    </section>
+
+    <sc-if value="{{isPhoto}}" hint-placeholder-val="{{true}}">
+      <section style="display: flex; flex-direction: column; gap: 10px">
+        <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px">
+          <button style="height: 92px; border-radius: 16px; border: 1.5px dashed #B3B2F7; background: #F5F4FF; color: #4A0D67; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; font-size: 12px; font-weight: 700"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"></rect><circle cx="9" cy="10" r="1.6"></circle><path d="M21 16l-5-5-8 8"></path></svg>Photos</button>
+          <sc-for list="{{thumbs}}" as="t" hint-placeholder-count="3">
+            <button onClick="{{t.pick}}" aria-label="{{t.name}}" aria-pressed="{{t.on}}" style="height: 92px; border-radius: 16px; border: 3px solid {{t.ring}}; background: url({{t.src}}) center/cover; box-shadow: inset 0 0 0 2px #FFFFFF; padding: 0"></button>
+          </sc-for>
+        </div>
+        <span style="font-size: 12px; color: #5E5878">Recently used. Tap Photos to pick from your library or take one.</span>
+      </section>
+
+      <section style="display: flex; flex-direction: column; gap: 10px">
+        <div style="display: flex; justify-content: space-between; align-items: baseline"><h2 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5E5878">Darken photo</h2><span style="font-size: 12px; font-weight: 600; color: #5E5878">Keeps the numbers readable</span></div>
+        <div style="display: flex; gap: 8px">
+          <sc-for list="{{dims}}" as="d" hint-placeholder-count="3">
+            <button onClick="{{d.pick}}" aria-pressed="{{d.on}}" style="flex: 1; height: 40px; border-radius: 20px; border: 1.5px solid {{d.border}}; background: {{d.bg}}; color: {{d.fg}}; font-size: 14px; font-weight: 600">{{d.label}}</button>
+          </sc-for>
+        </div>
+      </section>
+
+      <section style="display: flex; flex-direction: column; gap: 0; background: #F5F4FF; border-radius: 14px">
+        <button style="height: 48px; border: none; background: transparent; padding: 0 14px; display: flex; justify-content: space-between; align-items: center; font-size: 16px; color: #1C1633"><span>Move and crop</span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8A8796" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"></path></svg></button>
+        <div style="height: 1px; background: #E4E1F5; margin: 0 14px"></div>
+        <button style="height: 48px; border: none; background: transparent; padding: 0 14px; display: flex; justify-content: space-between; align-items: center; font-size: 16px; color: #1C1633"><span>Use on widgets</span><span style="width: 44px; height: 26px; border-radius: 13px; background: #1B998B; position: relative"><span style="position: absolute; right: 3px; top: 3px; width: 20px; height: 20px; border-radius: 10px; background: #FFFFFF"></span></span></button>
+        <div style="height: 1px; background: #E4E1F5; margin: 0 14px"></div>
+        <button onClick="{{remove}}" style="height: 48px; border: none; background: transparent; padding: 0 14px; display: flex; align-items: center; font-size: 16px; color: #C4314B; font-weight: 600">Remove photo</button>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{isColour}}" hint-placeholder-val="{{false}}">
+      <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px">
+        <sc-for list="{{swatches}}" as="sw" hint-placeholder-count="12">
+          <span style="height: 46px; border-radius: 23px; background: {{sw}}; box-shadow: inset 0 0 0 3px #FFFFFF"></span>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <span style="margin-top: auto; font-size: 12px; color: #5E5878; text-align: center">Photos are copied into the app on your phone. Nothing is uploaded.</span>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { mode: 'Photo', photo: 'fuji', dim: 'Medium' }; }
+  renderVals() {
+    const P = { fuji: ['Sunset over Fuji', '/_blob/936f0c7563d452e48e8a01312dd864ba'], beach: ['Beach', '/_blob/176363716b4c903c7c79827e2038e0ec'], party: ['Party', '/_blob/00a21eed18e810a61157f9f560de52e9'] };
+    const D = { Light: 0.15, Medium: 0.35, Strong: 0.55 };
+    const s = this.state, isPhoto = s.mode === 'Photo';
+    const a = D[s.dim];
+    return {
+      isPhoto, isColour: !isPhoto,
+      cardBg: isPhoto ? 'linear-gradient(rgba(18,15,34,' + a + '), rgba(18,15,34,' + (a + 0.15) + ')), url(' + P[s.photo][1] + ') center/cover' : '#66B6FE',
+      ink: isPhoto ? '#FFFFFF' : '#1C1633', shadow: isPhoto ? '0 1px 8px rgba(0,0,0,0.35)' : 'none',
+      modes: ['Colour', 'Photo'].map((label) => ({ label, on: s.mode === label ? 'true' : 'false', bg: s.mode === label ? '#1C1633' : 'transparent', fg: s.mode === label ? '#FFFFFF' : '#1C1633', pick: () => this.setState({ mode: label }) })),
+      thumbs: Object.keys(P).map((k) => ({ name: P[k][0], src: P[k][1], on: s.photo === k ? 'true' : 'false', ring: s.photo === k ? '#1C1633' : 'transparent', pick: () => this.setState({ photo: k }) })),
+      dims: Object.keys(D).map((label) => ({ label, on: s.dim === label ? 'true' : 'false', bg: s.dim === label ? '#1C1633' : 'transparent', fg: s.dim === label ? '#FFFFFF' : '#1C1633', border: s.dim === label ? '#1C1633' : '#D6D3F0', pick: () => this.setState({ dim: label }) })),
+      remove: () => this.setState({ mode: 'Colour' }),
+      swatches: ['#7877E6', '#8A8796', '#F7BC33', '#FF564A', '#FEA08B', '#FE7228', '#83C236', '#597FFE', '#66B6FE', '#FE607C', '#5FD3B5', '#C9A7F5']
+    };
+  }
+}
+</script>
+</body>
+</html>

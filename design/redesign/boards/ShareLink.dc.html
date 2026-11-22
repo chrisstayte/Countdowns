@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Shared countdown link page</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Inter:wght@400;500;600;700&amp;family=Libre+Baskerville:wght@400;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#1C1633}a:hover{color:#000000}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; overflow: hidden; background: #FFFFFF; color: #1C1633; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column">
+  <header style="padding: 54px 16px 12px; display: flex; flex-direction: column; align-items: center; gap: 4px; background: #F7F7FA; border-bottom: 1px solid #ECEBF2">
+    <span aria-hidden="true" style="width: 48px; height: 48px; border-radius: 24px; background: #1C1633; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px">A</span>
+    <span style="font-size: 13px; font-weight: 600">Alex</span>
+  </header>
+  <div style="flex: 1; padding: 18px 14px; display: flex; flex-direction: column; gap: 10px">
+    <span style="align-self: center; font-size: 11px; color: #8A8796; font-weight: 600">Today 7:24 PM</span>
+    <div style="align-self: flex-start; width: 180px; height: 320px; border-radius: 18px; background: #FF564A; padding: 18px 16px; box-sizing: border-box; display: flex; flex-direction: column">
+      <span style="font-family: 'Libre Baskerville', serif; font-size: 22px; font-weight: 700">Christmas</span>
+      <span style="font-size: 11px; font-weight: 600">Friday, December 25</span>
+      <span style="margin-top: auto; font-family: 'Bricolage Grotesque', sans-serif; font-size: 96px; font-weight: 800; line-height: 0.8; letter-spacing: -0.05em">{{sleeps}}</span>
+      <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px; font-weight: 700">sleeps to go</span>
+      <span style="margin-top: 14px; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase">Made with Countdowns</span>
+    </div>
+    <div style="align-self: flex-start; width: 240px; border-radius: 18px; background: #E9E9EE; padding: 10px 12px; display: flex; align-items: center; gap: 10px">
+      <div style="width: 42px; height: 46px; border-radius: 10px; background: #FFFFFF; display: flex; flex-direction: column; align-items: center; justify-content: center"><span style="font-size: 9px; font-weight: 700; color: #FF564A">DEC</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px; font-weight: 800; line-height: 1">25</span></div>
+      <div style="display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 700">Christmas.ics</span><span style="font-size: 12px; color: #5E5878">Tap to add to Calendar</span></div>
+    </div>
+    <div style="align-self: flex-start; max-width: 250px; background: #E9E9EE; border-radius: 18px 18px 18px 4px; padding: 10px 14px; font-size: 15px">Only {{sleeps}} sleeps left!</div>
+    <div style="align-self: flex-end; max-width: 250px; background: #4A0D67; color: #FFFFFF; border-radius: 18px 18px 4px 18px; padding: 10px 14px; font-size: 15px">Added it. Which app is that?</div>
+  </div>
+  <div style="margin: 0 14px 30px; padding: 14px 16px; border-radius: 20px; background: #F5F4FF; display: flex; flex-direction: column; gap: 4px; font-size: 13px">
+    <span style="font-weight: 700">Everything travels in the message</span>
+    <span style="color: #5E5878">The image and calendar file are made on the sender's phone, so there's no server, sign-in or link to host. The "Made with Countdowns" tag on the image is the install prompt.</span>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const ms = Math.max(new Date(2026, 11, 25).getTime() - Date.now(), 0);
+    return { sleeps: Math.floor(ms / 864e5) + 1 };
+  }
+}
+</script>
+</body>
+</html>

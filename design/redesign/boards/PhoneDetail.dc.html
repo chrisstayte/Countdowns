@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Countdown detail, phone</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Inter:wght@400;500;600;700&amp;family=Libre+Baskerville:wght@400;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#1C1633}a:hover{color:#000000}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: {{accent}}; color: #1C1633; font-family: Inter, system-ui, sans-serif; padding: 56px 20px 34px; display: flex; flex-direction: column">
+  <header style="display: flex; justify-content: space-between; align-items: center">
+    <a href="Main.dc.html" aria-label="Close" style="width: 44px; height: 44px; border-radius: 22px; background: rgba(28,22,51,0.12); display: flex; align-items: center; justify-content: center; color: #1C1633"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></a>
+    <div style="display: flex; gap: 8px">
+      <a href="PhoneShare.dc.html" aria-label="Share" style="width: 44px; height: 44px; border-radius: 22px; background: rgba(28,22,51,0.12); color: #1C1633; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13M7 8l5-5 5 5M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"></path></svg></a>
+      <a href="PhoneEditor.dc.html" style="height: 44px; padding: 0 18px; border-radius: 22px; background: #1C1633; color: #FFFFFF; text-decoration: none; display: flex; align-items: center; font-weight: 700; font-size: 15px">Edit</a>
+    </div>
+  </header>
+
+  <div style="margin-top: 36px; display: flex; flex-direction: column; gap: 10px">
+    <span style="width: 56px; height: 56px; border-radius: 20px; background: rgba(28,22,51,0.12); display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h16v4H4zM12 8v13M19 12v9H5v-9M7.5 8a2.5 2.5 0 0 1 0-5C10 3 12 8 12 8s2-5 4.5-5a2.5 2.5 0 0 1 0 5"></path></svg></span>
+    <h1 style="margin: 0; font-family: 'Libre Baskerville', serif; font-size: 40px; font-weight: 700; line-height: 1.1">Christmas</h1>
+    <span style="font-size: 15px; font-weight: 600">Friday, December 25 · All day</span>
+  </div>
+
+  <div style="margin-top: 34px; display: flex; flex-direction: column; gap: 4px">
+    <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 168px; font-weight: 800; line-height: 0.82; letter-spacing: -0.05em">{{big}}</span>
+    <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 700; padding-left: 6px">{{unitLabel}}</span>
+  </div>
+
+  <div role="group" aria-label="Count in" style="margin-top: 22px; display: flex; gap: 6px; background: rgba(28,22,51,0.12); border-radius: 22px; padding: 4px">
+    <sc-for list="{{units}}" as="u" hint-placeholder-count="4">
+      <button onClick="{{u.pick}}" aria-pressed="{{u.on}}" style="flex: 1; height: 36px; border-radius: 18px; border: none; background: {{u.bg}}; color: {{u.fg}}; font-size: 14px; font-weight: 700">{{u.label}}</button>
+    </sc-for>
+  </div>
+
+  <div style="margin-top: 16px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+    <sc-for list="{{tiles}}" as="t" hint-placeholder-count="3">
+      <div style="background: #1C1633; color: #FFFFFF; border-radius: 18px; padding: 12px 14px; display: flex; flex-direction: column"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; font-weight: 800; white-space: nowrap">{{t.v}}</span><span style="font-size: 12px; font-weight: 600; color: #CFCBE6">{{t.l}}</span></div>
+    </sc-for>
+  </div>
+
+  <div style="margin-top: auto; display: flex; flex-direction: column; gap: 8px">
+    <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600"><span>Added Oct 1</span><span>{{pct}}% of the wait is behind you</span></div>
+    <div style="height: 10px; border-radius: 5px; background: rgba(28,22,51,0.15); overflow: hidden"><div style="height: 10px; width: {{pct}}%; background: #1C1633; border-radius: 5px"></div></div>
+    <div style="margin-top: 10px; display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.35); border-radius: 18px; padding: 12px 14px">
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.9 1.9 0 0 0 3.4 0"></path></svg>
+      <span style="flex: 1; font-size: 14px; font-weight: 600">Reminders: 1 week before, on the day</span>
+      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 6l6 6-6 6"></path></svg>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#FF564A","options":["#FF564A","#F7BC33","#66B6FE","#83C236"]},"unit":{"editor":"enum","options":["days","weeks","sleeps","hours"],"default":"days"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { unit: p.unit || 'days' }; }
+  componentDidMount() { this.t = setInterval(() => this.forceUpdate(), 1000); }
+  componentWillUnmount() { clearInterval(this.t); }
+  renderVals() {
+    const target = new Date(2026, 11, 25).getTime();
+    const start = new Date(2026, 9, 1).getTime();
+    const now = Date.now();
+    const ms = Math.max(target - now, 0);
+    const days = Math.floor(ms / 864e5);
+    const pad = (n) => String(n).padStart(2, '0');
+    const map = {
+      days: [String(days), days === 1 ? 'day' : 'days'],
+      weeks: [(ms / 6048e5).toFixed(1), 'weeks'],
+      sleeps: [String(days + 1), 'sleeps'],
+      hours: [Math.floor(ms / 36e5).toLocaleString('en-US'), 'hours']
+    };
+    const units = ['days', 'weeks', 'sleeps', 'hours'].map((k) => ({
+      label: k.charAt(0).toUpperCase() + k.slice(1),
+      on: this.state.unit === k ? 'true' : 'false',
+      bg: this.state.unit === k ? '#1C1633' : 'transparent',
+      fg: this.state.unit === k ? '#FFFFFF' : '#1C1633',
+      pick: () => this.setState({ unit: k })
+    }));
+    const nights = days + 1;
+    let sats = 0, mons = 0;
+    for (let i = 0; i <= days; i++) { const wd = new Date(now + i * 864e5).getDay(); if (wd === 6) sats++; if (wd === 1) mons++; }
+    const compact = (n) => n >= 1e6 ? (n / 1e6).toFixed(2) + 'M' : n.toLocaleString('en-US');
+    const tileMap = {
+      days: [[pad(Math.floor(ms / 36e5) % 24), 'hours'], [pad(Math.floor(ms / 6e4) % 60), 'minutes'], [pad(Math.floor(ms / 1e3) % 60), 'seconds']],
+      weeks: [[String(Math.floor(days / 7)), 'weeks'], [String(days % 7), 'days'], [pad(Math.floor(ms / 36e5) % 24), 'hours']],
+      sleeps: [[String(sats), 'weekends'], [String(mons), 'Mondays'], [String(nights), 'bedtimes']],
+      hours: [[compact(Math.floor(ms / 6e4)), 'minutes'], [compact(Math.floor(ms / 1e3)), 'seconds'], [pad(Math.floor(ms / 6e4) % 60) + ':' + pad(Math.floor(ms / 1e3) % 60), 'this hour']]
+    };
+    const tiles = tileMap[this.state.unit].map(([v, l]) => ({ v, l }));
+    const pct = Math.min(100, Math.round(((now - start) / (target - start)) * 100));
+    return {
+      accent: this.props.accent ?? '#FF564A',
+      big: map[this.state.unit][0], unitLabel: map[this.state.unit][1] + ' to go', units, tiles,
+      h: pad(Math.floor(ms / 36e5) % 24), m: pad(Math.floor(ms / 6e4) % 60), s: pad(Math.floor(ms / 1e3) % 60), pct
+    };
+  }
+}
+</script>
+</body>
+</html>
