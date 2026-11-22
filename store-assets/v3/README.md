@@ -1,4 +1,6 @@
-# Since & Soon — store artwork, version 3
+# Soon and Since — store artwork, version 3
+
+The store listing name is **Soon and Since**. The installed app and promotional artwork use **Soon & Since**. Public review submissions are paused after the November 22 rename.
 
 Open `index.html` to review and download the artwork. The ZIP contains all final assets, raw screenshots, previews, listing copy, and the dimension/hash manifest. The artwork and English (US) metadata were uploaded and saved for version 3 on November 22, 2026. See [the upload record](UPLOADS.md) for the exact destinations and draft status.
 
@@ -48,4 +50,4 @@ swift -module-cache-path /private/tmp/countdowns-store-module-cache tool/store-a
 python3 tool/store-assets/package.py
 ```
 
-The first command renders the actual screens and designed campaign. The second removes PNG alpha channels and updates the five Android legacy launcher images. The third verifies exact dimensions, color types and size limits; writes SHA-256 provenance and the local review gallery; and makes `since-and-soon-v3-store-assets.zip`. Normal Flutter tests do not regenerate the pack.
+The first command renders the actual screens and designed campaign. The second removes PNG alpha channels and updates the five Android legacy launcher images. The third verifies exact dimensions, color types and size limits; writes SHA-256 provenance and the local review gallery; and makes `soon-and-since-v3-store-assets.zip`. Normal Flutter tests do not regenerate the pack.

@@ -1,5 +1,18 @@
 # Version 3 upload record
 
+## Current rename — November 22, 2026
+
+- Store listing name: **Soon and Since** on Apple and Google. Installed app, widgets, app UI, shared images, calendar exports, and feedback subject: **Soon & Since**.
+- Apple's version 3.0 submission is **Developer Rejected / Removed**. The remaining TestFlight 3.0.0 (7) beta review was also withdrawn. No new Apple review was submitted.
+- Google Play production 3.0.0 (8) was removed from review. The renamed listing and updated release notes are saved for later review; production remains on the existing release.
+- Replaced all seven screenshots in each of Apple's five device slots, plus all seven screenshots in each of Google's three device slots and the Google feature graphic. Confirmed screenshot order from 01 Soon through 07 Background Library. The Apple header/search assets and icon contain no app-name text and remain valid.
+- Regenerated 133 validated PNGs and the complete `soon-and-since-v3-store-assets.zip` pack. Share screenshots include the updated **MADE WITH SOON & SINCE** footer.
+- Published the website rename to [chrisstayte.app/countdowns/](https://chrisstayte.app/countdowns/) (Sites version 8), including portfolio cards, product page, page metadata, and legal-page headings. Existing support, privacy, and terms URLs remain valid.
+- The next app binary must be built from the renamed source before review resumes. Existing build numbers and reserved release tags remain unchanged.
+- Current browser receipts: `review/upload-proof-soon-since-*.jpg` (local, excluded from Git).
+
+## Original uploads
+
 Uploaded through Chrome on November 22, 2026. Language: English (US).
 
 ## App Store Connect

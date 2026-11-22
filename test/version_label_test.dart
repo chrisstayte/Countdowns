@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 PackageInfo _info(String version, String build) => PackageInfo(
-  appName: 'Countdowns',
+  appName: 'Soon & Since',
   packageName: 'com.chrisstayte.countdowns',
   version: version,
   buildNumber: build,

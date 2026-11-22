@@ -20,7 +20,7 @@ class PhotoCredit {
   final String photographerUrl;
   final String pageUrl;
 
-  /// Where it came from, e.g. "Countdowns catalogue".
+  /// Where it came from, e.g. "Soon & Since catalogue".
   final String source;
 
   /// The catalogue photo id, so it can be identified after it leaves the

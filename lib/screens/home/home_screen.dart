@@ -223,7 +223,7 @@ class _HomeHeader extends ConsumerWidget {
                 style: AppText.secondary.copyWith(letterSpacing: 0.26),
               ),
               const SizedBox(height: 2),
-              const MarkedTitle('Since & Soon', style: AppText.largeTitle),
+              const MarkedTitle('Soon & Since', style: AppText.largeTitle),
             ],
           ),
         ),

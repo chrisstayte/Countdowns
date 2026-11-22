@@ -434,7 +434,7 @@ class BleedScroller extends StatelessWidget {
 }
 
 /// A screen title with a slightly tilted highlighter band behind its
-/// lower half, like the app icon. For app screen titles only ("Countdowns",
+/// lower half, like the app icon. For app screen titles only ("Soon & Since",
 /// "Settings"), never for countdown names.
 class MarkedTitle extends StatelessWidget {
   const MarkedTitle(this.text, {super.key, required this.style});

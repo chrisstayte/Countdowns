@@ -98,7 +98,7 @@ def gallery(images):
                              f'<a href="{path}" download>Download PNG</a></p></article>')
     nav = ''.join(f'<a href="#{key.replace("/", "-")}">{value[0]}</a>' for key, value in DEVICES.items())
     page = '''<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Since &amp; Soon — Store artwork</title><style>
+<title>Soon and Since — Store artwork</title><style>
 :root{color-scheme:light;--paper:#fbf9f3;--ink:#2e2a3a;--yellow:#ffe36e}*{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 system-ui,sans-serif}
 header,main{max-width:1560px;margin:auto;padding:32px}h1{font-size:clamp(34px,5vw,64px);line-height:1.05;margin:24px 0 16px}
@@ -109,9 +109,9 @@ section{margin:32px 0 64px;scroll-margin-top:24px}h2{font-size:30px}.grid{displa
 article h3{margin:14px 0 4px;font-size:17px}article p{margin:0;color:#6b6677;font-size:13px}.wide{width:100%;height:auto;border-radius:12px}
 .note{background:#f1ede2;padding:20px 24px;border-radius:16px;margin:24px 0}.note p{margin:8px 0}.small{font-size:14px;color:#6b6677}
 @media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.landscape,.graphics{grid-template-columns:1fr}header,main{padding:20px}}
-</style><header><img src="brand/mark.svg" alt="Since &amp; Soon hourglass" width="64" height="64"><h1>Every day has a story.</h1>
-<p>Since &amp; Soon · Version 3.0 · English (US). Seven screenshots per device, matching store artwork, and the Android icon set.</p>
-<p><a class="pill" href="since-and-soon-v3-store-assets.zip" download>Download the complete pack</a> <a href="README.md">Upload guide</a> · <a href="metadata/en-US.json">Listing copy</a> · <a href="manifest.json">Asset manifest</a></p>
+</style><header><img src="brand/mark.svg" alt="Soon and Since hourglass" width="64" height="64"><h1>Every day has a story.</h1>
+<p>Soon and Since · Version 3.0 · English (US). Seven screenshots per device, matching store artwork, and the Android icon set.</p>
+<p><a class="pill" href="soon-and-since-v3-store-assets.zip" download>Download the complete pack</a> <a href="README.md">Upload guide</a> · <a href="metadata/en-US.json">Listing copy</a> · <a href="manifest.json">Asset manifest</a></p>
 <nav>''' + nav + '''<a href="#graphics">Headers &amp; icons</a></nav></header><main>
 <div class="note"><p><strong>Choose one screenshot family per device.</strong> Campaign images add headlines and a frame; raw screenshots show the full app directly. Keep the numbered order.</p>
 <p>Apple: upload either the universal artwork to both placements, or the separate header and search images. Safe-area overlays in review/ are for inspection only.</p>
@@ -138,7 +138,7 @@ def main():
     inputs = [ROOT / "tool/store_assets_test.dart", ROOT / "tool/store-assets/opaque.swift",
               ROOT / "tool/store-assets/photos/weekend-away.png", ROOT / "tool/splash/mark.swift"]
     manifest = {
-        "name": "Since & Soon", "version": "3.0", "locale": "en-US",
+        "name": "Soon and Since", "version": "3.0", "locale": "en-US",
         "sourceCommit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
         "sampleClock": "2026-11-22T09:41:00", "screensPerDevice": len(SLUGS),
         "capture": "Actual Flutter widgets, deterministic sample events, iOS/Android platform themes, representative safe insets; no native system chrome.",
@@ -148,7 +148,7 @@ def main():
     }
     (OUT / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     gallery(images)
-    archive = OUT / "since-and-soon-v3-store-assets.zip"
+    archive = OUT / "soon-and-since-v3-store-assets.zip"
     with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED) as z:
         for file in sorted(OUT.rglob("*")):
             if file.is_file() and file.suffix != ".zip" and file.name != ".DS_Store":
