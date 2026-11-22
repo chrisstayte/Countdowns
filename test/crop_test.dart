@@ -72,17 +72,21 @@ void main() {
       expect(crops.pointFor(CropShape.tablet), const CropPoint(-0.5, 0.2, 1.5));
     });
 
-    test('same spot for all uses the full-screen crop everywhere', () {
-      final same = crops.copyWith(sameForAll: true);
-      for (final s in CropShape.values) {
-        expect(same.pointFor(s), const CropPoint(-0.5, 0.2, 1.5));
-      }
+    test('older saves with the "same" flag keep what was stored', () {
+      // The flag is ignored; stored shapes keep their own values and
+      // shapes with nothing stored use the full-screen crop, as before.
+      final old = PhotoCrops.fromJson(
+        '{"same":true,"full":[0.3,-0.4,2.0],"card":[0.9,0.1,1.5]}',
+      )!;
+      expect(old.pointFor(CropShape.full), const CropPoint(0.3, -0.4, 2));
+      expect(old.pointFor(CropShape.card), const CropPoint(0.9, 0.1, 1.5));
+      expect(old.pointFor(CropShape.wide), const CropPoint(0.3, -0.4, 2));
+      expect(old.toJson(), isNot(contains('same')));
     });
 
     test('JSON keeps zoom, and older [x, y] crops read as zoom 1', () {
       expect(PhotoCrops.fromJson(crops.toJson()), crops);
-      final old = PhotoCrops.fromJson('{"same":true,"full":[0.3,-0.4]}')!;
-      expect(old.sameForAll, isTrue);
+      final old = PhotoCrops.fromJson('{"full":[0.3,-0.4]}')!;
       expect(old.pointFor(CropShape.card), const CropPoint(0.3, -0.4));
       expect(PhotoCrops.fromJson('not json'), isNull);
     });
@@ -183,24 +187,26 @@ void main() {
       });
     });
 
-    testWidgets('with Same spot off, dragging one shape moves only it', (
-      tester,
-    ) async {
+    testWidgets('there is no Same spot for all switch', (tester) async {
+      await open(tester, const PhotoCrops(), () async {
+        expect(find.text('Same spot for all'), findsNothing);
+        expect(find.bySemanticsLabel('Same spot for all'), findsNothing);
+      });
+    });
+
+    testWidgets('dragging one shape moves only it', (tester) async {
       final result = await open(tester, const PhotoCrops(), () async {
         await tester.tap(find.text('Card').last);
         await tester.pump();
         await tester.dragFrom(canvasCenter(tester), const Offset(60, 0));
         await tester.pump();
       });
-      expect(result!.sameForAll, isFalse);
-      expect(result.pointFor(CropShape.card).x, greaterThan(0.2));
+      expect(result!.pointFor(CropShape.card).x, greaterThan(0.2));
       expect(result.pointFor(CropShape.full), CropPoint.center);
       expect(result.pointFor(CropShape.wide), CropPoint.center);
     });
 
-    testWidgets('with Same spot off, pinching zooms only that shape', (
-      tester,
-    ) async {
+    testWidgets('pinching zooms only that shape', (tester) async {
       final result = await open(tester, const PhotoCrops(), () async {
         await tester.tap(find.text('Wide').last);
         await tester.pump();
@@ -226,22 +232,31 @@ void main() {
       expect(result.pointFor(CropShape.card).zoom, 1);
     });
 
-    testWidgets('with Same spot on, every shape moves together', (
+    testWidgets('in All shapes, dragging moves only the frame touched', (
       tester,
     ) async {
-      final result = await open(tester, const PhotoCrops(), () async {
-        await tester.tap(find.text('Same spot for all'));
-        await tester.pump();
-        await tester.tap(find.text('Card').last);
-        await tester.pump();
-        await tester.dragFrom(canvasCenter(tester), const Offset(60, 0));
+      final initial = PhotoCrops(
+        points: {
+          CropShape.full: const CropPoint(-1, 0),
+          CropShape.card: const CropPoint(1, 0, 2),
+          CropShape.wide: const CropPoint(0, 1),
+          CropShape.tablet: const CropPoint(0, 0),
+        },
+      );
+      final result = await open(tester, initial, () async {
+        // In the 600×400 photo the zoomed card is x 400–600, y 100–300
+        // and the wide frame starts at y 120, so (500, 110) is card only.
+        final image = tester.getRect(find.byType(Image).first);
+        final start =
+            image.topLeft +
+            Offset(image.width * 500 / 600, image.height * 110 / 400);
+        await tester.dragFrom(start, const Offset(-60, 0));
         await tester.pump();
       });
-      expect(result!.sameForAll, isTrue);
-      final card = result.pointFor(CropShape.card);
-      expect(card.x, greaterThan(0.2));
-      expect(result.pointFor(CropShape.full), card);
-      expect(result.pointFor(CropShape.wide), card);
+      expect(result!.pointFor(CropShape.card).x, lessThan(1));
+      expect(result.pointFor(CropShape.card).zoom, 2);
+      expect(result.pointFor(CropShape.full), const CropPoint(-1, 0));
+      expect(result.pointFor(CropShape.wide), const CropPoint(0, 1));
     });
 
     testWidgets('existing crops come back as they were saved', (tester) async {

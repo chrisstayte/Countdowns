@@ -56,11 +56,8 @@ class CropPoint {
 
   Alignment get alignment => Alignment(x, y);
 
-  CropPoint moved(double dx, double dy) => CropPoint(
-    (x + dx).clamp(-1.0, 1.0),
-    (y + dy).clamp(-1.0, 1.0),
-    zoom,
-  );
+  CropPoint moved(double dx, double dy) =>
+      CropPoint((x + dx).clamp(-1.0, 1.0), (y + dy).clamp(-1.0, 1.0), zoom);
 
   CropPoint zoomed(double value) =>
       CropPoint(x, y, value.clamp(minPhotoZoom, maxPhotoZoom));
@@ -76,28 +73,21 @@ class CropPoint {
   String toString() => 'CropPoint($x, $y, zoom: $zoom)';
 }
 
-/// The crop for every shape a photo shows in. Each shape keeps its own
-/// point and zoom unless [sameForAll] is on, in which case the full-screen
-/// crop is used everywhere.
+/// The crop for every shape a photo shows in. Each shape always keeps its
+/// own point and zoom. A shape with nothing stored yet uses the full-screen
+/// crop. (Older saves may hold a "same" flag; it's ignored.)
 class PhotoCrops {
-  const PhotoCrops({this.sameForAll = false, this.points = const {}});
+  const PhotoCrops({this.points = const {}});
 
-  final bool sameForAll;
   final Map<CropShape, CropPoint> points;
 
-  CropPoint pointFor(CropShape shape) {
-    if (sameForAll) return points[CropShape.full] ?? CropPoint.center;
-    return points[shape] ?? points[CropShape.full] ?? CropPoint.center;
-  }
+  CropPoint pointFor(CropShape shape) =>
+      points[shape] ?? points[CropShape.full] ?? CropPoint.center;
 
-  PhotoCrops copyWith({bool? sameForAll, Map<CropShape, CropPoint>? points}) =>
-      PhotoCrops(
-        sameForAll: sameForAll ?? this.sameForAll,
-        points: points ?? this.points,
-      );
+  PhotoCrops copyWith({Map<CropShape, CropPoint>? points}) =>
+      PhotoCrops(points: points ?? this.points);
 
   String toJson() => jsonEncode({
-    'same': sameForAll,
     for (final e in points.entries)
       e.key.name: [e.value.x, e.value.y, e.value.zoom],
   });
@@ -107,7 +97,6 @@ class PhotoCrops {
     try {
       final map = jsonDecode(json) as Map<String, dynamic>;
       return PhotoCrops(
-        sameForAll: map['same'] as bool? ?? false,
         points: {
           for (final shape in CropShape.values)
             if (map[shape.name] case [num x, num y, ...final rest])
@@ -130,16 +119,12 @@ class PhotoCrops {
   @override
   bool operator ==(Object other) =>
       other is PhotoCrops &&
-      other.sameForAll == sameForAll &&
       other.points.length == points.length &&
       points.entries.every((e) => other.points[e.key] == e.value);
 
   @override
-  int get hashCode => Object.hash(
-    sameForAll,
-    Object.hashAllUnordered(
-      points.entries.map((e) => Object.hash(e.key, e.value)),
-    ),
+  int get hashCode => Object.hashAllUnordered(
+    points.entries.map((e) => Object.hash(e.key, e.value)),
   );
 }
 

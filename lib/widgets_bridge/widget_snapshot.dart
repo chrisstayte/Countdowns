@@ -28,9 +28,12 @@ String iconFileName(String slug, ui.Color tint) =>
 /// the photo or crop does, so widgets never show a stale copy.
 String photoFileName(Countdown e, CropShape shape) {
   final a = e.photoCrops?.pointFor(shape);
-  final key = Object.hash(e.photoPath, a?.x, a?.y, a?.zoom)
-      .toUnsigned(32)
-      .toRadixString(16);
+  final key = Object.hash(
+    e.photoPath,
+    a?.x,
+    a?.y,
+    a?.zoom,
+  ).toUnsigned(32).toRadixString(16);
   return 'photos/${e.id}-${shape.name}-$key.png';
 }
 
@@ -53,7 +56,9 @@ Map<String, Object?> buildWidgetSnapshot(List<Countdown> events, DateTime now) {
           'unit': e.unit.name,
           'font': eventFontFor(e.fontFamily).family,
           'text': _hex(e.textColor),
-          'colors': [for (final c in e.gradient ?? [e.color]) _hex(c)],
+          'colors': [
+            for (final c in e.gradient ?? [e.color]) _hex(c),
+          ],
           'direction': e.direction.name,
           'icon': e.iconSlug == null
               ? null

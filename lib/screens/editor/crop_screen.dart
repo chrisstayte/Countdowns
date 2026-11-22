@@ -27,7 +27,7 @@ const _where = {
 };
 
 /// Crop a photo for every shape it shows up in. Each shape keeps its own
-/// crop point unless "Same spot for all" is on.
+/// crop point and zoom; moving one never moves the others.
 class CropScreen extends StatefulWidget {
   const CropScreen({super.key, required this.file, required this.initial});
 
@@ -39,7 +39,6 @@ class CropScreen extends StatefulWidget {
 }
 
 class _CropScreenState extends State<CropScreen> {
-  late bool _same = widget.initial.sameForAll;
   late final Map<CropShape, CropPoint> _points = {
     for (final s in CropShape.values) s: widget.initial.pointFor(s),
   };
@@ -80,39 +79,15 @@ class _CropScreenState extends State<CropScreen> {
   }
 
   void _done() {
-    final points = _same
-        ? {CropShape.full: _points[CropShape.full]!}
-        : Map<CropShape, CropPoint>.of(_points);
-    Navigator.pop(context, PhotoCrops(sameForAll: _same, points: points));
+    Navigator.pop(context, PhotoCrops(points: Map.of(_points)));
   }
 
-  /// The shapes a gesture on [grabbed] changes: all of them only when
-  /// "Same spot for all" is on.
-  List<CropShape> _affected(CropShape grabbed) =>
-      _same ? CropShape.values : [grabbed];
+  void _move(CropShape shape, Offset delta) => setState(
+    () => _points[shape] = _points[shape]!.moved(delta.dx, delta.dy),
+  );
 
-  void _move(CropShape grabbed, Offset delta) => setState(() {
-    for (final s in _affected(grabbed)) {
-      _points[s] = _points[s]!.moved(delta.dx, delta.dy);
-    }
-  });
-
-  void _zoom(CropShape grabbed, double zoom) => setState(() {
-    for (final s in _affected(grabbed)) {
-      _points[s] = _points[s]!.zoomed(zoom);
-    }
-  });
-
-  void _toggleSame() => setState(() {
-    _same = !_same;
-    if (_same) {
-      // Line everything up with the full-screen crop.
-      final a = _points[_selected ?? CropShape.full]!;
-      for (final s in CropShape.values) {
-        _points[s] = a;
-      }
-    }
-  });
+  void _zoom(CropShape shape, double zoom) =>
+      setState(() => _points[shape] = _points[shape]!.zoomed(zoom));
 
   @override
   Widget build(BuildContext context) {
@@ -146,9 +121,7 @@ class _CropScreenState extends State<CropScreen> {
       ),
     );
     final hint = _selected == null
-        ? (_same
-              ? 'Drag or pinch to move every crop together'
-              : 'Drag or pinch a shape to set its crop')
+        ? 'Drag or pinch a shape to set its crop'
         : 'Drag or pinch to set the ${_selected!.label.toLowerCase()} crop';
     final canvas = _CropCanvas(
       file: widget.file,
@@ -157,18 +130,9 @@ class _CropScreenState extends State<CropScreen> {
       points: _points,
       selected: _selected,
       hint: hint,
-      linked: _same,
       onMove: _move,
       onZoom: _zoom,
     );
-    final link = _LinkToggle(
-      on: _same,
-      onTap: _toggleSame,
-      sub: _same
-          ? 'Moving one moves them all'
-          : 'Each shape keeps its own crop',
-    );
-
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.light,
       child: Scaffold(
@@ -236,7 +200,6 @@ class _CropScreenState extends State<CropScreen> {
                                       ],
                                     ),
                                   ),
-                                  link,
                                 ],
                               ),
                             ),
@@ -285,8 +248,6 @@ class _CropScreenState extends State<CropScreen> {
                               ],
                             ],
                           ),
-                          const SizedBox(height: 14),
-                          link,
                         ],
                       ),
                     ),
@@ -311,7 +272,6 @@ class _CropCanvas extends StatefulWidget {
     required this.points,
     required this.selected,
     required this.hint,
-    required this.linked,
     required this.onMove,
     required this.onZoom,
   });
@@ -322,7 +282,6 @@ class _CropCanvas extends StatefulWidget {
   final Map<CropShape, CropPoint> points;
   final CropShape? selected;
   final String hint;
-  final bool linked;
   final void Function(CropShape grabbed, Offset alignmentDelta) onMove;
   final void Function(CropShape grabbed, double zoom) onZoom;
 
@@ -335,8 +294,7 @@ class _CropCanvasState extends State<_CropCanvas> {
   double _startZoom = 1;
 
   /// The shape a gesture starting at [at] works on: the selected shape, or
-  /// in "All shapes" the topmost frame under the finger (any frame when
-  /// linked, since they all move together).
+  /// in "All shapes" the topmost frame under the finger.
   CropShape? _grab(Rect image, Offset at) {
     if (widget.selected != null) return widget.selected;
     for (final s in _order.reversed) {
@@ -344,7 +302,7 @@ class _CropCanvasState extends State<_CropCanvas> {
         return s;
       }
     }
-    return widget.linked ? CropShape.full : null;
+    return null;
   }
 
   List<CropShape> get _order => [
@@ -598,78 +556,6 @@ class _ShapeChip extends StatelessWidget {
               ),
             ],
           ),
-        ),
-      ),
-    ),
-  );
-}
-
-class _LinkToggle extends StatelessWidget {
-  const _LinkToggle({required this.on, required this.onTap, required this.sub});
-  final bool on;
-  final VoidCallback onTap;
-  final String sub;
-
-  @override
-  Widget build(BuildContext context) => Semantics(
-    toggled: on,
-    label: 'Same spot for all',
-    child: GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 52,
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Row(
-          children: [
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 150),
-              width: 44,
-              height: 26,
-              padding: const EdgeInsets.all(3),
-              alignment: on ? Alignment.centerRight : Alignment.centerLeft,
-              decoration: BoxDecoration(
-                color: on
-                    ? AppColors.save
-                    : Colors.white.withValues(alpha: 0.25),
-                borderRadius: BorderRadius.circular(13),
-              ),
-              child: Container(
-                width: 20,
-                height: 20,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                ),
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Same spot for all',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  Text(
-                    sub,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: _sub, fontSize: 11),
-                  ),
-                ],
-              ),
-            ),
-          ],
         ),
       ),
     ),
