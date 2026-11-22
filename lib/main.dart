@@ -89,9 +89,6 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(
-      localSettingsProvider.select((s) => s.themeMode),
-    );
     return MaterialApp.router(
       routerConfig: ref.watch(routerProvider),
       debugShowCheckedModeBanner: false,
@@ -163,7 +160,9 @@ class MyApp extends ConsumerWidget {
         ),
         // shadowColor: Colors.grey,
       ),
-      themeMode: themeMode,
+      // Dark mode is hidden for now. The stored themeMode setting is still
+      // read and written unchanged so it can come back later.
+      themeMode: ThemeMode.light,
     );
   }
 }

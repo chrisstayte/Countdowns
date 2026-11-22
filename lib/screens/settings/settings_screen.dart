@@ -173,24 +173,6 @@ class SettingsScreen extends ConsumerWidget {
           SettingsContainer(
             title: 'Display',
             children: [
-              ListTile(
-                leading: const Icon(Icons.color_lens_rounded),
-                title: const Text('Theme'),
-                trailing: DropdownButton(
-                  value: settings.themeMode.index,
-                  underline: Container(),
-                  items: const [
-                    DropdownMenuItem<int>(value: 0, child: Text('System')),
-                    DropdownMenuItem<int>(value: 1, child: Text('Light')),
-                    DropdownMenuItem<int>(value: 2, child: Text('Dark')),
-                  ],
-                  onChanged: (int? value) {
-                    ref
-                        .read(localSettingsProvider.notifier)
-                        .setThemeMode(value!);
-                  },
-                ),
-              ),
               if (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS)
                 ListTile(
                   leading: Container(
