@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:countdowns/models/countdown.dart';
 import 'package:countdowns/theme/app_theme.dart';
 import 'package:countdowns/widgets/ui.dart';
+import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 
 const _dark = AppColors.scrim;
@@ -169,138 +170,142 @@ class _CropScreenState extends State<CropScreen> {
     );
     final pad = _Nudge(onNudge: _nudge);
 
-    return Scaffold(
-      backgroundColor: _dark,
-      body: SafeArea(
-        child: _tablet
-            ? Column(
-                children: [
-                  header,
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(28, 12, 28, 28),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Expanded(
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(18),
-                              child: canvas,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light,
+      child: Scaffold(
+        backgroundColor: _dark,
+        body: SafeArea(
+          child: _tablet
+              ? Column(
+                  children: [
+                    header,
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(28, 12, 28, 28),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Expanded(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(18),
+                                child: canvas,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 32),
-                          SizedBox(
-                            width: 520,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                const Text(
-                                  'Every place it shows up',
-                                  style: TextStyle(
-                                    fontFamily: AppFonts.numerals,
-                                    fontSize: 26,
-                                    fontWeight: FontWeight.w800,
-                                    color: Colors.white,
+                            const SizedBox(width: 32),
+                            SizedBox(
+                              width: 520,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  const Text(
+                                    'Every place it shows up',
+                                    style: TextStyle(
+                                      fontFamily: AppFonts.numerals,
+                                      fontSize: 26,
+                                      fontWeight: FontWeight.w800,
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                ),
-                                const Text(
-                                  'Pick a shape to set its own crop, or see them all at once.',
-                                  style: TextStyle(fontSize: 14, color: _sub),
-                                ),
-                                const SizedBox(height: 14),
-                                _ShowAll(
-                                  on: _selected == null,
-                                  onTap: () => setState(() => _selected = null),
-                                ),
-                                const SizedBox(height: 14),
-                                Expanded(
-                                  child: GridView.count(
-                                    padding: EdgeInsets.zero,
-                                    crossAxisCount: 2,
-                                    mainAxisSpacing: 12,
-                                    crossAxisSpacing: 12,
-                                    childAspectRatio: 1.6,
+                                  const Text(
+                                    'Pick a shape to set its own crop, or see them all at once.',
+                                    style: TextStyle(fontSize: 14, color: _sub),
+                                  ),
+                                  const SizedBox(height: 14),
+                                  _ShowAll(
+                                    on: _selected == null,
+                                    onTap: () =>
+                                        setState(() => _selected = null),
+                                  ),
+                                  const SizedBox(height: 14),
+                                  Expanded(
+                                    child: GridView.count(
+                                      padding: EdgeInsets.zero,
+                                      crossAxisCount: 2,
+                                      mainAxisSpacing: 12,
+                                      crossAxisSpacing: 12,
+                                      childAspectRatio: 1.6,
+                                      children: [
+                                        for (final s in _shapes)
+                                          _Thumbnail(
+                                            shape: s,
+                                            file: widget.file,
+                                            alignment: _points[s]!,
+                                            selected: _selected == s,
+                                            onTap: () =>
+                                                setState(() => _selected = s),
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                  Row(
                                     children: [
-                                      for (final s in _shapes)
-                                        _Thumbnail(
-                                          shape: s,
-                                          file: widget.file,
-                                          alignment: _points[s]!,
-                                          selected: _selected == s,
-                                          onTap: () =>
-                                              setState(() => _selected = s),
-                                        ),
+                                      Expanded(child: link),
+                                      const SizedBox(width: 14),
+                                      pad,
                                     ],
                                   ),
-                                ),
-                                Row(
-                                  children: [
-                                    Expanded(child: link),
-                                    const SizedBox(width: 14),
-                                    pad,
-                                  ],
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              : Column(
+                  children: [
+                    header,
+                    Expanded(child: canvas),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              _ShapeChip(
+                                label: 'All shapes',
+                                color: Colors.white,
+                                glyph: const Size(14, 14),
+                                on: _selected == null,
+                                onTap: () => setState(() => _selected = null),
+                              ),
+                              for (final s in _shapes) ...[
+                                const SizedBox(width: 6),
+                                _ShapeChip(
+                                  label: switch (s) {
+                                    CropShape.full => 'Full screen',
+                                    CropShape.card => 'Card',
+                                    CropShape.wide => 'Wide',
+                                    CropShape.tablet => 'iPad',
+                                  },
+                                  color: _shapeColors[s]!,
+                                  glyph: switch (s) {
+                                    CropShape.full => const Size(10, 20),
+                                    CropShape.card => const Size(16, 16),
+                                    CropShape.wide => const Size(22, 11),
+                                    CropShape.tablet => const Size(20, 14),
+                                  },
+                                  on: _selected == s,
+                                  onTap: () => setState(() => _selected = s),
                                 ),
                               ],
-                            ),
+                            ],
+                          ),
+                          const SizedBox(height: 14),
+                          Row(
+                            children: [
+                              Expanded(child: link),
+                              const SizedBox(width: 12),
+                              pad,
+                            ],
                           ),
                         ],
                       ),
                     ),
-                  ),
-                ],
-              )
-            : Column(
-                children: [
-                  header,
-                  Expanded(child: canvas),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            _ShapeChip(
-                              label: 'All shapes',
-                              color: Colors.white,
-                              glyph: const Size(14, 14),
-                              on: _selected == null,
-                              onTap: () => setState(() => _selected = null),
-                            ),
-                            for (final s in _shapes) ...[
-                              const SizedBox(width: 6),
-                              _ShapeChip(
-                                label: switch (s) {
-                                  CropShape.full => 'Full screen',
-                                  CropShape.card => 'Card',
-                                  CropShape.wide => 'Wide',
-                                  CropShape.tablet => 'iPad',
-                                },
-                                color: _shapeColors[s]!,
-                                glyph: switch (s) {
-                                  CropShape.full => const Size(10, 20),
-                                  CropShape.card => const Size(16, 16),
-                                  CropShape.wide => const Size(22, 11),
-                                  CropShape.tablet => const Size(20, 14),
-                                },
-                                on: _selected == s,
-                                onTap: () => setState(() => _selected = s),
-                              ),
-                            ],
-                          ],
-                        ),
-                        const SizedBox(height: 14),
-                        Row(
-                          children: [
-                            Expanded(child: link),
-                            const SizedBox(width: 12),
-                            pad,
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
+        ),
       ),
     );
   }

@@ -13,6 +13,7 @@ import 'package:countdowns/screens/editor/photo_flow.dart';
 import 'package:countdowns/theme/app_theme.dart';
 import 'package:countdowns/utilities/feedback.dart';
 import 'package:countdowns/widgets/ui.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
@@ -221,78 +222,81 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
       originalColor: _originalColor,
     );
 
-    return Scaffold(
-      body: SafeArea(
-        bottom: false,
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            if (constraints.maxWidth >= 900) {
-              return _TabletEditor(
-                header: header,
-                draft: draft,
-                now: now,
-                details: details,
-                look: EditorLook(
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.dark,
+      child: Scaffold(
+        body: SafeArea(
+          bottom: false,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              if (constraints.maxWidth >= 900) {
+                return _TabletEditor(
+                  header: header,
                   draft: draft,
-                  edit: _edit,
-                  onAddPhoto: _addPhoto,
-                  originalColor: _originalColor,
-                  backgroundColumns: 7,
-                  iconColumns: 8,
-                ),
-                onCrop: _crop,
+                  now: now,
+                  details: details,
+                  look: EditorLook(
+                    draft: draft,
+                    edit: _edit,
+                    onAddPhoto: _addPhoto,
+                    originalColor: _originalColor,
+                    backgroundColumns: 7,
+                    iconColumns: 8,
+                  ),
+                  onCrop: _crop,
+                );
+              }
+              return Column(
+                children: [
+                  header,
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 6, 20, 14),
+                    child: EditorPreview(draft: draft, now: now, onCrop: _crop),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+                    child: PillSegmented<EditorTab>(
+                      values: EditorTab.values,
+                      selected: _tab,
+                      label: (t) => t == EditorTab.details ? 'Details' : 'Look',
+                      height: 38,
+                      fontSize: 15,
+                      raised: true,
+                      trackColor: AppColors.track,
+                      selectedColor: Colors.white,
+                      selectedText: AppColors.ink,
+                      onChanged: (t) {
+                        feedback(ref, Sound.select);
+                        FocusScope.of(context).unfocus();
+                        setState(() => _tab = t);
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(28),
+                        ),
+                      ),
+                      child: SingleChildScrollView(
+                        keyboardDismissBehavior:
+                            ScrollViewKeyboardDismissBehavior.onDrag,
+                        padding: EdgeInsets.fromLTRB(
+                          20,
+                          20,
+                          20,
+                          30 + MediaQuery.paddingOf(context).bottom,
+                        ),
+                        child: _tab == EditorTab.details ? details : look,
+                      ),
+                    ),
+                  ),
+                ],
               );
-            }
-            return Column(
-              children: [
-                header,
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 6, 20, 14),
-                  child: EditorPreview(draft: draft, now: now, onCrop: _crop),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
-                  child: PillSegmented<EditorTab>(
-                    values: EditorTab.values,
-                    selected: _tab,
-                    label: (t) => t == EditorTab.details ? 'Details' : 'Look',
-                    height: 38,
-                    fontSize: 15,
-                    raised: true,
-                    trackColor: AppColors.track,
-                    selectedColor: Colors.white,
-                    selectedText: AppColors.ink,
-                    onChanged: (t) {
-                      feedback(ref, Sound.select);
-                      FocusScope.of(context).unfocus();
-                      setState(() => _tab = t);
-                    },
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(28),
-                      ),
-                    ),
-                    child: SingleChildScrollView(
-                      keyboardDismissBehavior:
-                          ScrollViewKeyboardDismissBehavior.onDrag,
-                      padding: EdgeInsets.fromLTRB(
-                        20,
-                        20,
-                        20,
-                        30 + MediaQuery.paddingOf(context).bottom,
-                      ),
-                      child: _tab == EditorTab.details ? details : look,
-                    ),
-                  ),
-                ),
-              ],
-            );
-          },
+            },
+          ),
         ),
       ),
     );
