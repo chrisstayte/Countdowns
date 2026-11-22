@@ -8,6 +8,23 @@ Android - https://play.google.com/store/apps/details?id=com.chrisstayte.countdow
 iOS - https://apps.apple.com/us/app/countdowns-chris-stayte/id1603744166
 
 
+## Application stack
+
+Countdowns runs on Flutter 3.50.1 and Dart 3.14.0. The previous app declared Dart 3.7, Provider 6 and GoRouter 14.
+
+| Area | Implementation |
+| --- | --- |
+| State | Riverpod 3 manages saved events, per-editor drafts, preferences, sorted views and a shared one-second clock. Closing an editor discards its unsaved draft. |
+| Navigation | GoRouter 18 owns the Events screen, event details, new and edit forms, date picker, settings and iOS app icons. Date confirmation returns the selection to the open form. |
+| Storage | Hive 2 stores events locally in the `events` box. Integer event IDs, adapter type 0 and the original field numbers are preserved. SharedPreferences stores the `localSettings` JSON object. Startup imports older mobile JSON files when present. |
+| Interface | Material and Cupertino widgets, bundled fonts, Font Awesome, AutoSizeText, FlexColorPicker and Flutter Animate render the existing screens. |
+| Device features | AudioPlayers and Flutter haptics provide feedback. Local Notifications, Flutter Timezone and timezone schedule mobile reminders. Alternate icons use flutter_dynamic_icon_plus on iOS. |
+| Native builds | iOS and macOS use Swift Package Manager. Android uses Gradle 9.5, Android Gradle Plugin 9.3.1, Java 17 and compile SDK 37. The Android icon and review plugins still use the Kotlin Gradle Plugin. |
+
+Use `flutter pub get` to install the locked dependencies, `flutter test` for the regression suite and `flutter run` to open the app on a selected device.
+
+## Original project brief
+
 The objective of Countdown Timer is to provide a continuously decrementing display of the he months, days, hours, minutes, and seconds to a user entered event.
 
 ### Constraints

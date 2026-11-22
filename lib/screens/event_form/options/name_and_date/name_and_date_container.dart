@@ -1,19 +1,21 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:countdowns/providers/local_settings_provider.dart';
-import 'package:countdowns/screens/event_form/options/name_and_date/date_picker_screen.dart';
-import 'package:flutter/material.dart';
+import 'package:countdowns/constants.dart';
+import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 typedef OnDateTimeChanged = void Function(DateTime dateTime);
 typedef OnAllDayChanged = void Function(bool allDay);
 
-class NameAndDateContainer extends StatelessWidget {
+class NameAndDateContainer extends ConsumerWidget {
   const NameAndDateContainer({
     super.key,
     required this.controller,
+    required this.eventKey,
     required this.eventDateTime,
     required this.onDateTimeChanged,
     required this.allDay,
@@ -22,6 +24,7 @@ class NameAndDateContainer extends StatelessWidget {
   });
 
   final TextEditingController controller;
+  final String? eventKey;
   final DateTime eventDateTime;
   final OnDateTimeChanged onDateTimeChanged;
   final bool allDay;
@@ -29,7 +32,7 @@ class NameAndDateContainer extends StatelessWidget {
   final bool shouldShakeName;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
       child: Column(
@@ -65,11 +68,10 @@ class NameAndDateContainer extends StatelessWidget {
                 Visibility(
                   visible: controller.text.isNotEmpty,
                   child: IconButton(
-                    onPressed:
-                        () => {
-                          controller.clear(),
-                          FocusManager.instance.primaryFocus?.unfocus(),
-                        },
+                    onPressed: () => {
+                      controller.clear(),
+                      FocusManager.instance.primaryFocus?.unfocus(),
+                    },
                     icon: const Icon(Icons.clear),
                   ),
                 ),
@@ -81,8 +83,7 @@ class NameAndDateContainer extends StatelessWidget {
             onTap: () async {
               // hide the keyboard if it's open
               FocusManager.instance.primaryFocus?.unfocus();
-              var settings =
-                  context.read<LocalSettingsProvider>().localSettings;
+              var settings = ref.read(localSettingsProvider);
               if (settings.hapticFeedback) {
                 HapticFeedback.lightImpact();
               }
@@ -97,22 +98,19 @@ class NameAndDateContainer extends StatelessWidget {
                   mode: PlayerMode.lowLatency,
                 );
               }
-              await Navigator.of(context)
-                  .push(
-                    MaterialPageRoute(
-                      builder:
-                          (context) => DatePickerScreen(
-                            eventDateTime: eventDateTime,
-                            allDay: allDay,
-                          ),
-                    ),
-                  )
-                  .then((result) {
-                    if (result != null) {
-                      onDateTimeChanged(result[0]);
-                      onAllDayChanged(result[1]);
-                    }
-                  });
+              final result = await context
+                  .pushNamed<({DateTime date, bool allDay})>(
+                    eventKey == null ? AppRoutes.newDate : AppRoutes.editDate,
+                    pathParameters: {'id': ?eventKey},
+                    queryParameters: {
+                      'date': eventDateTime.toIso8601String(),
+                      'allDay': allDay.toString(),
+                    },
+                  );
+              if (result != null && context.mounted) {
+                onDateTimeChanged(result.date);
+                onAllDayChanged(result.allDay);
+              }
             },
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),

@@ -1,24 +1,26 @@
 import UIKit
+import UserNotifications
 import Flutter
 
 @main
-@objc class AppDelegate: FlutterAppDelegate {
+@objc class AppDelegate: FlutterAppDelegate, FlutterImplicitEngineDelegate {
   override func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
 
-    if #available(iOS 10.0, *) {
-      UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
-    }
+    UNUserNotificationCenter.current().delegate = self
 
     // when user reinstalls application old notifications will be deleted
-    if(!UserDefaults.standard.bool(forKey: "Notification")) {
-      UIApplication.shared.cancelAllLocalNotifications()
+    if !UserDefaults.standard.bool(forKey: "Notification") {
+      UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
       UserDefaults.standard.set(true, forKey: "Notification")
     }
-    
-    GeneratedPluginRegistrant.register(with: self)
+
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+  }
+
+  func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
+    GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
   }
 }

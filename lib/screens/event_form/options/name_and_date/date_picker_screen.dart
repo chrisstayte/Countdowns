@@ -2,23 +2,23 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:countdowns/global/global.dart';
 import 'package:countdowns/providers/local_settings_provider.dart';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DatePickerScreen extends StatefulWidget {
+class DatePickerScreen extends ConsumerStatefulWidget {
   const DatePickerScreen({super.key, this.eventDateTime, required this.allDay});
 
   final DateTime? eventDateTime;
   final bool allDay;
 
   @override
-  State<DatePickerScreen> createState() => _DatePickerScreenState();
+  ConsumerState<DatePickerScreen> createState() => _DatePickerScreenState();
 }
 
-class _DatePickerScreenState extends State<DatePickerScreen> {
+class _DatePickerScreenState extends ConsumerState<DatePickerScreen> {
   late DateTime _dateTime;
   late bool _allDay;
 
@@ -31,13 +31,16 @@ class _DatePickerScreenState extends State<DatePickerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final year = DateTime.now().year;
+    final firstDate = DateTime(year - 100);
+    final lastDate = DateTime(year + 100);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Date'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            var settings = context.read<LocalSettingsProvider>().localSettings;
+            var settings = ref.read(localSettingsProvider);
             if (settings.hapticFeedback) {
               HapticFeedback.lightImpact();
             }
@@ -58,8 +61,7 @@ class _DatePickerScreenState extends State<DatePickerScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              var settings =
-                  context.read<LocalSettingsProvider>().localSettings;
+              var settings = ref.read(localSettingsProvider);
               if (settings.hapticFeedback) {
                 HapticFeedback.lightImpact();
               }
@@ -74,7 +76,7 @@ class _DatePickerScreenState extends State<DatePickerScreen> {
                   mode: PlayerMode.lowLatency,
                 );
               }
-              Navigator.pop(context, [_dateTime, _allDay]);
+              context.pop((date: _dateTime, allDay: _allDay));
             },
             icon: const Icon(Icons.check),
           ),
@@ -91,17 +93,17 @@ class _DatePickerScreenState extends State<DatePickerScreen> {
               ),
               child: CalendarDatePicker(
                 initialDate: _dateTime,
-                firstDate: DateTime(DateTime.now().year - 100),
-                lastDate: DateTime(DateTime.now().year + 100),
-                onDateChanged:
-                    (dateTime) =>
-                        _dateTime = DateTime(
-                          dateTime.year,
-                          dateTime.month,
-                          dateTime.day,
-                          _dateTime.hour,
-                          _dateTime.minute,
-                        ),
+                firstDate: _dateTime.isBefore(firstDate)
+                    ? _dateTime
+                    : firstDate,
+                lastDate: _dateTime.isAfter(lastDate) ? _dateTime : lastDate,
+                onDateChanged: (dateTime) => _dateTime = DateTime(
+                  dateTime.year,
+                  dateTime.month,
+                  dateTime.day,
+                  _dateTime.hour,
+                  _dateTime.minute,
+                ),
               ),
             ),
             const SizedBox(height: 10),
@@ -114,35 +116,34 @@ class _DatePickerScreenState extends State<DatePickerScreen> {
                 children: [
                   ListTile(
                     title: _allDay ? const Text('All Day') : null,
-                    leading:
-                        !_allDay
-                            ? TextButton(
-                              onPressed: () async {
-                                await showTimePicker(
-                                  context: context,
-                                  initialTime: TimeOfDay(
-                                    hour: _dateTime.hour,
-                                    minute: _dateTime.minute,
-                                  ),
-                                ).then((value) {
-                                  if (value != null) {
-                                    setState(() {
-                                      _dateTime = DateTime(
-                                        _dateTime.year,
-                                        _dateTime.month,
-                                        _dateTime.day,
-                                        value.hour,
-                                        value.minute,
-                                      );
-                                    });
-                                  }
-                                });
-                              },
-                              child: Text(
-                                DateFormat("hh:mm a").format(_dateTime),
-                              ),
-                            )
-                            : null,
+                    leading: !_allDay
+                        ? TextButton(
+                            onPressed: () async {
+                              await showTimePicker(
+                                context: context,
+                                initialTime: TimeOfDay(
+                                  hour: _dateTime.hour,
+                                  minute: _dateTime.minute,
+                                ),
+                              ).then((value) {
+                                if (value != null) {
+                                  setState(() {
+                                    _dateTime = DateTime(
+                                      _dateTime.year,
+                                      _dateTime.month,
+                                      _dateTime.day,
+                                      value.hour,
+                                      value.minute,
+                                    );
+                                  });
+                                }
+                              });
+                            },
+                            child: Text(
+                              DateFormat("hh:mm a").format(_dateTime),
+                            ),
+                          )
+                        : null,
                     trailing: Switch.adaptive(
                       value: _allDay,
                       onChanged: (value) => setState(() => _allDay = value),

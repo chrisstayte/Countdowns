@@ -4,58 +4,57 @@ import 'package:countdowns/global/global.dart';
 import 'package:countdowns/providers/event_provider.dart';
 import 'package:countdowns/providers/local_settings_provider.dart';
 import 'package:countdowns/widgets/event_container.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   late ScrollController _scrollController;
   bool _showButton = false;
 
   @override
   void initState() {
     super.initState();
-    _scrollController =
-        ScrollController()..addListener(() {
-          bool showButton = _scrollController.position.pixels > 0;
-          if (_showButton != showButton) {
-            setState(() {
-              _showButton = showButton;
-            });
-          }
-        });
+    _scrollController = ScrollController()
+      ..addListener(() {
+        bool showButton = _scrollController.position.pixels > 0;
+        if (_showButton != showButton) {
+          setState(() {
+            _showButton = showButton;
+          });
+        }
+      });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    var events = context.watch<EventProvider>().events.toList();
-    events.sort(
-      context.read<EventProvider>().sortingMethods[context
-          .watch<LocalSettingsProvider>()
-          .localSettings
-          .sortingMethod],
+    final events = ref.watch(sortedEventsProvider);
+    final squareView = ref.watch(
+      localSettingsProvider.select((s) => s.squareView),
     );
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Events'),
         actions: [
-          if (_showButton ||
-              context.read<LocalSettingsProvider>().localSettings.squareView ==
-                  false)
+          if (_showButton || !squareView)
             IconButton(
               onPressed: () {
-                var settings =
-                    context.read<LocalSettingsProvider>().localSettings;
+                var settings = ref.read(localSettingsProvider);
                 if (settings.hapticFeedback) {
                   HapticFeedback.lightImpact();
                 }
@@ -76,8 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           IconButton(
             onPressed: () {
-              var settings =
-                  context.read<LocalSettingsProvider>().localSettings;
+              var settings = ref.read(localSettingsProvider);
               if (settings.hapticFeedback) {
                 HapticFeedback.lightImpact();
               }
@@ -104,11 +102,9 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.only(top: 15, left: 15, right: 15),
         children: [
           CupertinoSlidingSegmentedControl(
-            groupValue:
-                context.watch<LocalSettingsProvider>().localSettings.squareView,
+            groupValue: squareView,
             onValueChanged: (value) {
-              var settings =
-                  context.read<LocalSettingsProvider>().localSettings;
+              var settings = ref.read(localSettingsProvider);
               if (settings.hapticFeedback) {
                 HapticFeedback.mediumImpact();
               }
@@ -123,9 +119,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   mode: PlayerMode.lowLatency,
                 );
               }
-              context.read<LocalSettingsProvider>().setSquareView(
-                value as bool,
-              );
+              ref
+                  .read(localSettingsProvider.notifier)
+                  .setSquareView(value as bool);
             },
             children: const <bool, Widget>{
               true: Padding(
@@ -144,24 +140,13 @@ class _HomeScreenState extends State<HomeScreen> {
             physics: const NeverScrollableScrollPhysics(),
             mainAxisSpacing: 10,
             crossAxisSpacing: 10,
-            childAspectRatio:
-                context.read<LocalSettingsProvider>().localSettings.squareView
-                    ? 1
-                    : 2.4,
-            crossAxisCount:
-                context.read<LocalSettingsProvider>().localSettings.squareView
-                    ? 2
-                    : 1,
+            childAspectRatio: squareView ? 1 : 2.4,
+            crossAxisCount: squareView ? 2 : 1,
             children: [
-              if (context
-                      .read<LocalSettingsProvider>()
-                      .localSettings
-                      .squareView ==
-                  true)
+              if (squareView)
                 GestureDetector(
                   onTap: () {
-                    var settings =
-                        context.read<LocalSettingsProvider>().localSettings;
+                    var settings = ref.read(localSettingsProvider);
                     if (settings.hapticFeedback) {
                       HapticFeedback.lightImpact();
                     }
@@ -197,8 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ...events.map(
                 (event) => GestureDetector(
                   onTap: () {
-                    var settings =
-                        context.read<LocalSettingsProvider>().localSettings;
+                    var settings = ref.read(localSettingsProvider);
                     if (settings.hapticFeedback) {
                       HapticFeedback.lightImpact();
                     }

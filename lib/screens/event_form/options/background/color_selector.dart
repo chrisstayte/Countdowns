@@ -1,12 +1,12 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:countdowns/providers/local_settings_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 typedef OnColorChanged = void Function(Color color);
 
-class ColorSelector extends StatelessWidget {
+class ColorSelector extends ConsumerWidget {
   const ColorSelector({
     super.key,
     required this.color,
@@ -19,10 +19,10 @@ class ColorSelector extends StatelessWidget {
   final Color? selectedColor;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () {
-        var settings = context.read<LocalSettingsProvider>().localSettings;
+        var settings = ref.read(localSettingsProvider);
         if (settings.hapticFeedback) {
           HapticFeedback.lightImpact();
         }
@@ -40,10 +40,9 @@ class ColorSelector extends StatelessWidget {
           shape: BoxShape.circle,
           border: Border.all(
             width: 2,
-            color:
-                selectedColor == color
-                    ? Theme.of(context).primaryColor
-                    : Colors.transparent,
+            color: selectedColor == color
+                ? Theme.of(context).primaryColor
+                : Colors.transparent,
           ),
         ),
         child: Container(

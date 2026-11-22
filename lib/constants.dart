@@ -1,8 +1,10 @@
 class AppRoutes {
-  static String home = '/';
-  static String event = 'event/:id';
-  static String settings = 'settings';
-  static String appIcon = 'appIcon';
-  static String eventEdit = 'edit';
-  static String eventNew = 'new';
+  static const String home = '/';
+  static const String event = 'event/:id';
+  static const String settings = 'settings';
+  static const String appIcon = 'appIcon';
+  static const String eventEdit = 'edit';
+  static const String newDate = 'newDate';
+  static const String editDate = 'editDate';
+  static const String eventNew = 'new';
 }

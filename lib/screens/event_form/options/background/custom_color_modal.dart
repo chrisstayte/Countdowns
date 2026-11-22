@@ -3,14 +3,14 @@ import 'package:countdowns/global/global.dart';
 import 'package:countdowns/providers/local_settings_provider.dart';
 import 'package:countdowns/utilities/extensions.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 typedef OnColorChanged = void Function(Color color);
 
-class CustomColorModal extends StatefulWidget {
+class CustomColorModal extends ConsumerStatefulWidget {
   const CustomColorModal({
     super.key,
     required this.selectedColor,
@@ -23,10 +23,10 @@ class CustomColorModal extends StatefulWidget {
   final bool gradient;
 
   @override
-  State<CustomColorModal> createState() => _CustomColorModalState();
+  ConsumerState<CustomColorModal> createState() => _CustomColorModalState();
 }
 
-class _CustomColorModalState extends State<CustomColorModal> {
+class _CustomColorModalState extends ConsumerState<CustomColorModal> {
   late Color _selectedColor;
 
   @override
@@ -53,8 +53,7 @@ class _CustomColorModalState extends State<CustomColorModal> {
               const Text('Background Color', style: TextStyle(fontSize: 22)),
               OutlinedButton(
                 onPressed: () {
-                  var settings =
-                      context.read<LocalSettingsProvider>().localSettings;
+                  var settings = ref.read(localSettingsProvider);
                   if (settings.hapticFeedback) {
                     HapticFeedback.lightImpact();
                   }
@@ -72,21 +71,19 @@ class _CustomColorModalState extends State<CustomColorModal> {
                   context.pop();
                 },
                 style: ButtonStyle(
-                  foregroundColor: MaterialStateProperty.all<Color>(
-                    Colors.white,
-                  ),
-                  backgroundColor: MaterialStateProperty.all<Color>(
+                  foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
+                  backgroundColor: WidgetStateProperty.all<Color>(
                     Global.colors.offColor,
                   ),
-                  side: MaterialStateProperty.all<BorderSide>(
+                  side: WidgetStateProperty.all<BorderSide>(
                     BorderSide(color: Global.colors.offColor),
                   ),
-                  shape: MaterialStateProperty.all<OutlinedBorder>(
+                  shape: WidgetStateProperty.all<OutlinedBorder>(
                     RoundedRectangleBorder(
                       borderRadius: Global.styles.containerCornerRadius,
                     ),
                   ),
-                  elevation: MaterialStateProperty.all<double>(2),
+                  elevation: WidgetStateProperty.all<double>(2),
                 ),
                 child: const Icon(Icons.check_circle_outline_outlined),
               ),
@@ -102,8 +99,9 @@ class _CustomColorModalState extends State<CustomColorModal> {
                   child: Container(
                     decoration: BoxDecoration(
                       color: _selectedColor,
-                      gradient:
-                          widget.gradient ? _selectedColor.gradient : null,
+                      gradient: widget.gradient
+                          ? _selectedColor.gradient
+                          : null,
                       borderRadius: Global.styles.containerCornerRadius,
                     ),
                   ),

@@ -2,14 +2,14 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:countdowns/providers/local_settings_provider.dart';
 import 'package:countdowns/screens/event_form/options/background/color_selector.dart';
 import 'package:countdowns/screens/event_form/options/background/custom_color_modal.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 typedef OnColorChanged = void Function(Color color);
 typedef OnGradientChanged = void Function(bool gradient);
 
-class BackgroundContainer extends StatelessWidget {
+class BackgroundContainer extends ConsumerWidget {
   const BackgroundContainer({
     super.key,
     required this.selectedColor,
@@ -37,38 +37,36 @@ class BackgroundContainer extends StatelessWidget {
   ];
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         const SizedBox(height: 25),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children:
-              _colors
-                  .sublist(0, _colors.length ~/ 2)
-                  .map(
-                    (color) => ColorSelector(
-                      color: color,
-                      onColorChanged: onColorChanged,
-                      selectedColor: selectedColor,
-                    ),
-                  )
-                  .toList(),
+          children: _colors
+              .sublist(0, _colors.length ~/ 2)
+              .map(
+                (color) => ColorSelector(
+                  color: color,
+                  onColorChanged: onColorChanged,
+                  selectedColor: selectedColor,
+                ),
+              )
+              .toList(),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children:
-              _colors
-                  .sublist(_colors.length ~/ 2, _colors.length)
-                  .map(
-                    (color) => ColorSelector(
-                      color: color,
-                      onColorChanged: onColorChanged,
-                      selectedColor: selectedColor,
-                    ),
-                  )
-                  .toList(),
+          children: _colors
+              .sublist(_colors.length ~/ 2, _colors.length)
+              .map(
+                (color) => ColorSelector(
+                  color: color,
+                  onColorChanged: onColorChanged,
+                  selectedColor: selectedColor,
+                ),
+              )
+              .toList(),
         ),
         const SizedBox(height: 10),
         Row(
@@ -76,8 +74,7 @@ class BackgroundContainer extends StatelessWidget {
           children: [
             GestureDetector(
               onTap: () async {
-                var settings =
-                    context.read<LocalSettingsProvider>().localSettings;
+                var settings = ref.read(localSettingsProvider);
                 if (settings.hapticFeedback) {
                   HapticFeedback.lightImpact();
                 }
@@ -94,12 +91,11 @@ class BackgroundContainer extends StatelessWidget {
                 }
                 await showModalBottomSheet(
                   context: context,
-                  builder:
-                      (context) => CustomColorModal(
-                        selectedColor: selectedColor,
-                        onColorChanged: onColorChanged,
-                        gradient: gradient,
-                      ),
+                  builder: (context) => CustomColorModal(
+                    selectedColor: selectedColor,
+                    onColorChanged: onColorChanged,
+                    gradient: gradient,
+                  ),
                   backgroundColor: Colors.transparent,
                 );
               },
@@ -109,10 +105,9 @@ class BackgroundContainer extends StatelessWidget {
                   shape: BoxShape.circle,
                   border: Border.all(
                     width: 2,
-                    color:
-                        !_colors.contains(selectedColor)
-                            ? Theme.of(context).primaryColor
-                            : Colors.transparent,
+                    color: !_colors.contains(selectedColor)
+                        ? Theme.of(context).primaryColor
+                        : Colors.transparent,
                   ),
                 ),
                 child: Container(

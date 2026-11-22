@@ -1,6 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:countdowns/global/global.dart';
-import 'package:countdowns/models/event.dart';
+import 'package:countdowns/providers/event_draft_provider.dart';
 import 'package:countdowns/providers/event_provider.dart';
 import 'package:countdowns/providers/local_settings_provider.dart';
 import 'package:countdowns/screens/event_form/option_circle.dart';
@@ -9,32 +9,31 @@ import 'package:countdowns/screens/event_form/options/font_container.dart';
 import 'package:countdowns/screens/event_form/options/name_and_date/name_and_date_container.dart';
 import 'package:countdowns/screens/event_form/options/icon_container.dart';
 import 'package:countdowns/widgets/event_container.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class EventFormScreen extends StatefulWidget {
+class EventFormScreen extends ConsumerStatefulWidget {
   const EventFormScreen({super.key, this.eventKey});
 
   final String? eventKey;
 
   @override
-  State<EventFormScreen> createState() => _EventFormScreenState();
+  ConsumerState<EventFormScreen> createState() => _EventFormScreenState();
 }
 
-class _EventFormScreenState extends State<EventFormScreen> {
-  late Event _eventDraft;
-  late Event _existingEvent;
-  bool _newEvent = true;
+class _EventFormScreenState extends ConsumerState<EventFormScreen> {
+  late final DraftSession _session;
+  bool _saving = false;
   bool _shouldShakeName = false;
   bool _isSquare = true;
 
   int _selectedOption = 0;
-  final TextEditingController _titleController = TextEditingController();
+  late final TextEditingController _titleController;
 
   void _selectOption(int index) {
-    var settings = context.read<LocalSettingsProvider>().localSettings;
+    var settings = ref.read(localSettingsProvider);
     if (settings.hapticFeedback) {
       HapticFeedback.lightImpact();
     }
@@ -51,28 +50,16 @@ class _EventFormScreenState extends State<EventFormScreen> {
 
   @override
   void initState() {
-    _titleController.addListener(() {
-      setState(() {
-        _eventDraft.title = _titleController.text;
-      });
-    });
-
-    Event? event = context.read<EventProvider>().getEvent(widget.eventKey);
-
-    if (event == null) {
-      _eventDraft = Event(
-        title: '',
-        eventDateTime: DateTime.now().add(const Duration(days: 1)),
-        allDayEvent: true,
-      );
-    } else {
-      _newEvent = false;
-      _existingEvent = event;
-      _eventDraft = event.copy();
-      _titleController.text = _eventDraft.title;
-    }
-
     super.initState();
+    _session = DraftSession(widget.eventKey);
+    _titleController = TextEditingController(
+      text: ref.read(eventDraftProvider(_session)).title,
+    );
+    _titleController.addListener(() {
+      ref
+          .read(eventDraftProvider(_session).notifier)
+          .change((draft) => draft.title = _titleController.text);
+    });
   }
 
   @override
@@ -83,6 +70,15 @@ class _EventFormScreenState extends State<EventFormScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final draft = ref.watch(eventDraftProvider(_session));
+    final editor = ref.read(eventDraftProvider(_session).notifier);
+    if (widget.eventKey != null &&
+        ref.watch(eventByIdProvider(widget.eventKey)) == null) {
+      return Scaffold(
+        appBar: AppBar(),
+        body: const Center(child: Text('Event Not Found')),
+      );
+    }
     return Scaffold(
       backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
       appBar: AppBar(
@@ -91,7 +87,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            var settings = context.read<LocalSettingsProvider>().localSettings;
+            var settings = ref.read(localSettingsProvider);
             if (settings.hapticFeedback) {
               HapticFeedback.lightImpact();
             }
@@ -113,85 +109,82 @@ class _EventFormScreenState extends State<EventFormScreen> {
           Padding(
             padding: const EdgeInsets.all(8),
             child: OutlinedButton(
-              onPressed: () {
-                if (_titleController.text.isNotEmpty) {
-                  if (_newEvent) {
-                    context.read<EventProvider>().addEvent(_eventDraft);
-                    if (context
-                        .read<LocalSettingsProvider>()
-                        .localSettings
-                        .notify) {
-                      _eventDraft.scheduleNotification();
-                    }
-                  } else {
-                    _existingEvent.update(_eventDraft);
-                    context.read<EventProvider>().saveEvent(_existingEvent);
-                    if (context
-                        .read<LocalSettingsProvider>()
-                        .localSettings
-                        .notify) {
-                      _existingEvent.rescheduleNotification();
-                    }
-                  }
-                  var settings =
-                      context.read<LocalSettingsProvider>().localSettings;
-                  if (settings.hapticFeedback) {
-                    HapticFeedback.lightImpact();
-                  }
-                  if (settings.soundEffects) {
-                    AudioPlayer().play(
-                      AssetSource('sounds/success.mp3'),
-                      ctx: AudioContext(
-                        iOS: AudioContextIOS(
-                          category: AVAudioSessionCategory.ambient,
-                        ),
-                      ),
-                      mode: PlayerMode.lowLatency,
-                    );
-                  }
+              onPressed: _saving
+                  ? null
+                  : () async {
+                      if (_saving) return;
+                      if (_titleController.text.isNotEmpty) {
+                        setState(() => _saving = true);
+                        try {
+                          await ref
+                              .read(eventsProvider.notifier)
+                              .save(
+                                ref.read(eventDraftProvider(_session)),
+                                key: int.tryParse(widget.eventKey ?? ''),
+                              );
+                        } catch (error) {
+                          if (!context.mounted) return;
+                          setState(() => _saving = false);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Could not save countdown: $error'),
+                            ),
+                          );
+                          return;
+                        }
+                        if (!context.mounted) return;
+                        var settings = ref.read(localSettingsProvider);
+                        if (settings.hapticFeedback) {
+                          HapticFeedback.lightImpact();
+                        }
+                        if (settings.soundEffects) {
+                          AudioPlayer().play(
+                            AssetSource('sounds/success.mp3'),
+                            ctx: AudioContext(
+                              iOS: AudioContextIOS(
+                                category: AVAudioSessionCategory.ambient,
+                              ),
+                            ),
+                            mode: PlayerMode.lowLatency,
+                          );
+                        }
 
-                  context.pop();
-                } else {
-                  setState(() {
-                    _selectedOption = 0;
-                    _shouldShakeName = !_shouldShakeName;
-                    if (context
-                        .read<LocalSettingsProvider>()
-                        .localSettings
-                        .hapticFeedback) {
-                      HapticFeedback.vibrate();
-                    }
-                    if (context
-                        .read<LocalSettingsProvider>()
-                        .localSettings
-                        .soundEffects) {
-                      AudioPlayer().play(
-                        AssetSource('sounds/error.mp3'),
-                        ctx: AudioContext(
-                          iOS: AudioContextIOS(
-                            category: AVAudioSessionCategory.ambient,
-                          ),
-                        ),
-                        mode: PlayerMode.lowLatency,
-                      );
-                    }
-                  });
-                }
-              },
+                        context.pop();
+                      } else {
+                        setState(() {
+                          _selectedOption = 0;
+                          _shouldShakeName = !_shouldShakeName;
+                          if (ref.read(localSettingsProvider).hapticFeedback) {
+                            HapticFeedback.vibrate();
+                          }
+                          if (ref.read(localSettingsProvider).soundEffects) {
+                            AudioPlayer().play(
+                              AssetSource('sounds/error.mp3'),
+                              ctx: AudioContext(
+                                iOS: AudioContextIOS(
+                                  category: AVAudioSessionCategory.ambient,
+                                ),
+                              ),
+                              mode: PlayerMode.lowLatency,
+                            );
+                          }
+                        });
+                      }
+                    },
               style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                backgroundColor: MaterialStateProperty.all<Color>(
+                foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
+                backgroundColor: WidgetStateProperty.all<Color>(
                   Global.colors.offColor,
                 ),
-                side: MaterialStateProperty.all<BorderSide>(
+                side: WidgetStateProperty.all<BorderSide>(
                   BorderSide(color: Global.colors.offColor),
                 ),
-                shape: MaterialStateProperty.all<OutlinedBorder>(
+                shape: WidgetStateProperty.all<OutlinedBorder>(
                   RoundedRectangleBorder(
                     borderRadius: Global.styles.containerCornerRadius,
                   ),
                 ),
-                elevation: MaterialStateProperty.all<double>(2),
+                elevation: WidgetStateProperty.all<double>(2),
               ),
               child: const Row(
                 children: [
@@ -217,10 +210,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                       GestureDetector(
                         onTap: () {
                           if (!_isSquare) {
-                            var settings =
-                                context
-                                    .read<LocalSettingsProvider>()
-                                    .localSettings;
+                            var settings = ref.read(localSettingsProvider);
                             if (settings.hapticFeedback) {
                               HapticFeedback.lightImpact();
                             }
@@ -252,10 +242,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                       GestureDetector(
                         onTap: () {
                           if (_isSquare) {
-                            var settings =
-                                context
-                                    .read<LocalSettingsProvider>()
-                                    .localSettings;
+                            var settings = ref.read(localSettingsProvider);
                             if (settings.hapticFeedback) {
                               HapticFeedback.lightImpact();
                             }
@@ -297,7 +284,9 @@ class _EventFormScreenState extends State<EventFormScreen> {
                       borderRadius: Global.styles.containerCornerRadius,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.grey.withOpacity(0.5), // Shadow color
+                          color: Colors.grey.withValues(
+                            alpha: 0.5,
+                          ), // Shadow color
                           spreadRadius: 2, // Spread radius
                           blurRadius: 25, // Blur radius
                           offset: const Offset(
@@ -307,7 +296,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                         ),
                       ],
                     ),
-                    child: EventContainer(event: _eventDraft),
+                    child: EventContainer(event: draft),
                   ),
                 ],
               ),
@@ -361,48 +350,36 @@ class _EventFormScreenState extends State<EventFormScreen> {
                 index: _selectedOption,
                 children: [
                   NameAndDateContainer(
+                    eventKey: widget.eventKey,
                     controller: _titleController,
-                    eventDateTime: _eventDraft.eventDateTime,
-                    onDateTimeChanged:
-                        (value) => setState(() {
-                          _eventDraft.eventDateTime = value;
-                        }),
-                    allDay: _eventDraft.allDayEvent,
-                    onAllDayChanged:
-                        (value) => setState(() {
-                          _eventDraft.allDayEvent = value;
-                        }),
+                    eventDateTime: draft.eventDateTime,
+                    onDateTimeChanged: (value) =>
+                        editor.change((draft) => draft.eventDateTime = value),
+                    allDay: draft.allDayEvent,
+                    onAllDayChanged: (value) =>
+                        editor.change((draft) => draft.allDayEvent = value),
                     shouldShakeName: _shouldShakeName,
                   ),
                   BackgroundContainer(
-                    selectedColor: _eventDraft.backgroundColor,
-                    onColorChanged:
-                        (color) => setState(() {
-                          _eventDraft.backgroundColor = color;
-                        }),
-                    gradient: _eventDraft.backgroundGradient,
-                    onGradientChanged:
-                        (shouldBeGradient) => setState(() {
-                          _eventDraft.backgroundGradient = shouldBeGradient;
-                        }),
+                    selectedColor: draft.backgroundColor,
+                    onColorChanged: (color) =>
+                        editor.change((draft) => draft.backgroundColor = color),
+                    gradient: draft.backgroundGradient,
+                    onGradientChanged: (shouldBeGradient) => editor.change(
+                      (draft) => draft.backgroundGradient = shouldBeGradient,
+                    ),
                   ),
                   IconContainer(
-                    selectedIcon: _eventDraft.icon,
-                    onIconChanged:
-                        (value) => setState(() {
-                          if (value == _eventDraft.icon) {
-                            _eventDraft.icon = null;
-                            return;
-                          }
-                          _eventDraft.icon = value;
-                        }),
+                    selectedIcon: draft.icon,
+                    onIconChanged: (value) => editor.change(
+                      (draft) =>
+                          draft.icon = value == draft.icon ? null : value,
+                    ),
                   ),
                   FontContainer(
-                    fontFamily: _eventDraft.fontFamily ?? 'Default',
-                    onFontSelected:
-                        (fontFamily) => setState(() {
-                          _eventDraft.fontFamily = fontFamily;
-                        }),
+                    fontFamily: draft.fontFamily,
+                    onFontSelected: (fontFamily) =>
+                        editor.change((draft) => draft.fontFamily = fontFamily),
                   ),
                 ],
               ),

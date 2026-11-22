@@ -1,97 +1,45 @@
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:countdowns/enums/sorting_method.dart';
 import 'package:countdowns/models/local_settings.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LocalSettingsProvider extends ChangeNotifier {
-  late LocalSettings localSettings;
-  final Completer _completer = Completer<void>();
+final preferencesProvider = Provider<SharedPreferences>(
+  (ref) => throw StateError('Preferences must be opened before startup'),
+);
 
-  Future<void> get isReady => _completer.future;
+final localSettingsProvider =
+    NotifierProvider<SettingsController, LocalSettings>(SettingsController.new);
 
-  LocalSettingsProvider() {
-    _loadSettings();
+class SettingsController extends Notifier<LocalSettings> {
+  @override
+  LocalSettings build() {
+    final json = ref.watch(preferencesProvider).getString('localSettings');
+    return json == null
+        ? const LocalSettings()
+        : LocalSettings.fromJson(jsonDecode(json));
   }
 
-  Future<void> _loadSettings() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? localSettingsJson = prefs.getString('localSettings');
-
-    if (localSettingsJson != null) {
-      Map<String, dynamic> json = jsonDecode(localSettingsJson);
-      localSettings = LocalSettings.fromJson(json);
-      debugPrint('Loaded local settings: ${localSettings.toJson()}');
-    } else {
-      localSettings = LocalSettings.initialSettings();
-      debugPrint('Loaded default local settings: $localSettings');
-    }
-
-    _completer.complete();
+  Future<void> _save(LocalSettings next) async {
+    state = next;
+    await ref
+        .read(preferencesProvider)
+        .setString('localSettings', jsonEncode(next.toJson()));
   }
 
-  Future<void> saveSettings() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String localSettingsJson = jsonEncode(localSettings.toJson());
-    await prefs.setString('localSettings', localSettingsJson);
-  }
-
-  void setSoundEffectsMode(bool soundEffects) {
-    localSettings.soundEffects = soundEffects;
-    saveSettings();
-    notifyListeners();
-  }
-
-  void setThemeMode(int themeMode) {
-    final ThemeMode convertedThemeMode = ThemeMode.values[themeMode];
-    localSettings.themeMode = convertedThemeMode;
-
-    localSettings.themeMode = convertedThemeMode;
-    saveSettings();
-    notifyListeners();
-  }
-
-  void setSortingMethod(SortingMethod sortingMethod) {
-    localSettings.sortingMethod = sortingMethod;
-    saveSettings();
-    notifyListeners();
-  }
-
-  void setHapticFeedbackMode(bool hapticFeedback) {
-    localSettings.hapticFeedback = hapticFeedback;
-    saveSettings();
-    notifyListeners();
-  }
-
-  void setSoundEffects(bool soundEffects) {
-    localSettings.soundEffects = soundEffects;
-    saveSettings();
-    notifyListeners();
-  }
-
-  void setSquareView(bool squareView) {
-    localSettings.squareView = squareView;
-    saveSettings();
-    notifyListeners();
-  }
-
-  void setNotify(bool notify) {
-    localSettings.notify = notify;
-    saveSettings();
-    notifyListeners();
-  }
-
-  void setIconName(String iconName) {
-    localSettings.iconName = iconName;
-    saveSettings();
-    notifyListeners();
-  }
-
-  void resetSettings() {
-    localSettings = LocalSettings.initialSettings();
-    saveSettings();
-    notifyListeners();
-  }
+  Future<void> setThemeMode(int index) =>
+      _save(state.copyWith(themeMode: ThemeMode.values[index]));
+  Future<void> setSortingMethod(SortingMethod value) =>
+      _save(state.copyWith(sortingMethod: value));
+  Future<void> setHapticFeedbackMode(bool value) =>
+      _save(state.copyWith(hapticFeedback: value));
+  Future<void> setSoundEffectsMode(bool value) =>
+      _save(state.copyWith(soundEffects: value));
+  Future<void> setSquareView(bool value) =>
+      _save(state.copyWith(squareView: value));
+  Future<void> setNotify(bool value) => _save(state.copyWith(notify: value));
+  Future<void> setIconName(String value) =>
+      _save(state.copyWith(iconName: value));
 }

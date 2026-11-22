@@ -1,5 +1,5 @@
 import 'package:countdowns/global/global.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class OptionCircle extends StatelessWidget {
   const OptionCircle({super.key, required this.selected, required this.icon});
@@ -10,9 +10,7 @@ class OptionCircle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(
-        selected ? 3 : 2,
-      ),
+      padding: EdgeInsets.all(selected ? 3 : 2),
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: selected
@@ -20,22 +18,22 @@ class OptionCircle extends StatelessWidget {
             : Theme.of(context).dividerColor,
       ),
       child: Container(
-        padding: EdgeInsets.all(
-          selected ? 11 : 12,
-        ),
+        padding: EdgeInsets.all(selected ? 11 : 12),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: selected
               ? Theme.of(context).appBarTheme.backgroundColor
               : Theme.of(context).scaffoldBackgroundColor,
         ),
-        child: LayoutBuilder(builder: (context, constraints) {
-          return Icon(
-            icon,
-            color: Global.colors.primaryColor,
-            size: constraints.biggest.shortestSide,
-          );
-        }),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return Icon(
+              icon,
+              color: Global.colors.primaryColor,
+              size: constraints.biggest.shortestSide,
+            );
+          },
+        ),
       ),
     );
   }

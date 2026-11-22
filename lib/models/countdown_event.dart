@@ -1,9 +1,5 @@
-/* 
-This was my original method for storing the data for the app. 
-I am migrating to a new database thus creating a new class.
-*/
-
-import 'package:flutter/material.dart';
+import 'package:countdowns/models/event_icons.dart';
+import 'package:material_ui/material_ui.dart';
 
 class CountdownEvent {
   String title;
@@ -13,32 +9,33 @@ class CountdownEvent {
   Color? contentColor;
   String? fontFamily;
 
-  CountdownEvent(
-      {required this.title,
-      required this.eventDate,
-      this.icon,
-      this.backgroundColor,
-      this.fontFamily,
-      this.contentColor});
+  CountdownEvent({
+    required this.title,
+    required this.eventDate,
+    this.icon,
+    this.backgroundColor,
+    this.fontFamily,
+    this.contentColor,
+  });
 
   factory CountdownEvent.fromJson(Map<String, dynamic> json) {
     String title = json['title'] as String;
     DateTime eventDate = DateTime.parse(json['eventDate']);
     IconData? icon;
     if (json['icon'] != null) {
-      icon = IconData(json['icon'], fontFamily: 'MaterialIcons');
+      icon = eventIcon(json['icon']);
     }
 
     Color? color;
     if (json['backgroundColor'] != null) {
-      color = Color(json['backgroundColor']).withOpacity(1);
+      color = Color(json['backgroundColor']).withValues(alpha: 1);
     }
 
     String? fontFamily = json['fontFamily'];
 
     Color? contentColor;
     if (json['contentColor'] != null) {
-      contentColor = Color(json['contentColor']).withOpacity(1);
+      contentColor = Color(json['contentColor']).withValues(alpha: 1);
     }
     return CountdownEvent(
       title: title,
@@ -49,13 +46,4 @@ class CountdownEvent {
       contentColor: contentColor,
     );
   }
-
-  Map<String, dynamic> toJson() => {
-        'title': title,
-        'eventDate': eventDate.toString(),
-        'icon': icon?.codePoint,
-        'backgroundColor': backgroundColor?.value,
-        'fontFamily': fontFamily,
-        'contentColor': contentColor?.value,
-      };
 }

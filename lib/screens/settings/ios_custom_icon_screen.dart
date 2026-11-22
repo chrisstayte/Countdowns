@@ -1,70 +1,96 @@
-import 'dart:io';
+import 'package:flutter/foundation.dart';
 
+import 'package:countdowns/models/app_icons.dart';
 import 'package:countdowns/providers/local_settings_provider.dart';
-import 'package:flex_color_picker/flex_color_picker.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
-import 'package:provider/provider.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:flutter_dynamic_icon_plus/flutter_dynamic_icon_plus.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class IOSCustomIconScreen extends StatelessWidget {
+class IOSCustomIconScreen extends ConsumerWidget {
   const IOSCustomIconScreen({super.key});
 
-  final List<String> iconNameList = const ['light', 'dark', 'original'];
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(title: const Text('App Icon')),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 20),
-        children: iconNameList.map((name) => IconListTile(name: name)).toList(),
+      body: GridView.builder(
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 110,
+          mainAxisSpacing: 20,
+          crossAxisSpacing: 16,
+          childAspectRatio: 0.74,
+        ),
+        itemCount: appIcons.length,
+        itemBuilder: (context, index) => IconGridTile(icon: appIcons[index]),
       ),
     );
   }
 }
 
-class IconListTile extends StatelessWidget {
-  const IconListTile({super.key, required this.name});
+class IconGridTile extends ConsumerWidget {
+  const IconGridTile({super.key, required this.icon});
 
-  final String name;
+  final AppIconOption icon;
+
+  Future<void> _select(BuildContext context, WidgetRef ref) async {
+    try {
+      if (await FlutterDynamicIconPlus.supportsAlternateIcons) {
+        await FlutterDynamicIconPlus.setAlternateIconName(
+          iconName: icon.alternateIconName,
+        );
+        if (!context.mounted) return;
+        ref.read(localSettingsProvider.notifier).setIconName(icon.slug);
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: ListTile(
-        onTap: () async {
-          try {
-            if (await FlutterDynamicIcon.supportsAlternateIcons) {
-              await FlutterDynamicIcon.setAlternateIconName('icon-$name');
-              context.read<LocalSettingsProvider>().setIconName(name);
-              return;
-            }
-          } catch (e) {
-            print(e);
-          }
-        },
-        trailing:
-            context.watch<LocalSettingsProvider>().localSettings.iconName ==
-                        name &&
-                    Platform.isIOS
-                ? const Icon(Icons.check_circle)
-                : null,
-        title: Text(
-          name.capitalize,
-          style: const TextStyle(fontWeight: FontWeight.w600),
-        ),
-        leading: Container(
-          clipBehavior: Clip.hardEdge,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(0.2237 * 64),
-          ),
-          child: Image.asset(
-            'assets/images/icons/icon-${name}.png',
-            height: 64,
-          ),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selected =
+        appIconFor(ref.watch(localSettingsProvider).iconName).slug ==
+            icon.slug &&
+        !kIsWeb &&
+        defaultTargetPlatform == TargetPlatform.iOS;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Semantics(
+      button: true,
+      selected: selected,
+      label: '${icon.label} app icon',
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: () => _select(context, ref),
+        child: Column(
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 150),
+              padding: const EdgeInsets.all(3),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(0.2237 * 78),
+                border: Border.all(
+                  color: selected ? colorScheme.primary : Colors.transparent,
+                  width: 3,
+                ),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(0.2237 * 66),
+                child: Image.asset(icon.assetPath, width: 66, height: 66),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              icon.label,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+              ),
+            ),
+          ],
         ),
       ),
     );

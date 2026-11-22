@@ -3,6 +3,7 @@
         android:label="Countdowns"
         android:name="${applicationName}"
         android:icon="@mipmap/countdowns">
+        <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

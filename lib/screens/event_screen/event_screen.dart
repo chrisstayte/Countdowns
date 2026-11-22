@@ -1,86 +1,68 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:countdowns/constants.dart';
-import 'package:countdowns/models/event.dart';
 import 'package:countdowns/providers/event_provider.dart';
 import 'package:countdowns/providers/local_settings_provider.dart';
 import 'package:countdowns/providers/timer_provider.dart';
 import 'package:countdowns/screens/event_screen/time_label.dart';
 import 'package:countdowns/utilities/extensions.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class EventScreen extends StatefulWidget {
+class EventScreen extends ConsumerWidget {
   const EventScreen({super.key, required this.eventKey});
 
   final String? eventKey;
 
   @override
-  State<EventScreen> createState() => _EventScreenState();
-}
-
-class _EventScreenState extends State<EventScreen> {
-  late final Event? _event;
-  late Color _contentColor;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _event = context.read<EventProvider>().getEvent(widget.eventKey);
-    _contentColor = _event?.backgroundColor.contentColor ?? Colors.white;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    context.watch<TimerProvider>();
-    TextStyle numberTextStyle = TextStyle(
-      fontSize: 38,
-      fontFamily: _event?.fontFamily,
-      color: _contentColor,
-    );
-
-    TextStyle labelTextStyle = TextStyle(
-      fontSize: 32,
-      fontFamily: _event?.fontFamily,
-      color: _contentColor,
-    );
-
-    if (_event == null) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final event = ref.watch(eventByIdProvider(eventKey));
+    final now = ref.watch(clockProvider);
+    if (event == null) {
       return Scaffold(
         appBar: AppBar(),
         body: const Center(child: Text('Event Not Found')),
       );
     }
+    final contentColor = event.backgroundColor.contentColor;
+    TextStyle numberTextStyle = TextStyle(
+      fontSize: 38,
+      fontFamily: event.fontFamily,
+      color: contentColor,
+    );
 
-    Duration timeDifference = _event!.getTimeDifference();
+    TextStyle labelTextStyle = TextStyle(
+      fontSize: 32,
+      fontFamily: event.fontFamily,
+      color: contentColor,
+    );
+
+    Duration timeDifference = event.getTimeDifference(now);
 
     return Hero(
-      tag: _event!.key ?? _event!.title,
+      tag: event.key ?? event.title,
       child: Material(
         type: MaterialType.transparency,
         child: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: _event!.backgroundColor,
-            gradient:
-                _event!.backgroundGradient
-                    ? _event!.backgroundColor.gradient
-                    : null,
+            color: event.backgroundColor,
+            gradient: event.backgroundGradient
+                ? event.backgroundColor.gradient
+                : null,
           ),
           child: Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.transparent,
-              iconTheme: IconThemeData(color: _contentColor),
+              iconTheme: IconThemeData(color: contentColor),
               centerTitle: true,
               leading: IconButton(
                 icon: const Icon(Icons.close),
                 onPressed: () {
-                  var settings =
-                      context.read<LocalSettingsProvider>().localSettings;
+                  var settings = ref.read(localSettingsProvider);
                   if (settings.hapticFeedback) {
                     HapticFeedback.lightImpact();
                   }
@@ -99,36 +81,34 @@ class _EventScreenState extends State<EventScreen> {
                 },
               ),
               title: Icon(
-                _event!.icon ?? Icons.event,
-                color: _contentColor,
+                event.icon ?? Icons.event,
+                color: contentColor,
                 size: 32,
               ),
               actions: [
                 PopupMenuButton<int>(
-                  icon: Icon(Icons.more_vert, color: _contentColor),
-                  color: _contentColor,
-                  itemBuilder:
-                      (context) => [
-                        PopupMenuItem(
-                          value: 1,
-                          child: Text(
-                            'Edit',
-                            style: TextStyle(color: _event!.backgroundColor),
-                          ),
-                        ),
-                        PopupMenuItem(
-                          value: 2,
-                          child: Text(
-                            'Delete',
-                            style: TextStyle(color: _event!.backgroundColor),
-                          ),
-                        ),
-                      ],
+                  icon: Icon(Icons.more_vert, color: contentColor),
+                  color: contentColor,
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      value: 1,
+                      child: Text(
+                        'Edit',
+                        style: TextStyle(color: event.backgroundColor),
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: 2,
+                      child: Text(
+                        'Delete',
+                        style: TextStyle(color: event.backgroundColor),
+                      ),
+                    ),
+                  ],
                   onSelected: (value) async {
                     switch (value) {
                       case 1:
-                        var settings =
-                            context.read<LocalSettingsProvider>().localSettings;
+                        var settings = ref.read(localSettingsProvider);
                         if (settings.hapticFeedback) {
                           HapticFeedback.lightImpact();
                         }
@@ -145,11 +125,8 @@ class _EventScreenState extends State<EventScreen> {
                         }
                         await context.pushNamed(
                           AppRoutes.eventEdit,
-                          pathParameters: {'id': _event.key.toString()},
+                          pathParameters: {'id': event.key.toString()},
                         );
-                        setState(() {
-                          _contentColor = _event.backgroundColor.contentColor;
-                        });
                         break;
                       case 2:
                         if (!(context.mounted)) return;
@@ -157,24 +134,23 @@ class _EventScreenState extends State<EventScreen> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              backgroundColor: _contentColor,
+                              backgroundColor: contentColor,
                               title: Text(
                                 'Delete This Countdown?',
-                                style: TextStyle(color: _event.backgroundColor),
+                                style: TextStyle(color: event.backgroundColor),
                               ),
                               actions: [
                                 TextButton(
                                   child: Text(
                                     "Yes",
                                     style: TextStyle(
-                                      color: _event!.backgroundColor,
+                                      color: event.backgroundColor,
                                     ),
                                   ),
-                                  onPressed: () {
-                                    var settings =
-                                        context
-                                            .read<LocalSettingsProvider>()
-                                            .localSettings;
+                                  onPressed: () async {
+                                    var settings = ref.read(
+                                      localSettingsProvider,
+                                    );
                                     if (settings.hapticFeedback) {
                                       HapticFeedback.lightImpact();
                                     }
@@ -190,21 +166,21 @@ class _EventScreenState extends State<EventScreen> {
                                         mode: PlayerMode.lowLatency,
                                       );
                                     }
-                                    context.read<EventProvider>().deleteEvent(
-                                      _event!,
-                                    );
-                                    Navigator.popUntil(
-                                      context,
-                                      ModalRoute.withName('/'),
-                                    );
+                                    await ref
+                                        .read(eventsProvider.notifier)
+                                        .deleteEvent(event.key as int);
+                                    if (context.mounted) {
+                                      context.pop();
+                                      context.goNamed(AppRoutes.home);
+                                    }
                                   },
                                 ),
                                 TextButton(
-                                  onPressed: () => Navigator.pop(context),
+                                  onPressed: () => context.pop(),
                                   child: Text(
                                     'No',
                                     style: TextStyle(
-                                      color: _event!.backgroundColor,
+                                      color: event.backgroundColor,
                                     ),
                                   ),
                                 ),
@@ -223,14 +199,14 @@ class _EventScreenState extends State<EventScreen> {
               children: [
                 Expanded(
                   child: AutoSizeText(
-                    _event!.title,
+                    event.title,
                     maxLines: 2,
                     minFontSize: 32,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 48,
-                      fontFamily: _event!.fontFamily,
-                      color: _event!.backgroundColor.contentColor,
+                      fontFamily: event.fontFamily,
+                      color: event.backgroundColor.contentColor,
                     ),
                   ),
                 ),
@@ -238,12 +214,12 @@ class _EventScreenState extends State<EventScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: Text(
                     DateFormat(
-                      _event!.allDayEvent ? "MM/dd/yyyy" : "MM/dd/yyyy hh:mm a",
-                    ).format(_event!.eventDateTime),
+                      event.allDayEvent ? "MM/dd/yyyy" : "MM/dd/yyyy hh:mm a",
+                    ).format(event.eventDateTime),
                     style: TextStyle(
                       fontSize: 24,
-                      fontFamily: _event!.fontFamily,
-                      color: _event!.backgroundColor.contentColor,
+                      fontFamily: event.fontFamily,
+                      color: event.backgroundColor.contentColor,
                     ),
                   ),
                 ),
@@ -256,9 +232,8 @@ class _EventScreenState extends State<EventScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             TimeLabel(
-                              label:
-                                  timeDifference.timeDifferenceOnlyYears
-                                      .toString(),
+                              label: timeDifference.timeDifferenceOnlyYears
+                                  .toString(),
                               style: numberTextStyle,
                             ),
                             TimeLabel(
@@ -274,9 +249,8 @@ class _EventScreenState extends State<EventScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             TimeLabel(
-                              label:
-                                  timeDifference.timeDifferenceOnlyDays
-                                      .toString(),
+                              label: timeDifference.timeDifferenceOnlyDays
+                                  .toString(),
                               style: numberTextStyle,
                             ),
                             TimeLabel(
@@ -292,11 +266,10 @@ class _EventScreenState extends State<EventScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             TimeLabel(
-                              label:
-                                  timeDifference.timeDifferenceOnlyHours > 0
-                                      ? timeDifference.timeDifferenceOnlyHours
-                                          .toString()
-                                      : '0',
+                              label: timeDifference.timeDifferenceOnlyHours > 0
+                                  ? timeDifference.timeDifferenceOnlyHours
+                                        .toString()
+                                  : '0',
                               style: numberTextStyle,
                             ),
                             TimeLabel(
@@ -312,9 +285,8 @@ class _EventScreenState extends State<EventScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             TimeLabel(
-                              label:
-                                  timeDifference.timeDifferenceOnlyMinutes
-                                      .toString(),
+                              label: timeDifference.timeDifferenceOnlyMinutes
+                                  .toString(),
                               style: numberTextStyle,
                             ),
                             TimeLabel(
@@ -330,9 +302,8 @@ class _EventScreenState extends State<EventScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             TimeLabel(
-                              label:
-                                  timeDifference.timeDifferenceOnlySeconds
-                                      .toString(),
+                              label: timeDifference.timeDifferenceOnlySeconds
+                                  .toString(),
                               style: numberTextStyle,
                             ),
                             TimeLabel(

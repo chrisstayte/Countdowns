@@ -1,10 +1,4 @@
-// GENERATED CODE - DO NOT MODIFY BY HAND
-
 part of 'event.dart';
-
-// **************************************************************************
-// TypeAdapterGenerator
-// **************************************************************************
 
 class EventAdapter extends TypeAdapter<Event> {
   @override
@@ -19,14 +13,12 @@ class EventAdapter extends TypeAdapter<Event> {
     return Event(
       title: fields[0] as String,
       eventDateTime: fields[1] as DateTime,
-      icon: fields[2] == null
-          ? null
-          : IconData(fields[2] as int, fontFamily: 'MaterialIcons'),
-      backgroundColor: Color(fields[3] as int),
+      icon: eventIcon(fields[2] as int?),
+      backgroundColor: Color(fields[3] as int? ?? 0xff7877e6),
       contentColor: fields[4] == null ? null : Color(fields[4] as int),
-      fontFamily: fields[5] as String,
-      allDayEvent: fields[6] as bool,
-      backgroundGradient: fields[7] != null ? fields[7] as bool : false,
+      fontFamily: fields[5] as String? ?? 'Default',
+      allDayEvent: fields[6] as bool? ?? true,
+      backgroundGradient: fields[7] as bool? ?? false,
     );
   }
 
@@ -41,9 +33,9 @@ class EventAdapter extends TypeAdapter<Event> {
       ..writeByte(2)
       ..write(obj.icon?.codePoint)
       ..writeByte(3)
-      ..write(obj.backgroundColor.value)
+      ..write(obj.backgroundColor.toARGB32())
       ..writeByte(4)
-      ..write(obj.contentColor?.value)
+      ..write(obj.contentColor?.toARGB32())
       ..writeByte(5)
       ..write(obj.fontFamily)
       ..writeByte(6)

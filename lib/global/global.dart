@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class Global {
   static final colors = _Colors();
@@ -33,6 +33,6 @@ class _Fonts {
     'Starjedi': 'Not Starwars',
     'Sunnyspells': 'Sunnyspells',
     'NewWaltDisney': 'Not Disney',
-    'DiarioDeAndy': 'Diario De Andy'
+    'DiarioDeAndy': 'Diario De Andy',
   };
 }

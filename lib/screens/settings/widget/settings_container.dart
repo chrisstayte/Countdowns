@@ -1,9 +1,12 @@
 import 'package:countdowns/global/global.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class SettingsContainer extends StatelessWidget {
-  const SettingsContainer(
-      {super.key, required this.title, required this.children});
+  const SettingsContainer({
+    super.key,
+    required this.title,
+    required this.children,
+  });
 
   final String title;
   final List<Widget> children;
@@ -14,9 +17,7 @@ class SettingsContainer extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 10,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Text(
             title.toUpperCase(),
             style: TextStyle(
@@ -29,16 +30,13 @@ class SettingsContainer extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 10),
-        Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
-            borderRadius: BorderRadius.circular(15),
-          ),
+        Material(
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(15),
+          clipBehavior: Clip.antiAlias,
           child: Column(children: children),
         ),
-        const SizedBox(
-          height: 30,
-        ),
+        const SizedBox(height: 30),
       ],
     );
   }

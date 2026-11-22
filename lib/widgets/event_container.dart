@@ -2,25 +2,25 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:countdowns/models/event.dart';
 import 'package:countdowns/providers/timer_provider.dart';
 import 'package:countdowns/utilities/extensions.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class EventContainer extends StatefulWidget {
+class EventContainer extends ConsumerStatefulWidget {
   const EventContainer({super.key, required this.event});
 
   final Event event;
 
   @override
-  State<EventContainer> createState() => _EventContainerState();
+  ConsumerState<EventContainer> createState() => _EventContainerState();
 }
 
-class _EventContainerState extends State<EventContainer> {
+class _EventContainerState extends ConsumerState<EventContainer> {
   late String premierText;
   late String? secondaryText;
 
-  void _updateTimeUI() {
-    Duration timeDifference = widget.event.getTimeDifference();
+  void _updateTimeUI(DateTime now) {
+    Duration timeDifference = widget.event.getTimeDifference(now);
     int years = (timeDifference.inDays / 365).floor();
     // set the premier text
     if (years > 0) {
@@ -52,8 +52,8 @@ class _EventContainerState extends State<EventContainer> {
 
   @override
   Widget build(BuildContext context) {
-    context.watch<TimerProvider>();
-    _updateTimeUI();
+    final now = ref.watch(clockProvider);
+    _updateTimeUI(now);
 
     return Hero(
       tag: widget.event.key ?? widget.event.title,
@@ -68,10 +68,9 @@ class _EventContainerState extends State<EventContainer> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(25),
             color: widget.event.backgroundColor,
-            gradient:
-                widget.event.backgroundGradient
-                    ? widget.event.backgroundColor.gradient
-                    : null,
+            gradient: widget.event.backgroundGradient
+                ? widget.event.backgroundColor.gradient
+                : null,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -125,7 +124,7 @@ class _EventContainerState extends State<EventContainer> {
                           ),
                         ),
                       ),
-                      if (widget.event.isPast())
+                      if (widget.event.getTimeDifference(now).isNegative)
                         Padding(
                           padding: const EdgeInsets.only(left: 5),
                           child: Icon(

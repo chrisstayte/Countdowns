@@ -2,50 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleIcons</key>
-	<dict>
-		<key>CFBundleAlternateIcons</key>
-		<dict>
-			<key>icon-original</key>
-			<dict>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>icon-original</string>
-				</array>
-			</dict>
-			<key>icon-dark</key>
-			<dict>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>icon-dark</string>
-				</array>
-			</dict>
-			<key>icon-light</key>
-			<dict>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>icon-light</string>
-				</array>
-			</dict>
-		</dict>
-		<key>CFBundlePrimaryIcon</key>
-		<dict>
-			<key>CFBundleIconName</key>
-			<string>icon-light</string>
-			<key>CFBundleIconFiles</key>
-			<array>
-				<string>icon-light</string>
-			</array>
-			<key>UIPrerenderedIcon</key>
-			<false/>
-		</dict>
-	</dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -68,6 +24,27 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<false/>
+		<key>UISceneConfigurations</key>
+		<dict>
+			<key>UIWindowSceneSessionRoleApplication</key>
+			<array>
+				<dict>
+					<key>UISceneClassName</key>
+					<string>UIWindowScene</string>
+					<key>UISceneConfigurationName</key>
+					<string>flutter</string>
+					<key>UISceneDelegateClassName</key>
+					<string>FlutterSceneDelegate</string>
+					<key>UISceneStoryboardFile</key>
+					<string>Main</string>
+				</dict>
+			</array>
+		</dict>
+	</dict>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

@@ -1,16 +1,19 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// This provider is to ensure that all widgets that use the Timer.periodic
-// Thus updating the UI at the same time
+final clockProvider = NotifierProvider.autoDispose<CountdownClock, DateTime>(
+  CountdownClock.new,
+);
 
-class TimerProvider extends ChangeNotifier {
-  late Timer _timer;
-
-  TimerProvider() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      notifyListeners();
-    });
+class CountdownClock extends Notifier<DateTime> {
+  @override
+  DateTime build() {
+    final timer = Timer.periodic(
+      const Duration(seconds: 1),
+      (_) => state = DateTime.now(),
+    );
+    ref.onDispose(timer.cancel);
+    return DateTime.now();
   }
 }
