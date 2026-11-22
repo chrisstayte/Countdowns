@@ -61,6 +61,17 @@ Future<void> main() async {
     unawaited(
       container.read(eventsControllerProvider).rescheduleNotifications(),
     );
+    // Flutter draws nothing before runApp, so the native splash (Paper and
+    // the icon mark) stays up through storage setup and this first read.
+    // Waiting for it means the first frame is Home with its countdowns, not
+    // a flash of the empty state. Capped so a slow read can't hold launch.
+    try {
+      await container
+          .read(eventsStreamProvider.future)
+          .timeout(const Duration(seconds: 3));
+    } catch (_) {
+      // Draw anyway; Home fills in when the read lands.
+    }
     runApp(
       UncontrolledProviderScope(container: container, child: const MyApp()),
     );
@@ -77,7 +88,9 @@ class StorageErrorApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(
     debugShowCheckedModeBanner: false,
+    theme: buildAppTheme(),
     home: Scaffold(
+      backgroundColor: AppColors.ground,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(32),
